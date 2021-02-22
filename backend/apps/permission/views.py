@@ -3,9 +3,6 @@ import json
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from system.serializers import GetUserInfoSerializer
-from utils.response import SuccessResponse
-
 
 class GetUserView(APIView):
     """
@@ -17,6 +14,7 @@ class GetUserView(APIView):
         data = '{"msg":"操作成功","code":200,"permissions":["*:*:*"],"roles":["admin"],"user":{"searchValue":null,"createBy":"admin","createTime":"2020-11-20 19:29:42","updateBy":null,"updateTime":null,"remark":"管理员","params":{},"userId":1,"deptId":103,"userName":"admin","nickName":"若依","email":"ry@163.com","phonenumber":"15888888888","sex":"1","avatar":"","salt":null,"status":"0","delFlag":"0","loginIp":"127.0.0.1","loginDate":"2020-11-20T19:29:42.000+0800","dept":{"searchValue":null,"createBy":null,"createTime":null,"updateBy":null,"updateTime":null,"remark":null,"params":{},"deptId":103,"parentId":101,"ancestors":null,"deptName":"研发部门","orderNum":"1","leader":"若依","phone":null,"email":null,"status":"0","delFlag":null,"parentName":null,"children":[]},"roles":[{"searchValue":null,"createBy":null,"createTime":null,"updateBy":null,"updateTime":null,"remark":null,"params":{},"roleId":1,"roleName":"超级管理员","roleKey":"admin","roleSort":"1","dataScope":"1","menuCheckStrictly":false,"deptCheckStrictly":false,"status":"0","delFlag":null,"flag":false,"menuIds":null,"deptIds":null,"admin":true}],"roleIds":null,"postIds":null,"admin":true}}'
         data = json.loads(data)
         return Response(data)
+
 
 class GetRouters(APIView):
     """

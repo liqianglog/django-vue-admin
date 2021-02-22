@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'captcha',
     # 自定义app
-    'apps.system',
+    'apps.permission',
 ]
 
 MIDDLEWARE = [
@@ -275,7 +275,7 @@ AUTHENTICATION_BACKENDS = (
     'utils.backends.CustomBackend',
     'utils.backends.SessionAuthentication',
 )
-AUTH_USER_MODEL = 'system.UserProfile'
+AUTH_USER_MODEL = 'permission.UserProfile'
 
 # ================================================= #
 # ************** 登录验证码配置  ************** #

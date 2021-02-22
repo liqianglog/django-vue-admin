@@ -25,7 +25,7 @@ from django.urls import re_path, include
 from django.views.static import serve
 from rest_framework.views import APIView
 
-from apps.system.views import GetUserView, GetRouters
+from apps.permission.views import GetUserView, GetRouters
 from utils.login import LoginView, LogoutView
 from utils.response import SuccessResponse
 
