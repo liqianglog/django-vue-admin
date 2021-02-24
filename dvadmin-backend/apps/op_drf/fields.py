@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import SET_NULL
 
-from .string_util import uuid_8, uuid_16, uuid_32, uuid_36
+from utils.string_util import uuid_8, uuid_16, uuid_32, uuid_36
 
 
 class IdField(models.CharField):
@@ -70,142 +70,13 @@ class DescriptionField(models.TextField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs['default'] = kwargs.get('default', '')
+        if kwargs.get('null', True):
+            kwargs['default'] = kwargs.get('default', '')
         kwargs['blank'] = kwargs.get('blank', True)
         kwargs['null'] = kwargs.get('null', True)
         kwargs['verbose_name'] = kwargs.get('verbose_name', '描述')
         kwargs['help_text'] = kwargs.get('help_text', '') or kwargs.get('verbose_name', '描述')
         super().__init__(*args, **kwargs)
-
-
-class TextField(models.TextField):
-    """
-    xxx = TextField()
-    """
-
-    def __init__(self, *args, **kwargs):
-        kwargs['default'] = kwargs.get('default', '')
-        kwargs['blank'] = kwargs.get('blank', True)
-        kwargs['null'] = kwargs.get('null', True)
-        kwargs['verbose_name'] = kwargs.get('verbose_name', '')
-        kwargs['help_text'] = kwargs.get('help_text', '') or kwargs.get('verbose_name', '')
-        super().__init__(*args, **kwargs)
-
-
-class CharField(models.CharField):
-    """
-    xxx = CharField()
-    """
-
-    def __init__(self, *args, **kwargs):
-        kwargs['default'] = kwargs.get('default', '')
-        kwargs['blank'] = kwargs.get('blank', True)
-        kwargs['null'] = kwargs.get('null', True)
-        kwargs['verbose_name'] = kwargs.get('verbose_name', '')
-        kwargs['help_text'] = kwargs.get('help_text', '') or kwargs.get('verbose_name', '')
-        super().__init__(*args, **kwargs)
-
-
-class IntegerField(models.IntegerField):
-    """
-    xxx = IntegerField()
-    """
-
-    def __init__(self, *args, **kwargs):
-        kwargs['default'] = kwargs.get('default', 0)
-        kwargs['verbose_name'] = kwargs.get('verbose_name', '')
-        kwargs['help_text'] = kwargs.get('help_text', '') or kwargs.get('verbose_name', '')
-        super().__init__(*args, **kwargs)
-
-
-class BooleanField(models.BooleanField):
-    """
-    xxx = BooleanField()
-    """
-
-    def __init__(self, *args, **kwargs):
-        kwargs['verbose_name'] = kwargs.get('verbose_name', '')
-        kwargs['help_text'] = kwargs.get('help_text', '') or kwargs.get('verbose_name', '')
-        super().__init__(*args, **kwargs)
-
-
-class DateField(models.DateField):
-    """
-    xxx = DateField()
-    """
-
-    def __init__(self, *args, **kwargs):
-        kwargs['verbose_name'] = kwargs.get('verbose_name', '')
-        kwargs['help_text'] = kwargs.get('help_text', '') or kwargs.get('verbose_name', '')
-        kwargs['editable'] = kwargs.get('default', False)
-        kwargs['blank'] = kwargs.get('blank', True)
-        kwargs['null'] = kwargs.get('null', True)
-        super().__init__(*args, **kwargs)
-
-
-class DateTimeField(models.DateTimeField):
-    """
-    xxx = DateTimeField()
-    """
-
-    def __init__(self, *args, **kwargs):
-        kwargs['verbose_name'] = kwargs.get('verbose_name', '')
-        kwargs['help_text'] = kwargs.get('help_text', '') or kwargs.get('verbose_name', '')
-        kwargs['editable'] = kwargs.get('default', False)
-        kwargs['blank'] = kwargs.get('blank', True)
-        kwargs['null'] = kwargs.get('null', True)
-        super().__init__(*args, **kwargs)
-
-
-class ForeignKey(models.ForeignKey):
-    """
-    xxx = ForeignKey()
-    """
-
-    def __init__(self, to=None, on_delete=None, related_name=None, related_query_name=None, limit_choices_to=None,
-                 parent_link=False, to_field=None, db_constraint=False, **kwargs):
-        if on_delete is None:
-            on_delete = SET_NULL
-        if to_field is None:
-            to_field = 'id'
-        kwargs['verbose_name'] = kwargs.get('verbose_name', '')
-        kwargs['help_text'] = kwargs.get('help_text', '') or kwargs.get('verbose_name', '')
-        kwargs['editable'] = kwargs.get('default', False)
-        kwargs['blank'] = kwargs.get('blank', True)
-        kwargs['null'] = kwargs.get('null', True)
-        super().__init__(to, on_delete, related_name, related_query_name, limit_choices_to, parent_link, to_field,
-                         db_constraint, **kwargs)
-
-
-class OneToOneField(models.OneToOneField):
-    """
-    xxx = OneToOneField()
-    """
-
-    def __init__(self, *args, on_delete=None, to_field=None, db_constraint=False, **kwargs):
-        if on_delete is None:
-            on_delete = SET_NULL
-        if to_field is None:
-            to_field = 'id'
-        kwargs['verbose_name'] = kwargs.get('verbose_name', '')
-        kwargs['help_text'] = kwargs.get('help_text', '') or kwargs.get('verbose_name', '')
-        kwargs['editable'] = kwargs.get('default', None)
-        kwargs['blank'] = kwargs.get('blank', True)
-        kwargs['null'] = kwargs.get('null', True)
-        super().__init__(*args, on_delete=on_delete, to_field=to_field, db_constraint=db_constraint, **kwargs)
-
-
-class ManyToManyField(models.ManyToManyField):
-    """
-    xxx = ManyToManyField()
-    """
-
-    def __init__(self, *args, db_constraint=False, **kwargs):
-        kwargs['verbose_name'] = kwargs.get('verbose_name', '')
-        kwargs['help_text'] = kwargs.get('help_text', '') or kwargs.get('verbose_name', '')
-        kwargs['editable'] = kwargs.get('default', False)
-        kwargs['blank'] = kwargs.get('blank', True)
-        super().__init__(*args, db_constraint=db_constraint, **kwargs)
 
 
 class UserForeignKeyField(models.ForeignKey):
@@ -224,8 +95,6 @@ class UserForeignKeyField(models.ForeignKey):
         kwargs['verbose_name'] = kwargs.get('verbose_name', '关联的用户')
         kwargs['help_text'] = kwargs.get('help_text', '') or kwargs.get('verbose_name', '关联的用户')
         kwargs['editable'] = kwargs.get('default', False)
-        kwargs['blank'] = kwargs.get('blank', True)
-        kwargs['null'] = kwargs.get('null', True)
         super().__init__(to, on_delete, related_name, related_query_name, limit_choices_to, parent_link, to_field,
                          db_constraint, **kwargs)
 
@@ -258,7 +127,7 @@ class CreateDateTimeField(models.DateTimeField):
         super().__init__(verbose_name, name, auto_now, auto_now_add, **kwargs)
 
 
-class CreatorCharField(CharField):
+class CreatorCharField(models.CharField):
     """
     creator = CreatorCharField()
     """
@@ -272,7 +141,7 @@ class CreatorCharField(CharField):
         super().__init__(*args, **kwargs)
 
 
-class ModifierCharField(CharField):
+class ModifierCharField(models.CharField):
     """
     modifier = ModifierCharField()
     """

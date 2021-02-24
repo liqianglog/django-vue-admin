@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'captcha',
     # 自定义app
     'apps.permission',
+    'apps.op_drf',
+    'apps.system',
 ]
 
 MIDDLEWARE = [

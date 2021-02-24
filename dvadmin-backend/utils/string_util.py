@@ -1,6 +1,5 @@
 """
 封装字符串相关函数:UUID字符串,字符串加密解密
-@author: wanglei
 """
 import uuid as UUID
 import base64

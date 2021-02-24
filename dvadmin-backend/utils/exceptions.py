@@ -1,7 +1,7 @@
 import logging
 import traceback
 
-from utils.response import ErrorResponse
+from .response import ErrorResponse
 
 logger = logging.getLogger(__name__)
 

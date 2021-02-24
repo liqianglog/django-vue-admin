@@ -13,7 +13,6 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-import json
 
 from captcha.conf import settings as ca_settings
 from captcha.helpers import captcha_image_url, captcha_audio_url
@@ -25,9 +24,9 @@ from django.urls import re_path, include
 from django.views.static import serve
 from rest_framework.views import APIView
 
-from apps.permission.views import GetUserView, GetRouters
+from apps.permission.views import GetUserProfileView, GetRouters
+from apps.op_drf.response import SuccessResponse
 from utils.login import LoginView, LogoutView
-from utils.response import SuccessResponse
 
 
 class CaptchaRefresh(APIView):
@@ -47,10 +46,12 @@ class CaptchaRefresh(APIView):
 urlpatterns = [
     re_path('api-token-auth/', LoginView.as_view(), name='api_token_auth'),
     re_path(r'^admin/', admin.site.urls),
+    re_path(r'^permission/', include('apps.permission.urls')),
+    re_path(r'^system/', include('apps.system.urls')),
     re_path(r'media/(?P<path>.*)', serve, {"document_root": settings.MEDIA_ROOT}),
     re_path(r'^login/$', LoginView.as_view()),
     re_path(r'^logout/$', LogoutView.as_view()),
-    re_path(r'^getInfo/$', GetUserView.as_view()),
+    re_path(r'^getInfo/$', GetUserProfileView.as_view()),
     re_path(r'^getRouters/$', GetRouters.as_view()),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r"captcha/refresh/$", CaptchaRefresh.as_view(), name="captcha-refresh"),  # 刷新验证码
