@@ -2,7 +2,7 @@
 
 使用django+vue进行极速开发的全栈管理系统。
 
-[![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/newpanjing/simpleui/blob/master/LICENSE) [![img](https://img.shields.io/pypi/v/django-simpleui.svg)](https://pypi.org/project/django-simpleui/#history) [![img](https://img.shields.io/badge/python-%3E=3.6.x-green.svg)](https://python.org/)  ![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-2.2-blue)[![img](https://img.shields.io/pypi/dm/django-simpleui.svg)](https://pypi.org/project/django-simpleui/)
+[![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitee.com/liqianglog/django-vue-admin/blob/master/LICENSE) [![img](https://img.shields.io/pypi/v/django-simpleui.svg)](https://pypi.org/project/django-simpleui/#history) [![img](https://img.shields.io/badge/python-%3E=3.6.x-green.svg)](https://python.org/)  ![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-2.2-blue)[![img](https://img.shields.io/pypi/dm/django-simpleui.svg)](https://pypi.org/project/django-simpleui/)
 
 
 
