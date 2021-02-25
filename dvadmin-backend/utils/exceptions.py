@@ -1,11 +1,13 @@
 import logging
 import traceback
 
+from rest_framework import serializers, exceptions
+
 from .response import ErrorResponse
 
 logger = logging.getLogger(__name__)
 
-from rest_framework.exceptions import APIException as DRFAPIException
+from rest_framework.exceptions import APIException as DRFAPIException, AuthenticationFailed
 
 
 class APIException(Exception):
@@ -60,12 +62,16 @@ def op_exception_handler(ex, context):
     :return:
     """
     msg = ''
-    if isinstance(ex, DRFAPIException):
+    code = '201'
+    if isinstance(ex, AuthenticationFailed):
+        code = 401
+        msg = ex.detail
+    elif isinstance(ex, DRFAPIException):
         # set_rollback()
         msg = ex.detail
-    elif isinstance(ex, APIException):
-        msg = ex.message
+    elif isinstance(ex, exceptions.APIException):
+        msg = ex.detail
     elif isinstance(ex, Exception):
         logger.error(traceback.format_exc())
         msg = str(ex)
-    return ErrorResponse(msg=msg)
+    return ErrorResponse(msg=msg,code=code)

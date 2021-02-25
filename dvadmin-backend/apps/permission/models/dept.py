@@ -1,17 +1,17 @@
-from django.db.models import SET_DEFAULT
+from django.db.models import CASCADE
+from django.db.models import CharField, IntegerField, BooleanField, ForeignKey
 
-from utils import fields
-from utils.BaseModels import CoreModel
+from apps.op_drf.models import CoreModel
 
 
 class Dept(CoreModel):
-    name = fields.CharField(null=False, max_length=64, verbose_name="部门名称")
-    orderNum = fields.IntegerField(verbose_name="显示排序")
-    owner = fields.CharField(max_length=32, verbose_name="负责人")
-    phone = fields.CharField(max_length=32, verbose_name="联系电话")
-    email = fields.CharField(max_length=32, verbose_name="邮箱")
-    status = fields.BooleanField(default=False, verbose_name="部门状态")
-    parentId = fields.ForeignKey(to='Dept', on_delete=SET_DEFAULT, default=False, verbose_name="上级部门")
+    name = CharField(max_length=64, verbose_name="部门名称")
+    orderNum = IntegerField(verbose_name="显示排序")
+    owner = CharField(max_length=32, verbose_name="负责人", null=True)
+    phone = CharField(max_length=32, verbose_name="联系电话", null=True)
+    email = CharField(max_length=32, verbose_name="邮箱", null=True)
+    status = BooleanField(default=False, verbose_name="部门状态")
+    parentId = ForeignKey(to='Dept', on_delete=CASCADE, default=False, verbose_name="上级部门")
 
     class Meta:
         verbose_name = '部门管理'

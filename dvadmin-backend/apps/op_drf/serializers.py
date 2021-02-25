@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework.fields import empty
 from rest_framework.request import Request
@@ -14,6 +15,9 @@ class CustomModelSerializer(ModelSerializer):
     modifier_field_name = 'modifier'
     # 创建人的审计字段名称, 默认creator, 继承使用时可自定义覆盖
     creator_field_name = 'creator'
+    # 添加默认时间返回格式
+    create_datetime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
+    update_datetime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
 
     def __init__(self, instance=None, data=empty, request=None, **kwargs):
         super().__init__(instance, data, **kwargs)
