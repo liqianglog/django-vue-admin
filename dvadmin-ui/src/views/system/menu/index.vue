@@ -1,14 +1,24 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch">
-      <el-form-item label="菜单名称" prop="menuName">
+      <el-form-item label="菜单名称" prop="name">
         <el-input
-          v-model="queryParams.menuName"
+          v-model="queryParams.name"
           placeholder="请输入菜单名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="菜单类型" prop="menuType">
+        <el-select v-model="queryParams.menuType" placeholder="菜单类型" clearable size="small">
+          <el-option
+            v-for="dict in menuTypeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="菜单状态" clearable size="small">
@@ -35,7 +45,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:menu:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -43,18 +54,21 @@
     <el-table
       v-loading="loading"
       :data="menuList"
-      row-key="menuId"
+      row-key="id"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
       <el-table-column prop="name" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
       <el-table-column prop="icon" label="图标" align="center" width="100">
         <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.icon || ''" />
+          <svg-icon :icon-class="scope.row.icon || ''"/>
         </template>
       </el-table-column>
       <el-table-column prop="orderNum" label="排序" width="60"></el-table-column>
+      <el-table-column prop="menuType" label="菜单类型" :formatter="menuTypeFormat" width="80"></el-table-column>
       <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="component_path" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
+<!--      <el-table-column prop="interface_path" label="接口路径" :show-overflow-tooltip="true"></el-table-column>-->
+<!--      <el-table-column prop="interface_method" label="请求方式" :formatter="interfaceMethodFormat" width="70"></el-table-column>-->
       <el-table-column prop="status" label="状态" :formatter="statusFormat" width="80"></el-table-column>
       <el-table-column label="更新时间" align="center" prop="update_datetime">
         <template slot-scope="scope">
@@ -69,25 +83,28 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:menu:edit']"
-          >修改</el-button>
+                     type="text"
+                     icon="el-icon-edit"
+                     @click="handleUpdate(scope.row)"
+                     v-hasPermi="['system:menu:edit']"
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-plus"
             @click="handleAdd(scope.row)"
             v-hasPermi="['system:menu:add']"
-          >新增</el-button>
+          >新增
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:menu:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -110,21 +127,21 @@
           <el-col :span="24">
             <el-form-item label="菜单类型" prop="menuType">
               <el-radio-group v-model="form.menuType">
-                <el-radio label="M">目录</el-radio>
-                <el-radio label="C">菜单</el-radio>
-                <el-radio label="F">按钮</el-radio>
+                <el-radio label="0">目录</el-radio>
+                <el-radio label="1">菜单</el-radio>
+                <el-radio label="2">按钮</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item v-if="form.menuType != 'F'" label="菜单图标">
+            <el-form-item v-if="form.menuType != '2'" label="菜单图标">
               <el-popover
                 placement="bottom-start"
                 width="460"
                 trigger="click"
                 @show="$refs['iconSelect'].reset()"
               >
-                <IconSelect ref="iconSelect" @selected="selected" />
+                <IconSelect ref="iconSelect" @selected="selected"/>
                 <el-input slot="reference" v-model="form.icon" placeholder="点击选择图标" readonly>
                   <svg-icon
                     v-if="form.icon"
@@ -133,23 +150,23 @@
                     class="el-input__icon"
                     style="height: 32px;width: 16px;"
                   />
-                  <i v-else slot="prefix" class="el-icon-search el-input__icon" />
+                  <i v-else slot="prefix" class="el-icon-search el-input__icon"/>
                 </el-input>
               </el-popover>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="菜单名称" prop="menuName">
-              <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
+            <el-form-item :label="form.menuType == '2'?'菜单名称':'按钮名称'" prop="name">
+              <el-input v-model="form.name" placeholder="请输入菜单名称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="显示排序" prop="orderNum">
-              <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
+              <el-input-number v-model="form.orderNum" controls-position="right" :min="0"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'" label="是否外链">
+          <el-col :span="24">
+            <el-form-item v-if="form.menuType != '2'" label="是否外链">
               <el-radio-group v-model="form.isFrame">
                 <el-radio label="0">是</el-radio>
                 <el-radio label="1">否</el-radio>
@@ -157,44 +174,63 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'" label="路由地址" prop="path">
-              <el-input v-model="form.path" placeholder="请输入路由地址" />
+            <el-form-item v-if="form.menuType != '2'" label="路由地址" prop="web_path">
+              <el-input v-model="form.web_path" placeholder="请输入前端路由地址"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.menuType == 'C'">
-            <el-form-item label="组件路径" prop="component">
-              <el-input v-model="form.component" placeholder="请输入组件路径" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'M'" label="权限标识">
-              <el-input v-model="form.perms" placeholder="请权限标识" maxlength="50" />
+          <el-col :span="12" v-if="form.menuType != '2'">
+            <el-form-item :label="form.isFrame !== '0'?'组件路径':'跳转路由'" prop="component_path">
+              <el-input v-model="form.component_path" :placeholder="form.isFrame !== '0'?'请输入前端组件路径':'请输入前端跳转路由'"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'" label="显示状态">
+            <el-form-item v-if="form.menuType != '0'" label="接口路径" prop="interface_path">
+              <el-input v-model="form.interface_path" placeholder="请输入后端接口路径"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-if="form.menuType != '0'">
+            <el-form-item label="请求方法" prop="interface_method">
+              <el-select v-model="form.interface_method" placeholder="请选择后端请求方法" clearable size="small">
+                <el-option
+                  v-for="dict in interfaceMethodOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item v-if="form.menuType != '0'" label="权限标识">
+              <el-input v-model="form.perms" placeholder="请权限标识" maxlength="50"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item v-if="form.menuType != '2'" label="显示状态">
               <el-radio-group v-model="form.visible">
                 <el-radio
                   v-for="dict in visibleOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
+                >{{dict.dictLabel}}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'" label="菜单状态">
+            <el-form-item v-if="form.menuType != '2'" label="菜单状态">
               <el-radio-group v-model="form.status">
                 <el-radio
                   v-for="dict in statusOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
+                >{{dict.dictLabel}}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType == 'C'" label="是否缓存">
+            <el-form-item v-if="form.menuType == '1'" label="是否缓存">
               <el-radio-group v-model="form.isCache">
                 <el-radio label="0">缓存</el-radio>
                 <el-radio label="1">不缓存</el-radio>
@@ -218,179 +254,196 @@
   import IconSelect from "@/components/IconSelect";
 
   export default {
-  name: "Menu",
-  components: { Treeselect, IconSelect },
-  data() {
-    return {
-      // 遮罩层
-      loading: true,
-      // 显示搜索条件
-      showSearch: true,
-      // 菜单表格树数据
-      menuList: [],
-      // 菜单树选项
-      menuOptions: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
-      // 显示状态数据字典
-      visibleOptions: [],
-      // 菜单状态数据字典
-      statusOptions: [],
-      // 查询参数
-      queryParams: {
-        menuName: undefined,
-        visible: undefined
-      },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        menuName: [
-          { required: true, message: "菜单名称不能为空", trigger: "blur" }
-        ],
-        orderNum: [
-          { required: true, message: "菜单顺序不能为空", trigger: "blur" }
-        ],
-        path: [
-          { required: true, message: "路由地址不能为空", trigger: "blur" }
-        ]
-      }
-    };
-  },
-  created() {
-    this.getList();
-    this.getDicts("sys_show_hide").then(response => {
-      this.visibleOptions = response.data.results;
-    });
-    this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data;
-    });
-  },
-  methods: {
-    // 选择图标
-    selected(name) {
-      this.form.icon = name;
-    },
-    /** 查询菜单列表 */
-    getList() {
-      this.loading = true;
-      listMenu(this.queryParams).then(response => {
-        this.menuList = this.handleTree(response.data.results, "id");
-        this.loading = false;
-      });
-    },
-    /** 转换菜单数据结构 */
-    normalizer(node) {
-      if (node.children && !node.children.length) {
-        delete node.children;
-      }
+    name: "Menu",
+    components: {Treeselect, IconSelect},
+    data() {
       return {
-        id: node.menuId,
-        label: node.menuName,
-        children: node.children
-      };
-    },
-    /** 查询菜单下拉树结构 */
-    getTreeselect() {
-      listMenu().then(response => {
-        this.menuOptions = [];
-        const menu = { menuId: 0, menuName: '主类目', children: [] };
-        menu.children = this.handleTree(response.data, "menuId");
-        this.menuOptions.push(menu);
-      });
-    },
-    // 菜单状态字典翻译
-    statusFormat(row, column) {
-      console.log(2,row,column)
-      return row.status
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        menuId: undefined,
-        parentId: 0,
-        menuName: undefined,
-        icon: undefined,
-        menuType: "M",
-        orderNum: undefined,
-        isFrame: "1",
-        isCache: "0",
-        visible: "0",
-        status: "0"
-      };
-      this.resetForm("form");
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
-    /** 新增按钮操作 */
-    handleAdd(row) {
-      this.reset();
-      this.getTreeselect();
-      if (row != null && row.menuId) {
-        this.form.parentId = row.menuId;
-      } else {
-        this.form.parentId = 0;
-      }
-      this.open = true;
-      this.title = "添加菜单";
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      this.getTreeselect();
-      getMenu(row.menuId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改菜单";
-      });
-    },
-    /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.menuId != undefined) {
-            updateMenu(this.form).then(response => {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addMenu(this.form).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
+        // 遮罩层
+        loading: true,
+        // 显示搜索条件
+        showSearch: true,
+        // 菜单表格树数据
+        menuList: [],
+        // 菜单树选项
+        menuOptions: [],
+        // 弹出层标题
+        title: "",
+        // 是否显示弹出层
+        open: false,
+        // 显示状态数据字典
+        visibleOptions: [{dictLabel: '显示', dictValue: '1',}, {dictLabel: '隐藏', dictValue: '0',}],
+        // 菜单状态数据字典
+        statusOptions: [{dictLabel: '正常', dictValue: '1',}, {dictLabel: '停用', dictValue: '0',}],
+        // 菜单类型数据字典
+        menuTypeOptions: [{dictLabel: '目录', dictValue: '0',}, {dictLabel: '菜单', dictValue: '1',}, {dictLabel: '按钮', dictValue: '2',}],
+        interfaceMethodOptions: [{dictLabel: 'GET', dictValue: 'GET',}, {dictLabel: 'POST', dictValue: 'POST',},
+          {dictLabel: 'PUT', dictValue: 'PUT',},{dictLabel: 'PATCH', dictValue: 'PATCH',}, {dictLabel: 'DELETE', dictValue: 'DELETE',},
+          {dictLabel: 'HEAD', dictValue: 'HEAD',}, {dictLabel: 'OPTIONS', dictValue: 'OPTIONS',},
+          {dictLabel: 'TRACE', dictValue: 'TRACE',},],
+        // 查询参数
+        queryParams: {
+          name: undefined,
+          visible: undefined
+        },
+        // 表单参数
+        form: {},
+        // 表单校验
+        rules: {
+          name: [
+            {required: true, message: "菜单名称不能为空", trigger: "blur"}
+          ],
+          orderNum: [
+            {required: true, message: "菜单顺序不能为空", trigger: "blur"}
+          ],
+          web_path: [
+            {required: true, message: "路由地址不能为空", trigger: "blur"}
+          ]
         }
-      });
+      };
     },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      this.$confirm('是否确认删除名称为"' + row.menuName + '"的数据项?', "警告", {
+    created() {
+      this.getList();
+      // this.getDicts("sys_show_hide").then(response => {
+      //   this.visibleOptions = response.data.results;
+      // });
+      // this.getDicts("sys_normal_disable").then(response => {
+      //   this.statusOptions = response.data;
+      // });
+    },
+    methods: {
+      // 选择图标
+      selected(name) {
+        this.form.icon = name;
+      },
+      /** 查询菜单列表 */
+      getList() {
+        this.loading = true;
+        listMenu(this.queryParams).then(response => {
+          this.menuList = this.handleTree(response.data.results, "id");
+          this.loading = false;
+        });
+      },
+      /** 转换菜单数据结构 */
+      normalizer(node) {
+        if (node.children && !node.children.length) {
+          delete node.children;
+        }
+        return {
+          id: node.id,
+          label: node.name,
+          children: node.children
+        };
+      },
+      /** 查询菜单下拉树结构 */
+      getTreeselect() {
+        listMenu().then(response => {
+          this.menuOptions = [];
+          const menu = {id: 0, name: '主类目', children: []};
+          menu.children = this.handleTree(response.data.results, "id");
+          this.menuOptions.push(menu);
+        });
+      },
+      // 菜单状态字典翻译
+      statusFormat(row, column) {
+        return this.selectDictLabel(this.statusOptions, row.status);
+      },
+      // 菜单类型 字典翻译
+      menuTypeFormat(row, column) {
+        return this.selectDictLabel(this.menuTypeOptions, row.menuType);
+      },
+      // 请求方式 字典翻译
+      interfaceMethodFormat(row, column) {
+        return this.selectDictLabel(this.interfaceMethodOptions, row.interface_method);
+      },
+      // 取消按钮
+      cancel() {
+        this.open = false;
+        this.reset();
+      },
+      // 表单重置
+      reset() {
+        this.form = {
+          id: undefined,
+          parentId: 0,
+          name: undefined,
+          icon: undefined,
+          web_path: undefined,
+          menuType: "0",
+          orderNum: undefined,
+          component_path: '',
+          interface_path: '',
+          interface_method: 'GET',
+          isFrame: "1",
+          isCache: "1",
+          visible: "1",
+          status: "1"
+        };
+        this.resetForm("form");
+      },
+      /** 搜索按钮操作 */
+      handleQuery() {
+        this.getList();
+      },
+      /** 重置按钮操作 */
+      resetQuery() {
+        this.resetForm("queryForm");
+        this.handleQuery();
+      },
+      /** 新增按钮操作 */
+      handleAdd(row) {
+        this.reset();
+        this.getTreeselect();
+        if (row != null && row.id) {
+          this.form.parentId = row.id;
+        } else {
+          this.form.parentId = 0;
+        }
+        this.open = true;
+        this.title = "添加菜单";
+      },
+      /** 修改按钮操作 */
+      handleUpdate(row) {
+        this.reset();
+        this.getTreeselect();
+        getMenu(row.id).then(response => {
+          this.form = response.data;
+          this.open = true;
+          this.title = "修改菜单";
+        });
+      },
+      /** 提交按钮 */
+      submitForm: function () {
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+            if (this.form.id != undefined) {
+              updateMenu(this.form).then(response => {
+                this.msgSuccess("修改成功");
+                this.open = false;
+                this.getList();
+              });
+            } else {
+              addMenu(this.form).then(response => {
+                this.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              });
+            }
+          }
+        });
+      },
+      /** 删除按钮操作 */
+      handleDelete(row) {
+        this.$confirm('是否确认删除名称为"' + row.name + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
-          return delMenu(row.menuId);
+        }).then(function () {
+          return delMenu(row.id);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
+      }
     }
-  }
-};
+  };
 </script>

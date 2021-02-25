@@ -73,7 +73,7 @@ export function addDateRange(params, dateRange, propName) {
 export function selectDictLabel(datas, value) {
 	var actions = [];
 	Object.keys(datas).some((key) => {
-		if (datas[key].dictValue == ('' + value)) {
+		if (String(datas[key].dictValue) === ('' + value)) {
 			actions.push(datas[key].dictLabel);
 			return true;
 		}
@@ -135,6 +135,11 @@ export function handleTree(data, id, parentId, children, rootId) {
 	id = id || 'id'
 	parentId = parentId || 'parentId'
 	children = children || 'children'
+  // 排序
+  function NumCompare(a,b){
+    //数字比较函数
+    return a.orderNum - b.orderNum;
+  }
 	rootId = rootId || Math.min.apply(Math, data.map(item => { return item[parentId] })) || 0
 	//对源数据深度克隆
 	const cloneData = JSON.parse(JSON.stringify(data))
@@ -144,9 +149,11 @@ export function handleTree(data, id, parentId, children, rootId) {
 			//返回每一项的子级数组
 			return father[id] === child[parentId]
 		});
+    branchArr.sort(NumCompare)
 		branchArr.length > 0 ? father.children = branchArr : '';
 		//返回第一层
-		return father[parentId] === rootId;
+		return father[parentId] === rootId || !father[parentId];
 	});
+  treeData.sort(NumCompare)
 	return treeData != '' ? treeData : data;
 }
