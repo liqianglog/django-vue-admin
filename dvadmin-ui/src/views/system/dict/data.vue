@@ -6,14 +6,14 @@
           <el-option
             v-for="item in typeOptions"
             :key="item.dictId"
-            :label="item.dictName"
+            :label="item.name"
             :value="item.dictType"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="字典标签" prop="dictLabel">
+      <el-form-item label="字典标签" prop="name">
         <el-input
-          v-model="queryParams.dictLabel"
+          v-model="queryParams.name"
           placeholder="请输入字典标签"
           clearable
           size="small"
@@ -84,10 +84,18 @@
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典编码" align="center" prop="dictCode" />
-      <el-table-column label="字典标签" align="center" prop="dictLabel" />
+      <el-table-column label="字典编码" align="center" prop="id" />
+      <el-table-column label="字典标签" align="center" prop="name" />
       <el-table-column label="字典键值" align="center" prop="dictValue" />
-      <el-table-column label="字典排序" align="center" prop="dictSort" />
+      <el-table-column label="字典排序" align="center" prop="sort" />
+      <el-table-column label="是否默认" align="center" prop="is_default" >
+        <template slot-scope="scope">
+          <el-switch
+            disabled
+            :value="scope.row.is_default">
+          </el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
@@ -129,14 +137,21 @@
         <el-form-item label="字典类型">
           <el-input v-model="form.dictType" :disabled="true" />
         </el-form-item>
-        <el-form-item label="数据标签" prop="dictLabel">
-          <el-input v-model="form.dictLabel" placeholder="请输入数据标签" />
+        <el-form-item label="数据标签" prop="name">
+          <el-input v-model="form.name" placeholder="请输入数据标签" />
         </el-form-item>
         <el-form-item label="数据键值" prop="dictValue">
           <el-input v-model="form.dictValue" placeholder="请输入数据键值" />
         </el-form-item>
-        <el-form-item label="显示排序" prop="dictSort">
-          <el-input-number v-model="form.dictSort" controls-position="right" :min="0" />
+        <el-form-item label="显示排序" prop="sort">
+          <el-input-number v-model="form.sort" controls-position="right" :min="0" />
+        </el-form-item>
+        <el-form-item label="是否默认" prop="is_default">
+          <el-switch
+            v-model="form.is_default"
+            active-text="是"
+            inactive-text="否">
+          </el-switch>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -188,13 +203,13 @@ export default {
       // 是否显示弹出层
       open: false,
       // 状态数据字典
-      statusOptions: [],
+      statusOptions: [{dictLabel: '正常', dictValue: '1',}, {dictLabel: '停用', dictValue: '0',}],
       // 类型数据字典
       typeOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 1000,
         dictName: undefined,
         dictType: undefined,
         status: undefined
@@ -203,13 +218,13 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        dictLabel: [
+        name: [
           { required: true, message: "数据标签不能为空", trigger: "blur" }
         ],
         dictValue: [
           { required: true, message: "数据键值不能为空", trigger: "blur" }
         ],
-        dictSort: [
+        sort: [
           { required: true, message: "数据顺序不能为空", trigger: "blur" }
         ]
       }
@@ -217,11 +232,12 @@ export default {
   },
   created() {
     const dictId = this.$route.params && this.$route.params.dictId;
+    console.log(11111,this.$route.params)
     this.getType(dictId);
     this.getTypeList();
-    this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data;
-    });
+    // this.getDicts("sys_normal_disable").then(response => {
+    //   this.statusOptions = response.data;
+    // });
   },
   methods: {
     /** 查询字典类型详细 */
@@ -235,15 +251,16 @@ export default {
     /** 查询字典类型列表 */
     getTypeList() {
       listType().then(response => {
-        this.typeOptions = response.rows;
+        this.typeOptions = response.data.results;
       });
     },
     /** 查询字典数据列表 */
     getList() {
       this.loading = true;
       listData(this.queryParams).then(response => {
-        this.dataList = response.rows;
-        this.total = response.total;
+        console.log(1212,response.data.count)
+        this.dataList = response.data.results;
+        this.total = response.data.count;
         this.loading = false;
       });
     },
@@ -259,10 +276,10 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        dictCode: undefined,
-        dictLabel: undefined,
+        id: undefined,
+        name: undefined,
         dictValue: undefined,
-        dictSort: 0,
+        sort: 0,
         status: "0",
         remark: undefined
       };
@@ -288,15 +305,15 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.dictCode)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length!=1
       this.multiple = !selection.length
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const dictCode = row.dictCode || this.ids
-      getData(dictCode).then(response => {
+      const id = row.id || this.ids
+      getData(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改字典数据";
@@ -306,13 +323,15 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.dictCode != undefined) {
+          if (this.form.id != undefined) {
             updateData(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
+            const dictId = this.$route.params && this.$route.params.dictId;
+            this.form.dict_data = dictId
             addData(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
@@ -324,7 +343,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const dictCodes = row.dictCode || this.ids;
+      const dictCodes = row.id || this.ids;
       this.$confirm('是否确认删除字典编码为"' + dictCodes + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
