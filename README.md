@@ -1,3 +1,17 @@
+# Django-Vue-Admin
+
+使用django+vue进行极速开发的全栈管理系统。
+
+[![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/newpanjing/simpleui/blob/master/LICENSE) [![img](https://img.shields.io/pypi/v/django-simpleui.svg)](https://pypi.org/project/django-simpleui/#history) [![img](https://img.shields.io/badge/python-%3E=3.6.x-green.svg)](https://python.org/)  ![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-2.2-blue)[![img](https://img.shields.io/pypi/dm/django-simpleui.svg)](https://pypi.org/project/django-simpleui/)
+
+
+
+## QQ群
+
+- QQ群号：812482043
+
+  <img src='http://pic.pgroom.cn/72851614273011_.pic.jpg' width='200'>
+
 ## 源码地址
 
 github地址：[https://gitee.com/liqianglog/django-vue-admin](https://gitee.com/liqianglog/django-vue-admin)
