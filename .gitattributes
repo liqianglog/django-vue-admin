@@ -1,0 +1,4 @@
+*.css linguist-language=[Python,Vue]
+*.less linguist-language=[Python,Vue]
+*.js linguist-language=[Python,Vue]
+*.html linguist-language=[Python,Vue]
