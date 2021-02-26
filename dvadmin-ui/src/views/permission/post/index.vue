@@ -112,7 +112,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -155,7 +155,7 @@
 </template>
 
 <script>
-import { listPost, getPost, delPost, addPost, updatePost, exportPost } from "@/api/system/post";
+import { listPost, getPost, delPost, addPost, updatePost, exportPost } from "@/api/permission/post";
 
 export default {
   name: "Post",

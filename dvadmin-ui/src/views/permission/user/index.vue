@@ -343,9 +343,9 @@
 </template>
 
 <script>
-import { listUser, getUser, delUser, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/system/user";
+import { listUser, getUser, delUser, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/permission/user";
 import { getToken } from "@/utils/auth";
-import { treeselect } from "@/api/system/dept";
+import { treeselect } from "@/api/permission/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -407,7 +407,7 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/system/user/importData"
+        url: process.env.VUE_APP_BASE_API + "/permission/user/importData"
       },
       // 查询参数
       queryParams: {

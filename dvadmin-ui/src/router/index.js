@@ -74,7 +74,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'profile',
-        component: (resolve) => require(['@/views/system/user/profile/index'], resolve),
+        component: (resolve) => require(['@/views/permission/user/profile/index'], resolve),
         name: 'Profile',
         meta: { title: '个人中心', icon: 'user' }
       }
@@ -86,7 +86,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'users',
-        component: (resolve) => require(['@/views/system/user/users/index'], resolve),
+        component: (resolve) => require(['@/views/permission/user/users/index'], resolve),
         name: 'Profile',
         meta: { title: '个人测试', icon: 'user' }
       }
