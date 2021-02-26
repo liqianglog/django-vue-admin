@@ -1,6 +1,6 @@
 # Django-Vue-Admin
 
-[![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitee.com/liqianglog/django-vue-admin/blob/master/LICENSE) [![img](https://img.shields.io/pypi/v/django-simpleui.svg)](https://pypi.org/project/django-simpleui/#history) [![img](https://img.shields.io/badge/python-%3E=3.6.x-green.svg)](https://python.org/)  ![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-2.2-blue)[![img](https://img.shields.io/pypi/dm/django-simpleui.svg)](https://pypi.org/project/django-simpleui/)
+[![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitee.com/liqianglog/django-vue-admin/blob/master/LICENSE) [![img](https://img.shields.io/pypi/v/django-simpleui.svg)](https://pypi.org/project/django-simpleui/#history) [![img](https://img.shields.io/badge/python-%3E=3.6.x-green.svg)](https://python.org/)  ![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-2.2-blue)[![img](https://img.shields.io/badge/node-%3E%3D%2012.0.0-brightgreen)](https://nodejs.org/zh-cn/download/releases/)[![img](https://img.shields.io/pypi/dm/django-simpleui.svg)](https://pypi.org/project/django-simpleui/)
 
 
 

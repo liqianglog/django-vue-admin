@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">若依后台管理系统</h3>
+      <h3 class="title">{{ title }}</h3>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
@@ -62,6 +62,7 @@ export default {
   name: "Login",
   data() {
     return {
+      title: process.env.VUE_APP_TITLE || 'dvAdmin管理系统',
       codeUrl: "",
       cookiePassword: "",
       loginForm: {
@@ -99,7 +100,7 @@ export default {
   methods: {
     getCode() {
       getCodeImg().then(res => {
-        this.codeUrl = 'http://127.0.0.1:8000'+res.data.image_url;
+        this.codeUrl = process.env.VUE_APP_BASE_API + res.data.image_url;
         this.loginForm.uuid = res.data.key;
       });
     },
