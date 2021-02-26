@@ -16,7 +16,7 @@ import os
 
 from mongoengine import connect
 
-from environment import *
+from conf.env import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -278,6 +278,8 @@ AUTHENTICATION_BACKENDS = (
     'utils.backends.SessionAuthentication',
 )
 AUTH_USER_MODEL = 'permission.UserProfile'
+# username_field
+USERNAME_FIELD = 'username'
 
 # ================================================= #
 # ************** 登录验证码配置  ************** #

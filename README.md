@@ -1,10 +1,19 @@
 # Django-Vue-Admin
 
-使用django+vue进行极速开发的全栈管理系统。
-
 [![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitee.com/liqianglog/django-vue-admin/blob/master/LICENSE) [![img](https://img.shields.io/pypi/v/django-simpleui.svg)](https://pypi.org/project/django-simpleui/#history) [![img](https://img.shields.io/badge/python-%3E=3.6.x-green.svg)](https://python.org/)  ![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-2.2-blue)[![img](https://img.shields.io/pypi/dm/django-simpleui.svg)](https://pypi.org/project/django-simpleui/)
 
 
+
+## 平台简介
+
+Django-Vue-Admin 是一套全部开源的快速开发平台，毫无保留给个人及企业免费使用。
+
+* 前端采用ruoyi-ui 、Vue、Element UI。
+* 后端采用Python语言Django框架。
+* 权限认证使用Jwt，支持多终端认证系统。
+* 支持加载动态权限菜单，多方式轻松权限控制。
+* ~~高效率开发，使用代码生成器可以一键生成前后端代码。~~
+* 特别鸣谢：[RuoYi](https://gitee.com/y_project/RuoYi-Vue) ，[Vue-Element-Admin](https://github.com/PanJiaChen/vue-element-admin)，[eladmin-web](https://gitee.com/elunez/eladmin-web?_from=gitee_search)，[Gin-Vue-Admin](https://www.gin-vue-admin.com/)。
 
 ## QQ群
 
@@ -19,15 +28,6 @@
 github地址：[https://gitee.com/liqianglog/django-vue-admin](https://gitee.com/liqianglog/django-vue-admin)
 
 gitee地址：[https://github.com/liqianglog/django-vue-admin](https://github.com/liqianglog/django-vue-admin)
-
-## 平台简介
-
-* 前端采用ruoyi-ui 、Vue、Element UI。
-* 后端采用Python语言Django框架。
-* 权限认证使用Jwt，支持多终端认证系统。
-* 支持加载动态权限菜单，多方式轻松权限控制。
-* ~~高效率开发，使用代码生成器可以一键生成前后端代码。~~
-* 特别鸣谢：[RuoYi](https://gitee.com/y_project/RuoYi-Vue) ，[Vue-Element-Admin](https://github.com/PanJiaChen/vue-element-admin)，[eladmin-web](https://gitee.com/elunez/eladmin-web?_from=gitee_search)，[Gin-Vue-Admin](https://www.gin-vue-admin.com/)。
 
 ## 内置功能
 
@@ -73,6 +73,7 @@ npm install --registry=https://registry.npm.taobao.org
 npm run dev
 
 # 浏览器访问 http://localhost:8080
+# .env.development 文件中可配置启动端口等参数
 ```
 
 ### 	发布
@@ -86,6 +87,19 @@ npm run build:prod
 ```
 
 ## 后端
+
+~~~bash
+1. 进入项目目录 cd dvadmin-backend
+2. 在项目根目录中，复制 env.example.py 文件为一份新的，并重命名为 env.py
+3. 在 env.py 中配置数据库信息
+4. 执行迁移命令：
+	python3 manage.py makemigrations
+	python3 manage.py migrate
+5. 创建 admin 用户
+	python3 manage.py createsuperuser
+6. 启动项目
+	python3 manage.py runserver 0.0.0.0:8000
+~~~
 
 
 

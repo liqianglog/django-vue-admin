@@ -1,10 +1,4 @@
-"""
-本地开发配置
-# 配置使用说明
-- 首先在backend下面新建config.py
-  eg:
-      environment_config = 'env'
-"""
+
 # ================================================= #
 # ************** mysql数据库 配置  ************** #
 # ================================================= #
@@ -17,7 +11,7 @@ DATABASE_PORT = 3306
 # 数据库用户名
 DATABASE_USER = "root"
 # 数据库密码
-DATABASE_PASSWORD = "Aa428912."
+DATABASE_PASSWORD = "123456"
 # 数据库名
 DATABASE_NAME = "django-vue-admin"
 
@@ -34,7 +28,7 @@ MONGO_PORT = 27017
 REDIS_DB = 1
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
-REDIS_PASSWORD = 'q1w2e3r4T%Y^U&I*2020'
+REDIS_PASSWORD = '123456'
 
 # ================================================= #
 # ************** 默认配置  ************** #
@@ -45,7 +39,5 @@ ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 # 允许ajax请求携带cookie
 CORS_ALLOW_CREDENTIALS = False
-# username_field
-USERNAME_FIELD = 'username'
 # 验证码状态
 CAPTCHA_STATE = True

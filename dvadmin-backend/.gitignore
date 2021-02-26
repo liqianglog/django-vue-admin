@@ -89,7 +89,7 @@ ENV/
 *.db
 .DS_Store
 __pycache__
-migrations/
+!migrations/__init__.py
 *.pyc
-config.py
+!conf/env.example.py
 db.sqlite3
