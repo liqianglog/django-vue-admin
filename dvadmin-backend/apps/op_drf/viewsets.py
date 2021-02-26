@@ -232,7 +232,7 @@ class CustomMongoModelViewSet(MongoModelViewSet, mixins.TableSerializerMixin):
         filtering_kwargs = {}
         for param in self.request.query_params:
             param = param.strip()
-            if param in ['page_size', 'page', 'search', 'ordering', 'as']: continue
+            if param in ['pageSize', 'pageNum', 'search', 'ordering', 'as']: continue
             if self.filter_fields == '__all__' or param in self.filter_fields:
                 # if param in self.filter_fields:
                 filtering_kwargs[param] = self.request.query_params[param]

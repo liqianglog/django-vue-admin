@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from typing import Any
 
 from rest_framework.pagination import PageNumberPagination, _positive_int
 from rest_framework.utils.urls import replace_query_param
@@ -21,6 +22,10 @@ class Pagination(PageNumberPagination):
     page_size = 10
 
     def paginate_queryset(self, queryset, request, view=None):
+        page_num = request.query_params.get(self.page_query_param)
+        # 判断，如果 pageNum 为all 则取消分页返回所有
+        if page_num == 'all':
+            return None
         return super().paginate_queryset(queryset, request, view)
 
     def get_next_link(self):

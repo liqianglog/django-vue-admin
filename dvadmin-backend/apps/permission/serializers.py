@@ -1,8 +1,12 @@
 from rest_framework import serializers
 
 from apps.op_drf.serializers import CustomModelSerializer
-from apps.permission.models import UserProfile, Menu, Role
+from apps.permission.models import Menu, Dept, Post, Role, UserProfile
 
+
+# ================================================= #
+# ************** 用户管理 序列化器  ************** #
+# ================================================= #
 
 class UserProfileSerializer(CustomModelSerializer):
     """
@@ -22,19 +26,24 @@ class UserProfileSerializer(CustomModelSerializer):
         exclude = ('password', 'secret', 'user_permissions', 'groups', 'is_superuser', 'date_joined')
 
 
+# ================================================= #
+# ************** 菜单管理 序列化器  ************** #
+# ================================================= #
+
 class MenuSerializer(CustomModelSerializer):
     """
     简单菜单序列化器
     """
     parentId = serializers.IntegerField(source="parentId.id", default=0)
+
     class Meta:
         model = Menu
-        fields = '__all__'
+        exclude = ('description', 'creator', 'modifier')
 
 
-class CreateUpdateMenuSerializer(CustomModelSerializer):
+class MenuCreateUpdateSerializer(CustomModelSerializer):
     """
-    创建角色/更新时的列化器
+    菜单管理 创建/更新时的列化器
     """
 
     def validate(self, attrs: dict):
@@ -50,15 +59,89 @@ class CreateUpdateMenuSerializer(CustomModelSerializer):
 
     class Meta:
         model = Menu
-        fields = "__all__"
-        read_only_fields = ('mtime', 'ctime', 'creator', 'modifier')
+        exclude = ('description', 'creator', 'modifier')
+        read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
 
 
-class RoleSerializer(serializers.ModelSerializer):
+# ================================================= #
+# ************** 部门管理 序列化器  ************** #
+# ================================================= #
+
+class DeptSerializer(CustomModelSerializer):
     """
-    简单角色序列化器
+    部门管理 简单序列化器
+    """
+    parentId = serializers.IntegerField(source="parentId.id", default=0)
+    class Meta:
+        model = Dept
+        exclude = ('description', 'creator', 'modifier')
+
+
+class DeptCreateUpdateSerializer(CustomModelSerializer):
+    """
+    部门管理 创建/更新时的列化器
+    """
+
+    def validate(self, attrs: dict):
+        return super().validate(attrs)
+
+    class Meta:
+        model = Dept
+        exclude = ('description', 'creator', 'modifier')
+        read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
+
+
+# ================================================= #
+# ************** 岗位管理 序列化器  ************** #
+# ================================================= #
+
+class PostSerializer(CustomModelSerializer):
+    """
+    岗位管理 简单序列化器
+    """
+
+    class Meta:
+        model = Post
+        exclude = ('description', 'creator', 'modifier')
+
+
+class PostCreateUpdateSerializer(CustomModelSerializer):
+    """
+    岗位管理 创建/更新时的列化器
+    """
+
+    def validate(self, attrs: dict):
+        return super().validate(attrs)
+
+    class Meta:
+        model = Post
+        exclude = ('description', 'creator', 'modifier')
+        read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
+
+
+# ================================================= #
+# ************** 角色管理 序列化器  ************** #
+# ================================================= #
+
+class RoleSerializer(CustomModelSerializer):
+    """
+    角色管理 简单序列化器
     """
 
     class Meta:
         model = Role
-        fields = '__all__'
+        exclude = ('description', 'creator', 'modifier')
+
+
+class RoleCreateUpdateSerializer(CustomModelSerializer):
+    """
+    角色管理 创建/更新时的列化器
+    """
+
+    def validate(self, attrs: dict):
+        return super().validate(attrs)
+
+    class Meta:
+        model = Role
+        exclude = ('description', 'creator', 'modifier')
+        read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')

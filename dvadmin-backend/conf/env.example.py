@@ -3,7 +3,7 @@
 # ************** mysql数据库 配置  ************** #
 # ================================================= #
 # 数据库类型 MYSQL/SQLITE3
-DATABASE_TYPE = "SQLITE3"
+DATABASE_TYPE = "MYSQL"
 # 数据库地址
 DATABASE_HOST = "127.0.0.1"
 # 数据库端口

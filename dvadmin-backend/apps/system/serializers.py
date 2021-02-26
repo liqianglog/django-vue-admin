@@ -4,6 +4,10 @@ from apps.op_drf.serializers import CustomModelSerializer
 from apps.system.models import DictData, DictDetails
 
 
+# ================================================= #
+# ************** 字典管理 序列化器  ************** #
+# ================================================= #
+
 class DictDataSerializer(serializers.ModelSerializer):
     """
     字典管理 简单序列化器
@@ -21,9 +25,13 @@ class DictDataCreateUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = DictData
-        fields = "__all__"
+        exclude = ('description', 'creator', 'modifier')
         read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
 
+
+# ================================================= #
+# ************** 字典详情 序列化器  ************** #
+# ================================================= #
 
 class DictDetailsSerializer(serializers.ModelSerializer):
     """
@@ -33,7 +41,16 @@ class DictDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DictDetails
-        exclude = ('creator', 'modifier')
+        exclude = ('description', 'creator', 'modifier')
+
+class DictDetailsListSerializer(serializers.ModelSerializer):
+    """
+    字典详情List 简单序列化器
+    """
+
+    class Meta:
+        model = DictDetails
+        fields = ('dictLabel', 'dictValue', 'is_default')
 
 
 class DictDetailsCreateUpdateSerializer(CustomModelSerializer):
@@ -43,5 +60,5 @@ class DictDetailsCreateUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = DictDetails
-        fields = "__all__"
+        exclude = ('description', 'creator', 'modifier')
         read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
