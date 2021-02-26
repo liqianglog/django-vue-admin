@@ -92,7 +92,9 @@ npm run build:prod
 1. 进入项目目录 cd dvadmin-backend
 2. 在项目根目录中，复制 env.example.py 文件为一份新的，并重命名为 env.py
 3. 在 env.py 中配置数据库信息
-4. 执行迁移命令：
+4. 安装依赖环境
+	pip3 install -r requirements.txt
+5. 执行迁移命令：
 	python3 manage.py makemigrations
 	python3 manage.py migrate
 5. 创建 admin 用户
@@ -100,8 +102,6 @@ npm run build:prod
 6. 启动项目
 	python3 manage.py runserver 0.0.0.0:8000
 ~~~
-
-
 
 
 
