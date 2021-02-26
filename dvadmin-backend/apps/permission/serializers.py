@@ -8,6 +8,7 @@ from apps.permission.models import Menu, Dept, Post, Role, UserProfile
 # ************** 用户管理 序列化器  ************** #
 # ================================================= #
 
+
 class UserProfileSerializer(CustomModelSerializer):
     """
     简单用户序列化器
@@ -63,6 +64,18 @@ class MenuCreateUpdateSerializer(CustomModelSerializer):
         read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
 
 
+class MenuTreeSerializer(serializers.ModelSerializer):
+    """
+    菜单树形架构序列化器:递归序列化所有深度的子菜单
+    """
+    label = serializers.CharField(source='name', default='')
+    parentId = serializers.IntegerField(source="parentId.id", default=0)
+
+    class Meta:
+        model = Menu
+        fields = ('id', 'label', 'parentId')
+
+
 # ================================================= #
 # ************** 部门管理 序列化器  ************** #
 # ================================================= #
@@ -72,6 +85,7 @@ class DeptSerializer(CustomModelSerializer):
     部门管理 简单序列化器
     """
     parentId = serializers.IntegerField(source="parentId.id", default=0)
+
     class Meta:
         model = Dept
         exclude = ('description', 'creator', 'modifier')
@@ -89,6 +103,18 @@ class DeptCreateUpdateSerializer(CustomModelSerializer):
         model = Dept
         exclude = ('description', 'creator', 'modifier')
         read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
+
+
+class DeptTreeSerializer(serializers.ModelSerializer):
+    """
+    部门树形架构序列化器:递归序列化所有深度的子部门
+    """
+    label = serializers.CharField(source='deptName', default='')
+    parentId = serializers.IntegerField(source="parentId.id", default=0)
+
+    class Meta:
+        model = Dept
+        fields = ('id', 'label', 'parentId')
 
 
 # ================================================= #
@@ -137,9 +163,17 @@ class RoleCreateUpdateSerializer(CustomModelSerializer):
     """
     角色管理 创建/更新时的列化器
     """
+    menu = MenuSerializer(many=True, read_only=True)
+    dept = DeptSerializer(many=True, read_only=True)
 
     def validate(self, attrs: dict):
         return super().validate(attrs)
+
+    def save(self, **kwargs):
+        data = super().save(**kwargs)
+        data.dept.set(self.initial_data.get('dept'))
+        data.menu.set(self.initial_data.get('menu'))
+        return data
 
     class Meta:
         model = Role

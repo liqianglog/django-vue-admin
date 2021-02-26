@@ -271,9 +271,9 @@
         // 是否显示弹出层
         open: false,
         // 显示状态数据字典
-        visibleOptions: [{dictLabel: '显示', dictValue: '1',}, {dictLabel: '隐藏', dictValue: '0',}],
+        visibleOptions: [],
         // 菜单状态数据字典
-        statusOptions: [{dictLabel: '正常', dictValue: '1',}, {dictLabel: '停用', dictValue: '0',}],
+        statusOptions: [],
         // 菜单类型数据字典
         menuTypeOptions: [{dictLabel: '目录', dictValue: '0',}, {dictLabel: '菜单', dictValue: '1',}, {dictLabel: '按钮', dictValue: '2',}],
         interfaceMethodOptions: [{dictLabel: 'GET', dictValue: 'GET',}, {dictLabel: 'POST', dictValue: 'POST',},
@@ -283,7 +283,8 @@
         // 查询参数
         queryParams: {
           name: undefined,
-          visible: undefined
+          visible: undefined,
+          pageNum: 'all'
         },
         // 表单参数
         form: {},
@@ -303,12 +304,12 @@
     },
     created() {
       this.getList();
-      // this.getDicts("sys_show_hide").then(response => {
-      //   this.visibleOptions = response.data.results;
-      // });
-      // this.getDicts("sys_normal_disable").then(response => {
-      //   this.statusOptions = response.data;
-      // });
+      this.getDicts("sys_show_hide").then(response => {
+        this.visibleOptions = response.data.results;
+      });
+      this.getDicts("sys_normal_disable").then(response => {
+        this.statusOptions = response.data;
+      });
     },
     methods: {
       // 选择图标
@@ -319,7 +320,7 @@
       getList() {
         this.loading = true;
         listMenu(this.queryParams).then(response => {
-          this.menuList = this.handleTree(response.data.results, "id");
+          this.menuList = this.handleTree(response.data, "id");
           this.loading = false;
         });
       },
@@ -339,7 +340,7 @@
         listMenu().then(response => {
           this.menuOptions = [];
           const menu = {id: 0, name: '主类目', children: []};
-          menu.children = this.handleTree(response.data.results, "id");
+          menu.children = this.handleTree(response.data, "id");
           this.menuOptions.push(menu);
         });
       },

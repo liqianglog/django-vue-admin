@@ -9,7 +9,7 @@ from apps.permission.filters import MenuFilter, DeptFilter, PostFilter, RoleFilt
 from apps.permission.models import Role, Menu, Dept, Post
 from apps.permission.serializers import UserProfileSerializer, MenuSerializer, RoleSerializer, \
     MenuCreateUpdateSerializer, DeptSerializer, DeptCreateUpdateSerializer, PostSerializer, PostCreateUpdateSerializer, \
-    RoleCreateUpdateSerializer
+    RoleCreateUpdateSerializer, DeptTreeSerializer, MenuTreeSerializer
 from utils.response import SuccessResponse
 
 
@@ -57,6 +57,38 @@ class MenuModelViewSet(CustomModelViewSet):
     search_fields = ('name',)
     ordering = 'create_datetime'  # 默认排序
 
+    def tree_select_list(self, request: Request, *args, **kwargs):
+        """
+        递归获取部门树
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+        if hasattr(self, 'handle_logging'):
+            self.handle_logging(request, *args, **kwargs)
+        serializer = MenuTreeSerializer(queryset, many=True)
+        return SuccessResponse(serializer.data)
+
+    def role_menu_tree_select(self, request: Request, *args, **kwargs):
+        """
+        根据角色ID查询菜单下拉树结构
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        menu_queryset = Menu.objects.filter(role__id=kwargs.get('pk')).values_list('id', flat=True)
+        queryset = self.filter_queryset(self.get_queryset())
+        if hasattr(self, 'handle_logging'):
+            self.handle_logging(request, *args, **kwargs)
+        serializer = MenuTreeSerializer(queryset, many=True)
+        return SuccessResponse({
+            'menus': serializer.data,
+            'checkedKeys': menu_queryset
+        })
+
 
 class DeptModelViewSet(CustomModelViewSet):
     """
@@ -74,6 +106,13 @@ class DeptModelViewSet(CustomModelViewSet):
     ordering = 'create_datetime'  # 默认排序
 
     def exclude_list(self, request: Request, *args, **kwargs):
+        """
+        过滤剔除同级部门
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         dept_queryset = Dept.objects.filter(id=kwargs.get('pk')).first()
         parentId = dept_queryset.parentId if dept_queryset else ''
         queryset = self.queryset.exclude(parentId=parentId).order_by('orderNum')
@@ -81,6 +120,38 @@ class DeptModelViewSet(CustomModelViewSet):
             self.handle_logging(request, *args, **kwargs)
         serializer = self.get_serializer(queryset, many=True)
         return SuccessResponse(serializer.data)
+
+    def tree_select_list(self, request: Request, *args, **kwargs):
+        """
+        递归获取部门树
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+        if hasattr(self, 'handle_logging'):
+            self.handle_logging(request, *args, **kwargs)
+        serializer = DeptTreeSerializer(queryset, many=True)
+        return SuccessResponse(serializer.data)
+
+    def role_dept_tree_select(self, request: Request, *args, **kwargs):
+        """
+        根据角色ID查询部门树结构
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        dept_queryset = Dept.objects.filter(role__id=kwargs.get('pk')).values_list('id', flat=True)
+        queryset = self.filter_queryset(self.get_queryset())
+        if hasattr(self, 'handle_logging'):
+            self.handle_logging(request, *args, **kwargs)
+        serializer = DeptTreeSerializer(queryset, many=True)
+        return SuccessResponse({
+            'depts': serializer.data,
+            'checkedKeys': dept_queryset
+        })
 
 
 class PostModelViewSet(CustomModelViewSet):
@@ -96,7 +167,7 @@ class PostModelViewSet(CustomModelViewSet):
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)
     search_fields = ('name',)
-    ordering = ['postSort','create_datetime']  # 默认排序
+    ordering = ['postSort', 'create_datetime']  # 默认排序
 
 
 class RoleModelViewSet(CustomModelViewSet):

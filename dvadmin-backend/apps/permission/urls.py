@@ -11,7 +11,13 @@ router.register(r'post', PostModelViewSet)
 router.register(r'role', RoleModelViewSet)
 urlpatterns = [
 
-    re_path('dept/exclude/(?P<pk>.*)/', DeptModelViewSet.as_view({'get': 'exclude_list'}), name='api_token_auth'),
+    re_path('dept/exclude/(?P<pk>.*)/', DeptModelViewSet.as_view({'get': 'exclude_list'})),
+    re_path('dept/treeselect/', DeptModelViewSet.as_view({'get': 'tree_select_list'})),
+    re_path('menus/treeselect/', MenuModelViewSet.as_view({'get': 'tree_select_list'})),
+    # 根据角色ID查询菜单下拉树结构
+    re_path('menus/roleMenuTreeselect/(?P<pk>.*)/', MenuModelViewSet.as_view({'get': 'role_menu_tree_select'})),
+    # 根据角色ID查询部门树结构
+    re_path('dept/roleDeptTreeselect/(?P<pk>.*)/', DeptModelViewSet.as_view({'get': 'role_dept_tree_select'})),
 
 ]
 urlpatterns += router.urls

@@ -140,6 +140,7 @@ export function handleTree(data, id, parentId, children, rootId) {
     //数字比较函数
     return a.orderNum - b.orderNum;
   }
+  console.log(1,data)
 	rootId = rootId || Math.min.apply(Math, data.map(item => { return item[parentId] })) || 0
 	//对源数据深度克隆
 	const cloneData = JSON.parse(JSON.stringify(data))
