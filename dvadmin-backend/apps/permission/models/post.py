@@ -4,10 +4,10 @@ from apps.op_drf.models import CoreModel
 
 
 class Post(CoreModel):
-    name = CharField(null=False, max_length=64, verbose_name="岗位名称")
-    web_path = CharField(max_length=32, verbose_name="岗位编码")
-    orderNum = IntegerField(verbose_name="岗位顺序")
-    status = BooleanField(default=False, verbose_name="岗位状态")
+    postName = CharField(null=False, max_length=64, verbose_name="岗位名称")
+    postCode = CharField(max_length=32, verbose_name="岗位编码")
+    postSort = IntegerField(verbose_name="岗位顺序")
+    status = CharField(max_length=8, verbose_name="岗位状态")
     remark = TextField(verbose_name="备注", help_text="备注", null=True)
 
     class Meta:
@@ -15,4 +15,4 @@ class Post(CoreModel):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.postName}"

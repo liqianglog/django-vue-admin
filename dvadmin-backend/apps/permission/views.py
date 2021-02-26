@@ -96,7 +96,7 @@ class PostModelViewSet(CustomModelViewSet):
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)
     search_fields = ('name',)
-    ordering = 'create_datetime'  # 默认排序
+    ordering = ['postSort','create_datetime']  # 默认排序
 
 
 class RoleModelViewSet(CustomModelViewSet):
