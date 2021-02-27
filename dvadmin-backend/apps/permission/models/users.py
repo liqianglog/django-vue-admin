@@ -21,7 +21,7 @@ class UserProfile(AbstractUser):
     secret = CharField(max_length=255, default=uuid4, verbose_name='加密秘钥')
     email = CharField(max_length=255, verbose_name="邮箱", null=True)
     mobile = CharField(max_length=255, verbose_name="电话", null=True)
-    avatar = TextField(verbose_name="头像")
+    avatar = TextField(verbose_name="头像",null=True)
     name = CharField(max_length=40, verbose_name="姓名")
     gender = IntegerField(default=2, choices=GENDER_CHOICES, verbose_name="性别")
     remark = TextField(verbose_name="备注", null=True)

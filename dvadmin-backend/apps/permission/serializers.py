@@ -1,30 +1,8 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from apps.op_drf.serializers import CustomModelSerializer
 from apps.permission.models import Menu, Dept, Post, Role, UserProfile
-
-
-# ================================================= #
-# ************** 用户管理 序列化器  ************** #
-# ================================================= #
-
-
-class UserProfileSerializer(CustomModelSerializer):
-    """
-    简单用户序列化器
-    """
-    admin = serializers.SerializerMethodField(read_only=True)
-
-    def get_admin(self, obj: UserProfile):
-        role_list = obj.role.all().values_list('admin', flat=True)
-        if True in list(set(role_list)):
-            return True
-        return False
-
-    class Meta:
-        model = UserProfile
-        dept = 2
-        exclude = ('password', 'secret', 'user_permissions', 'groups', 'is_superuser', 'date_joined')
 
 
 # ================================================= #
@@ -131,6 +109,16 @@ class PostSerializer(CustomModelSerializer):
         exclude = ('description', 'creator', 'modifier')
 
 
+class PostSimpleSerializer(CustomModelSerializer):
+    """
+    岗位管理 极简单序列化器
+    """
+
+    class Meta:
+        model = Post
+        fields = ('id', 'postName', 'postCode', 'status')
+
+
 class PostCreateUpdateSerializer(CustomModelSerializer):
     """
     岗位管理 创建/更新时的列化器
@@ -159,6 +147,16 @@ class RoleSerializer(CustomModelSerializer):
         exclude = ('description', 'creator', 'modifier')
 
 
+class RoleSimpleSerializer(CustomModelSerializer):
+    """
+    角色管理 极简单序列化器
+    """
+
+    class Meta:
+        model = Role
+        fields = ('id', 'roleName', 'roleKey', 'status')
+
+
 class RoleCreateUpdateSerializer(CustomModelSerializer):
     """
     角色管理 创建/更新时的列化器
@@ -179,3 +177,66 @@ class RoleCreateUpdateSerializer(CustomModelSerializer):
         model = Role
         exclude = ('description', 'creator', 'modifier')
         read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
+
+
+# ================================================= #
+# ************** 用户管理 序列化器  ************** #
+# ================================================= #
+
+
+class UserProfileSerializer(CustomModelSerializer):
+    """
+    简单用户序列化器
+    """
+    admin = serializers.SerializerMethodField(read_only=True)
+    deptId = serializers.IntegerField(source='dept.id',read_only=True)
+
+    def get_admin(self, obj: UserProfile):
+        role_list = obj.role.all().values_list('admin', flat=True)
+        if True in list(set(role_list)):
+            return True
+        return False
+
+    class Meta:
+        model = UserProfile
+        depth = 1
+        exclude = ('password', 'secret', 'user_permissions', 'groups', 'is_superuser', 'date_joined')
+
+
+class UserProfileCreateUpdateSerializer(CustomModelSerializer):
+    """
+    用户管理 创建/更新时的列化器
+    """
+    admin = serializers.SerializerMethodField(read_only=True)
+    post = PostSerializer(many=True, read_only=True)
+    role = RoleSerializer(many=True, read_only=True)
+    username = serializers.CharField(required=True, max_length=150,
+                     validators=[UniqueValidator(queryset=UserProfile.objects.all(), message="用戶已存在")],
+                      error_messages={
+                          "blank":"请输入用户名称",
+                          "required":"用户名称不能为空",
+                          "max_length":"用户名称过长",
+                      })
+    def get_admin(self, obj: UserProfile):
+        role_list = obj.role.all().values_list('admin', flat=True)
+        if True in list(set(role_list)):
+            return True
+        return False
+
+    def validate(self, attrs: dict):
+
+        return super().validate(attrs)
+
+    def save(self, **kwargs):
+        self.validated_data['dept_id'] = self.initial_data.get('deptId',None)
+        data = super().save(**kwargs)
+        data.set_password(self.initial_data.get('password',None))
+        data.save()
+        data.post.set(self.initial_data.get('postIds'))
+        data.role.set(self.initial_data.get('roleIds'))
+        return data
+
+    class Meta:
+        model = UserProfile
+        exclude = ('password', 'secret', 'user_permissions', 'groups', 'is_superuser', 'date_joined')
+        read_only_fields = ('dept',)

@@ -47,7 +47,7 @@ class UserProfileFilter(django_filters.rest_framework.FilterSet):
     """
     用户管理 简单序过滤器
     """
-
+    deptId = django_filters.CharFilter(field_name='dept__id')
     class Meta:
         model = UserProfile
         exclude = ('secret', 'password',)

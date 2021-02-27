@@ -5,11 +5,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.op_drf.viewsets import CustomModelViewSet
-from apps.permission.filters import MenuFilter, DeptFilter, PostFilter, RoleFilter
-from apps.permission.models import Role, Menu, Dept, Post
+from apps.permission.filters import MenuFilter, DeptFilter, PostFilter, RoleFilter, UserProfileFilter
+from apps.permission.models import Role, Menu, Dept, Post, UserProfile
 from apps.permission.serializers import UserProfileSerializer, MenuSerializer, RoleSerializer, \
     MenuCreateUpdateSerializer, DeptSerializer, DeptCreateUpdateSerializer, PostSerializer, PostCreateUpdateSerializer, \
-    RoleCreateUpdateSerializer, DeptTreeSerializer, MenuTreeSerializer
+    RoleCreateUpdateSerializer, DeptTreeSerializer, MenuTreeSerializer, UserProfileCreateUpdateSerializer, \
+    PostSimpleSerializer, RoleSimpleSerializer
 from utils.response import SuccessResponse
 
 
@@ -184,3 +185,74 @@ class RoleModelViewSet(CustomModelViewSet):
     # create_extra_permission_classes = (IsManagerPermission,)
     search_fields = ('roleName',)
     ordering = 'create_datetime'  # 默认排序
+
+
+class UserProfileModelViewSet(CustomModelViewSet):
+    """
+    用户管理 的CRUD视图
+    """
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    create_serializer_class = UserProfileCreateUpdateSerializer
+    update_serializer_class = UserProfileCreateUpdateSerializer
+    filter_class = UserProfileFilter
+    # update_extra_permission_classes = (IsManagerPermission,)
+    # destroy_extra_permission_classes = (IsManagerPermission,)
+    # create_extra_permission_classes = (IsManagerPermission,)
+    search_fields = ('username',)
+    ordering = 'create_datetime'  # 默认排序
+
+    def change_status(self, request: Request, *args, **kwargs):
+        """
+        修改用户状态
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        instance = self.queryset.get(id=request.data.get('userId'))
+        instance.is_active = request.data.get('status')
+        instance.save()
+        serializer = self.get_serializer(instance)
+        if hasattr(self, 'handle_logging'):
+            self.handle_logging(request, instance=instance, *args, **kwargs)
+        return SuccessResponse(serializer.data)
+
+    def get_user_details(self, request: Request, *args, **kwargs):
+        """
+        获取用户详情
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        userId = request.query_params.get('userId')
+        data = {
+            'posts': PostSimpleSerializer(Post.objects.all().order_by('postSort'), many=True).data,
+            'roles': RoleSimpleSerializer(Role.objects.all().order_by('roleSort'), many=True).data
+        }
+        if userId:
+            instance = self.queryset.get(id=userId)
+            serializer = self.get_serializer(instance)
+            data['data'] = serializer.data
+            data['postIds'] = [ele.get('id') for ele in serializer.data.get('post')]
+            data['roleIds'] = [ele.get('id') for ele in serializer.data.get('role')]
+            if hasattr(self, 'handle_logging'):
+                self.handle_logging(request, instance=instance, *args, **kwargs)
+        return SuccessResponse(data)
+
+    def reset_pwd(self, request: Request, *args, **kwargs):
+        """
+        重置密码
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        instance = self.queryset.get(id=request.data.get('userId'))
+        serializer = self.get_serializer(instance)
+        instance.set_password(request.data.get('password'))
+        instance.save()
+        if hasattr(self, 'handle_logging'):
+            self.handle_logging(request, instance=instance, *args,**kwargs)
+        return SuccessResponse(serializer.data)
