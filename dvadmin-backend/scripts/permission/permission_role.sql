@@ -23,7 +23,7 @@
 -- ----------------------------
 -- Records of permission_role
 -- ----------------------------
-INSERT INTO `permission_role` VALUES (1, '', 'admin', 'admin', '2021-02-27 08:48:23.225361', '2021-02-27 08:48:08.064911', '超级管理员', 'admin', 1, '1', 0, '2', NULL);
+INSERT INTO `permission_role` VALUES (1, '', 'admin', 'admin', '2021-02-27 08:48:23.225361', '2021-02-27 08:48:08.064911', '超级管理员', 'admin', 1, '1', 1, '2', NULL);
 INSERT INTO `permission_role` VALUES (2, '', 'admin', 'admin', '2021-02-27 08:49:05.149632', '2021-02-27 08:48:47.317214', '普通角色', 'common', 2, '1', 0, '2', NULL);
 
 -- ----------------------------

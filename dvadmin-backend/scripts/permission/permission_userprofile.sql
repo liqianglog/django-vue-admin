@@ -33,4 +33,41 @@
 -- ----------------------------
 -- Records of permission_userprofile
 -- ----------------------------
-INSERT INTO `permission_userprofile` VALUES (1, 'pbkdf2_sha256$150000$9Fs0I0yoaQ4s$cCe7ynmDuZMgDs1W9kNl7kGb6sBj+92UiF10n291Hq4=', '2021-02-27 06:20:28.214775', 1, '', '', 1, 1, '2021-02-27 06:20:09.188689', 'demo', '3704adf3-380f-4c27-a8da-60420e8cb4ab', 'demo@qq.com', NULL, NULL, '测试账号', '2', '1', 2, '2021-02-27 06:20:09.263192', '2021-02-27 09:14:30.009998', 8);
+INSERT INTO `permission_userprofile` VALUES (1, 'pbkdf2_sha256$150000$OjTMSXJgkzrE$jEQCjWbIbXwpN4k2z0o8Yvou1UQGuoJALyL/kGDZFd4=', '2021-02-27 06:20:28.214775', 1, '', '', 1, 1, '2021-02-27 06:20:09.188689', 'demo', '3704adf3-380f-4c27-a8da-60420e8cb4ab', 'demo@qq.com', NULL, NULL, '测试账号', '2', '1', 2, '2021-02-27 06:20:09.263192', '2021-02-27 09:14:30.009998', 8);
+-- ----------------------------
+-- Table structure for permission_userprofile_post
+-- ----------------------------
+-- DROP TABLE IF EXISTS `permission_userprofile_post`;
+-- CREATE TABLE `permission_userprofile_post` (
+--   `id` int(11) NOT NULL AUTO_INCREMENT,
+--   `userprofile_id` int(11) NOT NULL,
+--   `post_id` int(11) NOT NULL,
+--   PRIMARY KEY (`id`),
+--   UNIQUE KEY `permission_userprofile_post_userprofile_id_post_id_b9fb91e9_uniq` (`userprofile_id`,`post_id`),
+--   KEY `permission_userprofile_post_userprofile_id_229fe756` (`userprofile_id`) USING BTREE,
+--   KEY `permission_userprofile_post_post_id_dda441c3` (`post_id`) USING BTREE
+-- ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of permission_userprofile_post
+-- ----------------------------
+INSERT INTO `permission_userprofile_post` VALUES (1, 1, 1);
+
+-- ----------------------------
+-- Table structure for permission_userprofile_role
+-- ----------------------------
+-- DROP TABLE IF EXISTS `permission_userprofile_role`;
+-- CREATE TABLE `permission_userprofile_role` (
+--   `id` int(11) NOT NULL AUTO_INCREMENT,
+--   `userprofile_id` int(11) NOT NULL,
+--   `role_id` int(11) NOT NULL,
+--   PRIMARY KEY (`id`),
+--   UNIQUE KEY `permission_userprofile_role_userprofile_id_role_id_70affc5e_uniq` (`userprofile_id`,`role_id`),
+--   KEY `permission_userprofile_role_userprofile_id_66835002` (`userprofile_id`) USING BTREE,
+--   KEY `permission_userprofile_role_role_id_e91fd02e` (`role_id`) USING BTREE
+-- ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of permission_userprofile_role
+-- ----------------------------
+INSERT INTO `permission_userprofile_role` VALUES (1, 1, 1);

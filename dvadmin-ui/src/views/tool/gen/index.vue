@@ -111,8 +111,8 @@
         :show-overflow-tooltip="true"
         width="120"
       />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160" />
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="160" />
+      <el-table-column label="创建时间" align="center" prop="create_datetime" width="160" />
+      <el-table-column label="更新时间" align="center" prop="create_datetime" width="160" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

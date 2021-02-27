@@ -20,7 +20,7 @@ class UserProfile(AbstractUser):
     name = CharField(max_length=40, verbose_name="姓名")
     gender = CharField(max_length=8, verbose_name="性别", null=True, blank=True)
     remark = TextField(verbose_name="备注", null=True)
-    user_type = IntegerField(default=2, choices=USER_TYPE_CHOICES, verbose_name="用户类型")
+    user_type = IntegerField(default=0, verbose_name="用户类型")
     post = ManyToManyField(to='Post', verbose_name='关联岗位', db_constraint=False)
     role = ManyToManyField(to='Role', verbose_name='关联角色', db_constraint=False)
     dept = ForeignKey(to='Dept', verbose_name='归属部门', on_delete=CASCADE, db_constraint=False, null=True, blank=True)

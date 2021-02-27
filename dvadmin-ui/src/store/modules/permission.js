@@ -2,7 +2,7 @@ import { constantRoutes } from '@/router'
 import { getRouters } from '@/api/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView';
-
+import { handleTree } from "@/utils/ruoyi";
 const permission = {
   state: {
     routes: [],
@@ -24,8 +24,9 @@ const permission = {
       return new Promise(resolve => {
         // 向后端请求路由数据
         getRouters().then(res => {
-          const sdata = JSON.parse(JSON.stringify(res.data))
-          const rdata = JSON.parse(JSON.stringify(res.data))
+          const data = handleTree(res.data, "id");
+          const sdata = JSON.parse(JSON.stringify(data))
+          const rdata = JSON.parse(JSON.stringify(data))
           const sidebarRoutes = filterAsyncRouter(sdata)
           const rewriteRoutes = filterAsyncRouter(rdata, false, true)
           rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
