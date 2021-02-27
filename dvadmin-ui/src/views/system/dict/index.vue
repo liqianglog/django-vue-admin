@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="字典名称" prop="name">
+      <el-form-item label="字典名称" prop="dictName">
         <el-input
-          v-model="queryParams.name"
+          v-model="queryParams.dictName"
           placeholder="请输入字典名称"
           clearable
           size="small"
@@ -114,7 +114,7 @@
     <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="字典编号" align="center" prop="id" />
-      <el-table-column label="字典名称" align="center" prop="name" :show-overflow-tooltip="true" />
+      <el-table-column label="字典名称" align="center" prop="dictName" :show-overflow-tooltip="true" />
       <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <router-link :to="'/dict/type/data/' + scope.row.id" class="link-type">
@@ -160,8 +160,8 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="字典名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入字典名称" />
+        <el-form-item label="字典名称" prop="dictName">
+          <el-input v-model="form.dictName" placeholder="请输入字典名称" />
         </el-form-item>
         <el-form-item label="字典类型" prop="dictType">
           <el-input v-model="form.dictType" placeholder="请输入字典类型" />
@@ -220,7 +220,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        name: undefined,
+        dictName: undefined,
         dictType: undefined,
         status: undefined
       },
@@ -228,7 +228,7 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        name: [
+        dictName: [
           { required: true, message: "字典名称不能为空", trigger: "blur" }
         ],
         dictType: [
@@ -267,7 +267,7 @@ export default {
     reset() {
       this.form = {
         id: undefined,
-        name: undefined,
+        dictName: undefined,
         dictType: undefined,
         status: "0",
         remark: undefined

@@ -102,7 +102,7 @@ class DeptModelViewSet(CustomModelViewSet):
     # update_extra_permission_classes = (IsManagerPermission,)
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)
-    search_fields = ('name',)
+    search_fields = ('deptName',)
     ordering = 'create_datetime'  # 默认排序
 
     def exclude_list(self, request: Request, *args, **kwargs):
@@ -166,7 +166,7 @@ class PostModelViewSet(CustomModelViewSet):
     # update_extra_permission_classes = (IsManagerPermission,)
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)
-    search_fields = ('name',)
+    search_fields = ('postName',)
     ordering = ['postSort', 'create_datetime']  # 默认排序
 
 
@@ -182,5 +182,5 @@ class RoleModelViewSet(CustomModelViewSet):
     # update_extra_permission_classes = (IsManagerPermission,)
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)
-    search_fields = ('name',)
+    search_fields = ('roleName',)
     ordering = 'create_datetime'  # 默认排序

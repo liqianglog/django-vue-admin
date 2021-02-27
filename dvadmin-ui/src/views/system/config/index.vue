@@ -31,18 +31,6 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="创建时间">
-        <el-date-picker
-          v-model="dateRange"
-          size="small"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -107,11 +95,12 @@
 
     <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="参数主键" align="center" prop="configId" />
+      <el-table-column label="参数主键" align="center" prop="id" />
       <el-table-column label="参数名称" align="center" prop="configName" :show-overflow-tooltip="true" />
       <el-table-column label="参数键名" align="center" prop="configKey" :show-overflow-tooltip="true" />
       <el-table-column label="参数键值" align="center" prop="configValue" />
       <el-table-column label="系统内置" align="center" prop="configType" :formatter="typeFormat" />
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
@@ -167,6 +156,15 @@
             >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio
+              v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+            >{{dict.dictLabel}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
@@ -206,15 +204,16 @@ export default {
       open: false,
       // 类型数据字典
       typeOptions: [],
-      // 日期范围
-      dateRange: [],
+      // 状态数据字典
+      statusOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         configName: undefined,
         configKey: undefined,
-        configType: undefined
+        configType: undefined,
+        status: undefined
       },
       // 表单参数
       form: {},
@@ -237,14 +236,17 @@ export default {
     this.getDicts("sys_yes_no").then(response => {
       this.typeOptions = response.data;
     });
+    this.getDicts("sys_normal_disable").then(response => {
+      this.statusOptions = response.data;
+    });
   },
   methods: {
     /** 查询参数列表 */
     getList() {
       this.loading = true;
-      listConfig(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.configList = response.rows;
-          this.total = response.total;
+      listConfig(this.addDateRange(this.queryParams)).then(response => {
+          this.configList = response.data.results;
+          this.total = response.data.count;
           this.loading = false;
         }
       );
@@ -252,6 +254,10 @@ export default {
     // 参数系统内置字典翻译
     typeFormat(row, column) {
       return this.selectDictLabel(this.typeOptions, row.configType);
+    },
+    // 数据状态字典翻译
+    statusFormat(row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status);
     },
     // 取消按钮
     cancel() {
@@ -261,11 +267,12 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        configId: undefined,
+        id: undefined,
         configName: undefined,
         configKey: undefined,
         configValue: undefined,
         configType: "Y",
+        status: '0',
         remark: undefined
       };
       this.resetForm("form");
@@ -277,7 +284,6 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.dateRange = [];
       this.resetForm("queryForm");
       this.handleQuery();
     },
@@ -289,15 +295,15 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.configId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length!=1
       this.multiple = !selection.length
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const configId = row.configId || this.ids
-      getConfig(configId).then(response => {
+      const id = row.id || this.ids
+      getConfig(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改参数";
@@ -307,7 +313,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.configId != undefined) {
+          if (this.form.id != undefined) {
             updateConfig(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -325,7 +331,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const configIds = row.configId || this.ids;
+      const configIds = row.id || this.ids;
       this.$confirm('是否确认删除参数编号为"' + configIds + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",

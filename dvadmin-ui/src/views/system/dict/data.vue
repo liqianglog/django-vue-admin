@@ -6,14 +6,14 @@
           <el-option
             v-for="item in typeOptions"
             :key="item.dictId"
-            :label="item.name"
+            :label="item.dictName"
             :value="item.dictType"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="字典标签" prop="name">
+      <el-form-item label="字典标签" prop="dictLabel">
         <el-input
-          v-model="queryParams.name"
+          v-model="queryParams.dictLabel"
           placeholder="请输入字典标签"
           clearable
           size="small"
@@ -85,7 +85,7 @@
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="字典编码" align="center" prop="id" />
-      <el-table-column label="字典标签" align="center" prop="name" />
+      <el-table-column label="字典标签" align="center" prop="dictLabel" />
       <el-table-column label="字典键值" align="center" prop="dictValue" />
       <el-table-column label="字典排序" align="center" prop="sort" />
       <el-table-column label="是否默认" align="center" prop="is_default" >
@@ -137,8 +137,8 @@
         <el-form-item label="字典类型">
           <el-input v-model="form.dictType" :disabled="true" />
         </el-form-item>
-        <el-form-item label="数据标签" prop="name">
-          <el-input v-model="form.name" placeholder="请输入数据标签" />
+        <el-form-item label="数据标签" prop="dictLabel">
+          <el-input v-model="form.dictLabel" placeholder="请输入数据标签" />
         </el-form-item>
         <el-form-item label="数据键值" prop="dictValue">
           <el-input v-model="form.dictValue" placeholder="请输入数据键值" />
@@ -203,7 +203,7 @@ export default {
       // 是否显示弹出层
       open: false,
       // 状态数据字典
-      statusOptions: [{dictLabel: '正常', dictValue: '1',}, {dictLabel: '停用', dictValue: '0',}],
+      statusOptions: [],
       // 类型数据字典
       typeOptions: [],
       // 查询参数
@@ -235,9 +235,9 @@ export default {
     console.log(11111,this.$route.params)
     this.getType(dictId);
     this.getTypeList();
-    // this.getDicts("sys_normal_disable").then(response => {
-    //   this.statusOptions = response.data;
-    // });
+    this.getDicts("sys_normal_disable").then(response => {
+      this.statusOptions = response.data;
+    });
   },
   methods: {
     /** 查询字典类型详细 */
@@ -277,7 +277,7 @@ export default {
     reset() {
       this.form = {
         id: undefined,
-        name: undefined,
+        dictLabel: undefined,
         dictValue: undefined,
         sort: 0,
         status: "0",
