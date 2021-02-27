@@ -42,22 +42,18 @@ class DictDetailsModelViewSet(CustomModelViewSet):
     search_fields = ('dictLabel',)
     ordering = 'sort'  # 默认排序
 
-
-class DictDetailsListModelViewSet(CustomModelViewSet):
-    """
-    根据字典类型查询字典数据信息 模型的CRUD视图
-    """
-    queryset = DictDetails.objects.filter(status=0)
-    serializer_class = DictDetailsListSerializer
-    filter_class = DictDetailsFilter
-    search_fields = ('dictLabel',)
-    ordering = 'sort'  # 默认排序
-
-    def list(self, request: Request, *args, **kwargs):
+    def dict_details_list(self, request: Request, *args, **kwargs):
+        """
+        根据字典类型查询字典数据信息
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         queryset = self.queryset.filter(dict_data__dictType=kwargs.get('pk')).order_by('sort')
         if hasattr(self, 'handle_logging'):
             self.handle_logging(request, *args, **kwargs)
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = DictDetailsListSerializer(queryset, many=True)
         return SuccessResponse(serializer.data)
 
 
@@ -73,5 +69,18 @@ class ConfigSettingsModelViewSet(CustomModelViewSet):
     # update_extra_permission_classes = (IsManagerPermission,)
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)
-    search_fields = ('name',)
+    search_fields = ('configName',)
     ordering = 'id'  # 默认排序
+
+    def get_config_key(self, request: Request, *args, **kwargs):
+        """
+        根据 参数键名 查询参数数据信息
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        queryset = self.queryset.filter(configKey=kwargs.get('pk')).first()
+        # if hasattr(self, 'handle_logging'):
+        #     self.handle_logging(request, *args, **kwargs)
+        return SuccessResponse(msg=queryset.configValue if queryset else '')
