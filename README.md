@@ -25,9 +25,9 @@ Django-Vue-Admin 是一套全部开源的快速开发平台，毫无保留给个
 
 ## 源码地址
 
-github地址：[https://gitee.com/liqianglog/django-vue-admin](https://gitee.com/liqianglog/django-vue-admin)
+gitee地址：[https://gitee.com/liqianglog/django-vue-admin](https://gitee.com/liqianglog/django-vue-admin)
 
-gitee地址：[https://github.com/liqianglog/django-vue-admin](https://github.com/liqianglog/django-vue-admin)
+github地址：[https://github.com/liqianglog/django-vue-admin](https://github.com/liqianglog/django-vue-admin)
 
 ## 内置功能
 
