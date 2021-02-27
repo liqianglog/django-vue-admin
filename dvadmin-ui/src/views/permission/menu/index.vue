@@ -185,12 +185,13 @@
           </el-col>
           <el-col :span="12">
             <el-form-item v-if="form.menuType != '0'" label="接口路径" prop="interface_path">
-              <el-input v-model="form.interface_path" placeholder="请输入后端接口路径"/>
+              <el-input v-model="form.interface_path" placeholder="请输入后端接口路径" @change="CreatePerms"/>
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="form.menuType != '0'">
             <el-form-item label="请求方法" prop="interface_method">
-              <el-select v-model="form.interface_method" placeholder="请选择后端请求方法" clearable size="small">
+              <el-select v-model="form.interface_method" placeholder="请选择后端请求方法" clearable size="small"
+                         @change="CreatePerms">
                 <el-option
                   v-for="dict in interfaceMethodOptions"
                   :key="dict.dictValue"
@@ -275,11 +276,8 @@
         // 菜单状态数据字典
         statusOptions: [],
         // 菜单类型数据字典
-        menuTypeOptions: [{dictLabel: '目录', dictValue: '0',}, {dictLabel: '菜单', dictValue: '1',}, {dictLabel: '按钮', dictValue: '2',}],
-        interfaceMethodOptions: [{dictLabel: 'GET', dictValue: 'GET',}, {dictLabel: 'POST', dictValue: 'POST',},
-          {dictLabel: 'PUT', dictValue: 'PUT',},{dictLabel: 'PATCH', dictValue: 'PATCH',}, {dictLabel: 'DELETE', dictValue: 'DELETE',},
-          {dictLabel: 'HEAD', dictValue: 'HEAD',}, {dictLabel: 'OPTIONS', dictValue: 'OPTIONS',},
-          {dictLabel: 'TRACE', dictValue: 'TRACE',},],
+        menuTypeOptions: [],
+        interfaceMethodOptions: [],
         // 查询参数
         queryParams: {
           name: undefined,
@@ -305,16 +303,27 @@
     created() {
       this.getList();
       this.getDicts("sys_show_hide").then(response => {
-        this.visibleOptions = response.data.results;
+        this.visibleOptions = response.data;
       });
       this.getDicts("sys_normal_disable").then(response => {
         this.statusOptions = response.data;
+      });
+      this.getDicts("sys_menu_type").then(response => {
+        this.menuTypeOptions = response.data;
+      });
+      this.getDicts("sys_interface_method").then(response => {
+        this.interfaceMethodOptions = response.data;
       });
     },
     methods: {
       // 选择图标
       selected(name) {
         this.form.icon = name;
+      },
+      /** 自动生成权限标识 */
+      CreatePerms() {
+        let res = this.form.interface_path + ":" + this.form.interface_method
+        this.form.perms = res.toLocaleLowerCase().replace(/(\/)/g,':').replace(/(::)/g,':').replace(/(^:)|(:$)/g, "")
       },
       /** 查询菜单列表 */
       getList() {
@@ -337,7 +346,7 @@
       },
       /** 查询菜单下拉树结构 */
       getTreeselect() {
-        listMenu().then(response => {
+        listMenu({pageNum: 'all'}).then(response => {
           this.menuOptions = [];
           const menu = {id: 0, name: '主类目', children: []};
           menu.children = this.handleTree(response.data, "id");
@@ -371,8 +380,9 @@
           web_path: undefined,
           menuType: "0",
           orderNum: undefined,
-          component_path: '',
-          interface_path: '',
+          component_path: undefined,
+          interface_path: undefined,
+          perms: undefined,
           interface_method: 'GET',
           isFrame: "1",
           isCache: "1",
@@ -416,14 +426,18 @@
       submitForm: function () {
         this.$refs["form"].validate(valid => {
           if (valid) {
+            const cloneData = JSON.parse(JSON.stringify(this.form))
+            if (cloneData.parentId===0){
+              delete cloneData['parentId']
+            }
             if (this.form.id != undefined) {
-              updateMenu(this.form).then(response => {
+              updateMenu(cloneData).then(response => {
                 this.msgSuccess("修改成功");
                 this.open = false;
                 this.getList();
               });
             } else {
-              addMenu(this.form).then(response => {
+              addMenu(cloneData).then(response => {
                 this.msgSuccess("新增成功");
                 this.open = false;
                 this.getList();

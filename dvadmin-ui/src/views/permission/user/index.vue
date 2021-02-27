@@ -243,7 +243,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="用户性别">
-              <el-select v-model="form.sex" placeholder="请选择">
+              <el-select v-model="form.gender" placeholder="请选择">
                 <el-option
                   v-for="dict in sexOptions"
                   :key="dict.dictValue"
@@ -274,7 +274,7 @@
                   :key="item.id"
                   :label="item.postName"
                   :value="item.id"
-                  :disabled="item.status == 1"
+                  :disabled="item.status == 0"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -287,7 +287,7 @@
                   :key="item.id"
                   :label="item.roleName"
                   :value="item.id"
-                  :disabled="item.status == 1"
+                  :disabled="item.status == 0"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -530,7 +530,7 @@ export default {
         password: undefined,
         mobile: undefined,
         email: undefined,
-        sex: undefined,
+        gender: undefined,
         is_active: false,
         remark: undefined,
         postIds: [],
@@ -574,11 +574,12 @@ export default {
       this.getTreeselect();
       const id = row.id || this.ids;
       getUser(id).then(response => {
-        this.form = response.data.data;
+        let data = response.data.data
+        data['postIds'] = response.data.postIds
+        data['roleIds'] = response.data.roleIds
+        this.form = data;
         this.postOptions = response.data.posts;
         this.roleOptions = response.data.roles;
-        this.form.postIds = response.data.postIds;
-        this.form.roleIds = response.data.roleIds;
         this.open = true;
         this.title = "修改用户";
         this.form.password = "";

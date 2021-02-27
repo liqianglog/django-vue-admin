@@ -1,0 +1,36 @@
+-- ----------------------------
+-- 用户管理 初始化sql
+-- Table structure for permission_userprofile
+-- ----------------------------
+-- DROP TABLE IF EXISTS `permission_userprofile`;
+-- CREATE TABLE `permission_userprofile` (
+--   `id` int(11) NOT NULL AUTO_INCREMENT,
+--   `password` varchar(128) NOT NULL,
+--   `last_login` datetime(6) DEFAULT NULL,
+--   `is_superuser` tinyint(1) NOT NULL,
+--   `first_name` varchar(30) NOT NULL,
+--   `last_name` varchar(150) NOT NULL,
+--   `is_staff` tinyint(1) NOT NULL,
+--   `is_active` tinyint(1) NOT NULL,
+--   `date_joined` datetime(6) NOT NULL,
+--   `username` varchar(150) NOT NULL,
+--   `secret` varchar(255) NOT NULL,
+--   `email` varchar(255) DEFAULT NULL,
+--   `mobile` varchar(255) DEFAULT NULL,
+--   `avatar` longtext,
+--   `name` varchar(40) NOT NULL,
+--   `gender` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+--   `remark` longtext,
+--   `user_type` int(11) NOT NULL,
+--   `create_datetime` datetime(6) DEFAULT NULL,
+--   `update_datetime` datetime(6) DEFAULT NULL,
+--   `dept_id` int(11) DEFAULT NULL,
+--   PRIMARY KEY (`id`),
+--   UNIQUE KEY `username` (`username`),
+--   KEY `permission_userprofile_dept_id_bd5c7976` (`dept_id`) USING BTREE
+-- ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of permission_userprofile
+-- ----------------------------
+INSERT INTO `permission_userprofile` VALUES (1, 'pbkdf2_sha256$150000$9Fs0I0yoaQ4s$cCe7ynmDuZMgDs1W9kNl7kGb6sBj+92UiF10n291Hq4=', '2021-02-27 06:20:28.214775', 1, '', '', 1, 1, '2021-02-27 06:20:09.188689', 'demo', '3704adf3-380f-4c27-a8da-60420e8cb4ab', 'demo@qq.com', NULL, NULL, '测试账号', '2', '1', 2, '2021-02-27 06:20:09.263192', '2021-02-27 09:14:30.009998', 8);

@@ -9,7 +9,7 @@ class ConfigSettings(CoreModel):
     configValue = CharField(max_length=256, verbose_name="参数键值")
     configType = CharField(max_length=8,verbose_name="是否内置")
     status = CharField(max_length=8, verbose_name="参数状态")
-    remark = CharField(max_length=256, verbose_name="备注", null=True)
+    remark = CharField(max_length=256, verbose_name="备注", null=True, blank=True)
 
     class Meta:
         verbose_name = '参数设置'

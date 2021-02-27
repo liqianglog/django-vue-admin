@@ -189,7 +189,7 @@ class UserProfileSerializer(CustomModelSerializer):
     简单用户序列化器
     """
     admin = serializers.SerializerMethodField(read_only=True)
-    deptId = serializers.IntegerField(source='dept.id',read_only=True)
+    deptId = serializers.IntegerField(source='dept.id', read_only=True)
 
     def get_admin(self, obj: UserProfile):
         role_list = obj.role.all().values_list('admin', flat=True)
@@ -211,12 +211,13 @@ class UserProfileCreateUpdateSerializer(CustomModelSerializer):
     post = PostSerializer(many=True, read_only=True)
     role = RoleSerializer(many=True, read_only=True)
     username = serializers.CharField(required=True, max_length=150,
-                     validators=[UniqueValidator(queryset=UserProfile.objects.all(), message="用戶已存在")],
-                      error_messages={
-                          "blank":"请输入用户名称",
-                          "required":"用户名称不能为空",
-                          "max_length":"用户名称过长",
-                      })
+                                     validators=[UniqueValidator(queryset=UserProfile.objects.all(), message="用戶已存在")],
+                                     error_messages={
+                                         "blank": "请输入用户名称",
+                                         "required": "用户名称不能为空",
+                                         "max_length": "用户名称过长",
+                                     })
+
     def get_admin(self, obj: UserProfile):
         role_list = obj.role.all().values_list('admin', flat=True)
         if True in list(set(role_list)):
@@ -224,13 +225,12 @@ class UserProfileCreateUpdateSerializer(CustomModelSerializer):
         return False
 
     def validate(self, attrs: dict):
-
         return super().validate(attrs)
 
     def save(self, **kwargs):
-        self.validated_data['dept_id'] = self.initial_data.get('deptId',None)
+        self.validated_data['dept_id'] = self.initial_data.get('deptId', None)
         data = super().save(**kwargs)
-        data.set_password(self.initial_data.get('password',None))
+        data.set_password(self.initial_data.get('password', None))
         data.save()
         data.post.set(self.initial_data.get('postIds'))
         data.role.set(self.initial_data.get('roleIds'))

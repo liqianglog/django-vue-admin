@@ -97,10 +97,12 @@ npm run build:prod
 5. 执行迁移命令：
 	python3 manage.py makemigrations
 	python3 manage.py migrate
-5. 创建 admin 用户
-	python3 manage.py createsuperuser
+5. 初始化数据
+	python3 manage.py initialization
 6. 启动项目
 	python3 manage.py runserver 0.0.0.0:8000
+	
+初始账号：demo 密码：123456
 ~~~
 
 

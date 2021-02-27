@@ -289,14 +289,18 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          const cloneData = JSON.parse(JSON.stringify(this.form))
+          if (cloneData.parentId===0){
+            delete cloneData['parentId']
+          }
           if (this.form.id != undefined) {
-            updateDept(this.form).then(response => {
+            updateDept(cloneData).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addDept(this.form).then(response => {
+            addDept(cloneData).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();

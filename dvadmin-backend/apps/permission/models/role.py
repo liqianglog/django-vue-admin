@@ -16,10 +16,10 @@ class Role(CoreModel):
     roleSort = IntegerField(verbose_name="角色顺序")
     status = CharField(max_length=8, verbose_name="角色状态")
     admin = BooleanField(default=False, verbose_name="是否为admin")
-    dataScope = CharField(max_length=8, choices=DATASCOPE_CHOICES, verbose_name="权限范围")
-    remark = TextField(verbose_name="备注", help_text="备注", null=True)
-    dept = ManyToManyField(to='Dept', verbose_name='数据权限-关联部门')
-    menu = ManyToManyField(to='Menu', verbose_name='关联菜单权限')
+    dataScope = CharField(max_length=8,default='1', choices=DATASCOPE_CHOICES, verbose_name="权限范围",)
+    remark = TextField(verbose_name="备注", help_text="备注", null=True, blank=True)
+    dept = ManyToManyField(to='Dept', verbose_name='数据权限-关联部门', db_constraint=False)
+    menu = ManyToManyField(to='Menu', verbose_name='关联菜单权限', db_constraint=False)
 
     class Meta:
         verbose_name = '角色管理'

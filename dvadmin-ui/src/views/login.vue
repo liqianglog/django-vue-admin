@@ -54,11 +54,11 @@
 </template>
 
 <script>
-import { getCodeImg } from "@/api/login";
-import Cookies from "js-cookie";
-import { encrypt, decrypt } from '@/utils/jsencrypt'
+  import {getCodeImg} from "@/api/login";
+  import Cookies from "js-cookie";
+  import {decrypt, encrypt} from '@/utils/jsencrypt'
 
-export default {
+  export default {
   name: "Login",
   data() {
     return {
@@ -100,7 +100,7 @@ export default {
   methods: {
     getCode() {
       getCodeImg().then(res => {
-        this.codeUrl = process.env.VUE_APP_BASE_API + res.data.image_url;
+        this.codeUrl = res.data.image_url ? process.env.VUE_APP_BASE_API + res.data.image_url : require("@/assets/images/profile.jpg");
         this.loginForm.uuid = res.data.key;
       });
     },

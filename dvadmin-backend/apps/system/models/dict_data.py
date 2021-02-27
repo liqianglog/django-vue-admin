@@ -7,7 +7,7 @@ class DictData(CoreModel):
     dictName = CharField(max_length=64, verbose_name="字典名称")
     dictType = CharField(max_length=64, verbose_name="字典类型")
     status = CharField(max_length=8, verbose_name="字典状态")
-    remark = CharField(max_length=256,verbose_name="备注", null=True)
+    remark = CharField(max_length=256,verbose_name="备注", null=True, blank=True)
 
     class Meta:
         verbose_name = '字典管理'
