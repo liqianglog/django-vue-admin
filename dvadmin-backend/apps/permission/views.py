@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
@@ -8,7 +9,7 @@ from apps.permission.serializers import UserProfileSerializer, MenuSerializer, R
     MenuCreateUpdateSerializer, DeptSerializer, DeptCreateUpdateSerializer, PostSerializer, PostCreateUpdateSerializer, \
     RoleCreateUpdateSerializer, DeptTreeSerializer, MenuTreeSerializer, UserProfileCreateUpdateSerializer, \
     PostSimpleSerializer, RoleSimpleSerializer
-from utils.response import SuccessResponse
+from utils.response import SuccessResponse, ErrorResponse
 
 
 class GetUserProfileView(APIView):
@@ -276,6 +277,59 @@ class UserProfileModelViewSet(CustomModelViewSet):
         serializer = self.get_serializer(instance)
         instance.set_password(request.data.get('password'))
         instance.save()
+        if hasattr(self, 'handle_logging'):
+            self.handle_logging(request, instance=instance, *args, **kwargs)
+        return SuccessResponse(serializer.data)
+
+    def profile(self, request: Request, *args, **kwargs):
+        """
+        获取用户个人信息
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        instance = self.queryset.get(id=request.user.id)
+        serializer = self.get_serializer(instance)
+        if hasattr(self, 'handle_logging'):
+            self.handle_logging(request, instance=instance, *args, **kwargs)
+        return SuccessResponse(serializer.data)
+
+    def put_profile(self, request: Request, *args, **kwargs):
+        """
+        更新用户个人信息
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        instance = self.queryset.get(id=request.user.id)
+        instance.name = request.data.get('name',None)
+        instance.mobile = request.data.get('mobile',None)
+        instance.email = request.data.get('email',None)
+        instance.gender = request.data.get('gender',None)
+        instance.save()
+        serializer = self.get_serializer(instance)
+        if hasattr(self, 'handle_logging'):
+            self.handle_logging(request, instance=instance, *args, **kwargs)
+        return SuccessResponse(serializer.data)
+
+
+    def update_pwd(self, request: Request, *args, **kwargs):
+        """
+        个人修改密码
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        instance = self.queryset.get(id=request.user.id)
+        instance.mobile = request.data.get('newPassword',None)
+        if not authenticate(username=request.user.username, password=request.data.get('oldPassword',None)):
+            return ErrorResponse(msg='旧密码不正确！')
+        instance.set_password(request.data.get('newPassword'))
+        instance.save()
+        serializer = self.get_serializer(instance)
         if hasattr(self, 'handle_logging'):
             self.handle_logging(request, instance=instance, *args, **kwargs)
         return SuccessResponse(serializer.data)

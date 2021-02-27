@@ -24,7 +24,12 @@ urlpatterns = [
     re_path('user/changeStatus/', UserProfileModelViewSet.as_view({'put': 'change_status'})),
     # 获取用户详情
     re_path('user/details/', UserProfileModelViewSet.as_view({'get': 'get_user_details'})),
+    # 后台重置密码
     re_path('user/resetPwd/', UserProfileModelViewSet.as_view({'put': 'reset_pwd'})),
+    # 用户自己重置密码
+    re_path('user/profile/updatePwd/', UserProfileModelViewSet.as_view({'put': 'update_pwd'})),
+    # 获取、更新用户个人信息
+    re_path('user/profile/', UserProfileModelViewSet.as_view({'get': 'profile','put': 'put_profile'})),
 
 ]
 urlpatterns += router.urls

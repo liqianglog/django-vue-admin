@@ -104,9 +104,9 @@
       <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" :show-overflow-tooltip="true" />
       <el-table-column label="日志信息" align="center" prop="jobMessage" :show-overflow-tooltip="true" />
       <el-table-column label="执行状态" align="center" prop="status" :formatter="statusFormat" />
-      <el-table-column label="执行时间" align="center" prop="createTime" width="180">
+      <el-table-column label="执行时间" align="center" prop="create_datetime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+          <span>{{ parseTime(scope.row.create_datetime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -140,7 +140,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="任务分组：">{{ form.jobGroup }}</el-form-item>
-            <el-form-item label="执行时间：">{{ form.createTime }}</el-form-item>
+            <el-form-item label="执行时间：">{{ form.create_datetime }}</el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="调用方法：">{{ form.invokeTarget }}</el-form-item>
