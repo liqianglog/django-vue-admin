@@ -1,11 +1,15 @@
+import os
+
+from django.conf import settings
+from django.http import HttpResponse
 from rest_framework.request import Request
 
 from apps.op_drf.viewsets import CustomModelViewSet
 from apps.system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter
-from apps.system.models import DictData, DictDetails, ConfigSettings
+from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile
 from apps.system.serializers import DictDataSerializer, DictDataCreateUpdateSerializer, DictDetailsSerializer, \
     DictDetailsCreateUpdateSerializer, DictDetailsListSerializer, ConfigSettingsSerializer, \
-    ConfigSettingsCreateUpdateSerializer
+    ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer
 from utils.response import SuccessResponse
 
 
@@ -84,3 +88,32 @@ class ConfigSettingsModelViewSet(CustomModelViewSet):
         # if hasattr(self, 'handle_logging'):
         #     self.handle_logging(request, *args, **kwargs)
         return SuccessResponse(msg=queryset.configValue if queryset else '')
+
+
+class SaveFileModelViewSet(CustomModelViewSet):
+    """
+   参数设置 模型的CRUD视图
+   """
+    queryset = SaveFile.objects.all()
+    serializer_class = SaveFileSerializer
+    create_serializer_class = SaveFileCreateUpdateSerializer
+    update_serializer_class = SaveFileCreateUpdateSerializer
+    # filter_class = ConfigSettingsFilter
+    search_fields = ('configName',)
+    ordering = 'id'  # 默认排序
+
+    def download_file(self, request: Request, *args, **kwargs):
+        """
+        下载文件
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        instance = self.get_object()
+        file_path = os.path.join(settings.MEDIA_ROOT,str(instance.file))
+        with open(file_path, "rb") as f:
+            res = HttpResponse(f)
+        res["Content-Type"] = instance.type  # 注意格式
+        res["Content-Disposition"] = 'filename="{}"'.format(instance.name)
+        return res

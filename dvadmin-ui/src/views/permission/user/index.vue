@@ -405,7 +405,7 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/permission/user/importData"
+        url: process.env.VUE_APP_BASE_API + "/system/savefile/"
       },
       // 查询参数
       queryParams: {

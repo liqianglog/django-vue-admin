@@ -179,8 +179,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="form.menuType != '2'">
-            <el-form-item :label="form.isFrame !== '0'?'组件路径':'跳转路由'" prop="component_path">
-              <el-input v-model="form.component_path" :placeholder="form.isFrame !== '0'?'请输入前端组件路径':'请输入前端跳转路由'"/>
+            <el-form-item label="组件路径" prop="component_path">
+              <el-input v-model="form.component_path" placeholder="请输入前端组件路径" @change="ComponentPathChange"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -324,6 +324,10 @@
       CreatePerms() {
         let res = this.form.interface_path + ":" + this.form.interface_method
         this.form.perms = res.toLocaleLowerCase().replace(/(\/)/g,':').replace(/(::)/g,':').replace(/(^:)|(:$)/g, "")
+      },
+      /** 组件路径变化，替换斜杠开头 */
+      ComponentPathChange(){
+        this.form.component_path = this.form.component_path.replace(/(^\/)/g,'')
       },
       /** 查询菜单列表 */
       getList() {

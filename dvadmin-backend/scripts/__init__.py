@@ -8,6 +8,6 @@ def getSql(filename):
     :return:
     """
     pwd = os.path.join(os.getcwd(), 'scripts', filename)
-    with open(pwd) as fp:
-        content = fp.read()
+    with open(pwd,'rb') as fp:
+        content = fp.read().decode('utf8')
     return [ele for ele in content.split('\n') if not ele.startswith('--') and ele]
