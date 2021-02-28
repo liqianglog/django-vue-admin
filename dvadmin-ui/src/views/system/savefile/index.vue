@@ -118,53 +118,8 @@
 </template>
 
 <script>
-  import {clearSaveFile, listSaveFile} from "@/api/system/savefile";
-  import {delSaveFile} from "../../../api/system/savefile";
-  import FileUpload from "../../../components/FileUpload/index";
-
-  /**
-   * 保存
-   * @param  {Blob} blob
-   * @param  {String} filename 想要保存的文件名称
-   */
-  function saveAs(blob, filename) {
-    if (window.navigator.msSaveOrOpenBlob) {
-      navigator.msSaveBlob(blob, filename);
-    } else {
-      var link = document.createElement('a');
-      var body = document.querySelector('body');
-
-      link.href = window.URL.createObjectURL(blob);
-      link.download = filename;
-
-      // fix Firefox
-      link.style.display = 'none';
-      body.appendChild(link);
-
-      link.click();
-      body.removeChild(link);
-
-      window.URL.revokeObjectURL(link.href);
-    }
-    ;
-  }
-
-  /**
-   * 获取 blob
-   * @param  {String} url 目标文件地址
-   * @return {cb}
-   */
-  function getBlob(url, cb) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.responseType = 'blob';
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        cb(xhr.response);
-      }
-    };
-    xhr.send();
-  }
+  import {clearSaveFile, delSaveFile, listSaveFile} from "@/api/system/savefile";
+  import FileUpload from "@/components/FileUpload/index";
 
   export default {
     name: "Savefile",
@@ -225,9 +180,7 @@
       },
       /** 文件下载 **/
       handleDownload(row) {
-        getBlob(process.env.VUE_APP_BASE_API + row.file_url, function (blob) {
-          saveAs(blob, row.name);
-        });
+        this.download(row.file_url, row.name)
       },
       /** 删除按钮操作 */
       handleDelete(row) {
