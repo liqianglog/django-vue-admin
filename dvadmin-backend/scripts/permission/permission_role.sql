@@ -103,6 +103,7 @@ INSERT INTO `permission_role_menu` VALUES (7, 1, 7);
 INSERT INTO `permission_role_menu` VALUES (8, 1, 8);
 INSERT INTO `permission_role_menu` VALUES (9, 1, 9);
 INSERT INTO `permission_role_menu` VALUES (10, 1, 10);
+INSERT INTO `permission_role_menu` VALUES (21, 1, 11);
 INSERT INTO `permission_role_menu` VALUES (11, 2, 1);
 INSERT INTO `permission_role_menu` VALUES (12, 2, 2);
 INSERT INTO `permission_role_menu` VALUES (13, 2, 3);
