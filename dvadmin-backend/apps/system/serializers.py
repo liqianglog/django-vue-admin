@@ -18,6 +18,16 @@ class DictDataSerializer(CustomModelSerializer):
         exclude = ('description', 'creator', 'modifier')
 
 
+class ExportDictDataSerializer(CustomModelSerializer):
+    """
+    导出 字典管理 简单序列化器
+    """
+
+    class Meta:
+        model = DictData
+        fields = ('id', 'dictName', 'dictType', 'status', 'creator', 'modifier', 'remark',)
+
+
 class DictDataCreateUpdateSerializer(CustomModelSerializer):
     """
     字典管理 创建/更新时的列化器
@@ -26,7 +36,6 @@ class DictDataCreateUpdateSerializer(CustomModelSerializer):
     class Meta:
         model = DictData
         exclude = ('description', 'creator', 'modifier')
-        read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
 
 
 # ================================================= #
@@ -42,6 +51,16 @@ class DictDetailsSerializer(CustomModelSerializer):
     class Meta:
         model = DictDetails
         exclude = ('description', 'creator', 'modifier')
+
+
+class ExportDictDetailsSerializer(CustomModelSerializer):
+    """
+    导出 字典详情 简单序列化器
+    """
+
+    class Meta:
+        model = DictDetails
+        fields = ('id', 'dictLabel', 'dictValue', 'is_default', 'status', 'sort', 'creator', 'modifier', 'remark',)
 
 
 class DictDetailsListSerializer(CustomModelSerializer):
@@ -62,7 +81,6 @@ class DictDetailsCreateUpdateSerializer(CustomModelSerializer):
     class Meta:
         model = DictDetails
         exclude = ('description', 'creator', 'modifier')
-        read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
 
 
 # ================================================= #
@@ -71,24 +89,33 @@ class DictDetailsCreateUpdateSerializer(CustomModelSerializer):
 
 class ConfigSettingsSerializer(CustomModelSerializer):
     """
-    字典详情 简单序列化器
+    参数设置 简单序列化器
     """
-    dictType = serializers.CharField(source='dict_data.dictType', default='', read_only=True)
 
     class Meta:
         model = ConfigSettings
         exclude = ('description', 'creator', 'modifier')
+
+
+class ExportConfigSettingsSerializer(CustomModelSerializer):
+    """
+    导出 参数设置 简单序列化器
+    """
+
+    class Meta:
+        model = ConfigSettings
+        fields = (
+        'id', 'configName', 'configKey', 'configValue', 'configType', 'status', 'creator', 'modifier', 'remark')
 
 
 class ConfigSettingsCreateUpdateSerializer(CustomModelSerializer):
     """
-    字典详情 创建/更新时的列化器
+    参数设置 创建/更新时的列化器
     """
 
     class Meta:
         model = ConfigSettings
         exclude = ('description', 'creator', 'modifier')
-        read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
 
 
 # ================================================= #

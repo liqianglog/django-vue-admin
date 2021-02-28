@@ -39,7 +39,6 @@ class MenuCreateUpdateSerializer(CustomModelSerializer):
     class Meta:
         model = Menu
         exclude = ('description', 'creator', 'modifier')
-        read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
 
 
 class MenuTreeSerializer(serializers.ModelSerializer):
@@ -80,7 +79,6 @@ class DeptCreateUpdateSerializer(CustomModelSerializer):
     class Meta:
         model = Dept
         exclude = ('description', 'creator', 'modifier')
-        read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
 
 
 class DeptTreeSerializer(serializers.ModelSerializer):
@@ -109,6 +107,16 @@ class PostSerializer(CustomModelSerializer):
         exclude = ('description', 'creator', 'modifier')
 
 
+class ExportPostSerializer(CustomModelSerializer):
+    """
+    导出 岗位管理 简单序列化器
+    """
+
+    class Meta:
+        model = Post
+        fields = ('id', 'postName', 'postCode', 'postSort', 'status', 'creator', 'modifier', 'remark')
+
+
 class PostSimpleSerializer(CustomModelSerializer):
     """
     岗位管理 极简单序列化器
@@ -130,7 +138,6 @@ class PostCreateUpdateSerializer(CustomModelSerializer):
     class Meta:
         model = Post
         exclude = ('description', 'creator', 'modifier')
-        read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
 
 
 # ================================================= #
@@ -145,6 +152,21 @@ class RoleSerializer(CustomModelSerializer):
     class Meta:
         model = Role
         exclude = ('description', 'creator', 'modifier')
+
+
+class ExportRoleSerializer(CustomModelSerializer):
+    """
+    导出 角色管理 简单序列化器
+    """
+    dataScope = serializers.SerializerMethodField()
+
+    def get_dataScope(self, obj):
+        dataScope = obj.get_dataScope_display()
+        return dataScope
+
+    class Meta:
+        model = Role
+        fields = ('id', 'roleName', 'roleKey', 'roleSort', 'dataScope', 'status', 'creator', 'modifier', 'remark')
 
 
 class RoleSimpleSerializer(CustomModelSerializer):
@@ -176,7 +198,6 @@ class RoleCreateUpdateSerializer(CustomModelSerializer):
     class Meta:
         model = Role
         exclude = ('description', 'creator', 'modifier')
-        read_only_fields = ('update_datetime', 'create_datetime', 'creator', 'modifier')
 
 
 # ================================================= #
@@ -201,6 +222,20 @@ class UserProfileSerializer(CustomModelSerializer):
         model = UserProfile
         depth = 1
         exclude = ('password', 'secret', 'user_permissions', 'groups', 'is_superuser', 'date_joined')
+
+
+class ExportUserProfileSerializer(CustomModelSerializer):
+    """
+    用户导出 序列化器
+    """
+    last_login = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
+    dept__deptName = serializers.CharField(source='dept.deptName', default='')
+    dept__owner = serializers.CharField(source='dept.owner', default='')
+
+    class Meta:
+        model = UserProfile
+        fields = ('id', 'username', 'name', 'email', 'mobile', 'gender', 'is_active', 'last_login', 'dept__deptName',
+                  'dept__owner')
 
 
 class UserProfileCreateUpdateSerializer(CustomModelSerializer):

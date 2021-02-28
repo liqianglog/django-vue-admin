@@ -1,7 +1,3 @@
-import os
-
-from django.conf import settings
-from django.http import HttpResponse
 from rest_framework.request import Request
 
 from apps.op_drf.viewsets import CustomModelViewSet
@@ -9,7 +5,9 @@ from apps.system.filters import DictDetailsFilter, DictDataFilter, ConfigSetting
 from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile
 from apps.system.serializers import DictDataSerializer, DictDataCreateUpdateSerializer, DictDetailsSerializer, \
     DictDetailsCreateUpdateSerializer, DictDetailsListSerializer, ConfigSettingsSerializer, \
-    ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer
+    ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer, \
+    ExportConfigSettingsSerializer, ExportDictDataSerializer, ExportDictDetailsSerializer
+from utils.export_excel import export_excel_save_model
 from utils.response import SuccessResponse
 
 
@@ -29,6 +27,18 @@ class DictDataModelViewSet(CustomModelViewSet):
     # create_extra_permission_classes = (IsManagerPermission,)
     search_fields = ('dictName',)
     ordering = 'id'  # 默认排序
+
+    def export(self, request: Request, *args, **kwargs):
+        """
+        导出字典管理数据
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        field_data = ['字典主键', '字典名称', '字典类型', '字典状态', '创建者', '修改者', '备注']
+        data = ExportDictDataSerializer(DictData.objects.all(), many=True).data
+        return SuccessResponse(export_excel_save_model(request, field_data, data, '导出参数管理数据.xls'))
 
 
 class DictDetailsModelViewSet(CustomModelViewSet):
@@ -60,6 +70,19 @@ class DictDetailsModelViewSet(CustomModelViewSet):
         serializer = DictDetailsListSerializer(queryset, many=True)
         return SuccessResponse(serializer.data)
 
+    def export(self, request: Request, *args, **kwargs):
+        """
+        导出字典详情数据
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        dictType = request.query_params.get('dictType')
+        field_data = ['字典详情主键', '字典标签', '字典键值', '是否默认', '字典状态', '字典排序', '创建者', '修改者', '备注']
+        data = ExportDictDetailsSerializer(DictDetails.objects.filter(dict_data__dictType=dictType), many=True).data
+        return SuccessResponse(export_excel_save_model(request, field_data, data, f'导出字典[{dictType}]详情数据.xls'))
+
 
 class ConfigSettingsModelViewSet(CustomModelViewSet):
     """
@@ -89,6 +112,18 @@ class ConfigSettingsModelViewSet(CustomModelViewSet):
         #     self.handle_logging(request, *args, **kwargs)
         return SuccessResponse(msg=queryset.configValue if queryset else '')
 
+    def export(self, request: Request, *args, **kwargs):
+        """
+        导出参数管理数据
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        field_data = ['参数主键', '参数名称', '参数键名', '参数键值', '系统内置', '参数状态', '创建者', '修改者',  '备注']
+        data = ExportConfigSettingsSerializer(ConfigSettings.objects.all(), many=True).data
+        return SuccessResponse(export_excel_save_model(request, field_data, data, '导出参数管理数据.xls'))
+
 
 class SaveFileModelViewSet(CustomModelViewSet):
     """
@@ -101,19 +136,3 @@ class SaveFileModelViewSet(CustomModelViewSet):
     # filter_class = ConfigSettingsFilter
     search_fields = ('configName',)
     ordering = 'id'  # 默认排序
-
-    def download_file(self, request: Request, *args, **kwargs):
-        """
-        下载文件
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        instance = self.get_object()
-        file_path = os.path.join(settings.MEDIA_ROOT,str(instance.file))
-        with open(file_path, "rb") as f:
-            res = HttpResponse(f)
-        res["Content-Type"] = instance.type  # 注意格式
-        res["Content-Disposition"] = 'filename="{}"'.format(instance.name)
-        return res

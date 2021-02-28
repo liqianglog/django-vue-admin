@@ -8,7 +8,8 @@ from apps.permission.models import Role, Menu, Dept, Post, UserProfile
 from apps.permission.serializers import UserProfileSerializer, MenuSerializer, RoleSerializer, \
     MenuCreateUpdateSerializer, DeptSerializer, DeptCreateUpdateSerializer, PostSerializer, PostCreateUpdateSerializer, \
     RoleCreateUpdateSerializer, DeptTreeSerializer, MenuTreeSerializer, UserProfileCreateUpdateSerializer, \
-    PostSimpleSerializer, RoleSimpleSerializer
+    PostSimpleSerializer, RoleSimpleSerializer, ExportUserProfileSerializer, ExportRoleSerializer, ExportPostSerializer
+from utils.export_excel import export_excel_save_model
 from utils.response import SuccessResponse, ErrorResponse
 
 
@@ -44,7 +45,8 @@ class GetRouters(APIView):
 
     def get(self, request, format=None):
         # data = GetUserInfoSerializer(request.user).data
-        menus = Menu.objects.filter(role__userprofile=request.user).exclude(menuType="2").values('id','name', 'web_path',
+        menus = Menu.objects.filter(role__userprofile=request.user).exclude(menuType="2").values('id', 'name',
+                                                                                                 'web_path',
                                                                                                  'visible', 'status',
                                                                                                  'isFrame',
                                                                                                  'component_path',
@@ -56,7 +58,7 @@ class GetRouters(APIView):
         for ele in menus:
             data.append({
                 'id': ele.get('id'),
-                'name': ''.join([i.capitalize() for i in ele.get('web_path','').split('/')]),
+                'name': ''.join([i.capitalize() for i in ele.get('web_path', '').split('/')]),
                 'path': ele.get('web_path'),
                 'hidden': True if ele.get('visible') != '1' else False,
                 'redirect': ele.get('web_path') if ele.get('isFrame') == '1' else 'noRedirect',
@@ -194,6 +196,18 @@ class PostModelViewSet(CustomModelViewSet):
     search_fields = ('postName',)
     ordering = ['postSort', 'create_datetime']  # 默认排序
 
+    def export(self, request: Request, *args, **kwargs):
+        """
+        导出岗位
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        field_data = ['岗位序号', '岗位编码', '岗位名称', '岗位排序', '状态', '创建者', '修改者', '备注']
+        data = ExportPostSerializer(Post.objects.all(), many=True).data
+        return SuccessResponse(export_excel_save_model(request, field_data, data, '导出岗位数据.xls'))
+
 
 class RoleModelViewSet(CustomModelViewSet):
     """
@@ -209,6 +223,18 @@ class RoleModelViewSet(CustomModelViewSet):
     # create_extra_permission_classes = (IsManagerPermission,)
     search_fields = ('roleName',)
     ordering = 'create_datetime'  # 默认排序
+
+    def export(self, request: Request, *args, **kwargs):
+        """
+        导出角色
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        field_data = ['角色序号', '角色名称', '角色权限', '角色排序', '数据范围', '角色状态', '创建者', '修改者', '备注']
+        data = ExportRoleSerializer(Role.objects.all(), many=True).data
+        return SuccessResponse(export_excel_save_model(request, field_data, data, '导出角色数据.xls'))
 
 
 class UserProfileModelViewSet(CustomModelViewSet):
@@ -304,16 +330,15 @@ class UserProfileModelViewSet(CustomModelViewSet):
         :return:
         """
         instance = self.queryset.get(id=request.user.id)
-        instance.name = request.data.get('name',None)
-        instance.mobile = request.data.get('mobile',None)
-        instance.email = request.data.get('email',None)
-        instance.gender = request.data.get('gender',None)
+        instance.name = request.data.get('name', None)
+        instance.mobile = request.data.get('mobile', None)
+        instance.email = request.data.get('email', None)
+        instance.gender = request.data.get('gender', None)
         instance.save()
         serializer = self.get_serializer(instance)
         if hasattr(self, 'handle_logging'):
             self.handle_logging(request, instance=instance, *args, **kwargs)
         return SuccessResponse(serializer.data)
-
 
     def update_pwd(self, request: Request, *args, **kwargs):
         """
@@ -324,8 +349,8 @@ class UserProfileModelViewSet(CustomModelViewSet):
         :return:
         """
         instance = self.queryset.get(id=request.user.id)
-        instance.mobile = request.data.get('newPassword',None)
-        if not authenticate(username=request.user.username, password=request.data.get('oldPassword',None)):
+        instance.mobile = request.data.get('newPassword', None)
+        if not authenticate(username=request.user.username, password=request.data.get('oldPassword', None)):
             return ErrorResponse(msg='旧密码不正确！')
         instance.set_password(request.data.get('newPassword'))
         instance.save()
@@ -333,3 +358,15 @@ class UserProfileModelViewSet(CustomModelViewSet):
         if hasattr(self, 'handle_logging'):
             self.handle_logging(request, instance=instance, *args, **kwargs)
         return SuccessResponse(serializer.data)
+
+    def export(self, request: Request, *args, **kwargs):
+        """
+        导出用户
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        field_data = ['用户序号', '登录名称', '用户名称', '用户邮箱', '手机号码', '用户性别', '帐号状态', '最后登录时间', '部门名称', '部门负责人']
+        data = ExportUserProfileSerializer(UserProfile.objects.all(), many=True).data
+        return SuccessResponse(export_excel_save_model(request, field_data, data, '导出用户数据.xls'))

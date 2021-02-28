@@ -12,7 +12,11 @@ router.register(r'savefile', SaveFileModelViewSet)
 urlpatterns = [
     re_path('dict/get/type/(?P<pk>.*)/', DictDetailsModelViewSet.as_view({'get': 'dict_details_list'})),
     re_path('config/configKey/(?P<pk>.*)/', ConfigSettingsModelViewSet.as_view({'get': 'get_config_key'})),
-    # 下载文件
-    re_path('savefile/(?P<pk>.*)/', SaveFileModelViewSet.as_view({'get': 'download_file'})),
+    # 参数管理导出
+    re_path('config/export/', ConfigSettingsModelViewSet.as_view({'get': 'export'})),
+    # 导出字典管理数据
+    re_path('dict/type/export/', DictDataModelViewSet.as_view({'get': 'export'})),
+    # 导出字典详情数据
+    re_path('dict/data/export/', DictDetailsModelViewSet.as_view({'get': 'export'})),
 ]
 urlpatterns += router.urls

@@ -1,7 +1,7 @@
 import os
 import uuid
 
-from django.db.models import CharField, FileField
+from django.db.models import CharField, FileField,BooleanField
 from django.utils import timezone
 
 from apps.op_drf.models import CoreModel
@@ -17,6 +17,7 @@ class SaveFile(CoreModel):
     size = CharField(max_length=64, verbose_name="文件大小", null=True, blank=True)
     address = CharField(max_length=16, verbose_name="存储位置", null=True, blank=True)  # 本地、阿里云、腾讯云..
     oss_url = CharField(max_length=200, verbose_name="OSS地址", null=True, blank=True)
+    status = BooleanField(default=True, verbose_name="文件是否存在")
     file = FileField(verbose_name="文件URL", upload_to=files_path, )
 
     class Meta:

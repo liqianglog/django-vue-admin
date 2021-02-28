@@ -318,7 +318,7 @@ export default {
         }).then(function() {
           return exportPost(queryParams);
         }).then(response => {
-          this.download(response.msg);
+          this.download(response.data.file_url,response.data.name);
         })
     }
   }

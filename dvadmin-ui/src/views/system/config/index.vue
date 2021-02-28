@@ -353,7 +353,7 @@ export default {
         }).then(function() {
           return exportConfig(queryParams);
         }).then(response => {
-          this.download(response.msg);
+          this.download(response.data.file_url,response.data.name);
         })
     },
     /** 清理缓存按钮操作 */

@@ -640,7 +640,7 @@ export default {
         }).then(function() {
           return exportUser(queryParams);
         }).then(response => {
-          this.download(response.msg);
+          this.download(response.data.file_url,response.data.name);
         })
     },
     /** 导入按钮操作 */
@@ -651,7 +651,7 @@ export default {
     /** 下载模板操作 */
     importTemplate() {
       importTemplate().then(response => {
-        this.download(response.msg);
+        this.download(response.data.file_url,response.data.name);
       });
     },
     // 文件上传中处理

@@ -372,7 +372,7 @@
         }).then(function() {
           return exportData(queryParams);
         }).then(response => {
-          this.download(response.msg);
+          this.download(response.data.file_url,response.data.name);
         })
     }
   }

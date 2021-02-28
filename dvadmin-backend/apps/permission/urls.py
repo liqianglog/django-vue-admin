@@ -30,6 +30,12 @@ urlpatterns = [
     re_path('user/profile/updatePwd/', UserProfileModelViewSet.as_view({'put': 'update_pwd'})),
     # 获取、更新用户个人信息
     re_path('user/profile/', UserProfileModelViewSet.as_view({'get': 'profile','put': 'put_profile'})),
+    # 导出用户
+    re_path('user/export/', UserProfileModelViewSet.as_view({'get': 'export',})),
+    # 导出角色
+    re_path('role/export/', RoleModelViewSet.as_view({'get': 'export',})),
+    # 导出岗位
+    re_path('post/export/', PostModelViewSet.as_view({'get': 'export',})),
 
 ]
 urlpatterns += router.urls
