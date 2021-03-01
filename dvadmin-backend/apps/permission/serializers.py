@@ -269,6 +269,12 @@ class UserProfileCreateUpdateSerializer(CustomModelSerializer):
         data.role.set(self.initial_data.get('roleIds'))
         return data
 
+    def create(self, validated_data):
+        data = super().create(validated_data)
+        data.set_password(self.initial_data.get('password', None))
+        data.save()
+        return data
+
     class Meta:
         model = UserProfile
         exclude = ('password', 'secret', 'user_permissions', 'groups', 'is_superuser', 'date_joined')
