@@ -9,7 +9,7 @@ class DictDetails(CoreModel):
     is_default = BooleanField(verbose_name="是否默认", default=False)
     status = CharField(max_length=2, verbose_name="字典状态")
     sort = CharField(max_length=256, verbose_name="字典排序")
-    dict_data = ForeignKey(to='DictData', on_delete=CASCADE, verbose_name="关联字典")
+    dict_data = ForeignKey(to='DictData', on_delete=CASCADE, verbose_name="关联字典",db_constraint=False)
     remark = CharField(max_length=256, verbose_name="备注", null=True, blank=True)
 
     class Meta:

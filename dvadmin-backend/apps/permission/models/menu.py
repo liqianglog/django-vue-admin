@@ -19,7 +19,7 @@ class Menu(CoreModel):
     #     ('OPTIONS', 'OPTIONS'),
     #     ('TRACE', 'TRACE'),
     # )
-    parentId = ForeignKey(to='Menu', on_delete=CASCADE, verbose_name="上级菜单", null=True, blank=True, )
+    parentId = ForeignKey(to='Menu', on_delete=CASCADE, verbose_name="上级菜单", null=True, blank=True, db_constraint=False)
     menuType = CharField(max_length=8, verbose_name="菜单类型")
     icon = CharField(max_length=64, verbose_name="菜单图标", null=True, blank=True)
     name = CharField(max_length=64, verbose_name="菜单名称")
