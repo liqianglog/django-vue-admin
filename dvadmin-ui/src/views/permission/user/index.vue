@@ -90,7 +90,7 @@
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
-              v-hasPermi="['system:user:add']"
+              v-hasPermi="['permission:user:post']"
             >新增</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -101,7 +101,7 @@
               size="mini"
               :disabled="single"
               @click="handleUpdate"
-              v-hasPermi="['system:user:edit']"
+              v-hasPermi="['permission:user:{id}:put']"
             >修改</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -112,7 +112,7 @@
               size="mini"
               :disabled="multiple"
               @click="handleDelete"
-              v-hasPermi="['system:user:remove']"
+              v-hasPermi="['permission:user:{id}:delete']"
             >删除</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -122,7 +122,7 @@
               icon="el-icon-upload2"
               size="mini"
               @click="handleImport"
-              v-hasPermi="['system:user:import']"
+              v-hasPermi="['permission:user:import:post']"
             >导入</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -132,7 +132,7 @@
               icon="el-icon-download"
               size="mini"
               @click="handleExport"
-              v-hasPermi="['system:user:export']"
+              v-hasPermi="['permission:user:export:get']"
             >导出</el-button>
           </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
@@ -150,6 +150,7 @@
               <el-switch
                 v-model="scope.row.is_active"
                 @change="handleStatusChange(scope.row)"
+                disabled
               ></el-switch>
             </template>
           </el-table-column>
@@ -170,7 +171,7 @@
                 type="text"
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:user:edit']"
+                v-hasPermi="['permission:user:{id}:put']"
               >修改</el-button>
               <el-button
                 v-if="scope.row.id !== 1"
@@ -178,14 +179,14 @@
                 type="text"
                 icon="el-icon-delete"
                 @click="handleDelete(scope.row)"
-                v-hasPermi="['system:user:remove']"
+                v-hasPermi="['permission:user:{id}:delete']"
               >删除</el-button>
               <el-button
                 size="mini"
                 type="text"
                 icon="el-icon-key"
                 @click="handleResetPwd(scope.row)"
-                v-hasPermi="['system:user:resetPwd']"
+                v-hasPermi="['permission:user:resetpwd:put']"
               >重置</el-button>
             </template>
           </el-table-column>

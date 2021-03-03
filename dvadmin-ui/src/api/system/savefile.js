@@ -31,6 +31,6 @@ export function delSaveFile(menuId) {
 export function clearSaveFile() {
   return request({
     url: '/system/clearsavefile/',
-    method: 'get'
+    method: 'post'
   })
 }

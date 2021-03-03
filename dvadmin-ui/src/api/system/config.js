@@ -62,7 +62,7 @@ export function clearCache() {
 // 导出参数
 export function exportConfig(query) {
   return request({
-    url: '/system/config/export',
+    url: '/system/config/export/',
     method: 'get',
     params: query
   })

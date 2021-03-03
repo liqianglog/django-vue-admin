@@ -44,7 +44,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:menu:add']"
+          v-hasPermi="['permission:menus:post']"
         >新增
         </el-button>
       </el-col>
@@ -67,8 +67,8 @@
       <el-table-column prop="menuType" label="菜单类型" :formatter="menuTypeFormat" width="80"></el-table-column>
       <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="component_path" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
-<!--      <el-table-column prop="interface_path" label="接口路径" :show-overflow-tooltip="true"></el-table-column>-->
-<!--      <el-table-column prop="interface_method" label="请求方式" :formatter="interfaceMethodFormat" width="70"></el-table-column>-->
+      <!--      <el-table-column prop="interface_path" label="接口路径" :show-overflow-tooltip="true"></el-table-column>-->
+      <!--      <el-table-column prop="interface_method" label="请求方式" :formatter="interfaceMethodFormat" width="70"></el-table-column>-->
       <el-table-column prop="status" label="状态" :formatter="statusFormat" width="80"></el-table-column>
       <el-table-column label="更新时间" align="center" prop="update_datetime">
         <template slot-scope="scope">
@@ -86,7 +86,7 @@
                      type="text"
                      icon="el-icon-edit"
                      @click="handleUpdate(scope.row)"
-                     v-hasPermi="['system:menu:edit']"
+                     v-hasPermi="['permission:menus:{id}:put']"
           >修改
           </el-button>
           <el-button
@@ -94,7 +94,7 @@
             type="text"
             icon="el-icon-plus"
             @click="handleAdd(scope.row)"
-            v-hasPermi="['system:menu:add']"
+            v-hasPermi="['permission:menus:post']"
           >新增
           </el-button>
           <el-button
@@ -102,7 +102,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:menu:remove']"
+            v-hasPermi="['permission:menus:{id}:delete']"
           >删除
           </el-button>
         </template>
@@ -185,7 +185,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item v-if="form.menuType != '0'" label="接口路径" prop="interface_path">
-              <el-input v-model="form.interface_path" placeholder="请输入后端接口路径" @change="CreatePerms"/>
+              <el-input v-model="form.interface_path" placeholder="请输入后端接口路径" @change="InterfacePathChange"/>
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="form.menuType != '0'">
@@ -320,14 +320,24 @@
       selected(name) {
         this.form.icon = name;
       },
+      /** 接口路径变化，必须斜杠开头，不能斜杠结尾*/
+      InterfacePathChange() {
+        if (this.form.interface_path.indexOf("/") !== 0) {
+          this.form.interface_path = "/" + this.form.interface_path
+        }
+        if (!this.form.interface_path.endsWith('/')) {
+          this.form.interface_path = this.form.interface_path + "/"
+        }
+        this.CreatePerms()
+      },
       /** 自动生成权限标识 */
       CreatePerms() {
         let res = this.form.interface_path + ":" + this.form.interface_method
-        this.form.perms = res.toLocaleLowerCase().replace(/(\/)/g,':').replace(/(::)/g,':').replace(/(^:)|(:$)/g, "")
+        this.form.perms = res.toLocaleLowerCase().replace(/(\/)/g, ':').replace(/(::)/g, ':').replace(/(^:)|(:$)/g, "")
       },
       /** 组件路径变化，替换斜杠开头 */
-      ComponentPathChange(){
-        this.form.component_path = this.form.component_path.replace(/(^\/)/g,'')
+      ComponentPathChange() {
+        this.form.component_path = this.form.component_path.replace(/(^\/)/g, '')
       },
       /** 查询菜单列表 */
       getList() {
@@ -431,7 +441,7 @@
         this.$refs["form"].validate(valid => {
           if (valid) {
             const cloneData = JSON.parse(JSON.stringify(this.form))
-            if (cloneData.parentId===0){
+            if (cloneData.parentId === 0) {
               delete cloneData['parentId']
             }
             if (this.form.id != undefined) {

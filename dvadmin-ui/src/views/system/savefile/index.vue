@@ -35,7 +35,7 @@
           icon="el-icon-upload"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:config:add']"
+          v-hasPermi="['system:savefile:post']"
         >文件上传
         </el-button>
       </el-col>
@@ -47,7 +47,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:config:remove']"
+          v-hasPermi="['system:savefile:{id}:delete']"
         >批量删除
         </el-button>
       </el-col>
@@ -58,7 +58,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleClear"
-          v-hasPermi="['system:post:export']"
+          v-hasPermi="['system:clearsavefile:post']"
         >清理废弃文件
         </el-button>
       </el-col>
@@ -86,7 +86,7 @@
             type="text"
             icon="el-icon-download"
             @click="handleDownload(scope.row)"
-            v-hasPermi="['system:post:edit']"
+            v-hasPermi="['system:clearsavefile:download:post']"
           >下载
           </el-button>
           <el-button
@@ -94,7 +94,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:post:remove']"
+            v-hasPermi="['system:savefile:{id}:delete']"
           >删除
           </el-button>
         </template>
