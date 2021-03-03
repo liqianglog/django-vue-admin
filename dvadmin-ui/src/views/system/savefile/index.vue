@@ -79,7 +79,13 @@
           <span>{{ parseTime(scope.row.create_datetime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="130">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        width="130"
+        v-if="hasPermi(['system:clearsavefile:download:post'])"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"

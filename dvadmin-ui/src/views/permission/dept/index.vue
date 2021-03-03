@@ -47,20 +47,25 @@
       default-expand-all
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="deptName" label="部门名称" width="260"></el-table-column>
+      <el-table-column prop="deptName" label="部门名称"></el-table-column>
       <el-table-column prop="orderNum" label="排序" width="200"></el-table-column>
       <el-table-column prop="status" label="状态" :formatter="statusFormat" width="200"></el-table-column>
-      <el-table-column label="更新时间" align="center" prop="update_datetime" width="200">
+      <el-table-column label="更新时间" align="center" prop="update_datetime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.update_datetime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="create_datetime" width="200">
+      <el-table-column label="创建时间" align="center" prop="create_datetime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.create_datetime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        v-if="hasPermi(['permission:dept:{id}:put','permission:dept:post','permission:dept:{id}:delete'])"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"

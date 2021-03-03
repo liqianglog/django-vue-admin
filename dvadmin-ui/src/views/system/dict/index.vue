@@ -113,7 +113,7 @@
 
     <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典编号" align="center" prop="id" />
+      <el-table-column label="字典编号" align="center" prop="id" width="100"/>
       <el-table-column label="字典名称" align="center" prop="dictName" :show-overflow-tooltip="true" />
       <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -129,7 +129,12 @@
           <span>{{ parseTime(scope.row.create_datetime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        v-if="hasPermi(['system:dict:type:{id}:put','system:dict:type:{id}:delete'])"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"

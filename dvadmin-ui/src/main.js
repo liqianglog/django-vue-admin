@@ -31,6 +31,12 @@ Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
+Vue.prototype.hasPermi = function (values) {
+  const permissions = store.getters && store.getters.permissions
+  return  permissions.some(permission => {
+    return "*:*:*" === permission || values.includes(permission)
+  })
+};
 
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });

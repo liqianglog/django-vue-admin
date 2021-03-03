@@ -104,8 +104,8 @@
     <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="角色编号" prop="id" width="120" />
-      <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" width="150" />
-      <el-table-column label="权限字符" prop="roleKey" :show-overflow-tooltip="true" width="150" />
+      <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" />
+      <el-table-column label="权限字符" prop="roleKey" :show-overflow-tooltip="true" />
       <el-table-column label="显示顺序" prop="roleSort" width="100" />
       <el-table-column label="状态" align="center" width="100">
         <template slot-scope="scope">
@@ -118,12 +118,17 @@
           ></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="create_datetime" width="180">
+      <el-table-column label="创建时间" align="center" prop="create_datetime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.create_datetime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        v-if="hasPermi(['permission:role:{id}:put', 'permission:role:{id}:delete'])"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"

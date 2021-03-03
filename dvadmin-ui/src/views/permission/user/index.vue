@@ -164,6 +164,7 @@
             align="center"
             width="160"
             class-name="small-padding fixed-width"
+            v-if="hasPermi(['permission:user:{id}:put','permission:user:{id}:delete','permission:user:resetpwd:put'])"
           >
             <template slot-scope="scope">
               <el-button
