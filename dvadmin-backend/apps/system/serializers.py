@@ -35,7 +35,7 @@ class DictDataCreateUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = DictData
-        exclude = ('description', 'creator', 'modifier')
+        fields = '__all__'
 
 
 # ================================================= #
@@ -80,7 +80,7 @@ class DictDetailsCreateUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = DictDetails
-        exclude = ('description', 'creator', 'modifier')
+        fields = '__all__'
 
 
 # ================================================= #
@@ -115,7 +115,7 @@ class ConfigSettingsCreateUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = ConfigSettings
-        exclude = ('description', 'creator', 'modifier')
+        fields = '__all__'
 
 
 # ================================================= #
@@ -151,4 +151,4 @@ class SaveFileCreateUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = SaveFile
-        exclude = ('description', 'creator', 'modifier')
+        fields = '__all__'

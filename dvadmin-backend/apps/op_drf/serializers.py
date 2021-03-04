@@ -32,7 +32,7 @@ class CustomModelSerializer(ModelSerializer):
             if self.modifier_field_name in self.fields.fields:
                 validated_data[self.modifier_field_name] = username
             if self.creator_field_name in self.fields.fields:
-                validated_data[self.creator_field_name] = username
+                validated_data[self.creator_field_name] = self.request.user
         return super().create(validated_data)
 
     def update(self, instance, validated_data):

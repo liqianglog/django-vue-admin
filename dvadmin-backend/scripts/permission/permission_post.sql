@@ -21,7 +21,7 @@
 -- ----------------------------
 -- Records of permission_post
 -- ----------------------------
-INSERT INTO `permission_post` VALUES (1, '', 'admin', 'admin', '2021-02-27 07:16:10.725970', '2021-02-27 07:16:10.726016', '董事长', 'ceo', 1, '1', NULL);
-INSERT INTO `permission_post` VALUES (2, '', 'admin', 'admin', '2021-02-27 07:16:28.139648', '2021-02-27 07:16:28.139689', '项目经理', 'ce', 2, '1', NULL);
-INSERT INTO `permission_post` VALUES (3, '', 'admin', 'admin', '2021-02-27 07:16:39.843069', '2021-02-27 07:16:39.843114', '人力资源', 'hr', 3, '1', NULL);
-INSERT INTO `permission_post` VALUES (4, '', 'admin', 'admin', '2021-02-27 07:16:51.082769', '2021-02-27 07:16:51.082813', '普通员工', 'user', 4, '1', NULL);
+INSERT INTO `permission_post` VALUES (1, '', 1, 'admin', '2021-02-27 07:16:10.725970', '2021-02-27 07:16:10.726016', '董事长', 'ceo', 1, '1', NULL);
+INSERT INTO `permission_post` VALUES (2, '', 1, 'admin', '2021-02-27 07:16:28.139648', '2021-02-27 07:16:28.139689', '项目经理', 'ce', 2, '1', NULL);
+INSERT INTO `permission_post` VALUES (3, '', 1, 'admin', '2021-02-27 07:16:39.843069', '2021-02-27 07:16:39.843114', '人力资源', 'hr', 3, '1', NULL);
+INSERT INTO `permission_post` VALUES (4, '', 1, 'admin', '2021-02-27 07:16:51.082769', '2021-02-27 07:16:51.082813', '普通员工', 'user', 4, '1', NULL);

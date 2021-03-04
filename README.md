@@ -48,7 +48,7 @@ github地址：[https://github.com/liqianglog/django-vue-admin](https://github.c
 
 ## 在线体验
 
-演示地址：[https://demo.django-vue-admin.com/](https://demo.django-vue-admin.com/) 账号：demo 密码：123456
+演示地址：[https://demo.django-vue-admin.com/](https://demo.django-vue-admin.com/) 账号：admin 密码：123456
 
 文档地址：[https://django-vue-admin.com/](https://django-vue-admin.com/)
 
@@ -102,7 +102,7 @@ npm run build:prod
 6. 启动项目
 	python3 manage.py runserver 0.0.0.0:8000
 	
-初始账号：demo 密码：123456
+初始账号：admin 密码：123456
 ~~~
 
 

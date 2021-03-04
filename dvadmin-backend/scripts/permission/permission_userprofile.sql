@@ -33,7 +33,7 @@
 -- ----------------------------
 -- Records of permission_userprofile
 -- ----------------------------
-INSERT INTO `permission_userprofile` VALUES (1, 'pbkdf2_sha256$150000$OjTMSXJgkzrE$jEQCjWbIbXwpN4k2z0o8Yvou1UQGuoJALyL/kGDZFd4=', '2021-02-27 06:20:28.214775', 1, '', '', 1, 1, '2021-02-27 06:20:09.188689', 'demo', '3704adf3-380f-4c27-a8da-60420e8cb4ab', 'demo@qq.com', NULL, NULL, '测试账号', '2', '1', 2, '2021-02-27 06:20:09.263192', '2021-02-27 09:14:30.009998', 8);
+INSERT INTO `permission_userprofile` VALUES (1, 'pbkdf2_sha256$150000$OjTMSXJgkzrE$jEQCjWbIbXwpN4k2z0o8Yvou1UQGuoJALyL/kGDZFd4=', '2021-02-27 06:20:28.214775', 1, '', '', 1, 1, '2021-02-27 06:20:09.188689', 'admin', '3704adf3-380f-4c27-a8da-60420e8cb4ab', 'admin@qq.com', NULL, NULL, '管理员', '2', '1', 2, '2021-02-27 06:20:09.263192', '2021-02-27 09:14:30.009998', 8);
 INSERT INTO `permission_userprofile` VALUES (2, 'pbkdf2_sha256$150000$5Z9LSi7LpNms$xVguE/dOEpI4D95LjSaKm0xzG7vNSopUolANr8f/6/E=', NULL, 0, '', '', 0, 1, '2021-03-03 15:38:27.009893', 'dvadmin', 'b4c5d79a-f01c-4244-92f8-b5288eca1d50', NULL, NULL, NULL, '普通用户', '2', NULL, 0, '2021-03-03 15:38:27.010771', '2021-03-03 15:38:27.086069', 8);
 -- ----------------------------
 -- Table structure for permission_userprofile_post

@@ -38,7 +38,7 @@ class MenuCreateUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = Menu
-        exclude = ('description', 'creator', 'modifier')
+        fields = '__all__'
 
 
 class MenuTreeSerializer(serializers.ModelSerializer):
@@ -78,7 +78,7 @@ class DeptCreateUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = Dept
-        exclude = ('description', 'creator', 'modifier')
+        fields = '__all__'
 
 
 class DeptTreeSerializer(serializers.ModelSerializer):
@@ -137,7 +137,7 @@ class PostCreateUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = Post
-        exclude = ('description', 'creator', 'modifier')
+        fields = '__all__'
 
 
 # ================================================= #
@@ -197,7 +197,7 @@ class RoleCreateUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = Role
-        exclude = ('description', 'creator', 'modifier')
+        fields = '__all__'
 
 
 # ================================================= #
