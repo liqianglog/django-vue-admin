@@ -20,3 +20,4 @@ redis==3.5.3
 six==1.15.0
 sqlparse==0.4.1
 xlwt==1.3.0
+coreapi==2.3.3

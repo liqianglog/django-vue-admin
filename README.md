@@ -103,6 +103,8 @@ npm run build:prod
 	python3 manage.py runserver 0.0.0.0:8000
 	
 初始账号：admin 密码：123456
+
+后端接口文档地址：http://127.0.0.1:8000/docs/
 ~~~
 
 

@@ -22,6 +22,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.urls import re_path, include
 from django.views.static import serve
+from rest_framework.documentation import include_docs_urls
 from rest_framework.views import APIView
 
 from apps.permission.views import GetUserProfileView, GetRouters
@@ -46,6 +47,7 @@ class CaptchaRefresh(APIView):
 urlpatterns = [
     re_path('api-token-auth/', LoginView.as_view(), name='api_token_auth'),
     re_path(r'^admin/', admin.site.urls),
+    url(r'docs/', include_docs_urls(title='接口文档')),
     re_path(r'^permission/', include('apps.permission.urls')),
     re_path(r'^system/', include('apps.system.urls')),
     re_path(r'media/(?P<path>.*)', serve, {"document_root": settings.MEDIA_ROOT}),
