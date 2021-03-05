@@ -9,6 +9,7 @@ from apps.permission.serializers import UserProfileSerializer, MenuSerializer, R
     MenuCreateUpdateSerializer, DeptSerializer, DeptCreateUpdateSerializer, PostSerializer, PostCreateUpdateSerializer, \
     RoleCreateUpdateSerializer, DeptTreeSerializer, MenuTreeSerializer, UserProfileCreateUpdateSerializer, \
     PostSimpleSerializer, RoleSimpleSerializer, ExportUserProfileSerializer, ExportRoleSerializer, ExportPostSerializer
+from apps.op_drf.filters import DataLevelPermissionsFilter
 from utils.export_excel import export_excel_save_model
 from utils.response import SuccessResponse, ErrorResponse
 
@@ -78,6 +79,7 @@ class MenuModelViewSet(CustomModelViewSet):
     create_serializer_class = MenuCreateUpdateSerializer
     update_serializer_class = MenuCreateUpdateSerializer
     filter_class = MenuFilter
+    extra_filter_backends = [DataLevelPermissionsFilter]
     # update_extra_permission_classes = (IsManagerPermission,)
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)
@@ -126,6 +128,7 @@ class DeptModelViewSet(CustomModelViewSet):
     create_serializer_class = DeptCreateUpdateSerializer
     update_serializer_class = DeptCreateUpdateSerializer
     filter_class = DeptFilter
+    extra_filter_backends = [DataLevelPermissionsFilter]
     # update_extra_permission_classes = (IsManagerPermission,)
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)
@@ -190,6 +193,7 @@ class PostModelViewSet(CustomModelViewSet):
     create_serializer_class = PostCreateUpdateSerializer
     update_serializer_class = PostCreateUpdateSerializer
     filter_class = PostFilter
+    extra_filter_backends = [DataLevelPermissionsFilter]
     # update_extra_permission_classes = (IsManagerPermission,)
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)
@@ -218,6 +222,7 @@ class RoleModelViewSet(CustomModelViewSet):
     create_serializer_class = RoleCreateUpdateSerializer
     update_serializer_class = RoleCreateUpdateSerializer
     filter_class = RoleFilter
+    extra_filter_backends = [DataLevelPermissionsFilter]
     # update_extra_permission_classes = (IsManagerPermission,)
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)
@@ -246,6 +251,7 @@ class UserProfileModelViewSet(CustomModelViewSet):
     create_serializer_class = UserProfileCreateUpdateSerializer
     update_serializer_class = UserProfileCreateUpdateSerializer
     filter_class = UserProfileFilter
+    extra_filter_backends = [DataLevelPermissionsFilter]
     # update_extra_permission_classes = (IsManagerPermission,)
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)

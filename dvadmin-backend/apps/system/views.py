@@ -7,6 +7,7 @@ from apps.system.serializers import DictDataSerializer, DictDataCreateUpdateSeri
     DictDetailsCreateUpdateSerializer, DictDetailsListSerializer, ConfigSettingsSerializer, \
     ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer, \
     ExportConfigSettingsSerializer, ExportDictDataSerializer, ExportDictDetailsSerializer
+from op_drf.filters import DataLevelPermissionsFilter
 from utils.export_excel import export_excel_save_model
 from utils.response import SuccessResponse
 
@@ -50,6 +51,7 @@ class DictDetailsModelViewSet(CustomModelViewSet):
     create_serializer_class = DictDetailsCreateUpdateSerializer
     update_serializer_class = DictDetailsCreateUpdateSerializer
     filter_class = DictDetailsFilter
+    extra_filter_backends = [DataLevelPermissionsFilter]
     # update_extra_permission_classes = (IsManagerPermission,)
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)
@@ -93,6 +95,7 @@ class ConfigSettingsModelViewSet(CustomModelViewSet):
     create_serializer_class = ConfigSettingsCreateUpdateSerializer
     update_serializer_class = ConfigSettingsCreateUpdateSerializer
     filter_class = ConfigSettingsFilter
+    extra_filter_backends = [DataLevelPermissionsFilter]
     # update_extra_permission_classes = (IsManagerPermission,)
     # destroy_extra_permission_classes = (IsManagerPermission,)
     # create_extra_permission_classes = (IsManagerPermission,)
@@ -134,5 +137,6 @@ class SaveFileModelViewSet(CustomModelViewSet):
     create_serializer_class = SaveFileCreateUpdateSerializer
     update_serializer_class = SaveFileCreateUpdateSerializer
     # filter_class = ConfigSettingsFilter
+    extra_filter_backends = [DataLevelPermissionsFilter]
     search_fields = ('configName',)
     ordering = 'id'  # 默认排序

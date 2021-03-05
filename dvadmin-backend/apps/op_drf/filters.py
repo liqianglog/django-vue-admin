@@ -6,9 +6,12 @@ import logging
 import operator
 from functools import reduce
 
+from django.db.models import Q
 from django.utils import six
 from mongoengine.queryset import visitor
 from rest_framework.filters import BaseFilterBackend, SearchFilter, OrderingFilter
+
+from apps.permission.models import Dept
 
 logger = logging.getLogger(__name__)
 
@@ -94,3 +97,59 @@ class MongoAdvancedSearchFilter(BaseFilterBackend):
         if as_kwargs:
             queryset = queryset.filter(**as_kwargs)
         return queryset
+
+
+class DataLevelPermissionsFilter(BaseFilterBackend):
+    """
+    数据 级权限过滤器
+    0. 判断过滤的数据是否有创建人 "creator" 字段
+    1. 判断用户是否为超级管理员角色
+    2. 根据角色的最大权限进行数据过滤(会有多个角色，进行去重取最大权限)
+    3. 只为仅本人数据权限时只返回过滤本人数据
+    4. 自定数据权限 获取部门，根据部门过滤
+    """
+    project_resource_name: str = 'project__tenant__managers'
+
+    def filter_queryset(self, request, queryset, view):
+        # 0. 判断过滤的数据是否有创建人 "creator" 字段
+        if not hasattr(queryset.model, 'creator'):
+            return queryset
+        # 1. 判断用户是否为超级管理员角色
+        if not hasattr(request.user, 'role'):
+            return queryset.filter(creator=request.user)
+        role_list = request.user.role.all().values('id', 'admin', 'dataScope')
+        if True in list(set([ele.get('admin') for ele in role_list])):
+            return queryset
+
+        # 2. 根据角色的最大权限进行数据过滤(会有多个角色，进行去重取最大权限)
+        dataScope_list = list(set([ele.get('dataScope') for ele in role_list]))
+        if '1' in dataScope_list:  # 返回所有数据
+            return queryset
+
+        # 3. 只为仅本人数据权限时只返回过滤本人数据
+        if dataScope_list == ['5']:
+            return queryset.filter(Q(creator=request.user))
+
+        # 4. 自定数据权限 获取部门，根据部门过滤
+        dept_list = []
+        for ele in dataScope_list:
+            if ele == '2':
+                dept_list.extend(request.user.role.all().values_list('dept__id', flat=True))
+            elif ele == '3':
+                dept_list.append(request.user.dept.id)
+            elif ele == '4':
+                dept_list.extend(self.get_dept(request.user.dept.id, Dept.objects.all().values('id', 'parentId')))
+                dept_list.append(request.user.dept.id)
+        return queryset.filter(Q(creator=request.user) | Q(creator__dept__in=list(set(dept_list))))
+
+    def get_dept(self, id, dept_all_list, dept_list=[]):
+        """
+        获取部门的所有下级部门
+        :param id:
+        :return:
+        """
+        for ele in dept_all_list:
+            if ele.get('parentId') == id:
+                dept_list.append(ele.get('id'))
+                self.get_dept(ele.get('id'), dept_all_list, dept_list)
+        return dept_list
