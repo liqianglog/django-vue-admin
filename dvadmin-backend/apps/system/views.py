@@ -7,7 +7,7 @@ from apps.system.serializers import DictDataSerializer, DictDataCreateUpdateSeri
     DictDetailsCreateUpdateSerializer, DictDetailsListSerializer, ConfigSettingsSerializer, \
     ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer, \
     ExportConfigSettingsSerializer, ExportDictDataSerializer, ExportDictDetailsSerializer
-from op_drf.filters import DataLevelPermissionsFilter
+from apps.op_drf.filters import DataLevelPermissionsFilter
 from utils.export_excel import export_excel_save_model
 from utils.response import SuccessResponse
 
