@@ -18,6 +18,7 @@ init(){
     echo "正在初始化中..."
     sudo find . -path "*/*/*/migrations/*.py" -not -name "__init__.py" -delete
     sudo rm -rf docker_env/mysql/data
+    python ./manage.py initialization
     echo "初始化完成..."
 }
 
