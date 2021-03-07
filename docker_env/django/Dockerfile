@@ -10,7 +10,7 @@ RUN apt-get install -y redis-tools
 RUN mkdir /dvadmin-backend
 WORKDIR /dvadmin-backend
 COPY ./dvadmin-backend/requirements.txt /
-COPY ./dvadmin-backend/conf/env.example.py ./dvadmin-backend/conf/env.py
+COPY ./dvadmin-backend/conf/env.example.py /dvadmin-backend/conf/env.py
 RUN python3 -m pip install -i https://mirrors.aliyun.com/pypi/simple/ -r /requirements.txt
 CMD ["/dvadmin-backend/docker_start.sh"]
 # ENTRYPOINT [ "uwsgi --ini /backend/azcrm/uwsgi.ini" ]
