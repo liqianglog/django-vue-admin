@@ -11,7 +11,7 @@ DATABASE_PORT = 3306
 # 数据库用户名
 DATABASE_USER = "root"
 # 数据库密码
-DATABASE_PASSWORD = "123456"
+DATABASE_PASSWORD = "q1w2e3r4T%Y^U&MYSQL"
 # 数据库名
 DATABASE_NAME = "django-vue-admin"
 
@@ -28,7 +28,7 @@ MONGO_PORT = 27017
 REDIS_DB = 1
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
-REDIS_PASSWORD = 'q1w2e3r4T%Y^U&'
+REDIS_PASSWORD = ''
 
 # ================================================= #
 # ************** 默认配置  ************** #

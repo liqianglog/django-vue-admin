@@ -210,7 +210,7 @@ if DATABASE_TYPE == "MYSQL":
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
-            "HOST": DATABASE_HOST,
+            "HOST": os.getenv('DATABASE_HOST') or DATABASE_HOST,
             "PORT": DATABASE_PORT,
             "USER": DATABASE_USER,
             "PASSWORD": DATABASE_PASSWORD,
@@ -226,9 +226,9 @@ else:
         }
     }
 
-connect(MONGO_DATABASE_NAME, host=MONGO_HOST, port=MONGO_PORT, serverSelectionTimeoutMS=1000, connect=False)
+connect(MONGO_DATABASE_NAME, host=os.getenv('MONGO_HOST') or MONGO_HOST, port=MONGO_PORT, serverSelectionTimeoutMS=1000, connect=False)
 # redis 缓存
-REDIS_URL = f'redis://:{REDIS_PASSWORD if REDIS_PASSWORD else ""}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
+REDIS_URL = f'redis://:{REDIS_PASSWORD if REDIS_PASSWORD else ""}@{os.getenv("REDIS_HOST") or REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",

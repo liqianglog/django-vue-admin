@@ -33,7 +33,7 @@ services:
       - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "q1w2e3r4T%Y^U&MYSQL"
-      MYSQL_DATABASE: "dvadmin"
+      MYSQL_DATABASE: "django-vue-admin"
       TZ: Asia/Shanghai
     command:
       --wait_timeout=31536000
@@ -61,6 +61,9 @@ services:
     depends_on:
       - dvadmin-mysql
       - dvadmin-redis
+    environment:
+      - REDIS_HOST=dvadmin-redis
+      - DATABASE_HOST=dvadmin-mysql
     volumes:
       - ./dvadmin-backend:/dvadmin-backend
       - ./logs/log:/var/log
@@ -97,29 +100,29 @@ services:
 #      - dvadmin_net
 
 
-#  dvadmin-nginx:
-#    image: nginx:latest
-#    container_name: docker-nginx
-#    # build: ./docker_env/nginx
-#    restart: always
-#    ports:
-#      - "80:80"
-#      - "443:443"
-#    expose:
-#      - "80"
-#      - "443"
-#    volumes:
-#      - ./docker_env/nginx/nginx.conf:/etc/nginx/nginx.conf
-#      - ./docker_env/nginx/sites-enabled:/etc/nginx/sites-enabled
-#      - ./docker_env/nginx/keys:/nginx/keys
-#      - ./dvadmin-backend:/dvadmin-backend
-#      - ./dvadmin-doc:/dvadmin-doc
-#      - ./dvadmin-ui:/dvadmin-ui
-#      - ./logs/nginx:/var/log/nginx
-#    depends_on:
-#      - dvadmin-django
-#    networks:
-#      - dvadmin_net
+  dvadmin-nginx:
+    image: nginx:latest
+    container_name: docker-nginx
+    # build: ./docker_env/nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    expose:
+      - "80"
+      - "443"
+    volumes:
+      - ./docker_env/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker_env/nginx/sites-enabled:/etc/nginx/sites-enabled
+      - ./docker_env/nginx/keys:/nginx/keys
+      - ./dvadmin-backend:/dvadmin-backend
+      - ./dvadmin-doc:/dvadmin-doc
+      - ./dvadmin-ui:/dvadmin-ui
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - dvadmin-django
+    networks:
+      - dvadmin_net
 
 networks:
   dvadmin_net:
