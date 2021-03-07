@@ -25,7 +25,7 @@ class CoreModel(models.Model):
     """
     description = DescriptionField()  # 描述
     creator = models.ForeignKey(to='permission.UserProfile', related_query_name='creator_query', null=True,
-                                verbose_name='创建者', on_delete=SET_NULL,db_constraint=False)  # 创建者
+                                verbose_name='创建者', on_delete=SET_NULL, db_constraint=False)  # 创建者
     modifier = ModifierCharField()  # 修改者
     update_datetime = UpdateDateTimeField()  # 修改时间
     create_datetime = CreateDateTimeField()  # 创建时间

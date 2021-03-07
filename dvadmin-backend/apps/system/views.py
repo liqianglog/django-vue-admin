@@ -2,11 +2,12 @@ from rest_framework.request import Request
 
 from apps.op_drf.viewsets import CustomModelViewSet
 from apps.system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter
-from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile
+from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
 from apps.system.serializers import DictDataSerializer, DictDataCreateUpdateSerializer, DictDetailsSerializer, \
     DictDetailsCreateUpdateSerializer, DictDetailsListSerializer, ConfigSettingsSerializer, \
     ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer, \
-    ExportConfigSettingsSerializer, ExportDictDataSerializer, ExportDictDetailsSerializer
+    ExportConfigSettingsSerializer, ExportDictDataSerializer, ExportDictDetailsSerializer, \
+    MessagePushSerializer, MessagePushCreateUpdateSerializer
 from apps.op_drf.filters import DataLevelPermissionsFilter
 from utils.export_excel import export_excel_save_model
 from utils.response import SuccessResponse
@@ -123,7 +124,7 @@ class ConfigSettingsModelViewSet(CustomModelViewSet):
         :param kwargs:
         :return:
         """
-        field_data = ['参数主键', '参数名称', '参数键名', '参数键值', '系统内置', '参数状态', '创建者', '修改者',  '备注']
+        field_data = ['参数主键', '参数名称', '参数键名', '参数键值', '系统内置', '参数状态', '创建者', '修改者', '备注']
         data = ExportConfigSettingsSerializer(ConfigSettings.objects.all(), many=True).data
         return SuccessResponse(export_excel_save_model(request, field_data, data, '导出参数管理数据.xls'))
 
@@ -140,3 +141,51 @@ class SaveFileModelViewSet(CustomModelViewSet):
     extra_filter_backends = [DataLevelPermissionsFilter]
     search_fields = ('configName',)
     ordering = 'id'  # 默认排序
+
+
+class MessagePushModelViewSet(CustomModelViewSet):
+    """
+    消息推送模型的CRUD视图
+    """
+    queryset = MessagePush.objects.all()
+    serializer_class = MessagePushSerializer
+    create_serializer_class = MessagePushCreateUpdateSerializer
+    update_serializer_class = MessagePushCreateUpdateSerializer
+
+    extra_filter_backends = []
+    ordering = "id"  # 默认排序
+
+    def get_message_list(self, request: Request, *args, **kwargs):
+        """
+            管理员获取自己的消息列表
+        """
+        messages = self.queryset.filter(**kwargs)
+        data = MessagePushSerializer(messages, many=True)
+        return SuccessResponse(msg="返回", data=data)
+
+    def get_received_messages(self, request: Request, *args, **kwargs):
+        """
+            用户获取未读消息通知列表
+        """
+
+        queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.filter(recipient_id=request.user.id, is_read=0)
+        page = self.paginate_queryset(queryset)
+        if hasattr(self, 'handle_logging'):
+            self.handle_logging(request, *args, **kwargs)
+        if page is not None:
+            if getattr(self, 'values_queryset', None):
+                return self.get_paginated_response(page)
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        if getattr(self, 'values_queryset', None):
+            return SuccessResponse(page)
+        serializer = self.get_serializer(queryset, many=True)
+        return SuccessResponse(serializer.data)
+
+    def get_received_messages_count(self, request: Request, *args, **kwargs):
+        """
+            获取用户未读消息数量
+        """
+
+        pass

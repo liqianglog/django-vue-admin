@@ -1,12 +1,13 @@
 from rest_framework import serializers
 
 from apps.op_drf.serializers import CustomModelSerializer
-from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile
-
+from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
 
 # ================================================= #
 # ************** 字典管理 序列化器  ************** #
 # ================================================= #
+from permission.serializers import UserProfileSerializer
+
 
 class DictDataSerializer(CustomModelSerializer):
     """
@@ -105,7 +106,7 @@ class ExportConfigSettingsSerializer(CustomModelSerializer):
     class Meta:
         model = ConfigSettings
         fields = (
-        'id', 'configName', 'configKey', 'configValue', 'configType', 'status', 'creator', 'modifier', 'remark')
+            'id', 'configName', 'configKey', 'configValue', 'configType', 'status', 'creator', 'modifier', 'remark')
 
 
 class ConfigSettingsCreateUpdateSerializer(CustomModelSerializer):
@@ -152,3 +153,22 @@ class SaveFileCreateUpdateSerializer(CustomModelSerializer):
     class Meta:
         model = SaveFile
         fields = '__all__'
+
+
+class MessagePushSerializer(CustomModelSerializer):
+    """消息通知 序列化器"""
+
+    # recipient_id = UserProfileSerializer()
+    class Meta:
+        model = MessagePush
+        fields = "__all__"
+        depth = 1
+
+    def save(self, **kwargs):
+        return super().save(**kwargs)
+
+
+class MessagePushCreateUpdateSerializer(CustomModelSerializer):
+    class Meta:
+        model = MessagePush
+        fields = "__all__"
