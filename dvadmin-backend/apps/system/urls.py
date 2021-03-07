@@ -22,6 +22,8 @@ urlpatterns = [
     # 用户获取个人消息通知列表页
     re_path('message/list/(?P<pk>.*)/', MessagePushModelViewSet.as_view({"get": "get_message_list"})),
     # 用户获取个人通知列表
-    re_path('message/receive/', MessagePushModelViewSet.as_view({"get": "get_received_messages"}))
+    re_path('message/receive/', MessagePushModelViewSet.as_view({"get": "get_received_messages"})),
+    # 消息通知导出
+    re_path('message/export/', MessagePushModelViewSet.as_view({'get': 'export',})),
 ]
 urlpatterns += router.urls

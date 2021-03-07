@@ -28,7 +28,7 @@ MONGO_PORT = 27017
 REDIS_DB = 1
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
-REDIS_PASSWORD = ''
+REDIS_PASSWORD = 'q1w2e3r4T%Y^U&'
 
 # ================================================= #
 # ************** 默认配置  ************** #

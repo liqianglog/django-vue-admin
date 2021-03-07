@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
 from apps.op_drf.serializers import CustomModelSerializer
+from apps.permission.serializers import UserProfileSerializer
 from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
+
 
 # ================================================= #
 # ************** 字典管理 序列化器  ************** #
 # ================================================= #
-from permission.serializers import UserProfileSerializer
-
 
 class DictDataSerializer(CustomModelSerializer):
     """
@@ -155,20 +155,48 @@ class SaveFileCreateUpdateSerializer(CustomModelSerializer):
         fields = '__all__'
 
 
+# ================================================= #
+# ************** 消息通知 序列化器  ************** #
+# ================================================= #
 class MessagePushSerializer(CustomModelSerializer):
-    """消息通知 序列化器"""
+    """
+    消息通知 简单序列化器
+    """
+    # users = UserProfileSerializer(read_only=True)
+    users = serializers.SerializerMethodField(read_only=True)
 
-    # recipient_id = UserProfileSerializer()
+    def get_users(self, obj):
+        return UserProfileSerializer(obj.user.all(), many=True).data
+
     class Meta:
         model = MessagePush
         fields = "__all__"
-        depth = 1
 
     def save(self, **kwargs):
         return super().save(**kwargs)
 
 
 class MessagePushCreateUpdateSerializer(CustomModelSerializer):
+    """
+    消息通知 创建/更新时的列化器
+    """
+
     class Meta:
         model = MessagePush
         fields = "__all__"
+
+
+class ExportMessagePushSerializer(CustomModelSerializer):
+    """
+    导出 消息通知 简单序列化器
+    """
+    users = serializers.CharField(read_only=True)
+
+    def get_users(self, obj):
+        return ','.join(MessagePush.objects.filter(id=obj.id).values_list('user__username', flat=True))
+
+    class Meta:
+        model = MessagePush
+        fields = (
+        'id', 'title', 'content', 'message_type', 'is_reviewed', 'status', 'users', 'creator', 'modifier',
+        'update_datetime', 'create_datetime')

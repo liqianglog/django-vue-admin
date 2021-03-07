@@ -1,5 +1,6 @@
 from rest_framework.request import Request
 
+from apps.op_drf.filters import DataLevelPermissionsFilter
 from apps.op_drf.viewsets import CustomModelViewSet
 from apps.system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter
 from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
@@ -7,8 +8,7 @@ from apps.system.serializers import DictDataSerializer, DictDataCreateUpdateSeri
     DictDetailsCreateUpdateSerializer, DictDetailsListSerializer, ConfigSettingsSerializer, \
     ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer, \
     ExportConfigSettingsSerializer, ExportDictDataSerializer, ExportDictDetailsSerializer, \
-    MessagePushSerializer, MessagePushCreateUpdateSerializer
-from apps.op_drf.filters import DataLevelPermissionsFilter
+    MessagePushSerializer, MessagePushCreateUpdateSerializer, ExportMessagePushSerializer
 from utils.export_excel import export_excel_save_model
 from utils.response import SuccessResponse
 
@@ -151,9 +151,8 @@ class MessagePushModelViewSet(CustomModelViewSet):
     serializer_class = MessagePushSerializer
     create_serializer_class = MessagePushCreateUpdateSerializer
     update_serializer_class = MessagePushCreateUpdateSerializer
-
-    extra_filter_backends = []
-    ordering = "id"  # 默认排序
+    extra_filter_backends = [DataLevelPermissionsFilter]
+    ordering = "-update_datetime"  # 默认排序
 
     def get_message_list(self, request: Request, *args, **kwargs):
         """
@@ -189,3 +188,15 @@ class MessagePushModelViewSet(CustomModelViewSet):
         """
 
         pass
+
+    def export(self, request: Request, *args, **kwargs):
+        """
+        导出岗位
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        field_data = ['消息序号', '标题', '内容', '消息类型', '是否审核', '消息状态','通知接收消息用户', '创建者', '修改者', '修改时间', '创建时间']
+        data = ExportMessagePushSerializer(MessagePush.objects.all(), many=True).data
+        return SuccessResponse(export_excel_save_model(request, field_data, data, '导出岗位数据.xls'))

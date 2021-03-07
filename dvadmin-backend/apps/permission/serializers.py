@@ -211,12 +211,21 @@ class UserProfileSerializer(CustomModelSerializer):
     """
     admin = serializers.SerializerMethodField(read_only=True)
     deptId = serializers.IntegerField(source='dept.id', read_only=True)
+    # 未读通知数量
+    # unread_msg_count = serializers.SerializerMethodField(read_only=True)
 
     def get_admin(self, obj: UserProfile):
         role_list = obj.role.all().values_list('admin', flat=True)
         if True in list(set(role_list)):
             return True
         return False
+
+    # def get_unread_msg_count(self, obj: UserProfile):
+    #     UserProfile.objects.all()
+    #     role_list = obj.role.all().values_list('admin', flat=True)
+    #     if True in list(set(role_list)):
+    #         return True
+    #     return False
 
     class Meta:
         model = UserProfile
