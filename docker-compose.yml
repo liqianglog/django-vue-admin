@@ -102,7 +102,7 @@ services:
 
   dvadmin-nginx:
     image: nginx:latest
-    container_name: docker-nginx
+    container_name: dvadmin-nginx
     # build: ./docker_env/nginx
     restart: always
     ports:
