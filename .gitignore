@@ -19,3 +19,4 @@ bin-release/
 docker_env/mysql/data/
 docker_env/redis/data/
 */.idea
+dvadmin-doc/docs/.vuepress/dist
