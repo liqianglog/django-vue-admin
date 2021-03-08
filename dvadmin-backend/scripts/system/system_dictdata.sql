@@ -31,3 +31,5 @@ INSERT INTO `system_dictdata` VALUES (9, '', 'admin', '2021-02-27 06:26:57.91340
 INSERT INTO `system_dictdata` VALUES (10, '', 'admin', '2021-02-27 06:27:16.392863', '2021-02-27 06:27:16.392961', '系统状态', 'sys_common_status', '1', '登录状态列表', 1);
 INSERT INTO `system_dictdata` VALUES (11, '', 'admin', '2021-02-27 07:59:30.310069', '2021-02-27 07:59:30.310115', '菜单类型', 'sys_menu_type', '1', '菜单类型', 1);
 INSERT INTO `system_dictdata` VALUES (12, '', 'admin', '2021-02-27 07:59:47.677379', '2021-02-27 07:59:47.677423', '接口请求方式', 'sys_interface_method', '1', '接口请求方式', 1);
+INSERT INTO `system_dictdata` VALUES (13, '', 'admin', '2021-03-07 15:06:34.123188', '2021-03-07 14:27:51.286902', '消息类型', 'sys_message_push_type', '1', '消息通知类型', 1);
+INSERT INTO `system_dictdata` VALUES (14, '', 'admin', '2021-03-07 15:06:38.891604', '2021-03-07 15:06:00.930057', '消息状态', 'sys_message_push_status', '1', '消息通知状态', 1);

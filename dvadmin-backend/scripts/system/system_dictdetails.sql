@@ -64,3 +64,7 @@ INSERT INTO `system_dictdetails` VALUES (36, '', 'admin', '2021-02-27 08:03:31.7
 INSERT INTO `system_dictdetails` VALUES (37, '', 'admin', '2021-02-27 08:03:41.277335', '2021-02-27 08:03:41.277383', 'HEAD', 'HEAD', 0, '0', '6', NULL, 1, 12);
 INSERT INTO `system_dictdetails` VALUES (38, '', 'admin', '2021-02-27 08:03:50.891906', '2021-02-27 08:03:50.891950', 'OPTIONS', 'OPTIONS', 0, '0', '7', NULL, 1, 12);
 INSERT INTO `system_dictdetails` VALUES (39, '', 'admin', '2021-02-27 08:04:00.460564', '2021-02-27 08:04:00.460610', 'TRACE', 'TRACE', 0, '0', '8', NULL, 1, 12);
+INSERT INTO `system_dictdetails` VALUES (40, '', 'admin', '2021-03-07 14:29:10.529482', '2021-03-07 14:29:10.529513', '消息通知', '1', 1, '1', '1', '消息通知', 1, 13);
+INSERT INTO `system_dictdetails` VALUES (41, '', 'admin', '2021-03-07 14:29:40.480856', '2021-03-07 14:29:26.851952', '文件下发', '2', 0, '1', '2', '文件下发', 1, 13);
+INSERT INTO `system_dictdetails` VALUES (42, '', 'admin', '2021-03-07 15:07:23.204077', '2021-03-07 15:07:23.204107', '待发送', '1', 1, '1', '1', '消息发送状态：待发送', 1, 14);
+INSERT INTO `system_dictdetails` VALUES (43, '', 'admin', '2021-03-07 15:07:31.927366', '2021-03-07 15:07:31.927397', '已发送', '2', 0, '1', '2', '消息发送状态：已发送', 1, 14);
