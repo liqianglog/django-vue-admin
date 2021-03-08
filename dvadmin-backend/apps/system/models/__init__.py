@@ -4,4 +4,5 @@ from ..models.dict_details import DictDetails
 from ..models.web_set import WebSet
 from ..models.save_file import SaveFile
 from ..models.message_push import MessagePush
+from ..models.message_push import MessagePushUser
 

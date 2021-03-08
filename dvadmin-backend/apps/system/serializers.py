@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
 from apps.op_drf.serializers import CustomModelSerializer
-from apps.permission.serializers import UserProfileSerializer
-from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
+from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush, MessagePushUser
 
 
 # ================================================= #
@@ -162,11 +161,6 @@ class MessagePushSerializer(CustomModelSerializer):
     """
     消息通知 简单序列化器
     """
-    # users = UserProfileSerializer(read_only=True)
-    users = serializers.SerializerMethodField(read_only=True)
-
-    def get_users(self, obj):
-        return UserProfileSerializer(obj.user.all(), many=True).data
 
     class Meta:
         model = MessagePush
@@ -198,5 +192,27 @@ class ExportMessagePushSerializer(CustomModelSerializer):
     class Meta:
         model = MessagePush
         fields = (
-        'id', 'title', 'content', 'message_type', 'is_reviewed', 'status', 'users', 'creator', 'modifier',
-        'update_datetime', 'create_datetime')
+            'id', 'title', 'content', 'message_type', 'is_reviewed', 'status', 'users', 'creator', 'modifier',
+            'update_datetime', 'create_datetime')
+
+class MessagePushUserSerializer(CustomModelSerializer):
+    """
+    消息通知 用户查询简单序列化器
+    """
+    # users = UserProfileSerializer(read_only=True)
+    # users = serializers.SerializerMethodField(read_only=True)
+    is_read = serializers.SerializerMethodField(read_only=True)
+
+    # def get_users(self, obj):
+    #     return UserProfileSerializer(obj.user.all(), many=True).data
+    # 返回这个消息是否已读
+    def get_is_read(self, obj):
+        object = MessagePushUser.objects.filter(message_push=obj,user=self.context.get('request').user).first()
+        return object.is_read if object else False
+
+    class Meta:
+        model = MessagePush
+        fields = "__all__"
+
+    def save(self, **kwargs):
+        return super().save(**kwargs)

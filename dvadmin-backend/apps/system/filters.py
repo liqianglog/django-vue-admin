@@ -1,6 +1,6 @@
 import django_filters
 
-from apps.system.models import DictDetails, DictData, ConfigSettings
+from apps.system.models import DictDetails, DictData, ConfigSettings, MessagePush
 
 
 class DictDataFilter(django_filters.rest_framework.FilterSet):
@@ -31,4 +31,13 @@ class ConfigSettingsFilter(django_filters.rest_framework.FilterSet):
 
     class Meta:
         model = ConfigSettings
+        fields = '__all__'
+
+class MessagePushFilter(django_filters.rest_framework.FilterSet):
+    """
+    消息通知 简单过滤器
+    """
+
+    class Meta:
+        model = MessagePush
         fields = '__all__'

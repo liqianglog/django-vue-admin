@@ -2,7 +2,7 @@ from rest_framework.request import Request
 
 from apps.op_drf.filters import DataLevelPermissionsFilter
 from apps.op_drf.viewsets import CustomModelViewSet
-from apps.system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter
+from apps.system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter, MessagePushFilter
 from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
 from apps.system.serializers import DictDataSerializer, DictDataCreateUpdateSerializer, DictDetailsSerializer, \
     DictDetailsCreateUpdateSerializer, DictDetailsListSerializer, ConfigSettingsSerializer, \
@@ -137,7 +137,7 @@ class SaveFileModelViewSet(CustomModelViewSet):
     serializer_class = SaveFileSerializer
     create_serializer_class = SaveFileCreateUpdateSerializer
     update_serializer_class = SaveFileCreateUpdateSerializer
-    # filter_class = ConfigSettingsFilter
+    filter_class = ConfigSettingsFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
     search_fields = ('configName',)
     ordering = 'id'  # 默认排序
@@ -152,6 +152,7 @@ class MessagePushModelViewSet(CustomModelViewSet):
     create_serializer_class = MessagePushCreateUpdateSerializer
     update_serializer_class = MessagePushCreateUpdateSerializer
     extra_filter_backends = [DataLevelPermissionsFilter]
+    filter_class = MessagePushFilter
     ordering = "-update_datetime"  # 默认排序
 
     def get_message_list(self, request: Request, *args, **kwargs):
