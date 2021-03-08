@@ -3,6 +3,7 @@ from rest_framework.validators import UniqueValidator
 
 from apps.op_drf.serializers import CustomModelSerializer
 from apps.permission.models import Menu, Dept, Post, Role, UserProfile
+from apps.system.models import MessagePush
 
 
 # ================================================= #
@@ -212,7 +213,7 @@ class UserProfileSerializer(CustomModelSerializer):
     admin = serializers.SerializerMethodField(read_only=True)
     deptId = serializers.IntegerField(source='dept.id', read_only=True)
     # 未读通知数量
-    # unread_msg_count = serializers.SerializerMethodField(read_only=True)
+    unread_msg_count = serializers.SerializerMethodField(read_only=True)
 
     def get_admin(self, obj: UserProfile):
         role_list = obj.role.all().values_list('admin', flat=True)
@@ -220,12 +221,8 @@ class UserProfileSerializer(CustomModelSerializer):
             return True
         return False
 
-    # def get_unread_msg_count(self, obj: UserProfile):
-    #     UserProfile.objects.all()
-    #     role_list = obj.role.all().values_list('admin', flat=True)
-    #     if True in list(set(role_list)):
-    #         return True
-    #     return False
+    def get_unread_msg_count(self, obj: UserProfile):
+        return MessagePush.objects.filter(status='2').exclude(user=obj,messagepushuser_message_push__is_read=True).count()
 
     class Meta:
         model = UserProfile

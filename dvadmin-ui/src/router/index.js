@@ -80,7 +80,7 @@ export const constantRoutes = [
       },
       {
         path: 'msg',
-        component: (resolve) => require(['@/views/permission/user/msg/index'], resolve),
+        component: (resolve) => require(['@/views/system/message/Mymessage'], resolve),
         name: 'msg',
         meta: { title: '消息通知', icon: 'user' }
       }

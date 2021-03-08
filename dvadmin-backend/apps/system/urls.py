@@ -25,5 +25,7 @@ urlpatterns = [
     re_path('message/receive/', MessagePushModelViewSet.as_view({"get": "get_received_messages"})),
     # 消息通知导出
     re_path('message/export/', MessagePushModelViewSet.as_view({'get': 'export',})),
+    # 消息已读
+    re_path('message/export/', MessagePushModelViewSet.as_view({'get': 'export',})),
 ]
 urlpatterns += router.urls

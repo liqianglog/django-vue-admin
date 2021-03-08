@@ -2,7 +2,8 @@ from rest_framework.request import Request
 
 from apps.op_drf.filters import DataLevelPermissionsFilter
 from apps.op_drf.viewsets import CustomModelViewSet
-from apps.system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter, MessagePushFilter
+from apps.system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter, MessagePushFilter, \
+    SaveFileFilter
 from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
 from apps.system.serializers import DictDataSerializer, DictDataCreateUpdateSerializer, DictDetailsSerializer, \
     DictDetailsCreateUpdateSerializer, DictDetailsListSerializer, ConfigSettingsSerializer, \
@@ -131,13 +132,13 @@ class ConfigSettingsModelViewSet(CustomModelViewSet):
 
 class SaveFileModelViewSet(CustomModelViewSet):
     """
-   参数设置 模型的CRUD视图
+   文件管理 模型的CRUD视图
    """
     queryset = SaveFile.objects.all()
     serializer_class = SaveFileSerializer
     create_serializer_class = SaveFileCreateUpdateSerializer
     update_serializer_class = SaveFileCreateUpdateSerializer
-    filter_class = ConfigSettingsFilter
+    filter_class = SaveFileFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
     search_fields = ('configName',)
     ordering = 'id'  # 默认排序

@@ -11,14 +11,14 @@
 
     <div class="right-menu">
       <template v-if="device !== 'mobile'">
-        <router-link to="/user/msg">
-          <el-badge :value="count" :max="99" class="badge-item">
+        <div class="right-menu-item hover-effect">
+          <router-link to="/user/msg">
             <i class="el-icon-message-solid badge-item-icon"></i>
+            <el-badge :value="count" :max="99" style="margin-left: -4px;" v-if="count">
           </el-badge>
-        </router-link>
-
+          </router-link>
+        </div>
         <search id="header-search" class="right-menu-item" />
-
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -67,6 +67,7 @@ import SizeSelect from "@/components/SizeSelect";
 import Search from "@/components/HeaderSearch";
 import RuoYiGit from "@/components/RuoYi/Git";
 import RuoYiDoc from "@/components/RuoYi/Doc";
+import store from "@/store";
 
 export default {
   components: {
@@ -80,7 +81,7 @@ export default {
   },
   data() {
     return {
-      count: 0,
+      count: store.getters.unread_msg_count,
     };
   },
   computed: {

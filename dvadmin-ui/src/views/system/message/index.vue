@@ -31,12 +31,12 @@
           />
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="是否审核" prop="is_reviewed">-->
-<!--        <el-select v-model="queryParams.is_reviewed" placeholder="是否审核" clearable size="small">-->
-<!--          <el-option :key="true" label="是" :value="true"/>-->
-<!--          <el-option :key="false" label="否" :value="false"/>-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="是否审核" prop="is_reviewed">-->
+      <!--        <el-select v-model="queryParams.is_reviewed" placeholder="是否审核" clearable size="small">-->
+      <!--          <el-option :key="true" label="是" :value="true"/>-->
+      <!--          <el-option :key="false" label="否" :value="false"/>-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -99,7 +99,7 @@
       <el-table-column label="消息标题" align="center" prop="title" :show-overflow-tooltip="true"/>
       <el-table-column label="消息内容" align="center" prop="content" :show-overflow-tooltip="true"/>
       <el-table-column label="消息类型" align="center" prop="message_type" :formatter="typeFormat"/>
-<!--      <el-table-column label="是否审核通过" align="center" prop="is_reviewed" :formatter="isReviewedFormat"/>-->
+      <!--      <el-table-column label="是否审核通过" align="center" prop="is_reviewed" :formatter="isReviewedFormat"/>-->
       <el-table-column label="消息状态" align="center" prop="status" :formatter="statusFormat"/>
       <el-table-column label="跳转路径" align="center" prop="to_path" :show-overflow-tooltip="true"/>
       <el-table-column label="创建时间" align="center" prop="create_datetime" width="180">
@@ -142,43 +142,56 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="780px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="消息标题" prop="title">
-          <el-input v-model="form.title" placeholder="请输入消息标题"/>
-        </el-form-item>
-        <el-form-item label="消息内容" prop="content">
-          <el-input v-model="form.content" placeholder="请输入消息内容"/>
-        </el-form-item>
-        <el-form-item label="跳转路径" prop="to_path">
-          <el-input v-model="form.to_path" placeholder="请输入跳转路径"/>
-        </el-form-item>
-        <el-form-item label="消息类型" prop="message_type">
-          <el-radio-group v-model="form.message_type">
-            <el-radio
-              v-for="dict in MessagePushTypeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-<!--        <el-form-item label="是否审核" prop="is_reviewed">-->
-<!--          <el-radio-group v-model="form.is_reviewed">-->
-<!--            <el-radio :label="true">是</el-radio>-->
-<!--            <el-radio :label="false">否</el-radio>-->
-<!--          </el-radio-group>-->
-<!--        </el-form-item>-->
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in MessagePushStatusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="消息标题" prop="title">
+              <el-input v-model="form.title" placeholder="请输入消息标题"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="跳转路径" prop="to_path">
+              <el-input v-model="form.to_path" placeholder="请输入跳转路径"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态" prop="status">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in MessagePushStatusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="消息类型" prop="message_type">
+              <el-select v-model="form.message_type" placeholder="请选择">
+                <el-option
+                  v-for="dict in MessagePushTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="消息内容" prop="content">
+              <editor v-model="form.content" :min-height="192"/>
+            </el-form-item>
+          </el-col>
+
+          <!--        <el-form-item label="是否审核" prop="is_reviewed">-->
+          <!--          <el-radio-group v-model="form.is_reviewed">-->
+          <!--            <el-radio :label="true">是</el-radio>-->
+          <!--            <el-radio :label="false">否</el-radio>-->
+          <!--          </el-radio-group>-->
+          <!--        </el-form-item>-->
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -190,9 +203,13 @@
 
 <script>
   import {addMessage, delMessage, exportMessage, getMessage, listMessage, updateMessage} from "@/api/system/message";
+  import Editor from '@/components/Editor';
 
   export default {
     name: "message",
+    components: {
+      Editor
+    },
     data() {
       return {
         // 遮罩层

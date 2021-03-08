@@ -1,6 +1,6 @@
 import django_filters
 
-from apps.system.models import DictDetails, DictData, ConfigSettings, MessagePush
+from apps.system.models import DictDetails, DictData, ConfigSettings, MessagePush, SaveFile
 
 
 class DictDataFilter(django_filters.rest_framework.FilterSet):
@@ -32,6 +32,17 @@ class ConfigSettingsFilter(django_filters.rest_framework.FilterSet):
     class Meta:
         model = ConfigSettings
         fields = '__all__'
+
+
+class SaveFileFilter(django_filters.rest_framework.FilterSet):
+    """
+    文件管理 简单过滤器
+    """
+
+    class Meta:
+        model = SaveFile
+        exclude = ('file',)
+
 
 class MessagePushFilter(django_filters.rest_framework.FilterSet):
     """
