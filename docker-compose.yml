@@ -41,7 +41,7 @@ services:
         cd /dvadmin-doc
         npm install --registry=https://registry.npm.taobao.org
         rm -rf /dvadmin-doc/dist
-        npm run build:prod
+        npm run docs:build
 
 
   dvadmin-redis:
