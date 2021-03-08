@@ -15,7 +15,14 @@ services:
       TZ: Asia/Shanghai
     volumes:
       - "./dvadmin-ui:/dvadmin-ui"
-    command: cd /dvadmin-ui & rm -rf /dvadmin-ui/dist && npm run build:prod
+    command:
+      - /bin/bash
+      - -c
+      - |
+        cd /dvadmin-ui
+        npm install --registry=https://registry.npm.taobao.org
+        rm -rf /dvadmin-ui/dist
+        npm run build:prod
 
 
   dvadmin-doc:
@@ -27,7 +34,14 @@ services:
       TZ: Asia/Shanghai
     volumes:
       - "./dvadmin-doc:/dvadmin-doc"
-    command: cd /dvadmin-doc & rm -rf /dvadmin-doc/dist && npm run build:prod
+    command:
+      - /bin/bash
+      - -c
+      - |
+        cd /dvadmin-doc
+        npm install --registry=https://registry.npm.taobao.org
+        rm -rf /dvadmin-doc/dist
+        npm run build:prod
 
 
   dvadmin-redis:
