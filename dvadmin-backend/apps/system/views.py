@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework.request import Request
 
 from apps.op_drf.filters import DataLevelPermissionsFilter
@@ -5,6 +6,7 @@ from apps.op_drf.viewsets import CustomModelViewSet
 from apps.system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter, MessagePushFilter, \
     SaveFileFilter
 from apps.system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
+from apps.system.models import MessagePushUser
 from apps.system.serializers import DictDataSerializer, DictDataCreateUpdateSerializer, DictDetailsSerializer, \
     DictDetailsCreateUpdateSerializer, DictDetailsListSerializer, ConfigSettingsSerializer, \
     ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer, \
@@ -164,13 +166,19 @@ class MessagePushModelViewSet(CustomModelViewSet):
         data = MessagePushSerializer(messages, many=True)
         return SuccessResponse(msg="返回", data=data)
 
-    def get_received_messages(self, request: Request, *args, **kwargs):
+    def get_user_messages(self, request: Request, *args, **kwargs):
         """
-            用户获取未读消息通知列表
+        获取用户自己消息列表
         """
-
         queryset = self.filter_queryset(self.get_queryset())
-        queryset = queryset.filter(recipient_id=request.user.id, is_read=0)
+        is_read = request.query_params.get('is_read', None)
+        if is_read:
+            if is_read == 'False':
+                queryset = queryset.filter(Q(messagepushuser_message_push__is_read=is_read) | Q(user=None))
+            else:
+                queryset = queryset.filter(messagepushuser_message_push__is_read=is_read)
+
+        queryset = queryset.filter(is_reviewed=True)
         page = self.paginate_queryset(queryset)
         if hasattr(self, 'handle_logging'):
             self.handle_logging(request, *args, **kwargs)
@@ -184,12 +192,14 @@ class MessagePushModelViewSet(CustomModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return SuccessResponse(serializer.data)
 
-    def get_received_messages_count(self, request: Request, *args, **kwargs):
+    def update_is_read(self, request: Request, *args, **kwargs):
         """
-            获取用户未读消息数量
+        修改为已读
         """
-
-        pass
+        instance, _ = MessagePushUser.objects.get_or_create(message_push_id=kwargs.get('pk'), user=request.user)
+        instance.is_read = True
+        instance.save()
+        return SuccessResponse()
 
     def export(self, request: Request, *args, **kwargs):
         """
@@ -199,6 +209,6 @@ class MessagePushModelViewSet(CustomModelViewSet):
         :param kwargs:
         :return:
         """
-        field_data = ['消息序号', '标题', '内容', '消息类型', '是否审核', '消息状态','通知接收消息用户', '创建者', '修改者', '修改时间', '创建时间']
+        field_data = ['消息序号', '标题', '内容', '消息类型', '是否审核', '消息状态', '通知接收消息用户', '创建者', '修改者', '修改时间', '创建时间']
         data = ExportMessagePushSerializer(MessagePush.objects.all(), many=True).data
         return SuccessResponse(export_excel_save_model(request, field_data, data, '导出岗位数据.xls'))

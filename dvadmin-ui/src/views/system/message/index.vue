@@ -141,7 +141,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改参数配置对话框 -->
+    <!-- 添加或修改通知配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="780px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
@@ -224,7 +224,7 @@
         showSearch: true,
         // 总条数
         total: 0,
-        // 参数表格数据
+        // 通知表格数据
         configList: [],
         // 弹出层标题
         title: "",
@@ -236,7 +236,7 @@
         StatusOptions: [],
         // 消息类型字典
         MessagePushStatusOptions: [],
-        // 查询参数
+        // 查询通知
         queryParams: {
           pageNum: 1,
           pageSize: 10,
@@ -246,7 +246,7 @@
           is_reviewed: undefined,
           status: undefined
         },
-        // 表单参数
+        // 表单通知
         form: {},
         // 表单校验
         rules: {
@@ -272,7 +272,7 @@
       });
     },
     methods: {
-      /** 查询参数列表 */
+      /** 查询通知列表 */
       getList() {
         this.loading = true;
         listMessage(this.addDateRange(this.queryParams)).then(response => {
@@ -341,7 +341,7 @@
         getMessage(id).then(response => {
           this.form = response.data;
           this.open = true;
-          this.title = "修改参数";
+          this.title = "修改通知";
         });
       },
       /** 提交按钮 */
@@ -367,7 +367,7 @@
       /** 删除按钮操作 */
       handleDelete(row) {
         const configIds = row.id || this.ids;
-        this.$confirm('是否确认删除参数编号为"' + configIds + '"的数据项?', "警告", {
+        this.$confirm('是否确认删除通知编号为"' + configIds + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
