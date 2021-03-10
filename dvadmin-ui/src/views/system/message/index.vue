@@ -1,18 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="消息标题" prop="title">
+      <el-form-item label="公告标题" prop="title">
         <el-input
           v-model="queryParams.title"
-          placeholder="请输入消息标题"
+          placeholder="请输入公告标题"
           clearable
           size="small"
           style="width: 240px"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="消息类型" prop="message_type">
-        <el-select v-model="queryParams.message_type" placeholder="消息类型" clearable size="small">
+      <el-form-item label="公告类型" prop="message_type">
+        <el-select v-model="queryParams.message_type" placeholder="公告类型" clearable size="small">
           <el-option
             v-for="dict in MessagePushTypeOptions"
             :key="dict.dictValue"
@@ -21,8 +21,8 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="消息状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="消息状态" clearable size="small">
+      <el-form-item label="公告状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="公告状态" clearable size="small">
           <el-option
             v-for="dict in MessagePushStatusOptions"
             :key="dict.dictValue"
@@ -52,7 +52,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:message:post']"
-        >发布通知
+        >发布公告
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -64,7 +64,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:message:{id}:put']"
-        >修改通知
+        >修改公告
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -76,7 +76,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['permission:menu:{id}:delete']"
-        >删除通知
+        >删除公告
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -95,12 +95,12 @@
 
     <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="消息主键" align="center" prop="id"/>
-      <el-table-column label="消息标题" align="center" prop="title" :show-overflow-tooltip="true"/>
-      <el-table-column label="消息内容" align="center" prop="content" :show-overflow-tooltip="true"/>
-      <el-table-column label="消息类型" align="center" prop="message_type" :formatter="typeFormat"/>
+      <el-table-column label="公告主键" align="center" prop="id"/>
+      <el-table-column label="公告标题" align="center" prop="title" :show-overflow-tooltip="true"/>
+      <el-table-column label="公告内容" align="center" prop="content" :show-overflow-tooltip="true"/>
+      <el-table-column label="公告类型" align="center" prop="message_type" :formatter="typeFormat"/>
       <!--      <el-table-column label="是否审核通过" align="center" prop="is_reviewed" :formatter="isReviewedFormat"/>-->
-      <el-table-column label="消息状态" align="center" prop="status" :formatter="statusFormat"/>
+      <el-table-column label="公告状态" align="center" prop="status" :formatter="statusFormat"/>
       <el-table-column label="跳转路径" align="center" prop="to_path" :show-overflow-tooltip="true"/>
       <el-table-column label="创建时间" align="center" prop="create_datetime" width="180">
         <template slot-scope="scope">
@@ -141,13 +141,13 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改通知配置对话框 -->
+    <!-- 添加或修改公告配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="780px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="消息标题" prop="title">
-              <el-input v-model="form.title" placeholder="请输入消息标题"/>
+            <el-form-item label="公告标题" prop="title">
+              <el-input v-model="form.title" placeholder="请输入公告标题"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -168,7 +168,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="消息类型" prop="message_type">
+            <el-form-item label="公告类型" prop="message_type">
               <el-select v-model="form.message_type" placeholder="请选择">
                 <el-option
                   v-for="dict in MessagePushTypeOptions"
@@ -180,7 +180,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="消息内容" prop="content">
+            <el-form-item label="公告内容" prop="content">
               <editor v-model="form.content" :min-height="192"/>
             </el-form-item>
           </el-col>
@@ -224,19 +224,19 @@
         showSearch: true,
         // 总条数
         total: 0,
-        // 通知表格数据
+        // 公告表格数据
         configList: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层
         open: false,
-        // 消息类型字典
+        // 公告类型字典
         MessagePushTypeOptions: [],
         // 状态类型字典
         StatusOptions: [],
-        // 消息类型字典
+        // 公告类型字典
         MessagePushStatusOptions: [],
-        // 查询通知
+        // 查询公告
         queryParams: {
           pageNum: 1,
           pageSize: 10,
@@ -246,15 +246,15 @@
           is_reviewed: undefined,
           status: undefined
         },
-        // 表单通知
+        // 表单公告
         form: {},
         // 表单校验
         rules: {
           title: [
-            {required: true, message: "消息标题不能为空", trigger: "blur"}
+            {required: true, message: "公告标题不能为空", trigger: "blur"}
           ],
           content: [
-            {required: true, message: "消息内容不能为空", trigger: "blur"}
+            {required: true, message: "公告内容不能为空", trigger: "blur"}
           ],
           to_path: [
             {required: false, message: "跳转路径不能为空", trigger: "blur"}
@@ -272,7 +272,7 @@
       });
     },
     methods: {
-      /** 查询通知列表 */
+      /** 查询公告列表 */
       getList() {
         this.loading = true;
         listMessage(this.addDateRange(this.queryParams)).then(response => {
@@ -282,15 +282,15 @@
           }
         );
       },
-      // 消息类型字典翻译
+      // 公告类型字典翻译
       typeFormat(row, column) {
         return this.selectDictLabel(this.MessagePushTypeOptions, row.message_type);
       },
-      // 消息状态字典翻译
+      // 公告状态字典翻译
       statusFormat(row, column) {
         return this.selectDictLabel(this.MessagePushStatusOptions, row.status);
       },
-      // 消息状态字典翻译
+      // 公告状态字典翻译
       isReviewedFormat(row, column) {
         return row.is_reviewed === true ? '是' : '否'
       },
@@ -326,7 +326,7 @@
       handleAdd() {
         this.reset();
         this.open = true;
-        this.title = "发布通知";
+        this.title = "发布公告";
       },
       // 多选框选中数据
       handleSelectionChange(selection) {
@@ -341,7 +341,7 @@
         getMessage(id).then(response => {
           this.form = response.data;
           this.open = true;
-          this.title = "修改通知";
+          this.title = "修改公告";
         });
       },
       /** 提交按钮 */
@@ -367,7 +367,7 @@
       /** 删除按钮操作 */
       handleDelete(row) {
         const configIds = row.id || this.ids;
-        this.$confirm('是否确认删除通知编号为"' + configIds + '"的数据项?', "警告", {
+        this.$confirm('是否确认删除公告编号为"' + configIds + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"

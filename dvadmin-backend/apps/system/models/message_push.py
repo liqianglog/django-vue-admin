@@ -11,18 +11,18 @@ from apps.permission.models import UserProfile
 
 
 class MessagePush(CoreModel):
-    title = CharField(max_length=128, verbose_name="消息标题")
-    content = TextField(verbose_name="消息内容")
-    message_type = CharField(max_length=8, verbose_name="消息类型")
+    title = CharField(max_length=128, verbose_name="通知标题")
+    content = TextField(verbose_name="通知内容")
+    message_type = CharField(max_length=8, verbose_name="通知类型")
     is_reviewed = BooleanField(default=True, verbose_name="是否审核")
-    status = CharField(max_length=8, verbose_name="消息状态")
+    status = CharField(max_length=8, verbose_name="通知状态")
     to_path = CharField(max_length=256, verbose_name="跳转路径", null=True, blank=True, )
     user = ManyToManyField(to="permission.UserProfile",
                            related_name="user", related_query_name="user_query", through='MessagePushUser',
                            through_fields=('message_push', 'user'))
 
     class Meta:
-        verbose_name = '消息通知'
+        verbose_name = '通知公告'
         verbose_name_plural = verbose_name
 
     def __str__(self):
@@ -42,5 +42,5 @@ class MessagePushUser(models.Model):
     create_datetime = CreateDateTimeField()  # 创建时间
 
     class Meta:
-        verbose_name = "消息通知与用户关系"
+        verbose_name = "通知公告与用户关系"
         verbose_name_plural = verbose_name
