@@ -132,7 +132,7 @@ def export_excel_save_model(request,field_data,data,FilName):
         savefile.type = 'application/vnd.ms-excel'
         savefile.size = os.path.getsize(os.path.join(settings.MEDIA_ROOT, file_rul))
         savefile.address = '本地存储'
-        savefile.creator = request.user.id
+        savefile.creator = request.user
     savefile.modifier = request.user.username
     savefile.save()
     return SaveFileSerializer(savefile).data
