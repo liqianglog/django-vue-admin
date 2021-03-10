@@ -43,7 +43,9 @@ class Command(BaseCommand):
                         break
 
             for sql in sql_list:
-                cursor.execute(sql)
+                try:
+                    cursor.execute(sql)
+                except : pass
             connection.commit()
             return True
 
