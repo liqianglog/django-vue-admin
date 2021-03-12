@@ -146,8 +146,10 @@
         open: false,
         // 查询参数
         queryParams: {
+          pageNum: 1,
+          pageSize: 10,
           name: undefined,
-          visible: undefined,
+          type: undefined,
         },
         // 总条数
         total: 0,
