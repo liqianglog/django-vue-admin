@@ -126,10 +126,12 @@ USE_TZ = True
 """
 # 访问静态文件的url地址前缀
 STATIC_URL = '/static/'
-# 设置django的静态文件目录
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
-]
+# 收集静态文件，必须将 MEDIA_ROOT,STATICFILES_DIRS先注释，python manage.py collectstatic
+STATIC_ROOT=os.path.join(BASE_DIR,'static')
+# # 设置django的静态文件目录
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static")
+# ]
 # 访问上传文件的url地址前缀
 MEDIA_URL = "/media/"
 # 项目中存储上传文件的根目录
