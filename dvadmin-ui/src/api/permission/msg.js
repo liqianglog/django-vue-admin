@@ -11,7 +11,7 @@ import request from '@/utils/request'
 // 查询消息列表
 export function getList(query) {
   return request({
-    url: '/system/config/',
+    url: '/admin/system/config/',
     method: 'get',
     params: query
   })
@@ -20,7 +20,7 @@ export function getList(query) {
 // 查看详情
 export function getDesc(configId) {
   return request({
-    url: '/system/config/' + configId + '/',
+    url: '/admin/system/config/' + configId + '/',
     method: 'get'
   })
 }
@@ -28,7 +28,7 @@ export function getDesc(configId) {
 // // 根据消息标题查询
 // export function getConfigKey(configKey) {
 //   return request({
-//     url: '/system/config/configKey/' + configKey + '/',
+//     url: '/admin/system/config/configKey/' + configKey + '/',
 //     method: 'get'
 //   })
 // }
@@ -36,7 +36,7 @@ export function getDesc(configId) {
 // 新增消息
 export function addMsg(data) {
   return request({
-    url: '/system/config/',
+    url: '/admin/system/config/',
     method: 'post',
     data: data
   })
@@ -45,7 +45,7 @@ export function addMsg(data) {
 // 修改消息
 export function updateMsg(data) {
   return request({
-    url: '/system/config/' + data.id + '/',
+    url: '/admin/system/config/' + data.id + '/',
     method: 'put',
     data: data
   })
@@ -54,7 +54,7 @@ export function updateMsg(data) {
 // 删除消息
 export function delMsg(configId) {
   return request({
-    url: '/system/config/' + configId + '/',
+    url: '/admin/system/config/' + configId + '/',
     method: 'delete'
   })
 }
@@ -63,7 +63,7 @@ export function delMsg(configId) {
 // 导出消息
 export function exportMsg(query) {
   return request({
-    url: '/system/config/export/',
+    url: '/admin/system/config/export/',
     method: 'get',
     params: query
   })

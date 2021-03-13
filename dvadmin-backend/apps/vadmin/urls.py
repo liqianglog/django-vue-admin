@@ -17,12 +17,14 @@ Including another URLconf
 from captcha.conf import settings as ca_settings
 from captcha.helpers import captcha_image_url, captcha_audio_url
 from captcha.models import CaptchaStore
-from django.conf import settings
+from django.conf.urls import url
 from django.urls import re_path, include
-from django.views.static import serve
+from rest_framework.documentation import include_docs_urls
 from rest_framework.views import APIView
 
-from apps.vadmin.op_drf.response import SuccessResponse
+from .op_drf.response import SuccessResponse
+from .permission.views import GetUserProfileView, GetRouters
+from .utils.login import LoginView, LogoutView
 
 
 class CaptchaRefresh(APIView):
@@ -40,6 +42,16 @@ class CaptchaRefresh(APIView):
 
 
 urlpatterns = [
-    re_path(r'media/(?P<path>.*)', serve, {"document_root": settings.MEDIA_ROOT}),
-    re_path(r'^admin/', include('apps.vadmin.urls')),
+    re_path('api-token-auth/', LoginView.as_view(), name='api_token_auth'),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'docs/', include_docs_urls(title='接口文档')),
+    re_path(r'^login/$', LoginView.as_view()),
+    re_path(r'^logout/$', LogoutView.as_view()),
+    re_path(r'^getInfo/$', GetUserProfileView.as_view()),
+    re_path(r'^getRouters/$', GetRouters.as_view()),
+    url(r"captcha/refresh/$", CaptchaRefresh.as_view(), name="captcha-refresh"),  # 刷新验证码
+    re_path('captcha/', include('captcha.urls')),  # 图片验证码 路由
+    re_path(r'^permission/', include('apps.vadmin.permission.urls')),
+    re_path(r'^system/', include('apps.vadmin.system.urls')),
+
 ]

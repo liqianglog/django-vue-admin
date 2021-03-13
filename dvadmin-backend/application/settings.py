@@ -45,9 +45,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'captcha',
     # 自定义app
-    'apps.permission',
-    'apps.op_drf',
-    'apps.system',
+    'apps.vadmin.permission',
+    'apps.vadmin.op_drf',
+    'apps.vadmin.system',
 ]
 
 MIDDLEWARE = [
@@ -131,7 +131,8 @@ STATIC_URL = '/static/'
 # STATIC_ROOT=os.path.join(BASE_DIR,'static')
 # # 设置django的静态文件目录
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
+    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "apps", "vadmin", "static")
 ]
 # 访问上传文件的url地址前缀
 MEDIA_URL = "/media/"
@@ -250,9 +251,9 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',  # JWT的Header认证头以'JWT '开始
     'JWT_AUTH_COOKIE': 'AUTH_JWT',
     'JWT_VERIFY_EXPIRATION': True,
-    'JWT_PAYLOAD_HANDLER': 'utils.jwt_util.jwt_payload_handler',
-    'JWT_GET_USER_SECRET_KEY': 'utils.jwt_util.jwt_get_user_secret_key',
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'utils.jwt_util.jwt_response_payload_handler',
+    'JWT_PAYLOAD_HANDLER': 'apps.vadmin.utils.jwt_util.jwt_payload_handler',
+    'JWT_GET_USER_SECRET_KEY': 'apps.vadmin.utils.jwt_util.jwt_get_user_secret_key',
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'apps.vadmin.utils.jwt_util.jwt_response_payload_handler',
 }
 
 # ================================================= #
@@ -264,7 +265,7 @@ REST_FRAMEWORK = {
     ),
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'utils.authentication.RedisOpAuthJwtAuthentication',
+        'apps.vadmin.utils.authentication.RedisOpAuthJwtAuthentication',
         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
@@ -274,14 +275,14 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
-    'EXCEPTION_HANDLER': 'utils.exceptions.op_exception_handler',
+    'EXCEPTION_HANDLER': 'apps.vadmin.utils.exceptions.op_exception_handler',
 }
 # ================================================= #
 # ************** 登录方式配置  ************** #
 # ================================================= #
 AUTHENTICATION_BACKENDS = (
-    'utils.backends.CustomBackend',
-    'utils.backends.SessionAuthentication',
+    'apps.vadmin.utils.backends.CustomBackend',
+    'apps.vadmin.utils.backends.SessionAuthentication',
 )
 AUTH_USER_MODEL = 'permission.UserProfile'
 # username_field

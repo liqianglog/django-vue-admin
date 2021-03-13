@@ -9,7 +9,7 @@ export function login(username, password, code, uuid) {
     idKeyC: uuid
   }
   return request({
-    url: '/login/',
+    url: '/admin/login/',
     method: 'post',
     data: data
   })
@@ -18,7 +18,7 @@ export function login(username, password, code, uuid) {
 // 获取用户详细信息
 export function getInfo() {
   return request({
-    url: '/getInfo/',
+    url: '/admin/getInfo/',
     method: 'get'
   })
 }
@@ -26,7 +26,7 @@ export function getInfo() {
 // 退出方法
 export function logout() {
   return request({
-    url: '/logout/',
+    url: '/admin/logout/',
     method: 'post'
   })
 }

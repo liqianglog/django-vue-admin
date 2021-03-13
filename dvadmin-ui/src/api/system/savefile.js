@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询文件列表
 export function listSaveFile(query) {
   return request({
-    url: '/system/savefile/',
+    url: '/admin/system/savefile/',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listSaveFile(query) {
 // 新增文件
 export function addSaveFile(data) {
   return request({
-    url: '/system/savefile/',
+    url: '/admin/system/savefile/',
     method: 'post',
     data: data
   })
@@ -22,7 +22,7 @@ export function addSaveFile(data) {
 // 删除文件
 export function delSaveFile(menuId) {
   return request({
-    url: '/system/savefile/' + menuId + '/',
+    url: '/admin/system/savefile/' + menuId + '/',
     method: 'delete'
   })
 }
@@ -30,7 +30,7 @@ export function delSaveFile(menuId) {
 // 清理废弃文件
 export function clearSaveFile() {
   return request({
-    url: '/system/clearsavefile/',
+    url: '/admin/system/clearsavefile/',
     method: 'post'
   })
 }

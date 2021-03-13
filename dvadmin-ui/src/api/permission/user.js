@@ -4,7 +4,7 @@ import {praseStrEmpty} from "@/utils/ruoyi";
 // 查询用户列表
 export function listUser(query) {
   return request({
-    url: '/permission/user/',
+    url: '/admin/permission/user/',
     method: 'get',
     params: query
   })
@@ -13,7 +13,7 @@ export function listUser(query) {
 // 查询用户详细
 export function getUser(userId) {
   return request({
-    url: '/permission/user/details/?userId=' + praseStrEmpty(userId) ,
+    url: '/admin/permission/user/details/?userId=' + praseStrEmpty(userId) ,
     method: 'get'
   })
 }
@@ -21,7 +21,7 @@ export function getUser(userId) {
 // 新增用户
 export function addUser(data) {
   return request({
-    url: '/permission/user/',
+    url: '/admin/permission/user/',
     method: 'post',
     data: data
   })
@@ -30,7 +30,7 @@ export function addUser(data) {
 // 修改用户
 export function updateUser(data) {
   return request({
-    url: '/permission/user/' + data.id + '/',
+    url: '/admin/permission/user/' + data.id + '/',
     method: 'put',
     data: data
   })
@@ -39,7 +39,7 @@ export function updateUser(data) {
 // 删除用户
 export function delUser(userId) {
   return request({
-    url: '/permission/user/' + userId + '/',
+    url: '/admin/permission/user/' + userId + '/',
     method: 'delete'
   })
 }
@@ -47,7 +47,7 @@ export function delUser(userId) {
 // 导出用户
 export function exportUser(query) {
   return request({
-    url: '/permission/user/export/',
+    url: '/admin/permission/user/export/',
     method: 'get',
     params: query
   })
@@ -60,7 +60,7 @@ export function resetUserPwd(userId, password) {
     password
   }
   return request({
-    url: '/permission/user/resetPwd/',
+    url: '/admin/permission/user/resetPwd/',
     method: 'put',
     data: data
   })
@@ -73,7 +73,7 @@ export function changeUserStatus(userId, status) {
     status
   }
   return request({
-    url: '/permission/user/changeStatus/',
+    url: '/admin/permission/user/changeStatus/',
     method: 'put',
     data: data
   })
@@ -82,7 +82,7 @@ export function changeUserStatus(userId, status) {
 // 查询用户个人信息
 export function getUserProfile() {
   return request({
-    url: '/permission/user/profile/',
+    url: '/admin/permission/user/profile/',
     method: 'get'
   })
 }
@@ -90,7 +90,7 @@ export function getUserProfile() {
 // 修改用户个人信息
 export function updateUserProfile(data) {
   return request({
-    url: '/permission/user/profile/',
+    url: '/admin/permission/user/profile/',
     method: 'put',
     data: data
   })
@@ -103,7 +103,7 @@ export function updateUserPwd(oldPassword, newPassword) {
     newPassword
   }
   return request({
-    url: '/permission/user/profile/updatePwd/',
+    url: '/admin/permission/user/profile/updatePwd/',
     method: 'put',
     data: data
   })
@@ -112,7 +112,7 @@ export function updateUserPwd(oldPassword, newPassword) {
 // 用户头像上传
 export function uploadAvatar(data) {
   return request({
-    url: '/permission/user/profile/avatar',
+    url: '/admin/permission/user/profile/avatar',
     method: 'post',
     data: data
   })
@@ -121,7 +121,7 @@ export function uploadAvatar(data) {
 // 下载用户导入模板
 export function importTemplate() {
   return request({
-    url: '/permission/user/importTemplate',
+    url: '/admin/permission/user/importTemplate',
     method: 'get'
   })
 }
