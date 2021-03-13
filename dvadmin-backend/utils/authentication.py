@@ -3,10 +3,13 @@
 """
 import logging
 
+import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.utils.six import text_type
+from django.utils.translation import ugettext as _
+from rest_framework import exceptions
 from rest_framework_jwt.utils import jwt_decode_handler
 
 from .decorators import exceptionHandler
@@ -20,12 +23,21 @@ class OpAuthJwtAuthentication(object):
     统一JWT认证(环境允许情况下, 推荐使用RedisOpAuthJwtAuthentication)
     """
 
-    @exceptionHandler()
     def authenticate(self, request):
         token = self.get_header_authorization(request) or self.get_cookie_authorization(request)
         if not token:
             return None
-        payload = jwt_decode_handler(token)
+        try:
+            payload = jwt_decode_handler(token)
+        except jwt.ExpiredSignature:
+            msg = _('Signature has expired.')
+            raise exceptions.AuthenticationFailed(msg)
+        except jwt.DecodeError:
+            msg = _('Error decoding signature.')
+            raise exceptions.AuthenticationFailed(msg)
+        except jwt.InvalidTokenError:
+            raise exceptions.AuthenticationFailed()
+
         username = payload.get('username', None)
         if not username:
             return None
@@ -51,7 +63,7 @@ class OpAuthJwtAuthentication(object):
         if not auth:
             return ''
         auth = str(auth, encoding='utf-8').split()
-        if len(auth) != 2 or auth[0].upper() != settings.JWT_AUTH.get('JWT_AUTH_HEADER_PREFIX', 'JWT'):
+        if len(auth) != 2 or auth[0].upper() != settings.JWT_AUTH.get('JWT_AUTH_HEADER_PREFIX', 'JWT').upper():
             return ''
         return auth[1]
 
@@ -75,11 +87,10 @@ class RedisOpAuthJwtAuthentication(OpAuthJwtAuthentication):
     """
     prefix = settings.JWT_AUTH.get('JWT_AUTH_HEADER_PREFIX', 'JWT')
 
-    @exceptionHandler()
     def authenticate(self, request):
         res = super().authenticate(request)
         if res:
-            user, token = super().authenticate(request)
+            user, token = res
             key = f"{self.prefix}_{user.username}"
             redis_token = cache.get(key)
             if redis_token == token:
