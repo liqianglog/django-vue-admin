@@ -78,7 +78,8 @@ def export_excel(field_data: list, data: list, FileName: str, file_path: str = s
     # 设置栏位宽度，栏位宽度小于10时候采用默认宽度
     for i in range(len(col_width)):
         if col_width[i] > 10:
-            sheet.col(i).width = 256 * (col_width[i] + 6)
+            width = col_width[i] if col_width[i] < 36 else 36
+            sheet.col(i).width = 256 * (width + 6)
         else:
             sheet.col(i).width = 256 * (default_width)
 
