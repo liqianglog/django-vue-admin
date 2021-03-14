@@ -35,7 +35,7 @@ class CaptchaRefresh(APIView):
         new_key = CaptchaStore.pick()
         to_json_response = {
             "key": new_key,
-            "image_url": captcha_image_url(new_key),
+            "image_url": str(captcha_image_url(new_key)).lstrip('/'),
             "audio_url": captcha_audio_url(new_key) if ca_settings.CAPTCHA_FLITE_PATH else None,
         }
         return SuccessResponse(to_json_response)

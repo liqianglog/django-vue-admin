@@ -1,4 +1,4 @@
-import {getInfo, login, logout} from '@/api/login'
+import {getInfo, login, logout} from '@/api/vadmin/login'
 import {getToken, removeToken, setToken} from '@/utils/auth'
 
 const user = {

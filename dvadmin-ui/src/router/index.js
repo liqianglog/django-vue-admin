@@ -74,13 +74,13 @@ export const constantRoutes = [
     children: [
       {
         path: 'profile',
-        component: (resolve) => require(['@/views/permission/user/profile/index'], resolve),
+        component: (resolve) => require(['@/views/vadmin/permission/user/profile/index'], resolve),
         name: 'Profile',
         meta: { title: '个人中心', icon: 'user' }
       },
       {
         path: 'msg',
-        component: (resolve) => require(['@/views/system/message/Mymessage'], resolve),
+        component: (resolve) => require(['@/views/vadmin/system/message/Mymessage'], resolve),
         name: 'msg',
         meta: { title: '消息通知', icon: 'user' }
       }
@@ -93,35 +93,9 @@ export const constantRoutes = [
     children: [
       {
         path: 'type/data/:dictId(\\d+)',
-        component: (resolve) => require(['@/views/system/dict/data'], resolve),
+        component: (resolve) => require(['@/views/vadmin/system/dict/data'], resolve),
         name: 'Data',
         meta: { title: '字典数据', icon: '' }
-      }
-    ]
-  },
-  {
-    path: '/job',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'log',
-        component: (resolve) => require(['@/views/monitor/job/log'], resolve),
-        name: 'JobLog',
-        meta: { title: '调度日志' }
-      }
-    ]
-  },
-  {
-    path: '/gen',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'edit/:tableId(\\d+)',
-        component: (resolve) => require(['@/views/tool/gen/editTable'], resolve),
-        name: 'GenEdit',
-        meta: { title: '修改生成配置' }
       }
     ]
   }

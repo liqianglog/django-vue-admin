@@ -54,7 +54,7 @@
 </template>
 
 <script>
-  import {getCodeImg} from "@/api/login";
+  import {getCodeImg} from "@/api/vadmin/login";
   import Cookies from "js-cookie";
   import {decrypt, encrypt} from '@/utils/jsencrypt'
 
