@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from rest_framework_jwt.views import ObtainJSONWebToken, jwt_response_payload_handler
 
 from .exceptions import GenException
+from .jwt_util import jwt_get_session_id
 from .response import SuccessResponse, ErrorResponse
 
 # from .jwt_util import jwt_response_payload_handler
@@ -71,7 +72,8 @@ class LoginView(ObtainJSONWebToken):
             response = SuccessResponse(response_data)
             if token:
                 username = user.username
-                key = f"{self.prefix}_{username}"
+                session_id = jwt_get_session_id(token)
+                key = f"{self.prefix}_{session_id}_{username}"
                 cache.set(key, token, self.ex.total_seconds())
             if self.JWT_AUTH_COOKIE and token:
                 expiration = (datetime.datetime.utcnow() + self.ex)

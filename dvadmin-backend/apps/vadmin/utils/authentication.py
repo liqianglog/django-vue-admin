@@ -13,6 +13,7 @@ from rest_framework import exceptions
 from rest_framework_jwt.utils import jwt_decode_handler
 
 from .decorators import exceptionHandler
+from .jwt_util import jwt_get_session_id
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -91,7 +92,8 @@ class RedisOpAuthJwtAuthentication(OpAuthJwtAuthentication):
         res = super().authenticate(request)
         if res:
             user, token = res
-            key = f"{self.prefix}_{user.username}"
+            session_id = jwt_get_session_id(token)
+            key = f"{self.prefix}_{session_id}_{user.username}"
             redis_token = cache.get(key)
             if redis_token == token:
                 return user, token

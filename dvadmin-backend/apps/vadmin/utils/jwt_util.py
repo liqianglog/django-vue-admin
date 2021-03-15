@@ -1,6 +1,8 @@
+import uuid
 from calendar import timegm
 from datetime import datetime
 
+import jwt
 from django.conf import settings
 from django.contrib.auth import login
 
@@ -19,10 +21,16 @@ def jwt_response_payload_handler(token, user, request):
     }
 
 
-def jwt_get_secret_key(payload=None):
+def jwt_get_session_id(token=None):
+    """
+    获取会话id
+    :param token:
+    :return:
+    """
+    payload = jwt.decode(token, None, False)
     if isinstance(payload, dict):
-        return payload.get("secret", "")
-    return getattr(payload, "secret", "")
+        return payload.get("session_id", "")
+    return getattr(payload, "session_id", "")
 
 
 def jwt_get_user_secret_key(user):
@@ -37,7 +45,7 @@ def jwt_payload_handler(user):
     payload = {
         'user_id': user.pk,
         'username': user.username,
-        'secret': jwt_get_user_secret_key(user),
+        'session_id': str(uuid.uuid4()),
         'exp': datetime.utcnow() + settings.JWT_AUTH.get('JWT_EXPIRATION_DELTA')
     }
     if settings.JWT_AUTH.get('JWT_ALLOW_REFRESH'):
