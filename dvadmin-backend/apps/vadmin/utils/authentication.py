@@ -96,5 +96,5 @@ class RedisOpAuthJwtAuthentication(OpAuthJwtAuthentication):
             if redis_token == token:
                 return user, token
             else:
-                return None
+                raise exceptions.AuthenticationFailed("登录信息失效，请重新登录！")
         return None
