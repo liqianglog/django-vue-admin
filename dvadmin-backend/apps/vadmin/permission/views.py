@@ -61,7 +61,7 @@ class GetRouters(APIView):
         for ele in menus:
             data.append({
                 'id': ele.get('id'),
-                'name': ''.join([i.capitalize() for i in ele.get('web_path', '').split('/')]),
+                'name': ele.get('web_path', '').split('/')[-1] and ele.get('web_path', '').split('/')[-1].capitalize(),
                 'path': ele.get('web_path'),
                 'hidden': True if ele.get('visible') != '1' else False,
                 'redirect': ele.get('web_path') if ele.get('isFrame') == '1' else 'noRedirect',

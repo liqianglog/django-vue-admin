@@ -206,7 +206,7 @@
   import Editor from '@/components/Editor';
 
   export default {
-    name: "message",
+    name: "Message",
     components: {
       Editor
     },
