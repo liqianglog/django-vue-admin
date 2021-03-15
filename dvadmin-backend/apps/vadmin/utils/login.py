@@ -12,9 +12,10 @@ from rest_framework_jwt.views import ObtainJSONWebToken, jwt_response_payload_ha
 
 from .exceptions import GenException
 from .jwt_util import jwt_get_session_id
+from .request_util import get_request_ip, get_os, get_browser, get_login_location
 from .response import SuccessResponse, ErrorResponse
-
 # from .jwt_util import jwt_response_payload_handler
+from ..system.models.logininfor import LoginInfor
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +62,18 @@ class LoginView(ObtainJSONWebToken):
         else:
             raise GenException(message='验证码错误')
 
+    def save_login_infor(self, request, msg='',status=True):
+        User = get_user_model()
+        instance = LoginInfor()
+        instance.browser = get_browser(request)
+        instance.ipaddr = get_request_ip(request)
+        instance.loginLocation = get_login_location(request)
+        instance.msg = msg
+        instance.os = get_os(request)
+        instance.status = status
+        instance.creator = request.user and User.objects.filter(username=request.data.get('username')).first()
+        instance.save()
+
     def post(self, request, *args, **kwargs):
         # 校验验证码
         self.jarge_captcha(request)
@@ -75,6 +88,7 @@ class LoginView(ObtainJSONWebToken):
                 session_id = jwt_get_session_id(token)
                 key = f"{self.prefix}_{session_id}_{username}"
                 cache.set(key, token, self.ex.total_seconds())
+                self.save_login_infor(request, '登录成功')
             if self.JWT_AUTH_COOKIE and token:
                 expiration = (datetime.datetime.utcnow() + self.ex)
                 response.set_cookie(self.JWT_AUTH_COOKIE,
@@ -83,8 +97,9 @@ class LoginView(ObtainJSONWebToken):
                                     domain=settings.SESSION_COOKIE_DOMAIN,
                                     httponly=False)
             return response
+        self.save_login_infor(request, '登录失败，账户/密码不正确',False)
         return ErrorResponse(data=serializer.errors, msg='账户/密码不正确')
 
-    def handle_exception(self, exc):
-        print(exc)
-        return ErrorResponse(data=None, msg=exc.message)
+    # def handle_exception(self, exc):
+    #     print(exc)
+    #     return ErrorResponse(data=None, msg=exc.message)

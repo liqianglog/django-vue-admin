@@ -3,12 +3,13 @@ Request工具类
 """
 import json
 import logging
+
 from django.contrib.auth.models import AbstractBaseUser
-from rest_framework.authentication import BaseAuthentication
-from rest_framework.settings import api_settings as drf_settings
 from django.contrib.auth.models import AnonymousUser
 from django.urls.resolvers import ResolverMatch
-
+from rest_framework.authentication import BaseAuthentication
+from rest_framework.settings import api_settings as drf_settings
+from user_agents import parse
 
 logger = logging.getLogger(__name__)
 
@@ -126,3 +127,48 @@ def get_request_canonical_path(request, *args, **kwargs):
         if key == 'pk':
             pass
     return path
+
+
+def get_browser(request, *args, **kwargs):
+    """
+    获取浏览器名
+    :param request:
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    ua_string = request.META['HTTP_USER_AGENT']
+    user_agent = parse(ua_string)
+    return user_agent.get_browser()
+
+
+def get_os(request, *args, **kwargs):
+    """
+    获取操作系统
+    :param request:
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    ua_string = request.META['HTTP_USER_AGENT']
+    user_agent = parse(ua_string)
+    return user_agent.get_os()
+
+
+def get_login_location(request, *args, **kwargs):
+    """
+    获取ip 登录位置
+    :param request:
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    import requests
+    import eventlet  # 导入eventlet这个模块
+    eventlet.monkey_patch(thread=False)  # 必须加这条代码
+    with eventlet.Timeout(2, False):  # 设置超时时间为2秒
+        apiurl = "http://whois.pconline.com.cn/ip.jsp?ip=%s" % get_request_ip(request)
+        r = requests.get(apiurl)
+        content = r.content.decode('GBK')
+        return content.replace('\r', '').replace('\n', '')
+    return ""
