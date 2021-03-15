@@ -65,7 +65,7 @@ class Command(BaseCommand):
             logger.info(f'已取消[{table_name}]初始化')
 
     def add_arguments(self, parser):
-        parser.add_argument('init_name', nargs='+', type=str)
+        parser.add_argument('init_name', nargs='?', type=str)
 
     def handle(self, *args, **options):
         init_dict = {
