@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from .models import LoginInfor
 from ..op_drf.serializers import CustomModelSerializer
 from ..system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush, MessagePushUser
 
@@ -216,3 +217,16 @@ class MessagePushUserSerializer(CustomModelSerializer):
 
     def save(self, **kwargs):
         return super().save(**kwargs)
+
+# ================================================= #
+# ************** 登录日志 序列化器  ************** #
+# ================================================= #
+
+class LoginInforSerializer(CustomModelSerializer):
+    """
+    参数设置 简单序列化器
+    """
+
+    class Meta:
+        model = LoginInfor
+        fields = "__all__"

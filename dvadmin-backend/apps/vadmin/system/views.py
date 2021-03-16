@@ -1,17 +1,18 @@
 from django.db.models import Q
 from rest_framework.request import Request
 
+from .models import LoginInfor
 from ..op_drf.filters import DataLevelPermissionsFilter
 from ..op_drf.viewsets import CustomModelViewSet
 from ..system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter, MessagePushFilter, \
-    SaveFileFilter
+    SaveFileFilter, LoginInforFilter
 from ..system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
 from ..system.models import MessagePushUser
 from ..system.serializers import DictDataSerializer, DictDataCreateUpdateSerializer, DictDetailsSerializer, \
     DictDetailsCreateUpdateSerializer, DictDetailsListSerializer, ConfigSettingsSerializer, \
     ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer, \
     ExportConfigSettingsSerializer, ExportDictDataSerializer, ExportDictDetailsSerializer, \
-    MessagePushSerializer, MessagePushCreateUpdateSerializer, ExportMessagePushSerializer
+    MessagePushSerializer, MessagePushCreateUpdateSerializer, ExportMessagePushSerializer, LoginInforSerializer
 from ..utils.export_excel import export_excel_save_model
 from ..utils.response import SuccessResponse
 
@@ -212,3 +213,14 @@ class MessagePushModelViewSet(CustomModelViewSet):
         field_data = ['消息序号', '标题', '内容', '消息类型', '是否审核', '消息状态', '通知接收消息用户', '创建者', '修改者', '修改时间', '创建时间']
         data = ExportMessagePushSerializer(MessagePush.objects.all(), many=True).data
         return SuccessResponse(export_excel_save_model(request, field_data, data, '导出岗位数据.xls'))
+
+
+class LoginInforModelViewSet(CustomModelViewSet):
+    """
+   文件管理 模型的CRUD视图
+   """
+    queryset = LoginInfor.objects.all()
+    serializer_class = LoginInforSerializer
+    filter_class = LoginInforFilter
+    extra_filter_backends = [DataLevelPermissionsFilter]
+    ordering = 'create_datetime'  # 默认排序

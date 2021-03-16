@@ -1,5 +1,6 @@
 import django_filters
 
+from .models import LoginInfor
 from ..system.models import DictDetails, DictData, ConfigSettings, MessagePush, SaveFile
 
 
@@ -48,7 +49,18 @@ class MessagePushFilter(django_filters.rest_framework.FilterSet):
     """
     消息通知 简单过滤器
     """
+
     # is_read = django_filters.CharFilter(field_name='messagepushuser_message_push__is_read')
     class Meta:
         model = MessagePush
+        fields = '__all__'
+
+
+class LoginInforFilter(django_filters.rest_framework.FilterSet):
+    """
+    登录日志 简单过滤器
+    """
+
+    class Meta:
+        model = LoginInfor
         fields = '__all__'
