@@ -133,7 +133,6 @@ STATIC_URL = '/static/'
 # # 设置django的静态文件目录
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    os.path.join(BASE_DIR, "apps", "vadmin", "static")
 ]
 # 访问上传文件的url地址前缀
 MEDIA_URL = "/media/"
