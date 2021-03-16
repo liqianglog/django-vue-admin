@@ -1,6 +1,6 @@
 module.exports = {
     title: 'Django-Vue-Admin',
-    base: '/django-vue-admin/',
+    base: '/',
     head: [
         [
             'link', // 设置 favicon.ico，注意图片放在 public 文件夹下
