@@ -4,6 +4,7 @@ from ...op_drf.models import CoreModel
 
 
 class LoginInfor(CoreModel):
+    session_id = CharField(max_length=64, verbose_name="会话标识", null=True, blank=True)
     browser = CharField(max_length=64, verbose_name="浏览器")
     ipaddr = CharField(max_length=32, verbose_name="ip地址", null=True, blank=True)
     loginLocation = CharField(max_length=64, verbose_name="登录位置", null=True, blank=True)

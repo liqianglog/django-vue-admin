@@ -62,9 +62,10 @@ class LoginView(ObtainJSONWebToken):
         else:
             raise GenException(message='验证码错误')
 
-    def save_login_infor(self, request, msg='',status=True):
+    def save_login_infor(self, request, msg='',status=True,session_id=''):
         User = get_user_model()
         instance = LoginInfor()
+        instance.session_id = session_id
         instance.browser = get_browser(request)
         instance.ipaddr = get_request_ip(request)
         instance.loginLocation = get_login_location(request)
@@ -88,7 +89,7 @@ class LoginView(ObtainJSONWebToken):
                 session_id = jwt_get_session_id(token)
                 key = f"{self.prefix}_{session_id}_{username}"
                 cache.set(key, token, self.ex.total_seconds())
-                self.save_login_infor(request, '登录成功')
+                self.save_login_infor(request, '登录成功',session_id=session_id)
             if self.JWT_AUTH_COOKIE and token:
                 expiration = (datetime.datetime.utcnow() + self.ex)
                 response.set_cookie(self.JWT_AUTH_COOKIE,
