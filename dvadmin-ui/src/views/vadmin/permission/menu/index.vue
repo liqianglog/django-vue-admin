@@ -238,8 +238,8 @@
           <el-col :span="12">
             <el-form-item v-if="form.menuType == '1'" label="是否缓存">
               <el-radio-group v-model="form.isCache">
-                <el-radio label="0">缓存</el-radio>
-                <el-radio label="1">不缓存</el-radio>
+                <el-radio label="0">不缓存</el-radio>
+                <el-radio label="1">缓存</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -327,6 +327,10 @@
       },
       /** 接口路径变化，必须斜杠开头，不能斜杠结尾*/
       InterfacePathChange() {
+        if(this.form.interface_path.length === 0) {
+          this.form.perms = ''
+          return
+        }
         if (this.form.interface_path.indexOf("/") !== 0) {
           this.form.interface_path = "/" + this.form.interface_path
         }
