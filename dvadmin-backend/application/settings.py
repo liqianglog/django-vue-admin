@@ -134,6 +134,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+if not os.path.exists(os.path.join(BASE_DIR, 'media')):
+    os.makedirs(os.path.join(BASE_DIR, 'media'))
 # 访问上传文件的url地址前缀
 MEDIA_URL = "/media/"
 # 项目中存储上传文件的根目录
@@ -161,6 +163,10 @@ LOGGING = {
             'format': STANDARD_LOG_FORMAT
         },
         'console': {
+            'format': CONSOLE_LOG_FORMAT,
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+        'file': {
             'format': CONSOLE_LOG_FORMAT,
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
@@ -193,7 +199,7 @@ LOGGING = {
     'loggers': {
         # default日志
         '': {
-            'handlers': ['console'],
+            'handlers': ['console','error','file'],
             'level': 'INFO',
         },
         # 数据库相关日志
