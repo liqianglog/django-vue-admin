@@ -366,7 +366,7 @@ export default {
     /** 查询菜单树结构 */
     getMenuTreeselect() {
       menuTreeselect().then(response => {
-        this.menuOptions = response.data;
+        this.menuOptions = this.handleTree(response.data,'id');
       });
     },
     /** 查询部门树结构 */

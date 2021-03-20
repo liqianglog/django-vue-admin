@@ -313,3 +313,4 @@ CAPTCHA_NOISE_FUNCTIONS = (
                            )
 # CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.random_char_challenge'
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+DEFAULT_LOOKUP_EXPR = 'icontains'

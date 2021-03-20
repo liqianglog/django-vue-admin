@@ -8,6 +8,7 @@ class DictDataFilter(django_filters.rest_framework.FilterSet):
     """
     字典管理 简单过滤器
     """
+    dictName = django_filters.CharFilter(lookup_expr='icontains')
 
     class Meta:
         model = DictData
@@ -18,6 +19,7 @@ class DictDetailsFilter(django_filters.rest_framework.FilterSet):
     """
     字典详情 简单过滤器
     """
+    dictLabel = django_filters.CharFilter(lookup_expr='icontains')
     dictType = django_filters.CharFilter(field_name='dict_data__dictType')
 
     class Meta:
@@ -29,6 +31,7 @@ class ConfigSettingsFilter(django_filters.rest_framework.FilterSet):
     """
     参数设置 简单过滤器
     """
+    configName = django_filters.CharFilter(lookup_expr='icontains')
 
     class Meta:
         model = ConfigSettings
@@ -39,6 +42,7 @@ class SaveFileFilter(django_filters.rest_framework.FilterSet):
     """
     文件管理 简单过滤器
     """
+    name = django_filters.CharFilter(lookup_expr='icontains')
 
     class Meta:
         model = SaveFile
@@ -51,6 +55,8 @@ class MessagePushFilter(django_filters.rest_framework.FilterSet):
     """
 
     # is_read = django_filters.CharFilter(field_name='messagepushuser_message_push__is_read')
+    title = django_filters.CharFilter(lookup_expr='icontains')
+
     class Meta:
         model = MessagePush
         fields = '__all__'
