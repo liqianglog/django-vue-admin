@@ -3,6 +3,7 @@ import hashlib
 import os
 import time
 
+import xlrd
 import xlwt
 from django.conf import settings
 
@@ -68,8 +69,8 @@ def export_excel(field_data: list, data: list, FileName: str, file_path: str = s
 
     # 确定栏位宽度
     col_width = []
-    for index,ele in enumerate(data):
-        for inx,values in enumerate(ele.values()):
+    for index, ele in enumerate(data):
+        for inx, values in enumerate(ele.values()):
             if index == 0:
                 col_width.append(len_byte(str(values)))
             else:
@@ -82,7 +83,6 @@ def export_excel(field_data: list, data: list, FileName: str, file_path: str = s
             sheet.col(i).width = 256 * (width + 6)
         else:
             sheet.col(i).width = 256 * (default_width)
-
 
     row = 1
     # 内容背景颜色
@@ -113,7 +113,8 @@ def export_excel(field_data: list, data: list, FileName: str, file_path: str = s
     wbk.save(path_name)
     return os.path.join('system', monthTime, FileName)
 
-def export_excel_save_model(request,field_data,data,FilName):
+
+def export_excel_save_model(request, field_data, data, FilName):
     """
     导出Excel并保存到 SaveFile 文件管理中
     :param request:
@@ -125,7 +126,7 @@ def export_excel_save_model(request,field_data,data,FilName):
     # 根据生成的字典MD5
     time_stamp = hashlib.md5(str(field_data).encode('utf8')).hexdigest()
     # 存入文件数据库中
-    FilName = str(time_stamp) + FilName
+    FilName = '.'.join(FilName.split('.')[:-1]) + str(time_stamp) + '.' + FilName.split('.')[-1]
     file_rul = export_excel(field_data=field_data, data=data, FileName=FilName)
     savefile, _ = SaveFile.objects.get_or_create(file=file_rul)
     if _ == True:
@@ -137,3 +138,33 @@ def export_excel_save_model(request,field_data,data,FilName):
     savefile.modifier = request.user.username
     savefile.save()
     return SaveFileSerializer(savefile).data
+
+
+def excel_to_data(file_url, field_data):
+    """
+    读取导入的excel文件
+    :param request:
+    :param field_data: 首行数据源
+    :param data: 数据源
+    :param FilName: 文件名
+    :return:
+    """
+    # 读取excel 文件
+    data = xlrd.open_workbook(os.path.join(settings.BASE_DIR, *file_url.split(os.sep)))
+    table = data.sheets()[0]
+    # 创建一个空列表，存储Excel的数据
+    tables = []
+    for i, rown in enumerate(range(table.nrows)):
+        if i == 0: continue
+        array = {}
+        for index, ele in enumerate(field_data.keys()):
+            cell_value = table.cell_value(rown, index)
+            # 由于excel导入数字类型后，会出现数字加 .0 的，进行处理
+            if type(cell_value) is float and str(cell_value).split('.')[1] == '0':
+                cell_value = int(str(cell_value).split('.')[0])
+            if type(cell_value) is str:
+                cell_value = cell_value.strip(' \t\n\r')
+            array[ele] = cell_value
+
+        tables.append(array)
+    return tables

@@ -343,13 +343,24 @@
 </template>
 
 <script>
-import { listUser, getUser, delUser, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/vadmin/permission/user";
-import { getToken } from "@/utils/auth";
-import { treeselect } from "@/api/vadmin/permission/dept";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+  import {
+    addUser,
+    changeUserStatus,
+    delUser,
+    exportUser,
+    getUser,
+    importsUser,
+    importTemplate,
+    listUser,
+    resetUserPwd,
+    updateUser
+  } from "@/api/vadmin/permission/user";
+  import {getToken} from "@/utils/auth";
+  import {treeselect} from "@/api/vadmin/permission/dept";
+  import Treeselect from "@riophae/vue-treeselect";
+  import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
-export default {
+  export default {
   name: "User",
   components: { Treeselect },
   data() {
@@ -407,7 +418,7 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/system/savefile/"
+        url: process.env.VUE_APP_BASE_API + "/admin/system/savefile/"
       },
       // 查询参数
       queryParams: {
@@ -665,8 +676,11 @@ export default {
       this.upload.open = false;
       this.upload.isUploading = false;
       this.$refs.upload.clearFiles();
-      this.$alert(response.msg, "导入结果", { dangerouslyUseHTMLString: true });
-      this.getList();
+      // 是否更新已经存在的用户数据
+      importsUser({file_url: response.data.file_url,updateSupport:this.upload.updateSupport}).then(response => {
+        this.$alert('导入成功！', "导入结果", { dangerouslyUseHTMLString: true });
+        this.getList();
+      });
     },
     // 提交上传文件
     submitFileForm() {

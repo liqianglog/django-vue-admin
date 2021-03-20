@@ -201,7 +201,9 @@ class MongoModelViewSet(mixins.CreateModelMixin,
     pass
 
 
-class CustomModelViewSet(ModelViewSet, mixins.TableSerializerMixin):
+class CustomModelViewSet(ModelViewSet, mixins.TableSerializerMixin,
+                         mixins.ImportSerializerMixin,
+                         mixins.ExportSerializerMixin):
     """
     自定义的ModelViewSet:
     (1)默认分页器就为统一分页器op_drf.pagination.Pagination

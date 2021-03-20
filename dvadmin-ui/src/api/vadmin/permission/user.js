@@ -13,7 +13,7 @@ export function listUser(query) {
 // 查询用户详细
 export function getUser(userId) {
   return request({
-    url: '/admin/permission/user/details/?userId=' + praseStrEmpty(userId) ,
+    url: '/admin/permission/user/details/?userId=' + praseStrEmpty(userId),
     method: 'get'
   })
 }
@@ -112,7 +112,7 @@ export function updateUserPwd(oldPassword, newPassword) {
 // 用户头像上传
 export function uploadAvatar(data) {
   return request({
-    url: '/admin/permission/user/profile/avatar',
+    url: '/admin/permission/user/profile/avatar/',
     method: 'post',
     data: data
   })
@@ -121,7 +121,16 @@ export function uploadAvatar(data) {
 // 下载用户导入模板
 export function importTemplate() {
   return request({
-    url: '/admin/permission/user/importTemplate',
+    url: '/admin/permission/user/importTemplate/',
     method: 'get'
+  })
+}
+
+// 用户导入
+export function importsUser(data) {
+  return request({
+    url: '/admin/permission/user/importTemplate/',
+    method: 'post',
+    data: data
   })
 }

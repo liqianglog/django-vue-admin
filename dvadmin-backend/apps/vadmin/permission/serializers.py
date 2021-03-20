@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.fields import empty
 from rest_framework.validators import UniqueValidator
 
 from ..op_drf.serializers import CustomModelSerializer
@@ -285,3 +286,25 @@ class UserProfileCreateUpdateSerializer(CustomModelSerializer):
         model = UserProfile
         exclude = ('password', 'secret', 'user_permissions', 'groups', 'is_superuser', 'date_joined')
         read_only_fields = ('dept',)
+
+class UserProfileImportSerializer(CustomModelSerializer):
+
+    def save(self, **kwargs):
+        data = super().save(**kwargs)
+        data.set_password(self.initial_data.get('password', None))
+        data.save()
+        return data
+
+    def run_validation(self, data={}):
+        # 把excel 数据进行格式转换
+        if type(data) is dict:
+            data['role'] = str(data['role']).split(',')
+            data['post'] = str(data['post']).split(',')
+            data['gender'] = {'男': '0', '女': '1', '未知': '2'}.get(data['gender'])
+            data['is_active'] = {'启用': True, '禁用': False}.get(data['is_active'])
+        return super().run_validation(data)
+
+
+    class Meta:
+        model = UserProfile
+        exclude = ('password', 'secret', 'user_permissions', 'groups', 'is_superuser', 'date_joined')

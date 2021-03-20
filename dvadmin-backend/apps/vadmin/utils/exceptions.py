@@ -2,6 +2,7 @@ import logging
 import traceback
 
 from rest_framework import serializers, exceptions
+from rest_framework.views import set_rollback
 
 from .response import ErrorResponse
 
@@ -67,9 +68,10 @@ def op_exception_handler(ex, context):
         code = 401
         msg = ex.detail
     elif isinstance(ex, DRFAPIException):
-        # set_rollback()
+        set_rollback()
         msg = ex.detail
     elif isinstance(ex, exceptions.APIException):
+        set_rollback()
         msg = ex.detail
     elif isinstance(ex, Exception):
         logger.error(traceback.format_exc())

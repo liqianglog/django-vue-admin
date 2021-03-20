@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import mixins
 from rest_framework import serializers
 from rest_framework import status
@@ -5,6 +6,7 @@ from rest_framework.relations import ManyRelatedField, RelatedField, PrimaryKeyR
 from rest_framework.request import Request
 
 from .response import SuccessResponse
+from ..utils.export_excel import excel_to_data, export_excel_save_model
 
 
 class CreateModelMixin(mixins.CreateModelMixin):
@@ -271,3 +273,75 @@ class TableSerializerMixin:
                     info['type'] = 'select'
             column.append(info)
         return column
+
+
+class ImportSerializerMixin:
+    """
+    自定义导出模板、导入功能
+    """
+    # 导入字段
+    import_field_data = {}
+    # 导入序列化器
+    import_serializer_class = None
+
+
+    @transaction.atomic # Django 事物
+    def importTemplate(self, request: Request, *args, **kwargs):
+        """
+        用户导人模板
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        assert self.import_field_data, (
+                "'%s' 请配置对应的导出模板字段。"
+                % self.__class__.__name__
+        )
+        # 导出模板
+        if request.method == 'GET':
+            # 示例数据
+            return SuccessResponse(
+                export_excel_save_model(request, self.import_field_data.values(), [], '导入用户数据模板.xls'))
+        updateSupport = request.data.get('updateSupport')
+        # 从excel中组织对应的数据结构，然后使用序列化器保存
+        data = excel_to_data(request.data.get('file_url'), self.import_field_data)
+        unique_list = [ele.attname for ele in self.get_queryset().model._meta.get_fields() if
+                       hasattr(ele, 'unique') and ele.unique == True]
+        for ele in data:
+            # 获取 unique 字段
+            filter_dic = {i: ele.get(i) for i in list(set(self.import_field_data.keys()) & set(unique_list))}
+            instance = self.get_queryset().filter(**filter_dic).first()
+            if instance and not updateSupport:
+                continue
+            if not filter_dic:
+                instance = None
+            serializer = self.import_serializer_class(instance, data=ele)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        return SuccessResponse(msg=f"导入成功！")
+
+
+class ExportSerializerMixin:
+    """
+    自定义导出功能
+    """
+    # 导出字段
+    export_field_data = []
+    # 导出序列化器
+    export_serializer_class = None
+
+    def export(self, request: Request, *args, **kwargs):
+        """
+        导出功能
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        assert self.export_field_data, (
+                "'%s' 请配置对应的导出模板字段。"
+                % self.__class__.__name__
+        )
+        data = self.export_serializer_class(self.get_queryset(), many=True).data
+        return SuccessResponse(export_excel_save_model(request, self.export_field_data, data, '导出用户数据.xls'))
