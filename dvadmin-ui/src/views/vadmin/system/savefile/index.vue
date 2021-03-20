@@ -192,12 +192,13 @@
       },
       /** 删除按钮操作 */
       handleDelete(row) {
-        this.$confirm('是否确认删除名称为"' + row.name + '"的数据项?', "警告", {
+        const userIds = row.id || this.ids;
+        this.$confirm('是否确认删除文件编号为"' + userIds + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function () {
-          return delSaveFile(row.id);
+          return delSaveFile(userIds);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
