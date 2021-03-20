@@ -93,11 +93,25 @@ class DestroyModelMixin(mixins.DestroyModelMixin):
     """
     destroy_serializer_class = None
 
+    def get_object_list(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        assert lookup_url_kwarg in self.kwargs, (
+                'Expected view %s to be called with a URL keyword argument '
+                'named "%s". Fix your URL conf, or set the `.lookup_field` '
+                'attribute on the view correctly.' %
+                (self.__class__.__name__, lookup_url_kwarg)
+        )
+        filter_kwargs = {f"{self.lookup_field}__in": self.kwargs[lookup_url_kwarg].split(',')}
+        obj = queryset.filter(**filter_kwargs)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
     def destroy(self, request: Request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
+        instance = self.get_object_list()
         if hasattr(self, 'handle_logging'):
             self.handle_logging(request, instance=instance, *args, **kwargs)
+        self.perform_destroy(instance)
         return SuccessResponse(status=status.HTTP_204_NO_CONTENT)
 
     def perform_destroy(self, instance):
