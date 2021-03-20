@@ -59,7 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'vadmin.op_drf.middleware.ApiLoggingMiddleware',  # 用于记录API访问日志
+    'vadmin.op_drf.middleware.ApiLoggingMiddleware',  # 用于记录API访问日志
 ]
 # 允许跨域源
 CORS_ORIGIN_ALLOW_ALL = CORS_ORIGIN_ALLOW_ALL
@@ -313,3 +313,7 @@ CAPTCHA_NOISE_FUNCTIONS = (
                            )
 # CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.random_char_challenge'
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+
+API_LOG_ENABLE = True
+# API_LOG_METHODS = 'ALL' # ['POST', 'DELETE']
+API_LOG_METHODS = ['POST', 'DELETE'] # ['POST', 'DELETE']
