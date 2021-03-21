@@ -6,6 +6,7 @@ import logging
 
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import AnonymousUser
+from django.core.cache import cache
 from django.urls.resolvers import ResolverMatch
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.settings import api_settings as drf_settings
@@ -165,12 +166,20 @@ def get_login_location(request, *args, **kwargs):
     """
     import requests
     import eventlet  # 导入eventlet这个模块
+    request_ip = get_request_ip(request)
+    # 从缓存中获取
+    location = cache.get(request_ip)
+    if location:
+        return location
+    # 通过api 获取，再缓存redis
     eventlet.monkey_patch(thread=False)  # 必须加这条代码
     with eventlet.Timeout(2, False):  # 设置超时时间为2秒
-        apiurl = "http://whois.pconline.com.cn/ip.jsp?ip=%s" % get_request_ip(request)
+        apiurl = "http://whois.pconline.com.cn/ip.jsp?ip=%s" % request_ip
         r = requests.get(apiurl)
         content = r.content.decode('GBK')
-        return content.replace('\r', '').replace('\n', '')
+        location = content.replace('\r', '').replace('\n', '')
+        cache.set(request_ip,location, 8640)
+        return location
     return ""
 
 
