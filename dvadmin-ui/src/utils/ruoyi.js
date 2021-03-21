@@ -55,14 +55,10 @@ export function resetForm(refName) {
 
 // 添加日期范围
 export function addDateRange(params, dateRange, propName) {
-	var search = params;
-	if (null != dateRange && '' != dateRange) {
-	  // create_datetime__range = this.dateRange
-    var dateTime=new Date();
-
+	let search = JSON.parse(JSON.stringify(params));
+	if (dateRange.length !== 0) {
     search.as = JSON.stringify({create_datetime__range : dateRange});
 	}
-	console.log(11,search)
 	return search;
 }
 
@@ -70,7 +66,8 @@ export function addDateRange(params, dateRange, propName) {
 export function selectDictLabel(datas, value) {
 	var actions = [];
 	Object.keys(datas).some((key) => {
-		if (String(datas[key].dictValue) === ('' + value)) {
+		if (String(datas[key].dictValue) === ('' + String(value))) {
+			actions.push(datas[key].dictLabel);
 			actions.push(datas[key].dictLabel);
 			return true;
 		}
