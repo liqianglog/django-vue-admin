@@ -72,7 +72,7 @@ class CustomAPIView(APIView):
         method = request.method.lower()
         for view_logger in view_loggers:
             view_logger.handle(request, *args, **kwargs)
-            logger_fun = getattr(view_logger, f'handle_{method}', None)
+            logger_fun = getattr(view_logger, f'handle_{method}', f'handle_other')
             if logger_fun and isinstance(logger_fun, (FunctionType, MethodType)):
                 logger_fun(request, *args, **kwargs)
 

@@ -1,6 +1,6 @@
 import django_filters
 
-from .models import LoginInfor
+from .models import LoginInfor, OperationLog
 from ..system.models import DictDetails, DictData, ConfigSettings, MessagePush, SaveFile
 
 
@@ -69,4 +69,16 @@ class LoginInforFilter(django_filters.rest_framework.FilterSet):
 
     class Meta:
         model = LoginInfor
+        fields = '__all__'
+
+
+class OperationLogFilter(django_filters.rest_framework.FilterSet):
+    """
+    操作日志 简单过滤器
+    """
+    request_modular = django_filters.CharFilter(lookup_expr='icontains')
+    creator_username = django_filters.CharFilter(field_name='creator__username', lookup_expr='icontains')
+
+    class Meta:
+        model = OperationLog
         fields = '__all__'

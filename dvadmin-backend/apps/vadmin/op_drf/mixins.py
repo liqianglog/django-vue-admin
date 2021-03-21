@@ -7,6 +7,7 @@ from rest_framework.request import Request
 
 from .response import SuccessResponse
 from ..utils.export_excel import excel_to_data, export_excel_save_model
+from ..utils.request_util import get_verbose_name
 
 
 class CreateModelMixin(mixins.CreateModelMixin):
@@ -35,10 +36,10 @@ class ListModelMixin(mixins.ListModelMixin):
     list_serializer_class = None
 
     def list(self, request: Request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
         if hasattr(self, 'handle_logging'):
             self.handle_logging(request, *args, **kwargs)
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
         if page is not None:
             if getattr(self, 'values_queryset', None):
                 return self.get_paginated_response(page)
@@ -298,8 +299,7 @@ class ImportSerializerMixin:
     # 导入序列化器
     import_serializer_class = None
 
-
-    @transaction.atomic # Django 事物
+    @transaction.atomic  # Django 事物
     def importTemplate(self, request: Request, *args, **kwargs):
         """
         用户导人模板
@@ -358,4 +358,5 @@ class ExportSerializerMixin:
                 % self.__class__.__name__
         )
         data = self.export_serializer_class(self.get_queryset(), many=True).data
-        return SuccessResponse(export_excel_save_model(request, self.export_field_data, data, '导出用户数据.xls'))
+        return SuccessResponse(export_excel_save_model(request, self.export_field_data, data,
+                                                       f'导出{get_verbose_name(self.get_queryset())}.xls'))

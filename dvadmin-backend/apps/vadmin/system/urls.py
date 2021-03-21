@@ -2,7 +2,8 @@ from django.urls import re_path
 from rest_framework.routers import DefaultRouter
 
 from ..system.views import DictDataModelViewSet, DictDetailsModelViewSet, \
-    ConfigSettingsModelViewSet, SaveFileModelViewSet, MessagePushModelViewSet, LoginInforModelViewSet
+    ConfigSettingsModelViewSet, SaveFileModelViewSet, MessagePushModelViewSet, LoginInforModelViewSet, \
+    OperationLogModelViewSet
 
 router = DefaultRouter()
 router.register(r'dict/type', DictDataModelViewSet)
@@ -11,6 +12,8 @@ router.register(r'config', ConfigSettingsModelViewSet)
 router.register(r'savefile', SaveFileModelViewSet)
 router.register(r'message', MessagePushModelViewSet)
 router.register(r'logininfor', LoginInforModelViewSet)
+router.register(r'operation_log', OperationLogModelViewSet)
+
 urlpatterns = [
     re_path('dict/get/type/(?P<pk>.*)/', DictDetailsModelViewSet.as_view({'get': 'dict_details_list'})),
     re_path('config/configKey/(?P<pk>.*)/', ConfigSettingsModelViewSet.as_view({'get': 'get_config_key'})),
@@ -30,5 +33,9 @@ urlpatterns = [
     re_path('message/user_messages/', MessagePushModelViewSet.as_view({'get': 'get_user_messages', })),
     # 改为已读
     re_path('message/is_read/(?P<pk>.*)/', MessagePushModelViewSet.as_view({'put': 'update_is_read', })),
+    # 清空操作日志
+    re_path('operation_log/clean/', OperationLogModelViewSet.as_view({'delete': 'clean_all', })),
+    # 导出操作日志
+    re_path('operation_log/export/', OperationLogModelViewSet.as_view({'get': 'export', })),
 ]
 urlpatterns += router.urls

@@ -4,6 +4,7 @@ import traceback
 from rest_framework import serializers, exceptions
 from rest_framework.views import set_rollback
 
+from .request_util import get_verbose_name
 from .response import ErrorResponse
 
 logger = logging.getLogger(__name__)
@@ -17,9 +18,9 @@ class APIException(Exception):
     """
 
     def __init__(self, code=201, message='API异常', args=('API异常',)):
-        self.args = args
-        self.code = code
-        self.message = message
+        args = args
+        code = code
+        message = message
 
     def __str__(self):
         return self.message
@@ -36,7 +37,7 @@ class FrameworkException(Exception):
 
     def __init__(self, message='框架异常', *args: object, **kwargs: object) -> None:
         super().__init__(*args, **kwargs)
-        self.message = message
+        message = message
 
     def __str__(self) -> str:
         return f"{self.message}"
@@ -64,6 +65,9 @@ def op_exception_handler(ex, context):
     """
     msg = ''
     code = '201'
+    request = context.get('request')
+    request.session['model_name'] = get_verbose_name(view=context.get('view'))
+
     if isinstance(ex, AuthenticationFailed):
         code = 401
         msg = ex.detail

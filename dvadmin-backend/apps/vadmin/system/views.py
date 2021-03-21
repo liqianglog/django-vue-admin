@@ -1,18 +1,19 @@
 from django.db.models import Q
 from rest_framework.request import Request
 
-from .models import LoginInfor
+from .models import LoginInfor, OperationLog
 from ..op_drf.filters import DataLevelPermissionsFilter
 from ..op_drf.viewsets import CustomModelViewSet
 from ..system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter, MessagePushFilter, \
-    SaveFileFilter, LoginInforFilter
+    SaveFileFilter, LoginInforFilter, OperationLogFilter
 from ..system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
 from ..system.models import MessagePushUser
 from ..system.serializers import DictDataSerializer, DictDataCreateUpdateSerializer, DictDetailsSerializer, \
     DictDetailsCreateUpdateSerializer, DictDetailsListSerializer, ConfigSettingsSerializer, \
     ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer, \
     ExportConfigSettingsSerializer, ExportDictDataSerializer, ExportDictDetailsSerializer, \
-    MessagePushSerializer, MessagePushCreateUpdateSerializer, ExportMessagePushSerializer, LoginInforSerializer
+    MessagePushSerializer, MessagePushCreateUpdateSerializer, ExportMessagePushSerializer, LoginInforSerializer, \
+    OperationLogSerializer, ExportOperationLogSerializer
 from ..utils.export_excel import export_excel_save_model
 from ..utils.response import SuccessResponse
 
@@ -224,3 +225,28 @@ class LoginInforModelViewSet(CustomModelViewSet):
     filter_class = LoginInforFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
     ordering = 'create_datetime'  # 默认排序
+
+
+class OperationLogModelViewSet(CustomModelViewSet):
+    """
+   操作日志 模型的CRUD视图
+   """
+    queryset = OperationLog.objects.all()
+    serializer_class = OperationLogSerializer
+    filter_class = OperationLogFilter
+    extra_filter_backends = [DataLevelPermissionsFilter]
+    ordering = '-create_datetime'  # 默认排序
+    export_field_data = ['请求模块', '请求地址', '请求参数', '请求方式', '操作说明', '请求ip地址',
+                         '请求浏览器', '响应状态码', '操作地点', '操作系统', '返回信息', '响应状态', '操作用户名']
+    export_serializer_class = ExportOperationLogSerializer
+
+    def clean_all(self, request: Request, *args, **kwargs):
+        """
+        清空操作日志
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        self.get_queryset().delete()
+        return SuccessResponse(msg="清空成功")

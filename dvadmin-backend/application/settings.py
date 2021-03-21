@@ -118,7 +118,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -316,4 +316,4 @@ CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 
 API_LOG_ENABLE = True
 # API_LOG_METHODS = 'ALL' # ['POST', 'DELETE']
-API_LOG_METHODS = ['POST', 'DELETE'] # ['POST', 'DELETE']
+# API_LOG_METHODS = ['POST', 'DELETE'] # ['POST', 'DELETE']

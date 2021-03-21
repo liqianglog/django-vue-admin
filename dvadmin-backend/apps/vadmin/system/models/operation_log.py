@@ -3,12 +3,12 @@ from django.db.models import TextField, CharField, BooleanField
 from ...op_drf.models import CoreModel
 
 
-class RequestLog(CoreModel):
+class OperationLog(CoreModel):
     request_modular = CharField(max_length=64, verbose_name="请求模块", null=True, blank=True)
     request_path = CharField(max_length=400, verbose_name="请求地址", null=True, blank=True)
     request_body = TextField(verbose_name="请求参数", null=True, blank=True)
     request_method = CharField(max_length=64, verbose_name="请求方式", null=True, blank=True)
-    request_msg = CharField(max_length=64, verbose_name="操作说明", null=True, blank=True)
+    request_msg = TextField(verbose_name="操作说明", null=True, blank=True)
     request_ip = CharField(max_length=32, verbose_name="请求ip地址", null=True, blank=True)
     request_browser = CharField(max_length=32, verbose_name="请求浏览器", null=True, blank=True)
     response_code = CharField(max_length=32, verbose_name="响应状态码", null=True, blank=True)

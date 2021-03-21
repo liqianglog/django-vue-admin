@@ -98,6 +98,18 @@ export const constantRoutes = [
         meta: { title: '字典数据', icon: '' }
       }
     ]
+  },{
+    path: '/operlog',
+    component: Layout,
+    hidden: false,
+    children: [
+      {
+        path: 'log',
+        component: (resolve) => require(['@/views/vadmin/system/operlog'], resolve),
+        name: 'Data',
+        meta: { title: '操作日志', icon: '' }
+      }
+    ]
   }
 ]
 

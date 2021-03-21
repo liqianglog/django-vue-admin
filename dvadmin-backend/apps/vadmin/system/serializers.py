@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import LoginInfor
+from .models import LoginInfor, OperationLog
 from ..op_drf.serializers import CustomModelSerializer
 from ..system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush, MessagePushUser
 
@@ -196,6 +196,7 @@ class ExportMessagePushSerializer(CustomModelSerializer):
             'id', 'title', 'content', 'message_type', 'is_reviewed', 'status', 'users', 'creator', 'modifier',
             'update_datetime', 'create_datetime')
 
+
 class MessagePushUserSerializer(CustomModelSerializer):
     """
     消息通知 用户查询简单序列化器
@@ -208,7 +209,7 @@ class MessagePushUserSerializer(CustomModelSerializer):
     #     return UserProfileSerializer(obj.user.all(), many=True).data
     # 返回这个消息是否已读
     def get_is_read(self, obj):
-        object = MessagePushUser.objects.filter(message_push=obj,user=self.context.get('request').user).first()
+        object = MessagePushUser.objects.filter(message_push=obj, user=self.context.get('request').user).first()
         return object.is_read if object else False
 
     class Meta:
@@ -217,6 +218,7 @@ class MessagePushUserSerializer(CustomModelSerializer):
 
     def save(self, **kwargs):
         return super().save(**kwargs)
+
 
 # ================================================= #
 # ************** 登录日志 序列化器  ************** #
@@ -230,3 +232,30 @@ class LoginInforSerializer(CustomModelSerializer):
     class Meta:
         model = LoginInfor
         fields = "__all__"
+
+
+# ================================================= #
+# ************** 操作日志 序列化器  ************** #
+# ================================================= #
+
+class OperationLogSerializer(CustomModelSerializer):
+    """
+    操作日志 简单序列化器
+    """
+    creator_name = serializers.SlugRelatedField(slug_field="username", source="creator", read_only=True)
+
+    class Meta:
+        model = OperationLog
+        fields = "__all__"
+
+
+class ExportOperationLogSerializer(CustomModelSerializer):
+    """
+    导出 操作日志 简单序列化器
+    """
+    creator_name = serializers.SlugRelatedField(slug_field="username", source="creator", read_only=True)
+    class Meta:
+        model = OperationLog
+        fields = ('request_modular', 'request_path', 'request_body', 'request_method', 'request_msg', 'request_ip',
+                  'request_browser', 'response_code', 'request_location', 'request_os', 'json_result', 'status',
+                  'creator_name')

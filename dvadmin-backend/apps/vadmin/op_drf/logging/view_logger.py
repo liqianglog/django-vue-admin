@@ -201,3 +201,12 @@ class CustomerModelViewLogger(ModelViewLogger):
         operator = self.user.username
         model_name = getattr(self.model, '_meta').verbose_name
         self.logger(f'{self.log_prefix}用户[username={operator}]删除{model_name}:[{instance}]')
+
+    def handle_other(self, request: Request, instance: Model = None, *args, **kwargs):
+        """
+        仅 其他 请求才会触发此方法
+        """
+        pass
+        operator = self.user.username
+        model_name = getattr(self.model, '_meta').verbose_name
+        self.logger(f'{self.log_prefix}用户[username={operator}]其他请求{model_name}:[{instance}]')

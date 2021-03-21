@@ -172,3 +172,21 @@ def get_login_location(request, *args, **kwargs):
         content = r.content.decode('GBK')
         return content.replace('\r', '').replace('\n', '')
     return ""
+
+
+def get_verbose_name(queryset=None, view=None, model=None):
+    """
+    获取 verbose_name
+    :param request:
+    :param view:
+    :return:
+    """
+    if queryset and hasattr(queryset, 'model'):
+        model = queryset.model
+    elif view and hasattr(view.get_queryset(), 'model'):
+        model = view.get_queryset().model
+    elif view and hasattr(view.get_serializer(), 'Meta') and hasattr(view.get_serializer().Meta, 'model'):
+        model = view.get_serializer().Meta.model
+    if model:
+        return getattr(model, '_meta').verbose_name
+    return ""

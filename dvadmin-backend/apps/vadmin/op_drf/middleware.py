@@ -5,7 +5,7 @@ django中间件
 from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
 
-from apps.vadmin.system.models import RequestLog
+from apps.vadmin.system.models import OperationLog
 from ..utils.request_util import get_request_ip, get_request_data, get_request_path, get_browser, get_os, \
     get_login_location
 
@@ -39,7 +39,7 @@ class ApiLoggingMiddleware(MiddlewareMixin):
             'request_method': request.method,
             'request_path': request.request_path,
             'request_body': body,
-            'response_code': response.status_code,
+            'response_code': response.data.get('code'),
             'request_location': get_login_location(request),
             'request_os': get_os(request),
             'request_browser': get_browser(request),
@@ -48,7 +48,7 @@ class ApiLoggingMiddleware(MiddlewareMixin):
             'json_result': {"code": response.data.get('code'), "msg": response.data.get('msg')},
             'request_modular': request.session.get('model_name'),
         }
-        log = RequestLog(**info)
+        log = OperationLog(**info)
         log.save()
 
     def process_request(self, request):
