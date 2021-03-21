@@ -17,8 +17,8 @@ class ApiLoggingMiddleware(MiddlewareMixin):
 
     def __init__(self, get_response=None):
         super().__init__(get_response)
-        self.enable = settings.API_LOG_ENABLE or False
-        self.methods = settings.API_LOG_METHODS or set()
+        self.enable = getattr(settings, 'API_LOG_ENABLE', None) or False
+        self.methods = getattr(settings, 'API_LOG_METHODS', None) or set()
 
     @classmethod
     def __handle_request(cls, request):
