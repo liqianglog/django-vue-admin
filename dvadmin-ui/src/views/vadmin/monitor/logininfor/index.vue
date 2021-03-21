@@ -42,11 +42,12 @@
           v-model="dateRange"
           size="small"
           style="width: 240px"
-          value-format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd HH:mm:ss"
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :default-time="['00:00:00', '23:59:59']"
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -64,7 +65,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['monitor:logininfor:remove']"
+          v-hasPermi="['admin:system:logininfor:{id}:delete']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -74,7 +75,7 @@
           icon="el-icon-delete"
           size="mini"
           @click="handleClean"
-          v-hasPermi="['monitor:logininfor:remove']"
+          v-hasPermi="['admin:system:logininfor:clean:delete']"
         >清空</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -84,7 +85,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:logininfor:export']"
+          v-hasPermi="['admin:system:logininfor:export:get']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -92,17 +93,17 @@
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="访问编号" align="center" prop="infoId" />
-      <el-table-column label="用户名称" align="center" prop="userName" />
+      <el-table-column label="访问编号" align="center" prop="id" />
+      <el-table-column label="用户名称" align="center" prop="creator_name" />
       <el-table-column label="登录地址" align="center" prop="ipaddr" width="130" :show-overflow-tooltip="true" />
       <el-table-column label="登录地点" align="center" prop="loginLocation" :show-overflow-tooltip="true" />
       <el-table-column label="浏览器" align="center" prop="browser" />
       <el-table-column label="操作系统" align="center" prop="os" />
-      <el-table-column label="登录状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column label="登录状态" align="center" prop="status" :formatter="statusFormat"/>
       <el-table-column label="操作信息" align="center" prop="msg" />
-      <el-table-column label="登录日期" align="center" prop="loginTime" width="180">
+      <el-table-column label="登录日期" align="center" prop="create_datetime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.loginTime) }}</span>
+          <span>{{ parseTime(scope.row.create_datetime) }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -137,9 +138,11 @@ export default {
       // 表格数据
       list: [],
       // 状态数据字典
-      statusOptions: [],
+      statusOptions:[{dictLabel: '成功', dictValue: true}, {dictLabel: '失败', dictValue: false}],
       // 日期范围
       dateRange: [],
+      form: {},
+
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -152,17 +155,18 @@ export default {
   },
   created() {
     this.getList();
-    this.getDicts("sys_common_status").then(response => {
-      this.statusOptions = response.data;
-    });
+    // this.getDicts("sys_common_status").then(response => {
+    //   this.statusOptions = response.data;
+    // });
   },
   methods: {
+
     /** 查询登录日志列表 */
     getList() {
       this.loading = true;
       list(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.list = response.rows;
-          this.total = response.total;
+          this.list = response.data.results;
+          this.total = response.data.count;
           this.loading = false;
         }
       );
@@ -174,6 +178,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      console.log(this.queryParams)
       this.getList();
     },
     /** 重置按钮操作 */
@@ -184,12 +189,12 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.infoId)
+      this.ids = selection.map(item => item.id)
       this.multiple = !selection.length
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const infoIds = row.infoId || this.ids;
+      const infoIds = row.id || this.ids;
       this.$confirm('是否确认删除访问编号为"' + infoIds + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
