@@ -33,6 +33,8 @@ class ApiLoggingMiddleware(MiddlewareMixin):
         # 请求含有password则用*替换掉(暂时先用于所有接口的password请求参数)
         if isinstance(body, dict) and body.get('password', ''):
             body['password'] = '*' * len(body['password'])
+        if not hasattr(response,'data'):
+            response.data = {}
         info = {
             'request_ip': getattr(request, 'request_ip', 'unknown'),
             'creator': request.user,
