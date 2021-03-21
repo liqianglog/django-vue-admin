@@ -228,6 +228,7 @@ class LoginInforSerializer(CustomModelSerializer):
     """
     参数设置 简单序列化器
     """
+    creator_name = serializers.SlugRelatedField(slug_field="username", source="creator", read_only=True)
 
     class Meta:
         model = LoginInfor
@@ -254,6 +255,7 @@ class ExportOperationLogSerializer(CustomModelSerializer):
     导出 操作日志 简单序列化器
     """
     creator_name = serializers.SlugRelatedField(slug_field="username", source="creator", read_only=True)
+
     class Meta:
         model = OperationLog
         fields = ('request_modular', 'request_path', 'request_body', 'request_method', 'request_msg', 'request_ip',
