@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import SET_NULL
 
-from ...vadmin.utils.string_util import uuid_8, uuid_16, uuid_32, uuid_36
+from ..utils.string_util import uuid_8, uuid_16, uuid_32, uuid_36
 
 
 class IdField(models.CharField):

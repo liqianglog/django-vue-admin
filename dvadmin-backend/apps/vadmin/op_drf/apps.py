@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class OpDrfConfig(AppConfig):
-    name = 'vadmin.op_drf'
+    name = 'apps.vadmin.op_drf'
     verbose_name = "OP DRF"
 
     def ready(self):
