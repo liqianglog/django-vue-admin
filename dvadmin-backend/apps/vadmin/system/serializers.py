@@ -226,13 +226,25 @@ class MessagePushUserSerializer(CustomModelSerializer):
 
 class LoginInforSerializer(CustomModelSerializer):
     """
-    参数设置 简单序列化器
+    登录日志 简单序列化器
     """
     creator_name = serializers.SlugRelatedField(slug_field="username", source="creator", read_only=True)
 
     class Meta:
         model = LoginInfor
         fields = "__all__"
+
+
+class ExportLoginInforSerializer(CustomModelSerializer):
+    """
+    导出 登录日志 简单序列化器
+    """
+    creator_name = serializers.SlugRelatedField(slug_field="username", source="creator", read_only=True)
+
+    class Meta:
+        model = LoginInfor
+        fields = ('id', 'creator_name', 'ipaddr', 'loginLocation', 'browser', 'os',
+                  'status', 'msg', 'creator_name')
 
 
 # ================================================= #

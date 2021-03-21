@@ -37,5 +37,9 @@ urlpatterns = [
     re_path('operation_log/clean/', OperationLogModelViewSet.as_view({'delete': 'clean_all', })),
     # 导出操作日志
     re_path('operation_log/export/', OperationLogModelViewSet.as_view({'get': 'export', })),
+    # 清空登录日志
+    re_path('logininfor/clean/', LoginInforModelViewSet.as_view({'delete': 'clean_all', })),
+    # 导出登录日志
+    re_path('logininfor/export/', LoginInforModelViewSet.as_view({'get': 'export', })),
 ]
 urlpatterns += router.urls

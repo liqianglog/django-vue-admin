@@ -13,7 +13,7 @@ from ..system.serializers import DictDataSerializer, DictDataCreateUpdateSeriali
     ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer, \
     ExportConfigSettingsSerializer, ExportDictDataSerializer, ExportDictDetailsSerializer, \
     MessagePushSerializer, MessagePushCreateUpdateSerializer, ExportMessagePushSerializer, LoginInforSerializer, \
-    OperationLogSerializer, ExportOperationLogSerializer
+    OperationLogSerializer, ExportOperationLogSerializer, ExportLoginInforSerializer
 from ..utils.export_excel import export_excel_save_model
 from ..utils.response import SuccessResponse
 
@@ -225,6 +225,20 @@ class LoginInforModelViewSet(CustomModelViewSet):
     filter_class = LoginInforFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
     ordering = '-create_datetime'  # 默认排序
+    export_field_data = ['访问编号', '用户名称', '登录地址', '登录地点', '浏览器', '操作系统',
+                         '登录状态', '操作信息', '登录日期']
+    export_serializer_class = ExportLoginInforSerializer
+
+    def clean_all(self, request: Request, *args, **kwargs):
+        """
+        清空登录日志
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        self.get_queryset().delete()
+        return SuccessResponse(msg="清空成功")
 
 
 class OperationLogModelViewSet(CustomModelViewSet):
