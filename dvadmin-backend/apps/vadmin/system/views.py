@@ -145,7 +145,7 @@ class SaveFileModelViewSet(CustomModelViewSet):
     filter_class = SaveFileFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
     search_fields = ('configName',)
-    ordering = 'id'  # 默认排序
+    ordering = '-create_datetime'  # 默认排序
 
 
 class MessagePushModelViewSet(CustomModelViewSet):
@@ -218,13 +218,13 @@ class MessagePushModelViewSet(CustomModelViewSet):
 
 class LoginInforModelViewSet(CustomModelViewSet):
     """
-   文件管理 模型的CRUD视图
+   登录日志 模型的CRUD视图
    """
     queryset = LoginInfor.objects.all()
     serializer_class = LoginInforSerializer
     filter_class = LoginInforFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
-    ordering = 'create_datetime'  # 默认排序
+    ordering = '-create_datetime'  # 默认排序
 
 
 class OperationLogModelViewSet(CustomModelViewSet):

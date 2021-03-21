@@ -70,9 +70,9 @@ def get_request_data(request):
         return request_data
     data: dict = {**request.GET.dict(), **request.POST.dict()}
     if not data:
-        body = getattr(request, '_body', request.body)
-        if body:
-            data = json.loads(body)
+        # body = request.body
+        # if body:
+        #     data = json.loads(body)
         if not isinstance(data, dict):
             data = {'data': data}
     return data
