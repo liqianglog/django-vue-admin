@@ -14,7 +14,7 @@ class Command(BaseCommand):
     项目初始化命令: python manage.py initialization
     """
 
-    def customSql(self, sql_list, model_name, table_name):
+    def customSql(self, sql_list, model_name, table_name, is_yes):
         """
         批量执行sql
         :param sql_list:
@@ -29,7 +29,10 @@ class Command(BaseCommand):
                 num += result[0]
             if num > 0:
                 while True:
-                    inp = input(f'[{model_name}]模型已初始化完成，继续将清空[{table_name}]表中所有数据，是否继续初始化？【 Y/N 】')
+                    if is_yes is None:
+                        inp = input(f'[{model_name}]模型已初始化完成，继续将清空[{table_name}]表中所有数据，是否继续初始化？【 Y/N 】')
+                    else:
+                        inp = 'Y' if is_yes == True else 'N'
                     if inp.upper() == 'N':
                         return False
                     elif inp.upper() == 'Y':
@@ -45,12 +48,12 @@ class Command(BaseCommand):
             for sql in sql_list:
                 try:
                     cursor.execute(sql)
-                except:
-                    pass
+                except Exception as e:
+                    print(e)
             connection.commit()
             return True
 
-    def init(self, sql_filename, model_name, table_name):
+    def init(self, sql_filename, model_name, table_name, is_yes):
         """
         初始化
         :param sql_filename: sql存放位置
@@ -59,13 +62,17 @@ class Command(BaseCommand):
         :return:
         """
         logger.info(f'正在初始化[{model_name}]中...')
-        if self.customSql(getSql(sql_filename), model_name, table_name):
+        if self.customSql(getSql(sql_filename), model_name, table_name, is_yes):
             logger.info(f'[{model_name}]初始化完成！')
         else:
             logger.info(f'已取消[{table_name}]初始化')
 
     def add_arguments(self, parser):
-        parser.add_argument('init_name', nargs='?', type=str)
+        parser.add_argument('init_name', nargs='*', type=str, )
+        parser.add_argument('-y', nargs='*')
+        parser.add_argument('-Y', nargs='*')
+        parser.add_argument('-n', nargs='*')
+        parser.add_argument('-N', nargs='*')
 
     def handle(self, *args, **options):
         init_dict = {
@@ -83,11 +90,13 @@ class Command(BaseCommand):
                  'permission_userprofile_post'])]
         }
         init_name = options.get('init_name')
+        is_yes = None
+        if isinstance(options.get('y'), list) or isinstance(options.get('Y'), list):
+            is_yes = True
+        if isinstance(options.get('n'), list) or isinstance(options.get('N'), list):
+            is_yes = False
         if init_name:
-            for ele in init_name:
-                if ele in init_dict:
-                    self.init(*init_dict[ele])
-
+            [self.init(*init_dict[ele], is_yes=is_yes) for ele in init_name if ele in init_dict]
         else:
             for ele in init_dict.values():
-                self.init(*ele)
+                self.init(*ele, is_yes=is_yes)

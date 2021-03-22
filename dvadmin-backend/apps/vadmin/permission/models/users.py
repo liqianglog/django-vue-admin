@@ -24,6 +24,7 @@ class UserProfile(AbstractUser):
     post = ManyToManyField(to='Post', verbose_name='关联岗位', db_constraint=False)
     role = ManyToManyField(to='Role', verbose_name='关联角色', db_constraint=False)
     dept = ForeignKey(to='Dept', verbose_name='归属部门', on_delete=CASCADE, db_constraint=False, null=True, blank=True)
+    dept_belong_id = CharField(max_length=64, verbose_name="数据归属部门", null=True, blank=True)
     create_datetime = CreateDateTimeField()
     update_datetime = UpdateDateTimeField()
 
