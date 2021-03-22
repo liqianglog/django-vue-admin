@@ -3,6 +3,7 @@ django中间件
 """
 
 from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
 from django.utils.deprecation import MiddlewareMixin
 
 from apps.vadmin.system.models import OperationLog
@@ -38,6 +39,7 @@ class ApiLoggingMiddleware(MiddlewareMixin):
         info = {
             'request_ip': getattr(request, 'request_ip', 'unknown'),
             'creator': request.user,
+            'dept_belong_id': getattr(request.user, 'dept_id', None),
             'request_method': request.method,
             'request_path': request.request_path,
             'request_body': body,
@@ -50,6 +52,8 @@ class ApiLoggingMiddleware(MiddlewareMixin):
             'json_result': {"code": response.data.get('code'), "msg": response.data.get('msg')},
             'request_modular': request.session.get('model_name'),
         }
+        if isinstance(request.user, AnonymousUser):
+            info['creator'] = None
         log = OperationLog(**info)
         log.save()
 
@@ -67,3 +71,9 @@ class ApiLoggingMiddleware(MiddlewareMixin):
             if self.methods == 'ALL' or request.method in self.methods:
                 self.__handle_response(request, response)
         return response
+
+
+class PermissionModeMiddleware(MiddlewareMixin):
+    """
+    权限模式拦截判断
+    """

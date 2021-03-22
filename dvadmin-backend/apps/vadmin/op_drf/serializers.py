@@ -15,6 +15,8 @@ class CustomModelSerializer(ModelSerializer):
     modifier_field_name = 'modifier'
     # 创建人的审计字段名称, 默认creator, 继承使用时可自定义覆盖
     creator_field_name = 'creator'
+    # 数据所属部门字段
+    dept_belong_id_field_name = 'dept_belong_id'
     # 添加默认时间返回格式
     create_datetime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
     update_datetime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
@@ -33,6 +35,8 @@ class CustomModelSerializer(ModelSerializer):
                 validated_data[self.modifier_field_name] = username
             if self.creator_field_name in self.fields.fields:
                 validated_data[self.creator_field_name] = self.request.user
+            if self.dept_belong_id_field_name in self.fields.fields:
+                validated_data[self.dept_belong_id_field_name] = getattr(self.request.user,'dept_id',None)
         return super().create(validated_data)
 
     def update(self, instance, validated_data):

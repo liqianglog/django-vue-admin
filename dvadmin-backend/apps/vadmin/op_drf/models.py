@@ -27,6 +27,7 @@ class CoreModel(models.Model):
     creator = models.ForeignKey(to='permission.UserProfile', related_query_name='creator_query', null=True,
                                 verbose_name='创建者', on_delete=SET_NULL, db_constraint=False)  # 创建者
     modifier = ModifierCharField()  # 修改者
+    dept_belong_id = models.CharField(max_length=64, verbose_name="数据归属部门", null=True, blank=True)
     update_datetime = UpdateDateTimeField()  # 修改时间
     create_datetime = CreateDateTimeField()  # 创建时间
 

@@ -56,7 +56,7 @@ export function resetForm(refName) {
 // 添加日期范围
 export function addDateRange(params, dateRange, propName) {
 	let search = JSON.parse(JSON.stringify(params));
-	if (dateRange.length !== 0) {
+	if (null != dateRange && '' !== dateRange && dateRange.length !== 0) {
     search.as = JSON.stringify({create_datetime__range : dateRange});
 	}
 	return search;
@@ -67,7 +67,6 @@ export function selectDictLabel(datas, value) {
 	var actions = [];
 	Object.keys(datas).some((key) => {
 		if (String(datas[key].dictValue) === ('' + String(value))) {
-			actions.push(datas[key].dictLabel);
 			actions.push(datas[key].dictLabel);
 			return true;
 		}

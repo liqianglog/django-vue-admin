@@ -28,6 +28,7 @@ class DictDataModelViewSet(CustomModelViewSet):
     update_serializer_class = DictDataCreateUpdateSerializer
     # list_serializer_class = ListRoleSerializer
     # retrieve_serializer_class = DetailRoleSerializer
+    extra_filter_backends = [DataLevelPermissionsFilter]
     filter_class = DictDataFilter
     # update_extra_permission_classes = (IsManagerPermission,)
     # destroy_extra_permission_classes = (IsManagerPermission,)
