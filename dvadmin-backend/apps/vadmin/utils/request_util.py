@@ -71,9 +71,12 @@ def get_request_data(request):
         return request_data
     data: dict = {**request.GET.dict(), **request.POST.dict()}
     if not data:
-        # body = request.body
-        # if body:
-        #     data = json.loads(body)
+        try:
+            body = request.body
+            if body:
+                data = json.loads(body)
+        except Exception as e:
+            pass
         if not isinstance(data, dict):
             data = {'data': data}
     return data
@@ -178,7 +181,7 @@ def get_login_location(request, *args, **kwargs):
         r = requests.get(apiurl)
         content = r.content.decode('GBK')
         location = content.replace('\r', '').replace('\n', '')
-        cache.set(request_ip,location, 8640)
+        cache.set(request_ip, location, 8640)
         return location
     return ""
 
