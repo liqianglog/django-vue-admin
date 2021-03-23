@@ -11,6 +11,7 @@ from mongoengine.queryset import visitor
 from rest_framework.filters import BaseFilterBackend, SearchFilter, OrderingFilter
 
 from ..permission.models import Dept
+from ..utils.model_util import get_dept
 
 logger = logging.getLogger(__name__)
 
@@ -147,18 +148,6 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
             elif ele == '3':
                 dept_list.append(user_dept_id)
             elif ele == '4':
-                dept_list.extend(self.get_dept(user_dept_id, Dept.objects.all().values('id', 'parentId')))
-                dept_list.append(user_dept_id)
+                dept_list.extend(get_dept(user_dept_id,))
         return queryset.filter(dept_belong_id__in=list(set(dept_list)))
 
-    def get_dept(self, id, dept_all_list, dept_list=[]):
-        """
-        获取部门的所有下级部门
-        :param id:
-        :return:
-        """
-        for ele in dept_all_list:
-            if ele.get('parentId') == id:
-                dept_list.append(ele.get('id'))
-                self.get_dept(ele.get('id'), dept_all_list, dept_list)
-        return dept_list

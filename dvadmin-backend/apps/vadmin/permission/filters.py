@@ -1,6 +1,7 @@
 import django_filters
 
 from ..permission.models import Menu, Dept, Post, Role, UserProfile
+from ..utils.model_util import get_dept
 
 
 class MenuFilter(django_filters.rest_framework.FilterSet):
@@ -53,7 +54,10 @@ class UserProfileFilter(django_filters.rest_framework.FilterSet):
     """
     username = django_filters.CharFilter(lookup_expr='icontains')
     mobile = django_filters.CharFilter(lookup_expr='icontains')
-    deptId = django_filters.CharFilter(field_name='dept__id')
+    deptId = django_filters.CharFilter(method='filter_deptId')
+
+    def filter_deptId(self, queryset, name, value):
+        return queryset.filter(dept__id__in=get_dept(dept_id=value))
 
     class Meta:
         model = UserProfile

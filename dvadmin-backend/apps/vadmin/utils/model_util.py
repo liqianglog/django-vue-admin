@@ -6,6 +6,8 @@ from django.apps.config import AppConfig
 from django.db.models.fields import Field
 from rest_framework.renderers import JSONRenderer
 
+from ..permission.models import Dept
+
 
 def get_primary_field(model, many=False):
     """
@@ -61,6 +63,25 @@ def get_model(app_label: str = None, model_name: str = None, model_label: str = 
         app_label, model_name = model_label.split(".")
     app_conf: AppConfig = apps.get_app_config(app_label)
     return app_conf.get_model(model_name)
+
+
+def get_dept(dept_id: int, dept_all_list=None, dept_list=None):
+    """
+    递归获取部门的所有下级部门
+    :param dept_id: 需要获取的部门id
+    :param dept_all_list: 所有部门列表
+    :param dept_list: 递归部门list
+    :return:
+    """
+    if not dept_all_list:
+        dept_all_list = Dept.objects.all().values('id', 'parentId')
+    if dept_list is None:
+        dept_list = [dept_id]
+    for ele in dept_all_list:
+        if ele.get('parentId') == int(dept_id):
+            dept_list.append(ele.get('id'))
+            get_dept(ele.get('id'), dept_all_list, dept_list)
+    return list(set(dept_list))
 
 
 class ModelRelateUtils:
