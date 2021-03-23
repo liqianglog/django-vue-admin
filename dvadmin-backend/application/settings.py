@@ -45,10 +45,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'captcha',
+    'djcelery',
     # 自定义app
     'apps.vadmin.permission',
     'apps.vadmin.op_drf',
     'apps.vadmin.system',
+    'apps.vadmin.celery',
 ]
 
 MIDDLEWARE = [

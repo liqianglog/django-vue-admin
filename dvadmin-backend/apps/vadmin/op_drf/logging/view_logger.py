@@ -24,7 +24,7 @@ class ViewLogger(object):
                                                                                    'model'):
             self.model: Model = self.view.get_serializer().Meta.model
         if self.model:
-            request.session['model_name'] = getattr(self.model, '_meta').verbose_name
+            request.session['model_name'] = str(getattr(self.model, '_meta').verbose_name)
 
     def handle(self, request: Request, *args, **kwargs):
         pass
@@ -37,6 +37,7 @@ class ViewLogger(object):
         """
         self.request.session['request_msg'] = msg
         return logger
+
 
 class APIViewLogger(ViewLogger):
     """

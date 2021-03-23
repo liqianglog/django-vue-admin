@@ -53,5 +53,6 @@ urlpatterns = [
     re_path('captcha/', include('captcha.urls')),  # 图片验证码 路由
     re_path(r'^permission/', include('apps.vadmin.permission.urls')),
     re_path(r'^system/', include('apps.vadmin.system.urls')),
+    re_path(r'^celery/', include('apps.vadmin.celery.urls')),
 
 ]

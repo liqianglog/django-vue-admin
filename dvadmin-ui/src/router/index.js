@@ -98,6 +98,18 @@ export const constantRoutes = [
         meta: { title: '字典数据', icon: '' }
       }
     ]
+  },{
+    path: '/celerymanage',
+    component: Layout,
+    hidden: false,
+    children: [
+      {
+        path: 'celerymanage',
+        component: (resolve) => require(['@/views/vadmin/monitor/celery/index'], resolve),
+        name: 'Data',
+        meta: { title: 'celery管理', icon: '' }
+      }
+    ]
   }
 ]
 
