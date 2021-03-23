@@ -2,7 +2,7 @@ from django.urls import re_path
 from rest_framework.routers import DefaultRouter
 
 from apps.system.views import DictDataModelViewSet, DictDetailsModelViewSet, \
-    ConfigSettingsModelViewSet, SaveFileModelViewSet, MessagePushModelViewSet
+    ConfigSettingsModelViewSet, SaveFileModelViewSet, MessagePushModelViewSet, SystemInfoApiView
 
 router = DefaultRouter()
 router.register(r'dict/type', DictDataModelViewSet)
@@ -25,5 +25,7 @@ urlpatterns = [
     re_path('message/receive/', MessagePushModelViewSet.as_view({"get": "get_received_messages"})),
     # 消息通知导出
     re_path('message/export/', MessagePushModelViewSet.as_view({'get': 'export',})),
+
+    re_path('sys/info/', SystemInfoApiView.as_view())
 ]
 urlpatterns += router.urls

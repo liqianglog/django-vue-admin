@@ -1,4 +1,5 @@
 from rest_framework.request import Request
+from rest_framework.views import APIView
 
 from apps.op_drf.filters import DataLevelPermissionsFilter
 from apps.op_drf.viewsets import CustomModelViewSet
@@ -11,6 +12,7 @@ from apps.system.serializers import DictDataSerializer, DictDataCreateUpdateSeri
     MessagePushSerializer, MessagePushCreateUpdateSerializer, ExportMessagePushSerializer
 from utils.export_excel import export_excel_save_model
 from utils.response import SuccessResponse
+from utils.system_info_utils import get_memory_used_percent, get_cpu_used_percent, get_disk_used_percent
 
 
 class DictDataModelViewSet(CustomModelViewSet):
@@ -186,7 +188,6 @@ class MessagePushModelViewSet(CustomModelViewSet):
         """
             获取用户未读消息数量
         """
-
         pass
 
     def export(self, request: Request, *args, **kwargs):
@@ -197,6 +198,23 @@ class MessagePushModelViewSet(CustomModelViewSet):
         :param kwargs:
         :return:
         """
-        field_data = ['消息序号', '标题', '内容', '消息类型', '是否审核', '消息状态','通知接收消息用户', '创建者', '修改者', '修改时间', '创建时间']
+        field_data = ['消息序号', '标题', '内容', '消息类型', '是否审核', '消息状态', '通知接收消息用户', '创建者', '修改者', '修改时间', '创建时间']
         data = ExportMessagePushSerializer(MessagePush.objects.all(), many=True).data
         return SuccessResponse(export_excel_save_model(request, field_data, data, '导出岗位数据.xls'))
+
+
+class SystemInfoApiView(APIView):
+    """
+    系统服务监控视图
+    """
+    def get(self, request, *args, **kwargs):
+        # 获取内存使用率
+        memory_used_percent = get_memory_used_percent()
+        # 获取cpu使用率
+        cpu_used_percent = get_cpu_used_percent()
+        # 获取硬盘使用率
+        disk_used_percent = get_disk_used_percent()
+        return SuccessResponse(data={"memory_used_percent": memory_used_percent,
+                                     "cpu_used_percent": cpu_used_percent,
+                                     "disk_used_percent": disk_used_percent
+                                     })
