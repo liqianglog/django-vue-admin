@@ -6,6 +6,43 @@
 
 version: "3"
 services:
+  dvadmin-ui:
+    container_name: dvadmin-ui
+    build:
+      context: ./
+      dockerfile: ./docker_env/vue-ui/Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - "./dvadmin-ui:/dvadmin-ui"
+    command:
+      - /bin/bash
+      - -c
+      - |
+        cd /dvadmin-ui
+        npm install --registry=https://registry.npm.taobao.org
+        rm -rf /dvadmin-ui/dist
+        npm run build:prod
+
+
+  dvadmin-doc:
+    container_name: dvadmin-doc
+    build:
+      context: ./
+      dockerfile: ./docker_env/vue-doc/Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - "./dvadmin-doc:/dvadmin-doc"
+    command:
+      - /bin/bash
+      - -c
+      - |
+        cd /dvadmin-doc
+        npm install --registry=https://registry.npm.taobao.org
+        rm -rf /dvadmin-doc/dist
+        npm run docs:build
+
 
   dvadmin-redis:
     image: redis:latest

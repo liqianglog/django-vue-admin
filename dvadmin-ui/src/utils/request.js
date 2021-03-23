@@ -60,9 +60,7 @@ service.interceptors.response.use(res => {
           type: 'warning'
         }
       ).then(() => {
-        store.dispatch('LogOut').then(() => {
-          location.href = '/index';
-        })
+        location.href = '/index';
       })
     } else if (code === 500) {
       Message({

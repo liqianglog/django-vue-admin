@@ -1,5 +1,5 @@
 import { constantRoutes } from '@/router'
-import { getRouters } from '@/api/menu'
+import { getRouters } from '@/api/vadmin/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView';
 import { handleTree } from "@/utils/ruoyi";

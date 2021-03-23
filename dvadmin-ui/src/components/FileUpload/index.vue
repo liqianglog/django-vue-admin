@@ -64,7 +64,7 @@ export default {
   name:'FileUpload',
   data() {
     return {
-      uploadFileUrl: process.env.VUE_APP_BASE_API + "/system/savefile/", // 上传的图片服务器地址
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/admin/system/savefile/", // 上传的图片服务器地址
       headers: {
         Authorization: "Bearer " + getToken(),
       },

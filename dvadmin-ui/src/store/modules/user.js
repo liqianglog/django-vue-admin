@@ -1,4 +1,4 @@
-import {getInfo, login, logout} from '@/api/login'
+import {getInfo, login, logout} from '@/api/vadmin/login'
 import {getToken, removeToken, setToken} from '@/utils/auth'
 
 const user = {
@@ -25,6 +25,9 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
+    },
+    SET_UNREAD_MSG_COUNT: (state, unread_msg_count) => {
+      state.unread_msg_count = unread_msg_count
     }
   },
 
@@ -59,6 +62,7 @@ const user = {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }
           commit('SET_NAME', user.name)
+          commit('SET_UNREAD_MSG_COUNT', user.unread_msg_count)
           commit('SET_AVATAR', avatar)
           resolve(res.data)
         }).catch(error => {
