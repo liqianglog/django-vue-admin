@@ -113,28 +113,27 @@ services:
       - dvadmin_net
 
 
-#  docker-celery:
-#    build:
-#      context: .
-#      dockerfile: ./docker_env/celery/Dockerfile
-#    # image: celery:1.0
-#    container_name: docker-celery
-#    working_dir: /dvadmin-backend
-#    # command: bash
-#    depends_on:
-#      - dvadmin-mysql
-#      - dvadmin-redis
-#      - dvadmin-django
-#    volumes:
-#      - ./dvadmin-backend:/dvadmin-backend
-#      - ./logs/log:/var/log
-#    ports:
-#      - "5672:5672"
-#    expose:
-#      - "5672"
-#    restart: always
-#    networks:
-#      - dvadmin_net
+  dvadmin-celery:
+    build:
+      context: .
+      dockerfile: ./docker_env/celery/Dockerfile
+    # image: django:2.2
+    container_name: dvadmin-celery
+    working_dir: /dvadmin-backend
+    # command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py runserver"
+    # command: bash
+    depends_on:
+      - dvadmin-mysql
+      - dvadmin-redis
+    environment:
+      - REDIS_HOST=dvadmin-redis
+      - DATABASE_HOST=dvadmin-mysql
+    volumes:
+      - ./dvadmin-backend:/dvadmin-backend
+      - ./logs/log:/var/log
+    restart: always
+    networks:
+      - dvadmin_net
 
 
   dvadmin-nginx:

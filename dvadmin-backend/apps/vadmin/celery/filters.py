@@ -1,5 +1,5 @@
 import django_filters
-from djcelery.models import IntervalSchedule, CrontabSchedule, PeriodicTask
+from django_celery_beat.models import IntervalSchedule, CrontabSchedule, PeriodicTask
 
 
 class IntervalScheduleFilter(django_filters.rest_framework.FilterSet):
@@ -11,7 +11,7 @@ class IntervalScheduleFilter(django_filters.rest_framework.FilterSet):
 class CrontabScheduleFilter(django_filters.rest_framework.FilterSet):
     class Meta:
         model = CrontabSchedule
-        fields = '__all__'
+        exclude = ('timezone',)
 
 
 class PeriodicTaskFilter(django_filters.rest_framework.FilterSet):

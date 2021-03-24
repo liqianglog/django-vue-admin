@@ -31,7 +31,7 @@
         </el-autocomplete>
       </el-form-item>
       <el-form-item :rules="[{ required: true, message: '名称不能为空'}]" prop="name" label="名称:">
-        <el-input v-model="form.name" placeholder="例如: 主机表同步任务" style="width: 400px;"/>
+        <el-input v-model="form.name" placeholder="例如: XXX同步任务" style="width: 400px;"/>
       </el-form-item>
       <el-form-item prop="interval" label="任务频率:">
         <el-select v-model="form.interval" placeholder="请选择任务频率" style="width: 400px;" @change="form.crontab = ''">

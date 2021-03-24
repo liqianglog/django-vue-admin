@@ -1,5 +1,5 @@
-from djcelery.admin import TaskSelectWidget
-from djcelery.models import IntervalSchedule, CrontabSchedule, PeriodicTask
+from django_celery_beat.admin import TaskSelectWidget
+from django_celery_beat.models import IntervalSchedule, CrontabSchedule, PeriodicTask
 from rest_framework.views import APIView
 
 from ..celery.filters import IntervalScheduleFilter, CrontabScheduleFilter, PeriodicTaskFilter

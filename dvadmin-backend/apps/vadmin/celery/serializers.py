@@ -1,4 +1,4 @@
-from djcelery.models import IntervalSchedule, CrontabSchedule, PeriodicTask
+from django_celery_beat.models import IntervalSchedule, CrontabSchedule, PeriodicTask
 from rest_framework import serializers
 
 from ..op_drf.serializers import CustomModelSerializer
@@ -23,7 +23,7 @@ class CrontabScheduleSerializer(CustomModelSerializer):
 
     class Meta:
         model = CrontabSchedule
-        fields = '__all__'
+        exclude = ('timezone',)
 
 
 class PeriodicTaskSerializer(CustomModelSerializer):

@@ -101,11 +101,14 @@ npm run build:prod
 5. 执行迁移命令：
 	python3 manage.py makemigrations
 	python3 manage.py migrate
-5. 初始化数据
+6. 初始化数据
 	python3 manage.py init
-6. 启动项目
+7. 启动项目
 	python3 manage.py runserver 0.0.0.0:8000
-	
+
+定时任务启动命令：
+	celery -A application  worker -B --loglevel=info
+
 初始账号：admin 密码：123456
 
 后端接口文档地址：http://127.0.0.1:8000/docs/

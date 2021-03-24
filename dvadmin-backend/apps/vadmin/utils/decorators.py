@@ -1,22 +1,60 @@
 """
 常用的装饰器以及DRF的装饰器
 """
+import functools
+import logging
 import time
 import traceback
-from datetime import datetime
-import functools
 from collections import Iterable
+from datetime import datetime
+
 from django.conf import settings
-from rest_framework_extensions.settings import extensions_api_settings
 from django.utils import six
 from django.utils.decorators import available_attrs
 from rest_framework.response import Response
+from rest_framework_extensions.settings import extensions_api_settings
+
+from application.celery import app
 from .string_util import bas64_encode_text, bas64_decode_text
+from ..system.models import CeleryLog
 
 
 def get_cache(alias=None):
     from django.core.cache import caches
     return caches[alias or extensions_api_settings.DEFAULT_USE_CACHE]
+
+
+logger = logging.getLogger(__name__)
+
+
+def BaseCeleryApp(name):
+    def wraps(func):
+        @app.task(name=name)
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            obj = CeleryLog()
+            obj.name = str(func.__name__)
+            obj.kwargs = f"*args：{args}\n**kwargs：{kwargs}"
+            start_time = datetime.now()
+            res = None
+            try:
+                res = func(*args, **kwargs)
+                obj.result = str(res)
+                obj.state = True
+            except Exception as exc:
+                obj.state = False
+                obj.result = f"执行失败，错误信息：{exc}"
+                logger.info(f"传入参数:{args, kwargs}")
+                logger.error(f"执行失败，错误信息：{exc}")
+            end_time = datetime.now()
+            seconds = (end_time - start_time).seconds
+            obj.seconds = seconds
+            obj.save()
+            return res
+
+        return wrapper
+
+    return wraps
 
 
 def print_fun_time(logger=None):
@@ -25,6 +63,7 @@ def print_fun_time(logger=None):
     :param logger:
     :return:
     """
+
     def wrapper(func):
         @functools.wraps(func)
         def inner(*args, **kwargs):
@@ -37,8 +76,11 @@ def print_fun_time(logger=None):
             else:
                 print(f"{func.__name__}耗时:{seconds}秒")
             return res
+
         return inner
+
     return wrapper
+
 
 def print_time(logger=None):
     """
@@ -46,19 +88,22 @@ def print_time(logger=None):
     :param logger:
     :return:
     """
+
     def wrapper(func):
         @functools.wraps(func)
         def inner(*args, **kwargs):
             start_time = time.time()
             res = func(*args, **kwargs)
             end_time = time.time()
-            seconds = "%.3f"% (end_time - start_time)
+            seconds = "%.3f" % (end_time - start_time)
             if logger:
                 logger.info(f"{func.__name__}耗时:{seconds}秒")
             else:
                 print(f"{func.__name__}耗时:{seconds}秒")
             return res
+
         return inner
+
     return wrapper
 
 
@@ -68,11 +113,13 @@ def bas64_encode(func):
     :param func:
     :return:
     """
+
     def inner(*args, **kwargs):
         text = func(*args, **kwargs)
         if isinstance(text, str):
             text = bas64_encode_text(text)
         return text
+
     return inner
 
 
@@ -82,11 +129,13 @@ def bas64_decode(func):
     :param func:
     :return:
     """
+
     def inner(*args, **kwargs):
         text = func(*args, **kwargs)
         if isinstance(text, str):
             text = bas64_decode_text(text)
         return text
+
     return inner
 
 
@@ -95,6 +144,7 @@ def decode(crypto=""):
     解密装饰器:BASE64
     :param crypto: 解密算法名称(忽略大小写)
     """
+
     def wrapper(func):
         def inner(*args, **kwargs):
             text = func(*args, **kwargs)
@@ -104,7 +154,9 @@ def decode(crypto=""):
                 else:
                     text = text
             return text
+
         return inner
+
     return wrapper
 
 
@@ -113,11 +165,14 @@ def encode(crypto=""):
     解密装饰器:BASE64
     :param crypto: 解密算法名称(忽略大小写)
     """
+
     def wrapper(func):
         def inner(*args, **kwargs):
             text = func(*args, **kwargs)
             return text
+
         return inner
+
     return wrapper
 
 
@@ -133,6 +188,7 @@ def envFunction(envs='', execute=True, result=None):
            pass
 
     """
+
     def wrapper(func):
         @functools.wraps(func)
         def inner(*args, **kwargs):
@@ -141,14 +197,16 @@ def envFunction(envs='', execute=True, result=None):
                 environments = []
             elif isinstance(envs, str):
                 environments = [envs, ]
-            elif isinstance(envs, (Iterable, )):
+            elif isinstance(envs, (Iterable,)):
                 environments = envs
             if settings.PROJECT_ENV in environments and execute:
                 return func(*args, **kwargs)
             elif settings.PROJECT_ENV not in environments and not execute:
                 return func(*args, **kwargs)
             return result
+
         return inner
+
     return wrapper
 
 
@@ -161,6 +219,7 @@ def exceptionHandler(logger=None, throw=False, result=None, message=None):
     :param message: 错误信息
     :return:
     """
+
     def wrapper(func):
         @functools.wraps(func)
         def inner(*args, **kwargs):
@@ -174,7 +233,9 @@ def exceptionHandler(logger=None, throw=False, result=None, message=None):
                 if throw:
                     raise e
                 return result
+
         return inner
+
     return wrapper
 
 
@@ -203,6 +264,7 @@ class CacheResponse(object):
 
     def __call__(self, func):
         this = self
+
         @functools.wraps(func, assigned=available_attrs(func))
         def inner(self, request, *args, **kwargs):
             return this.process_cache_response(
@@ -212,6 +274,7 @@ class CacheResponse(object):
                 args=args,
                 kwargs=kwargs,
             )
+
         return inner
 
     def process_cache_response(self,
@@ -274,4 +337,3 @@ class CacheResponse(object):
 
 
 cache_response = CacheResponse
-

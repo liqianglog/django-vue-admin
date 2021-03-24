@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'captcha',
-    'djcelery',
+    'django_celery_beat',
     # 自定义app
     'apps.vadmin.permission',
     'apps.vadmin.op_drf',
@@ -320,3 +320,5 @@ CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 API_LOG_ENABLE = True
 # API_LOG_METHODS = 'ALL' # ['POST', 'DELETE']
 # API_LOG_METHODS = ['POST', 'DELETE'] # ['POST', 'DELETE']
+BROKER_URL = f'redis://:{REDIS_PASSWORD if REDIS_PASSWORD else ""}@{os.getenv("REDIS_HOST") or REDIS_HOST}:{REDIS_PORT}/2'    #Broker使用Redis, 使用0数据库(暂时不是很清楚原理)
+CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'    #Backend数据库
