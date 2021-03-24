@@ -28,6 +28,8 @@ urlpatterns = [
     re_path('user/resetPwd/', UserProfileModelViewSet.as_view({'put': 'reset_pwd'})),
     # 用户自己重置密码
     re_path('user/profile/updatePwd/', UserProfileModelViewSet.as_view({'put': 'update_pwd'})),
+    # 更新用户头像
+    re_path('user/profile/avatar/', UserProfileModelViewSet.as_view({'put': 'put_avatar'})),
     # 获取、更新用户个人信息
     re_path('user/profile/', UserProfileModelViewSet.as_view({'get': 'profile', 'put': 'put_profile'})),
     # 导出用户

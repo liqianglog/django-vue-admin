@@ -359,6 +359,22 @@ class UserProfileModelViewSet(CustomModelViewSet):
             self.handle_logging(request, instance=instance, *args, **kwargs)
         return SuccessResponse(serializer.data)
 
+    def put_avatar(self, request: Request, *args, **kwargs):
+        """
+        更新用户头像
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        instance = self.queryset.get(id=request.user.id)
+        instance.avatar = request.data.get('avatar_url', None)
+        instance.save()
+        serializer = self.get_serializer(instance)
+        if hasattr(self, 'handle_logging'):
+            self.handle_logging(request, instance=instance, *args, **kwargs)
+        return SuccessResponse(serializer.data)
+
     def update_pwd(self, request: Request, *args, **kwargs):
         """
         个人修改密码

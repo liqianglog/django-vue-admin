@@ -56,6 +56,7 @@
 import store from "@/store";
 import { VueCropper } from "vue-cropper";
 import { uploadAvatar } from "@/api/vadmin/permission/user";
+import {addSaveFile} from "@/api/vadmin/system/savefile";
 
 export default {
   components: { VueCropper },
@@ -123,13 +124,15 @@ export default {
     uploadImg() {
       this.$refs.cropper.getCropBlob(data => {
         let formData = new FormData();
-        formData.append("avatarfile", data);
-        uploadAvatar(formData).then(response => {
-          this.open = false;
-          this.options.img = process.env.VUE_APP_BASE_API + response.imgUrl;
-          store.commit('SET_AVATAR', this.options.img);
-          this.msgSuccess("修改成功");
-          this.visible = false;
+        formData.append("file", data);
+        addSaveFile(formData).then(res => {
+          uploadAvatar({avatar_url:res.data.file_url}).then(response => {
+            this.open = false;
+            this.options.img = process.env.VUE_APP_BASE_API + response.data.avatar;
+            store.commit('SET_AVATAR', this.options.img);
+            this.msgSuccess("修改成功");
+            this.visible = false;
+          })
         });
       });
     },

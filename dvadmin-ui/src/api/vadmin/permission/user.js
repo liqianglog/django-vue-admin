@@ -113,7 +113,7 @@ export function updateUserPwd(oldPassword, newPassword) {
 export function uploadAvatar(data) {
   return request({
     url: '/admin/permission/user/profile/avatar/',
-    method: 'post',
+    method: 'put',
     data: data
   })
 }
