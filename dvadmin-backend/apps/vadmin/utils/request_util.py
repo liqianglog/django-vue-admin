@@ -175,14 +175,17 @@ def get_login_location(request, *args, **kwargs):
     if location:
         return location
     # 通过api 获取，再缓存redis
-    eventlet.monkey_patch(thread=False)  # 必须加这条代码
-    with eventlet.Timeout(2, False):  # 设置超时时间为2秒
-        apiurl = "http://whois.pconline.com.cn/ip.jsp?ip=%s" % request_ip
-        r = requests.get(apiurl)
-        content = r.content.decode('GBK')
-        location = content.replace('\r', '').replace('\n', '')
-        cache.set(request_ip, location, 8640)
-        return location
+    try:
+        eventlet.monkey_patch(thread=False)  # 必须加这条代码
+        with eventlet.Timeout(2, False):  # 设置超时时间为2秒
+            apiurl = "http://whois.pconline.com.cn/ip.jsp?ip=%s" % request_ip
+            r = requests.get(apiurl)
+            content = r.content.decode('GBK')
+            location = str(content).replace('\r', '').replace('\n', '')[:64]
+            cache.set(request_ip, location, 8640)
+            return location
+    except Exception as e:
+        pass
     return ""
 
 

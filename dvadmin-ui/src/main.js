@@ -30,7 +30,7 @@ import Pagination from "@/components/Pagination";
 import RightToolbar from "@/components/RightToolbar"
 import SmallDialog from '@/components/SmallDialog';
 import CommonIcon from '@/components/CommonIcon';
-// import CommonStaticTable from '@/components/CommonStaticTable';
+import CommonStaticTable from '@/components/CommonStaticTable';
 import {getCrontabData, getIntervalData} from "./utils/validate"; // 通用图标组件
 
 // 全局方法挂载
@@ -69,7 +69,7 @@ Vue.component('small-dialog', SmallDialog);
 Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
 Vue.component('common-icon', CommonIcon);
-// Vue.component('common-static-table', CommonStaticTable);
+Vue.component('common-static-table', CommonStaticTable);
 
 Vue.use(permission)
 
