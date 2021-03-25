@@ -1,6 +1,6 @@
 import django_filters
 
-from .models import LoginInfor, OperationLog
+from .models import LoginInfor, OperationLog, CeleryLog
 from ..system.models import DictDetails, DictData, ConfigSettings, MessagePush, SaveFile
 
 
@@ -66,6 +66,8 @@ class LoginInforFilter(django_filters.rest_framework.FilterSet):
     """
     登录日志 简单过滤器
     """
+    loginLocation = django_filters.CharFilter(lookup_expr='icontains')
+    userName = django_filters.CharFilter(field_name='creator__username', lookup_expr='icontains')
 
     class Meta:
         model = LoginInfor
@@ -81,4 +83,16 @@ class OperationLogFilter(django_filters.rest_framework.FilterSet):
 
     class Meta:
         model = OperationLog
+        fields = '__all__'
+
+
+class CeleryLogFilter(django_filters.rest_framework.FilterSet):
+    """
+    定时日志 简单过滤器
+    """
+    name = django_filters.CharFilter(lookup_expr='icontains')
+    func_name = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = CeleryLog
         fields = '__all__'

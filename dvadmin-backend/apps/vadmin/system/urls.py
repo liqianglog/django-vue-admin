@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from ..system.views import DictDataModelViewSet, DictDetailsModelViewSet, \
     ConfigSettingsModelViewSet, SaveFileModelViewSet, MessagePushModelViewSet, LoginInforModelViewSet, \
-    OperationLogModelViewSet
+    OperationLogModelViewSet, CeleryLogModelViewSet
 
 router = DefaultRouter()
 router.register(r'dict/type', DictDataModelViewSet)
@@ -13,6 +13,7 @@ router.register(r'savefile', SaveFileModelViewSet)
 router.register(r'message', MessagePushModelViewSet)
 router.register(r'logininfor', LoginInforModelViewSet)
 router.register(r'operation_log', OperationLogModelViewSet)
+router.register(r'celery_log', CeleryLogModelViewSet)
 
 urlpatterns = [
     re_path('dict/get/type/(?P<pk>.*)/', DictDetailsModelViewSet.as_view({'get': 'dict_details_list'})),
@@ -23,10 +24,6 @@ urlpatterns = [
     re_path('dict/type/export/', DictDataModelViewSet.as_view({'get': 'export'})),
     # 导出字典详情数据
     re_path('dict/data/export/', DictDetailsModelViewSet.as_view({'get': 'export'})),
-    # 用户获取个人消息通知列表页
-    re_path('message/list/(?P<pk>.*)/', MessagePushModelViewSet.as_view({"get": "get_message_list"})),
-    # 用户获取个人通知列表
-    re_path('message/receive/', MessagePushModelViewSet.as_view({"get": "get_received_messages"})),
     # 消息通知导出
     re_path('message/export/', MessagePushModelViewSet.as_view({'get': 'export', })),
     # 用户个人消息列表
@@ -41,5 +38,9 @@ urlpatterns = [
     re_path('logininfor/clean/', LoginInforModelViewSet.as_view({'delete': 'clean_all', })),
     # 导出登录日志
     re_path('logininfor/export/', LoginInforModelViewSet.as_view({'get': 'export', })),
+    # 清空定时日志
+    re_path('celery_log/clean/', CeleryLogModelViewSet.as_view({'delete': 'clean_all', })),
+    # 导出定时日志
+    re_path('celery_log/export/', CeleryLogModelViewSet.as_view({'get': 'export', })),
 ]
 urlpatterns += router.urls

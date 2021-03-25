@@ -57,6 +57,7 @@ function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
     }
     if (route.children != null && route.children && route.children.length) {
       route.children = filterAsyncRouter(route.children, route, type)
+      route.alwaysShow = true
     } else {
       delete route['children']
       delete route['redirect']

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import LoginInfor, OperationLog
+from .models import LoginInfor, OperationLog, CeleryLog
 from ..op_drf.serializers import CustomModelSerializer
 from ..system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush, MessagePushUser
 
@@ -273,3 +273,27 @@ class ExportOperationLogSerializer(CustomModelSerializer):
         fields = ('request_modular', 'request_path', 'request_body', 'request_method', 'request_msg', 'request_ip',
                   'request_browser', 'response_code', 'request_location', 'request_os', 'json_result', 'status',
                   'creator_name')
+
+
+# ================================================= #
+# ************** celery定时日志 序列化器  ************** #
+# ================================================= #
+
+class CeleryLogSerializer(CustomModelSerializer):
+    """
+    定时日志 简单序列化器
+    """
+
+    class Meta:
+        model = CeleryLog
+        fields = "__all__"
+
+
+class ExportCeleryLogSerializer(CustomModelSerializer):
+    """
+    导出 定时日志 简单序列化器
+    """
+
+    class Meta:
+        model = CeleryLog
+        fields = ('name', 'kwargs', 'seconds', 'state', 'result', 'creator_name')

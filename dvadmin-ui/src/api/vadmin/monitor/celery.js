@@ -144,3 +144,37 @@ export function operatesyncdata(data) {
     data
   });
 }
+
+// 查询定时任务日志列表
+export function list(query) {
+  return request({
+    url: '/admin/system/celery_log/',
+    method: 'get',
+    params: query
+  })
+}
+
+// 删除定时任务日志
+export function delCeleryLog(infoId) {
+  return request({
+    url: `/admin/system/celery_log/${infoId}/`,
+    method: 'delete'
+  })
+}
+
+// 清空定时任务日志
+export function cleanCeleryLog() {
+  return request({
+    url: '/admin/system/celery_log/clean',
+    method: 'delete'
+  })
+}
+
+// 导出定时任务日志
+export function exportCeleryLog(query) {
+  return request({
+    url: '/admin/system/celery_log/export',
+    method: 'get',
+    params: query
+  })
+}

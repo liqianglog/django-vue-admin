@@ -1,11 +1,11 @@
 from django.db.models import Q
 from rest_framework.request import Request
 
-from .models import LoginInfor, OperationLog
+from .models import LoginInfor, OperationLog, CeleryLog
 from ..op_drf.filters import DataLevelPermissionsFilter
 from ..op_drf.viewsets import CustomModelViewSet
 from ..system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter, MessagePushFilter, \
-    SaveFileFilter, LoginInforFilter, OperationLogFilter
+    SaveFileFilter, LoginInforFilter, OperationLogFilter, CeleryLogFilter
 from ..system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
 from ..system.models import MessagePushUser
 from ..system.serializers import DictDataSerializer, DictDataCreateUpdateSerializer, DictDetailsSerializer, \
@@ -13,7 +13,8 @@ from ..system.serializers import DictDataSerializer, DictDataCreateUpdateSeriali
     ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer, \
     ExportConfigSettingsSerializer, ExportDictDataSerializer, ExportDictDetailsSerializer, \
     MessagePushSerializer, MessagePushCreateUpdateSerializer, ExportMessagePushSerializer, LoginInforSerializer, \
-    OperationLogSerializer, ExportOperationLogSerializer, ExportLoginInforSerializer
+    OperationLogSerializer, ExportOperationLogSerializer, ExportLoginInforSerializer, CeleryLogSerializer, \
+    ExportCeleryLogSerializer
 from ..utils.export_excel import export_excel_save_model
 from ..utils.response import SuccessResponse
 
@@ -161,14 +162,6 @@ class MessagePushModelViewSet(CustomModelViewSet):
     filter_class = MessagePushFilter
     ordering = "-update_datetime"  # 默认排序
 
-    def get_message_list(self, request: Request, *args, **kwargs):
-        """
-            管理员获取自己的消息列表
-        """
-        messages = self.queryset.filter(**kwargs)
-        data = MessagePushSerializer(messages, many=True)
-        return SuccessResponse(msg="返回", data=data)
-
     def get_user_messages(self, request: Request, *args, **kwargs):
         """
         获取用户自己消息列表
@@ -258,6 +251,29 @@ class OperationLogModelViewSet(CustomModelViewSet):
     def clean_all(self, request: Request, *args, **kwargs):
         """
         清空操作日志
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        self.get_queryset().delete()
+        return SuccessResponse(msg="清空成功")
+
+
+class CeleryLogModelViewSet(CustomModelViewSet):
+    """
+   定时任务日志 模型的CRUD视图
+   """
+    queryset = CeleryLog.objects.all()
+    serializer_class = CeleryLogSerializer
+    filter_class = CeleryLogFilter
+    ordering = '-create_datetime'  # 默认排序
+    export_field_data = ['任务名称', '执行参数', '执行时间', '运行状态', '任务结果', '创建时间']
+    export_serializer_class = ExportCeleryLogSerializer
+
+    def clean_all(self, request: Request, *args, **kwargs):
+        """
+        清空定时任务日志
         :param request:
         :param args:
         :param kwargs:

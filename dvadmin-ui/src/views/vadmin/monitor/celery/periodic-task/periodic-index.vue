@@ -202,6 +202,7 @@
         this.reqloading = true;
         SyncDataApi.operatesyncdata({ celery_name: this.row.task }).then(response => {
          this.task_id = response.data.task_id
+          this.msgSuccess("执行成功！");
         })
       },
       closeView(){

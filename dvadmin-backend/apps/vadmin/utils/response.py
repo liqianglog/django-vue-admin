@@ -26,13 +26,16 @@ class SuccessResponse(Response):
 
     def __init__(self, data=None, msg='success', status=None, template_name=None, headers=None, exception=False,
                  content_type=None):
-        std_data = {
+        self.std_data = {
             "code": 200,
             "data": data,
             "msg": msg,
             "status": 'success'
         }
-        super().__init__(std_data, status, template_name, headers, exception, content_type)
+        super().__init__(self.std_data, status, template_name, headers, exception, content_type)
+
+    def __str__(self):
+        return str(self.std_data)
 
 
 class ErrorResponse(Response):
@@ -43,10 +46,13 @@ class ErrorResponse(Response):
 
     def __init__(self, data=None, msg='error', code=201, status=None, template_name=None, headers=None,
                  exception=False, content_type=None):
-        std_data = {
+        self.std_data = {
             "code": code,
             "data": data,
             "msg": msg,
             "status": 'error'
         }
-        super().__init__(std_data, status, template_name, headers, exception, content_type)
+        super().__init__(self.std_data, status, template_name, headers, exception, content_type)
+
+    def __str__(self):
+        return str(self.std_data)

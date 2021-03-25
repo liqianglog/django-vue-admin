@@ -33,16 +33,17 @@ def BaseCeleryApp(name):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             obj = CeleryLog()
-            obj.name = str(func.__name__)
+            obj.name = ''.join(str(func.__doc__).replace(' ','').split('\n')[:2])
+            obj.func_name = str(func.__name__)
             obj.kwargs = f"*args：{args}\n**kwargs：{kwargs}"
             start_time = datetime.now()
             res = None
             try:
                 res = func(*args, **kwargs)
                 obj.result = str(res)
-                obj.state = True
+                obj.status = True
             except Exception as exc:
-                obj.state = False
+                obj.status = False
                 obj.result = f"执行失败，错误信息：{exc}"
                 logger.info(f"传入参数:{args, kwargs}")
                 logger.error(f"执行失败，错误信息：{exc}")

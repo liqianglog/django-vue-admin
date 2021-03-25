@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.fields import empty
 from rest_framework.validators import UniqueValidator
 
 from ..op_drf.serializers import CustomModelSerializer
@@ -52,7 +51,7 @@ class MenuTreeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Menu
-        fields = ('id', 'label', 'parentId')
+        fields = ('id', 'label', 'orderNum', 'parentId')
 
 
 # ================================================= #
@@ -223,7 +222,8 @@ class UserProfileSerializer(CustomModelSerializer):
         return False
 
     def get_unread_msg_count(self, obj: UserProfile):
-        return MessagePush.objects.filter(status='2').exclude(user=obj,messagepushuser_message_push__is_read=True).count()
+        return MessagePush.objects.filter(status='2').exclude(user=obj,
+                                                              messagepushuser_message_push__is_read=True).count()
 
     class Meta:
         model = UserProfile
@@ -287,6 +287,7 @@ class UserProfileCreateUpdateSerializer(CustomModelSerializer):
         exclude = ('password', 'secret', 'user_permissions', 'groups', 'is_superuser', 'date_joined')
         read_only_fields = ('dept',)
 
+
 class UserProfileImportSerializer(CustomModelSerializer):
 
     def save(self, **kwargs):
@@ -303,7 +304,6 @@ class UserProfileImportSerializer(CustomModelSerializer):
             data['gender'] = {'男': '0', '女': '1', '未知': '2'}.get(data['gender'])
             data['is_active'] = {'启用': True, '禁用': False}.get(data['is_active'])
         return super().run_validation(data)
-
 
     class Meta:
         model = UserProfile
