@@ -120,7 +120,7 @@ class ConfigSettingsCreateUpdateSerializer(CustomModelSerializer):
 
 
 # ================================================= #
-# ************** 参数设置 序列化器  ************** #
+# ************** 文件管理 序列化器  ************** #
 # ================================================= #
 
 class SaveFileSerializer(CustomModelSerializer):
@@ -136,7 +136,7 @@ class SaveFileSerializer(CustomModelSerializer):
 
 class SaveFileCreateUpdateSerializer(CustomModelSerializer):
     """
-    字典详情 创建/更新时的列化器
+    文件管理 创建/更新时的列化器
     """
     file_url = serializers.CharField(source='file.url', read_only=True)
 
@@ -146,6 +146,7 @@ class SaveFileCreateUpdateSerializer(CustomModelSerializer):
         self.validated_data['size'] = files.size
         self.validated_data['type'] = files.content_type
         self.validated_data['address'] = '本地存储'
+        self.validated_data['source'] = '用户上传'
         instance = super().save(**kwargs)
         # 进行判断是否需要OSS上传
         return instance
@@ -228,7 +229,6 @@ class LoginInforSerializer(CustomModelSerializer):
     """
     登录日志 简单序列化器
     """
-    creator_name = serializers.SlugRelatedField(slug_field="username", source="creator", read_only=True)
 
     class Meta:
         model = LoginInfor
@@ -239,7 +239,6 @@ class ExportLoginInforSerializer(CustomModelSerializer):
     """
     导出 登录日志 简单序列化器
     """
-    creator_name = serializers.SlugRelatedField(slug_field="username", source="creator", read_only=True)
 
     class Meta:
         model = LoginInfor
@@ -255,7 +254,6 @@ class OperationLogSerializer(CustomModelSerializer):
     """
     操作日志 简单序列化器
     """
-    creator_name = serializers.SlugRelatedField(slug_field="username", source="creator", read_only=True)
 
     class Meta:
         model = OperationLog
@@ -266,7 +264,6 @@ class ExportOperationLogSerializer(CustomModelSerializer):
     """
     导出 操作日志 简单序列化器
     """
-    creator_name = serializers.SlugRelatedField(slug_field="username", source="creator", read_only=True)
 
     class Meta:
         model = OperationLog

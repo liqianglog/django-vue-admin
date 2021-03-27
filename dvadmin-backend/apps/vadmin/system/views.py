@@ -1,3 +1,6 @@
+import os
+
+from django.conf import settings
 from django.db.models import Q
 from rest_framework.request import Request
 
@@ -16,6 +19,7 @@ from ..system.serializers import DictDataSerializer, DictDataCreateUpdateSeriali
     OperationLogSerializer, ExportOperationLogSerializer, ExportLoginInforSerializer, CeleryLogSerializer, \
     ExportCeleryLogSerializer
 from ..utils.export_excel import export_excel_save_model
+from ..utils.file_util import get_all_files, remove_empty_dir, delete_files
 from ..utils.response import SuccessResponse
 
 
@@ -148,6 +152,26 @@ class SaveFileModelViewSet(CustomModelViewSet):
     extra_filter_backends = [DataLevelPermissionsFilter]
     search_fields = ('configName',)
     ordering = '-create_datetime'  # 默认排序
+
+    def clearsavefile(self, request: Request, *args, **kwargs):
+        """
+        清理废弃文件
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        # 获取废弃文件列表
+        file_list = get_all_files(os.path.join(settings.MEDIA_ROOT, 'system'))
+        queryset_files = [os.path.join(os.path.join(settings.MEDIA_ROOT) + os.sep, ele) for ele in
+                          list(self.get_queryset().values_list('file', flat=True))]
+
+        delete_list = list(set(file_list) - set(queryset_files))
+        # 进行文件删除操作
+        delete_files(delete_list)
+        # 递归删除空文件
+        remove_empty_dir(os.path.join(settings.MEDIA_ROOT, 'system'))
+        return SuccessResponse(msg=f"成功清理废弃文件{len(delete_list)}个")
 
 
 class MessagePushModelViewSet(CustomModelViewSet):
