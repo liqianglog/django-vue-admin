@@ -20,10 +20,14 @@ urlpatterns = [
     re_path('config/configKey/(?P<pk>.*)/', ConfigSettingsModelViewSet.as_view({'get': 'get_config_key'})),
     # 参数管理导出
     re_path('config/export/', ConfigSettingsModelViewSet.as_view({'get': 'export'})),
+    # 清理参数缓存
+    re_path('config/clearCache/', ConfigSettingsModelViewSet.as_view({'delete': 'clearCache', })),
     # 导出字典管理数据
     re_path('dict/type/export/', DictDataModelViewSet.as_view({'get': 'export'})),
     # 导出字典详情数据
     re_path('dict/data/export/', DictDetailsModelViewSet.as_view({'get': 'export'})),
+    # 清理字典缓存
+    re_path('dict/type/clearCache/', DictDetailsModelViewSet.as_view({'delete': 'clearCache', })),
     # 消息通知导出
     re_path('message/export/', MessagePushModelViewSet.as_view({'get': 'export', })),
     # 用户个人消息列表
@@ -44,5 +48,6 @@ urlpatterns = [
     re_path('celery_log/export/', CeleryLogModelViewSet.as_view({'get': 'export', })),
     # 清除废弃文件
     re_path('clearsavefile/', SaveFileModelViewSet.as_view({'post': 'clearsavefile', })),
+
 ]
 urlpatterns += router.urls

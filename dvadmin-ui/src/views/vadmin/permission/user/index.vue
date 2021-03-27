@@ -543,7 +543,7 @@
         password: undefined,
         mobile: undefined,
         email: undefined,
-        gender: undefined,
+        gender: this.selectDictDefault(this.sexOptions),
         is_active: false,
         remark: undefined,
         postIds: [],

@@ -1,6 +1,7 @@
 import os
 
 from django.conf import settings
+from django.core.cache import cache
 from django.db.models import Q
 from rest_framework.request import Request
 
@@ -12,7 +13,7 @@ from ..system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFi
 from ..system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
 from ..system.models import MessagePushUser
 from ..system.serializers import DictDataSerializer, DictDataCreateUpdateSerializer, DictDetailsSerializer, \
-    DictDetailsCreateUpdateSerializer, DictDetailsListSerializer, ConfigSettingsSerializer, \
+    DictDetailsCreateUpdateSerializer, ConfigSettingsSerializer, \
     ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer, \
     ExportConfigSettingsSerializer, ExportDictDataSerializer, ExportDictDetailsSerializer, \
     MessagePushSerializer, MessagePushCreateUpdateSerializer, ExportMessagePushSerializer, LoginInforSerializer, \
@@ -78,11 +79,30 @@ class DictDetailsModelViewSet(CustomModelViewSet):
         :param kwargs:
         :return:
         """
-        queryset = self.queryset.filter(dict_data__dictType=kwargs.get('pk')).order_by('sort')
-        if hasattr(self, 'handle_logging'):
-            self.handle_logging(request, *args, **kwargs)
-        serializer = DictDetailsListSerializer(queryset, many=True)
-        return SuccessResponse(serializer.data)
+        dict_details_dic = cache.get('system_dict_details', {})
+        if not dict_details_dic:
+            queryset = self.filter_queryset(self.get_queryset())
+            queryset_dic = queryset.order_by('sort').values('dict_data__dictType', 'dictLabel', 'dictValue',
+                                                                       'is_default')
+            for ele in queryset_dic:
+                dictType = ele.pop('dict_data__dictType')
+                if dictType in dict_details_dic:
+                    dict_details_dic[dictType].append(ele)
+                else:
+                    dict_details_dic[dictType] = [ele]
+            cache.set('system_dict_details', dict_details_dic, 84600)
+        return SuccessResponse(dict_details_dic.get(kwargs.get('pk'), []))
+
+    def clearCache(self, request: Request, *args, **kwargs):
+        """
+        清理键值缓存
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        cache.delete('system_dict_details')
+        return SuccessResponse(msg='清理成功！')
 
     def export(self, request: Request, *args, **kwargs):
         """
@@ -122,10 +142,26 @@ class ConfigSettingsModelViewSet(CustomModelViewSet):
         :param kwargs:
         :return:
         """
-        queryset = self.queryset.filter(configKey=kwargs.get('pk')).first()
         # if hasattr(self, 'handle_logging'):
         #     self.handle_logging(request, *args, **kwargs)
-        return SuccessResponse(msg=queryset.configValue if queryset else '')
+        config_key_dic = cache.get('system_configKey')
+        if not config_key_dic:
+            queryset = self.filter_queryset(self.get_queryset())
+            config_key_dic = {ele.get('configKey'): ele.get('configValue') for ele in
+                              queryset.values('configValue', 'configKey')}
+            cache.set('system_configKey', config_key_dic, 84600)
+        return SuccessResponse(msg=config_key_dic.get(kwargs.get('pk'), ''))
+
+    def clearCache(self, request: Request, *args, **kwargs):
+        """
+        清理键值缓存
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        cache.delete('system_configKey')
+        return SuccessResponse(msg='清理成功！')
 
     def export(self, request: Request, *args, **kwargs):
         """

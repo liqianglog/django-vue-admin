@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from rest_framework import serializers
 
 from .models import LoginInfor, OperationLog, CeleryLog
@@ -79,6 +80,10 @@ class DictDetailsCreateUpdateSerializer(CustomModelSerializer):
     字典详情 创建/更新时的列化器
     """
 
+    def save(self, **kwargs):
+        cache.delete('system_dict_details')
+        return super().save(**kwargs)
+
     class Meta:
         model = DictDetails
         fields = '__all__'
@@ -113,6 +118,10 @@ class ConfigSettingsCreateUpdateSerializer(CustomModelSerializer):
     """
     参数设置 创建/更新时的列化器
     """
+
+    def save(self, **kwargs):
+        cache.delete('system_configKey')
+        return super().save(**kwargs)
 
     class Meta:
         model = ConfigSettings

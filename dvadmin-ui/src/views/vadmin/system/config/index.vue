@@ -275,8 +275,8 @@ export default {
         configName: undefined,
         configKey: undefined,
         configValue: undefined,
-        configType: "Y",
-        status: '0',
+        configType: this.selectDictDefault(this.typeOptions),
+        status: this.selectDictDefault(this.statusOptions),
         remark: undefined
       };
       this.resetForm("form");

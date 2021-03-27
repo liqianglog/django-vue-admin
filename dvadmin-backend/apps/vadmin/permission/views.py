@@ -291,8 +291,8 @@ class UserProfileModelViewSet(CustomModelViewSet):
         """
         userId = request.query_params.get('userId')
         data = {
-            'posts': PostSimpleSerializer(Post.objects.all().order_by('postSort'), many=True).data,
-            'roles': RoleSimpleSerializer(Role.objects.all().order_by('roleSort'), many=True).data
+            'posts': PostSimpleSerializer(Post.objects.filter(status='1').order_by('postSort'), many=True).data,
+            'roles': RoleSimpleSerializer(Role.objects.filter(status='1').order_by('roleSort'), many=True).data
         }
         if userId:
             instance = self.queryset.get(id=userId)

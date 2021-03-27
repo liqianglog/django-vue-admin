@@ -127,7 +127,7 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
             return queryset.filter(dept_belong_id=user_dept_id)
 
         # 3. 根据所有角色 获取所有权限范围
-        role_list = request.user.role.all().values('admin', 'dataScope')
+        role_list = request.user.role.filter(status='1').values('admin', 'dataScope')
         dataScope_list = []
         for ele in role_list:
             # 3.1 判断用户是否为超级管理员角色/如果有1(所有数据) 则返回所有数据
@@ -144,7 +144,7 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
         dept_list = []
         for ele in dataScope_list:
             if ele == '2':
-                dept_list.extend(request.user.role.all().values_list('dept__id', flat=True))
+                dept_list.extend(request.user.role.filter(status='1').values_list('dept__id', flat=True))
             elif ele == '3':
                 dept_list.append(user_dept_id)
             elif ele == '4':

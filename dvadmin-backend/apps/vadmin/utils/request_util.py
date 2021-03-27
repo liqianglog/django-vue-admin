@@ -182,7 +182,7 @@ def get_login_location(request, *args, **kwargs):
             r = requests.get(apiurl)
             content = r.content.decode('GBK')
             location = str(content).replace('\r', '').replace('\n', '')[:64]
-            cache.set(request_ip, location, 8640)
+            cache.set(request_ip, location, 86400)
             return location
     except Exception as e:
         pass
