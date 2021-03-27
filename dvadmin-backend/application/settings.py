@@ -239,7 +239,6 @@ else:
         }
     }
 
-connect(MONGO_DATABASE_NAME, host=os.getenv('MONGO_HOST') or MONGO_HOST, port=MONGO_PORT, serverSelectionTimeoutMS=1000, connect=False)
 # redis 缓存
 REDIS_URL = f'redis://:{REDIS_PASSWORD if REDIS_PASSWORD else ""}@{os.getenv("REDIS_HOST") or REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
 CACHES = {
@@ -320,5 +319,6 @@ CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 API_LOG_ENABLE = True
 # API_LOG_METHODS = 'ALL' # ['POST', 'DELETE']
 # API_LOG_METHODS = ['POST', 'DELETE'] # ['POST', 'DELETE']
-BROKER_URL = f'redis://:{REDIS_PASSWORD if REDIS_PASSWORD else ""}@{os.getenv("REDIS_HOST") or REDIS_HOST}:{REDIS_PORT}/2'    #Broker使用Redis, 使用0数据库(暂时不是很清楚原理)
+BROKER_URL = f'redis://:{REDIS_PASSWORD if REDIS_PASSWORD else ""}@{os.getenv("REDIS_HOST") or REDIS_HOST}:' \
+             f'{REDIS_PORT}/{locals().get("CELERY_DB",2)}'    #Broker使用Redis
 CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'    #Backend数据库
