@@ -105,6 +105,18 @@
           <span>{{ parseTime(scope.row.create_datetime) }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleView(scope.row,scope.index)"
+            v-hasPermi="['admin:system:celerylog:get']"
+          >详细
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -114,14 +126,79 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+
+    <!-- 表单类详情dialog-->
+    <detail-form-dialog v-if="openDetailModal"
+                        dialog-title="定时日志详细"
+                        modalWidth="700px"
+                        :openDetailModal="openDetailModal"
+                        :formData="form"
+                        :formItem="formItem"
+                        @closeDialog="value=>{openDetailModal=value}"
+    ></detail-form-dialog>
   </div>
 </template>
 
 <script>
 import { list, delCeleryLog, cleanCeleryLog, exportCeleryLog } from "@/api/vadmin/monitor/celery";
+import DetailFormDialog from '@/components/Modal/DetailFormDialog'
+
+const CELERY_LOG_FORM_ITEM = [
+  {
+    index: 1,
+    label: '日志编号',
+    key: 'id'
+  },
+  {
+    index: 2,
+    label: '任务名称',
+    key: 'name'
+  },
+  {
+    index: 3,
+    label: '执行函数名称',
+    key: 'func_name',
+    width: "auto"
+  },
+  {
+    index: 4,
+    label: '执行参数',
+    key: 'kwargs',
+    singleLine: true
+  },
+  {
+    index: 5,
+    label: '执行时间',
+    key: 'seconds'
+  },
+  {
+    index: 6,
+    label: '运行状态',
+    key: 'status',
+    labelType: 'boolean',
+    labelChoices: {
+      false: '失败',
+      true: '正常'
+    }
+  },
+  {
+    index: 7,
+    label: '任务结果',
+    key: 'result',
+    singleLine: true
+  },
+  {
+    index: 8,
+    label: '执行日期',
+    key: 'create_datetime',
+    labelType: 'time',
+    singleLine: true
+  }
+];
 
 export default {
   name: "CeleryLog",
+  components: { DetailFormDialog },
   data() {
     return {
       // 遮罩层
@@ -135,12 +212,15 @@ export default {
       // 总条数
       total: 0,
       // 表格数据
+      // 是否显示详细模态框
+      openDetailModal: false,
       list: [],
       // 状态数据字典
       statusOptions:[{dictLabel: '成功', dictValue: true}, {dictLabel: '失败', dictValue: false}],
       // 日期范围
       dateRange: [],
       form: {},
+      formItem: CELERY_LOG_FORM_ITEM,
 
       // 查询参数
       queryParams: {
@@ -191,6 +271,13 @@ export default {
       this.ids = selection.map(item => item.id)
       this.multiple = !selection.length
     },
+
+    /** 详细按钮操作 */
+    handleView(row) {
+      this.openDetailModal = true
+      this.form = row
+    },
+
     /** 删除按钮操作 */
     handleDelete(row) {
       const infoIds = row.id || this.ids;
