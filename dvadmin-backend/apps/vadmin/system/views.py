@@ -8,6 +8,7 @@ from rest_framework.request import Request
 from .models import LoginInfor, OperationLog, CeleryLog
 from ..op_drf.filters import DataLevelPermissionsFilter
 from ..op_drf.viewsets import CustomModelViewSet
+from ..permission.permissions import CommonPermission
 from ..system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter, MessagePushFilter, \
     SaveFileFilter, LoginInforFilter, OperationLogFilter, CeleryLogFilter
 from ..system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
@@ -36,23 +37,13 @@ class DictDataModelViewSet(CustomModelViewSet):
     # retrieve_serializer_class = DetailRoleSerializer
     extra_filter_backends = [DataLevelPermissionsFilter]
     filter_class = DictDataFilter
-    # update_extra_permission_classes = (IsManagerPermission,)
-    # destroy_extra_permission_classes = (IsManagerPermission,)
-    # create_extra_permission_classes = (IsManagerPermission,)
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission,)
+    create_extra_permission_classes = (CommonPermission,)
     search_fields = ('dictName',)
     ordering = 'id'  # 默认排序
-
-    def export(self, request: Request, *args, **kwargs):
-        """
-        导出字典管理数据
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        field_data = ['字典主键', '字典名称', '字典类型', '字典状态', '创建者', '修改者', '备注']
-        data = ExportDictDataSerializer(DictData.objects.all(), many=True).data
-        return SuccessResponse(export_excel_save_model(request, field_data, data, '导出参数管理数据.xls'))
+    export_field_data = ['字典主键', '字典名称', '字典类型', '字典状态', '创建者', '修改者', '备注']
+    export_serializer_class = ExportDictDataSerializer
 
 
 class DictDetailsModelViewSet(CustomModelViewSet):
@@ -65,9 +56,9 @@ class DictDetailsModelViewSet(CustomModelViewSet):
     update_serializer_class = DictDetailsCreateUpdateSerializer
     filter_class = DictDetailsFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
-    # update_extra_permission_classes = (IsManagerPermission,)
-    # destroy_extra_permission_classes = (IsManagerPermission,)
-    # create_extra_permission_classes = (IsManagerPermission,)
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission,)
+    create_extra_permission_classes = (CommonPermission,)
     search_fields = ('dictLabel',)
     ordering = 'sort'  # 默认排序
 
@@ -127,12 +118,14 @@ class ConfigSettingsModelViewSet(CustomModelViewSet):
     create_serializer_class = ConfigSettingsCreateUpdateSerializer
     update_serializer_class = ConfigSettingsCreateUpdateSerializer
     filter_class = ConfigSettingsFilter
-    extra_filter_backends = [DataLevelPermissionsFilter]
-    # update_extra_permission_classes = (IsManagerPermission,)
-    # destroy_extra_permission_classes = (IsManagerPermission,)
-    # create_extra_permission_classes = (IsManagerPermission,)
     search_fields = ('configName',)
     ordering = 'id'  # 默认排序
+    extra_filter_backends = [DataLevelPermissionsFilter]
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission,)
+    create_extra_permission_classes = (CommonPermission,)
+    export_field_data = ['参数主键', '参数名称', '参数键名', '参数键值', '系统内置', '参数状态', '创建者', '修改者', '备注']
+    export_serializer_class = ExportConfigSettingsSerializer
 
     def get_config_key(self, request: Request, *args, **kwargs):
         """
@@ -142,8 +135,6 @@ class ConfigSettingsModelViewSet(CustomModelViewSet):
         :param kwargs:
         :return:
         """
-        # if hasattr(self, 'handle_logging'):
-        #     self.handle_logging(request, *args, **kwargs)
         config_key_dic = cache.get('system_configKey')
         if not config_key_dic:
             queryset = self.filter_queryset(self.get_queryset())
@@ -163,18 +154,6 @@ class ConfigSettingsModelViewSet(CustomModelViewSet):
         cache.delete('system_configKey')
         return SuccessResponse(msg='清理成功！')
 
-    def export(self, request: Request, *args, **kwargs):
-        """
-        导出参数管理数据
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        field_data = ['参数主键', '参数名称', '参数键名', '参数键值', '系统内置', '参数状态', '创建者', '修改者', '备注']
-        data = ExportConfigSettingsSerializer(ConfigSettings.objects.all(), many=True).data
-        return SuccessResponse(export_excel_save_model(request, field_data, data, '导出参数管理数据.xls'))
-
 
 class SaveFileModelViewSet(CustomModelViewSet):
     """
@@ -186,6 +165,9 @@ class SaveFileModelViewSet(CustomModelViewSet):
     update_serializer_class = SaveFileCreateUpdateSerializer
     filter_class = SaveFileFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission,)
+    create_extra_permission_classes = (CommonPermission,)
     search_fields = ('configName',)
     ordering = '-create_datetime'  # 默认排序
 
@@ -219,8 +201,14 @@ class MessagePushModelViewSet(CustomModelViewSet):
     create_serializer_class = MessagePushCreateUpdateSerializer
     update_serializer_class = MessagePushCreateUpdateSerializer
     extra_filter_backends = [DataLevelPermissionsFilter]
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission,)
+    create_extra_permission_classes = (CommonPermission,)
     filter_class = MessagePushFilter
     ordering = "-update_datetime"  # 默认排序
+    export_field_data = ['消息序号', '标题', '内容', '消息类型', '是否审核', '消息状态', '通知接收消息用户',
+                         '创建者', '修改者', '修改时间', '创建时间']
+    export_serializer_class = ExportMessagePushSerializer
 
     def get_user_messages(self, request: Request, *args, **kwargs):
         """
@@ -230,11 +218,12 @@ class MessagePushModelViewSet(CustomModelViewSet):
         is_read = request.query_params.get('is_read', None)
         if is_read:
             if is_read == 'False':
-                queryset = queryset.filter(Q(messagepushuser_message_push__is_read=is_read) | Q(user=None))
-            else:
-                queryset = queryset.filter(messagepushuser_message_push__is_read=is_read)
-
-        queryset = queryset.filter(is_reviewed=True)
+                queryset = queryset.exclude(Q(messagepushuser_message_push__is_read=True),
+                                            Q(messagepushuser_message_push__user=request.user))
+            elif is_read == 'True':
+                queryset = queryset.filter(messagepushuser_message_push__is_read=True,
+                                           messagepushuser_message_push__user=request.user)
+        queryset = queryset.filter(is_reviewed=True).distinct()
         page = self.paginate_queryset(queryset)
         if hasattr(self, 'handle_logging'):
             self.handle_logging(request, *args, **kwargs)
@@ -257,18 +246,6 @@ class MessagePushModelViewSet(CustomModelViewSet):
         instance.save()
         return SuccessResponse()
 
-    def export(self, request: Request, *args, **kwargs):
-        """
-        导出岗位
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        field_data = ['消息序号', '标题', '内容', '消息类型', '是否审核', '消息状态', '通知接收消息用户', '创建者', '修改者', '修改时间', '创建时间']
-        data = ExportMessagePushSerializer(MessagePush.objects.all(), many=True).data
-        return SuccessResponse(export_excel_save_model(request, field_data, data, '导出岗位数据.xls'))
-
 
 class LoginInforModelViewSet(CustomModelViewSet):
     """
@@ -278,6 +255,9 @@ class LoginInforModelViewSet(CustomModelViewSet):
     serializer_class = LoginInforSerializer
     filter_class = LoginInforFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission,)
+    create_extra_permission_classes = (CommonPermission,)
     ordering = '-create_datetime'  # 默认排序
     export_field_data = ['访问编号', '用户名称', '登录地址', '登录地点', '浏览器', '操作系统',
                          '登录状态', '操作信息', '登录日期']
@@ -303,6 +283,9 @@ class OperationLogModelViewSet(CustomModelViewSet):
     serializer_class = OperationLogSerializer
     filter_class = OperationLogFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission,)
+    create_extra_permission_classes = (CommonPermission,)
     ordering = '-create_datetime'  # 默认排序
     export_field_data = ['请求模块', '请求地址', '请求参数', '请求方式', '操作说明', '请求ip地址',
                          '请求浏览器', '响应状态码', '操作地点', '操作系统', '返回信息', '响应状态', '操作用户名']
@@ -326,6 +309,10 @@ class CeleryLogModelViewSet(CustomModelViewSet):
    """
     queryset = CeleryLog.objects.all()
     serializer_class = CeleryLogSerializer
+    extra_filter_backends = [DataLevelPermissionsFilter]
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission,)
+    create_extra_permission_classes = (CommonPermission,)
     filter_class = CeleryLogFilter
     ordering = '-create_datetime'  # 默认排序
     export_field_data = ['任务名称', '执行参数', '执行时间', '运行状态', '任务结果', '创建时间']

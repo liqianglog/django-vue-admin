@@ -1,7 +1,7 @@
 """
 常用的Response以及Django的Response、DRF的Response
 """
-from django.http.response import DjangoJSONEncoder
+from django.http.response import DjangoJSONEncoder, JsonResponse
 from rest_framework.response import Response
 
 
@@ -56,3 +56,36 @@ class ErrorResponse(Response):
 
     def __str__(self):
         return str(self.std_data)
+
+
+class SuccessJsonResponse(JsonResponse):
+    """
+    标准JsonResponse, SuccessJsonResponse(data)SuccessJsonResponse(data=data)
+    (1)仅SuccessResponse无法使用时才能推荐使用SuccessJsonResponse
+    """
+
+    def __init__(self, data, msg='success', encoder=DjangoJSONEncoder, safe=True, json_dumps_params=None, **kwargs):
+        std_data = {
+            "code": 200,
+            "data": data,
+            "msg": msg,
+            "status": 'success'
+        }
+        super().__init__(std_data, encoder, safe, json_dumps_params, **kwargs)
+
+
+class ErrorJsonResponse(JsonResponse):
+    """
+    标准JsonResponse, 仅ErrorResponse无法使用时才能使用ErrorJsonResponse
+    (1)默认错误码返回2001, 也可以指定其他返回码:ErrorJsonResponse(code=xxx)
+    """
+
+    def __init__(self, data, msg='error', code=201, encoder=OpDRFJSONEncoder, safe=True, json_dumps_params=None,
+                 **kwargs):
+        std_data = {
+            "code": code,
+            "data": data,
+            "msg": msg,
+            "status": 'error'
+        }
+        super().__init__(std_data, encoder, safe, json_dumps_params, **kwargs)

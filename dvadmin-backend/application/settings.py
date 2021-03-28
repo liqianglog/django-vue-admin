@@ -21,7 +21,7 @@ from conf.env import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0,os.path.join(BASE_DIR,'apps'))
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'vadmin.op_drf.middleware.PermissionModeMiddleware',  # 权限中间件
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -202,7 +203,7 @@ LOGGING = {
     'loggers': {
         # default日志
         '': {
-            'handlers': ['console','error','file'],
+            'handlers': ['console', 'error', 'file'],
             'level': 'INFO',
         },
         # 数据库相关日志
@@ -300,19 +301,19 @@ USERNAME_FIELD = 'username'
 # ************** 登录验证码配置  ************** #
 # ================================================= #
 CAPTCHA_STATE = CAPTCHA_STATE
-#字母验证码
-CAPTCHA_IMAGE_SIZE = (160, 60)   # 设置 captcha 图片大小
-CAPTCHA_LENGTH = 4   # 字符个数
-CAPTCHA_TIMEOUT = 1   # 超时(minutes)
-#加减乘除验证码
+# 字母验证码
+CAPTCHA_IMAGE_SIZE = (160, 60)  # 设置 captcha 图片大小
+CAPTCHA_LENGTH = 4  # 字符个数
+CAPTCHA_TIMEOUT = 1  # 超时(minutes)
+# 加减乘除验证码
 CAPTCHA_OUTPUT_FORMAT = '%(image)s %(text_field)s %(hidden_field)s '
-CAPTCHA_FONT_SIZE = 40 # 字体大小
+CAPTCHA_FONT_SIZE = 40  # 字体大小
 CAPTCHA_FOREGROUND_COLOR = '#0033FF'  # 前景色
 CAPTCHA_BACKGROUND_COLOR = '#F5F7F4'  # 背景色
 CAPTCHA_NOISE_FUNCTIONS = (
-                           # 'captcha.helpers.noise_arcs', # 线
-                           # 'captcha.helpers.noise_dots', # 点
-                           )
+    # 'captcha.helpers.noise_arcs', # 线
+    # 'captcha.helpers.noise_dots', # 点
+)
 # CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.random_char_challenge'
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 
@@ -320,5 +321,10 @@ API_LOG_ENABLE = True
 # API_LOG_METHODS = 'ALL' # ['POST', 'DELETE']
 # API_LOG_METHODS = ['POST', 'DELETE'] # ['POST', 'DELETE']
 BROKER_URL = f'redis://:{REDIS_PASSWORD if REDIS_PASSWORD else ""}@{os.getenv("REDIS_HOST") or REDIS_HOST}:' \
-             f'{REDIS_PORT}/{locals().get("CELERY_DB",2)}'    #Broker使用Redis
-CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'    #Backend数据库
+             f'{REDIS_PORT}/{locals().get("CELERY_DB", 2)}'  # Broker使用Redis
+CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'  # Backend数据库
+# ================================================= #
+# ************** 其他配置  ************** #
+# ================================================= #
+# 接口权限
+INTERFACE_PERMISSION = {locals().get("INTERFACE_PERMISSION", False)}

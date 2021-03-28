@@ -10,7 +10,6 @@ from django.utils import six
 from mongoengine.queryset import visitor
 from rest_framework.filters import BaseFilterBackend, SearchFilter, OrderingFilter
 
-from ..permission.models import Dept
 from ..utils.model_util import get_dept
 
 logger = logging.getLogger(__name__)
@@ -119,7 +118,7 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
             return queryset.none()
 
         # 1. 判断过滤的数据是否有创建人所在部门 "dept_belong_id" 字段
-        if not hasattr(queryset.model, 'dept_belong_id'):
+        if not getattr(queryset.model, 'dept_belong_id', None):
             return queryset
 
         # 2. 如果用户没有关联角色则返回本部门数据
@@ -138,7 +137,7 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
 
         # 4. 只为仅本人数据权限时只返回过滤本人数据，并且部门为自己本部门(考虑到用户会变部门，只能看当前用户所在的部门数据)
         if dataScope_list == ['5']:
-            return queryset.filter(creator=request.user, dept_belong_id=request.user.dept_id)
+            return queryset.filter(creator=request.user, dept_belong_id=user_dept_id)
 
         # 5. 自定数据权限 获取部门，根据部门过滤
         dept_list = []
@@ -148,6 +147,5 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
             elif ele == '3':
                 dept_list.append(user_dept_id)
             elif ele == '4':
-                dept_list.extend(get_dept(user_dept_id,))
+                dept_list.extend(get_dept(user_dept_id, ))
         return queryset.filter(dept_belong_id__in=list(set(dept_list)))
-

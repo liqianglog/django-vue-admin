@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from django.contrib.auth.models import UserManager, AbstractUser
+from django.core.cache import cache
 from django.db.models import IntegerField, ForeignKey, CharField, TextField, ManyToManyField, CASCADE
 
 from ...op_drf.fields import CreateDateTimeField, UpdateDateTimeField
@@ -28,6 +29,29 @@ class UserProfile(AbstractUser):
     create_datetime = CreateDateTimeField()
     update_datetime = UpdateDateTimeField()
 
+    @property
+    def get_user_interface_dict(self):
+        interface_dict = cache.get(f'permission_interface_dict{self.username}', {})
+        if not interface_dict:
+            for ele in self.role.filter(status='1', menu__status='1').values('menu__interface_path',
+                                                                             'menu__interface_method').distinct():
+                interface_path = ele.get('menu__interface_path')
+                if interface_path is None or interface_path == '':
+                    continue
+                if ele.get('menu__interface_method') in interface_dict:
+                    interface_dict[ele.get('menu__interface_method', '')].append(interface_path)
+                else:
+                    interface_dict[ele.get('menu__interface_method', '')] = [interface_path]
+            cache.set(f'permission_interface_dict_{self.username}', interface_dict, 84600)
+        return interface_dict
+
+    @property
+    def delete_cache(self):
+        """
+        清空缓存中的接口列表
+        :return:
+        """
+        return cache.delete(f'permission_interface_dict_{self.username}')
     class Meta:
         verbose_name = '用户管理'
         verbose_name_plural = verbose_name
