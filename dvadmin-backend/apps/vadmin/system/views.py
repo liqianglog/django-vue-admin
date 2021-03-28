@@ -74,7 +74,7 @@ class DictDetailsModelViewSet(CustomModelViewSet):
         if not dict_details_dic:
             queryset = self.filter_queryset(self.get_queryset())
             queryset_dic = queryset.order_by('sort').values('dict_data__dictType', 'dictLabel', 'dictValue',
-                                                                       'is_default')
+                                                            'is_default')
             for ele in queryset_dic:
                 dictType = ele.pop('dict_data__dictType')
                 if dictType in dict_details_dic:

@@ -95,7 +95,7 @@ class DeptTreeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dept
-        fields = ('id', 'label', 'parentId','status')
+        fields = ('id', 'label', 'parentId', 'status')
 
 
 # ================================================= #
