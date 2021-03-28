@@ -87,11 +87,9 @@ class CommonPermission(CustomPermission):
         return int(instance.dept_belong_id) in list(set(dept_list))
 
     def has_permission(self, request: Request, view: APIView):
-        """判断是否为演示模式"""
         return True
 
     def has_object_permission(self, request: Request, view: APIView, instance):
         self.message = f"没有此数据操作权限!"
         res = self.check_queryset(request, instance)
-        print(res)
         return res

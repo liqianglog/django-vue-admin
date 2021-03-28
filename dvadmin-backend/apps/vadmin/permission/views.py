@@ -25,6 +25,7 @@ class GetUserProfileView(APIView):
         user_dict = UserProfileSerializer(request.user).data
         permissions_list = ['*:*:*'] if user_dict.get('admin') else Menu.objects.filter(
             role__userprofile=request.user).values_list('perms', flat=True)
+        delete_cache = request.user.delete_cache
         return SuccessResponse({
             'permissions': [ele for ele in permissions_list if ele],
             'roles': Role.objects.filter(userprofile=request.user).values_list('roleKey', flat=True),

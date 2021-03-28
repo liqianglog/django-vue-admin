@@ -37,6 +37,10 @@ class MenuCreateUpdateSerializer(CustomModelSerializer):
         #         raise APIException(message=f'仅Manger能创建/更新角色为公共角色')
         return super().validate(attrs)
 
+    def save(self, **kwargs):
+        Menu.delete_cache()
+        return super().save(**kwargs)
+
     class Meta:
         model = Menu
         fields = '__all__'
@@ -91,7 +95,7 @@ class DeptTreeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dept
-        fields = ('id', 'label', 'parentId','status')
+        fields = ('id', 'label', 'parentId', 'status')
 
 
 # ================================================= #

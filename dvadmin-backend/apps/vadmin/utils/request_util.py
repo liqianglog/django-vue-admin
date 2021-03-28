@@ -8,9 +8,9 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
 from django.urls.resolvers import ResolverMatch
-from rest_framework.authentication import BaseAuthentication
-from rest_framework.settings import api_settings as drf_settings
 from user_agents import parse
+
+from apps.vadmin.utils.authentication import OpAuthJwtAuthentication
 
 logger = logging.getLogger(__name__)
 
@@ -26,18 +26,8 @@ def get_request_user(request, authenticate=True):
     user: AbstractBaseUser = getattr(request, 'user', None)
     if user and user.is_authenticated:
         return user
-    authentication: BaseAuthentication = None
-    for authentication_class in drf_settings.DEFAULT_AUTHENTICATION_CLASSES:
-        try:
-            authentication = authentication_class()
-            user_auth_tuple = authentication.authenticate(request)
-            if user_auth_tuple is not None:
-                user, token = user_auth_tuple
-                if authenticate:
-                    request.user = user
-                return user
-        except Exception:
-            pass
+    user, tokrn = OpAuthJwtAuthentication().authenticate(request)
+    print(22, user)
     return user or AnonymousUser()
 
 
@@ -127,9 +117,11 @@ def get_request_canonical_path(request, *args, **kwargs):
     for value in resolver_match.args:
         path = path.replace(f"/{value}", "/{id}")
     for key, value in resolver_match.kwargs.items():
-        path = path.replace(f"/{value}", f"/{{{key}}}")
         if key == 'pk':
-            pass
+            path = path.replace(f"/{value}", f"/{{id}}")
+            continue
+        path = path.replace(f"/{value}", f"/{{{key}}}")
+
     return path
 
 
