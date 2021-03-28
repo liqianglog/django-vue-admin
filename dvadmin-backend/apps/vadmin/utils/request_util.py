@@ -26,7 +26,10 @@ def get_request_user(request, authenticate=True):
     user: AbstractBaseUser = getattr(request, 'user', None)
     if user and user.is_authenticated:
         return user
-    user, tokrn = OpAuthJwtAuthentication().authenticate(request)
+    try:
+        user, tokrn = OpAuthJwtAuthentication().authenticate(request)
+    except Exception as e:
+        pass
     return user or AnonymousUser()
 
 
