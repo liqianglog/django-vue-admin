@@ -27,7 +27,6 @@ def get_request_user(request, authenticate=True):
     if user and user.is_authenticated:
         return user
     user, tokrn = OpAuthJwtAuthentication().authenticate(request)
-    print(22, user)
     return user or AnonymousUser()
 
 
