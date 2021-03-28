@@ -25,25 +25,6 @@ services:
         npm run build:prod
 
 
-  dvadmin-doc:
-    container_name: dvadmin-doc
-    build:
-      context: ./
-      dockerfile: ./docker_env/vue-doc/Dockerfile
-    environment:
-      TZ: Asia/Shanghai
-    volumes:
-      - "./dvadmin-doc:/dvadmin-doc"
-    command:
-      - /bin/bash
-      - -c
-      - |
-        cd /dvadmin-doc
-        npm install --registry=https://registry.npm.taobao.org
-        rm -rf /dvadmin-doc/dist
-        npm run docs:build
-
-
   dvadmin-redis:
     image: redis:latest
     container_name: dvadmin-redis
@@ -134,32 +115,3 @@ services:
     restart: always
     networks:
       - dvadmin_net
-
-
-  dvadmin-nginx:
-    image: nginx:latest
-    container_name: dvadmin-nginx
-    # build: ./docker_env/nginx
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    expose:
-      - "80"
-      - "443"
-    volumes:
-      - ./docker_env/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./docker_env/nginx/sites-enabled:/etc/nginx/sites-enabled
-      - ./docker_env/nginx/keys:/nginx/keys
-      - ./dvadmin-backend:/dvadmin-backend
-      - ./dvadmin-doc:/dvadmin-doc
-      - ./dvadmin-ui:/dvadmin-ui
-      - ./logs/nginx:/var/log/nginx
-    depends_on:
-      - dvadmin-django
-    networks:
-      - dvadmin_net
-
-networks:
-  dvadmin_net:
-    driver: bridge
