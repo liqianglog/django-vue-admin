@@ -37,6 +37,10 @@ class MenuCreateUpdateSerializer(CustomModelSerializer):
         #         raise APIException(message=f'仅Manger能创建/更新角色为公共角色')
         return super().validate(attrs)
 
+    def save(self, **kwargs):
+        Menu.delete_cache()
+        return super().save(**kwargs)
+
     class Meta:
         model = Menu
         fields = '__all__'
@@ -91,7 +95,7 @@ class DeptTreeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dept
-        fields = ('id', 'label', 'parentId')
+        fields = ('id', 'label', 'parentId', 'status')
 
 
 # ================================================= #
@@ -216,7 +220,7 @@ class UserProfileSerializer(CustomModelSerializer):
     unread_msg_count = serializers.SerializerMethodField(read_only=True)
 
     def get_admin(self, obj: UserProfile):
-        role_list = obj.role.all().values_list('admin', flat=True)
+        role_list = obj.role.filter(status='1').values_list('admin', flat=True)
         if True in list(set(role_list)):
             return True
         return False
@@ -261,7 +265,7 @@ class UserProfileCreateUpdateSerializer(CustomModelSerializer):
                                      })
 
     def get_admin(self, obj: UserProfile):
-        role_list = obj.role.all().values_list('admin', flat=True)
+        role_list = obj.role.filter(status='1').values_list('admin', flat=True)
         if True in list(set(role_list)):
             return True
         return False

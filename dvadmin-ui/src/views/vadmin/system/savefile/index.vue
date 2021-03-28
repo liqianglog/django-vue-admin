@@ -14,7 +14,7 @@
       <el-form-item label="文件类型" prop="type">
         <el-input
           v-model="queryParams.type"
-          placeholder="请输入文件类型(待完善)"
+          placeholder="请输入文件类型"
           clearable
           size="small"
           style="width: 240px"
@@ -72,8 +72,33 @@
       <el-table-column label="文件类型" width="150" align="center" prop="type"/>
       <el-table-column label="文件大小" width="90" align="center" prop="size"/>
       <el-table-column label="存储位置" align="center" prop="address"/>
-      <el-table-column label="文件本地地址" align="center" prop="file" :show-overflow-tooltip="true"/>
-      <el-table-column label="OSS地址" align="center" prop="oss_url" :show-overflow-tooltip="true"/>
+      <el-table-column label="文件来源" align="center" prop="source"/>
+      <el-table-column label="文件本地地址" align="center" prop="file" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-document-copy"
+            @click="CopyFileUrl(scope.row.file)"
+            v-if="scope.row.file"
+          ></el-button>
+          &nbsp;
+          <span>{{ scope.row.file }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="OSS地址" align="center" prop="oss_url" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-document-copy"
+            @click="CopyFileUrl(scope.row.oss_url)"
+            v-if="scope.row.oss_url"
+          ></el-button>
+          &nbsp;
+          <span>{{ scope.row.oss_url }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" prop="create_datetime" width="160">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.create_datetime) }}</span>
@@ -218,9 +243,9 @@
           type: "warning"
         }).then(function () {
           return clearSaveFile();
-        }).then(() => {
+        }).then((values) => {
           this.getList();
-          this.msgSuccess("删除成功");
+          this.msgSuccess(values.msg);
         })
       },
       /** 完成按钮 */
@@ -229,6 +254,17 @@
         this.open = false;
         this.$refs.saveFile.fileList = []
       },
+      CopyFileUrl(values){
+        const input = document.createElement('input');
+        document.body.appendChild(input);
+        input.setAttribute('value', values);
+        input.select();
+        if (document.execCommand('copy')) {
+          document.execCommand('copy');
+          this.msgSuccess("复制成功");
+        }
+        document.body.removeChild(input);
+      }
     }
 
   }

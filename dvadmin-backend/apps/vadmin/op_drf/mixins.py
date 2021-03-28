@@ -320,12 +320,13 @@ class ImportSerializerMixin:
         updateSupport = request.data.get('updateSupport')
         # 从excel中组织对应的数据结构，然后使用序列化器保存
         data = excel_to_data(request.data.get('file_url'), self.import_field_data)
-        unique_list = [ele.attname for ele in self.get_queryset().model._meta.get_fields() if
+        queryset = self.filter_queryset(self.get_queryset())
+        unique_list = [ele.attname for ele in queryset.model._meta.get_fields() if
                        hasattr(ele, 'unique') and ele.unique == True]
         for ele in data:
             # 获取 unique 字段
             filter_dic = {i: ele.get(i) for i in list(set(self.import_field_data.keys()) & set(unique_list))}
-            instance = self.get_queryset().filter(**filter_dic).first()
+            instance = queryset.filter(**filter_dic).first()
             if instance and not updateSupport:
                 continue
             if not filter_dic:
@@ -357,6 +358,7 @@ class ExportSerializerMixin:
                 "'%s' 请配置对应的导出模板字段。"
                 % self.__class__.__name__
         )
-        data = self.export_serializer_class(self.get_queryset(), many=True).data
+        queryset = self.filter_queryset(self.get_queryset())
+        data = self.export_serializer_class(queryset, many=True).data
         return SuccessResponse(export_excel_save_model(request, self.export_field_data, data,
-                                                       f'导出{get_verbose_name(self.get_queryset())}.xls'))
+                                                       f'导出{get_verbose_name(queryset)}.xls'))

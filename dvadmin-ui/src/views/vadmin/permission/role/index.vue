@@ -440,7 +440,7 @@ export default {
         roleName: undefined,
         roleKey: undefined,
         roleSort: 0,
-        status: "0",
+        status: this.selectDictDefault(this.statusOptions),
         menu: [],
         dept: [],
         menuCheckStrictly: true,

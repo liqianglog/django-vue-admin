@@ -401,16 +401,16 @@
           name: undefined,
           icon: undefined,
           web_path: undefined,
-          menuType: "0",
+          menuType: this.selectDictDefault(this.menuTypeOptions),
           orderNum: undefined,
           component_path: undefined,
           interface_path: undefined,
           perms: undefined,
-          interface_method: 'GET',
+          interface_method: this.selectDictDefault(this.interfaceMethodOptions),
           isFrame: "1",
           isCache: "1",
-          visible: "1",
-          status: "1"
+          visible: this.selectDictDefault(this.visibleOptions),
+          status: this.selectDictDefault(this.statusOptions)
         };
         this.resetForm("form");
       },

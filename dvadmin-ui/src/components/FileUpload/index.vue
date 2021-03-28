@@ -39,9 +39,9 @@
 </template>
 
 <script>
-import { getToken } from "@/utils/auth";
+  import {getToken} from "@/utils/auth";
 
-export default {
+  export default {
   props: {
     // 值
     value: [String, Object, Array],
@@ -135,8 +135,12 @@ export default {
     },
     // 上传成功回调
     handleUploadSuccess(res, file) {
-      this.$message.success("上传成功");
-      this.$emit("input", res.url);
+      if (res.code === 200) {
+        this.$message.success("上传成功");
+        this.$emit("input", res.data.file);
+      } else {
+        this.$message.error(res.msg);
+      }
     },
     // 删除文件
     handleDelete(index) {

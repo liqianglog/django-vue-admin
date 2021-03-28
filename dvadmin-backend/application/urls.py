@@ -22,7 +22,7 @@ from django.urls import re_path, include
 from django.views.static import serve
 from rest_framework.views import APIView
 
-from apps.vadmin.op_drf.response import SuccessResponse
+from vadmin.utils.response import SuccessResponse
 
 
 class CaptchaRefresh(APIView):

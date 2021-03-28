@@ -1,6 +1,6 @@
 # Django-Vue-Admin
 
-[![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitee.com/liqianglog/django-vue-admin/blob/master/LICENSE) [![img](https://img.shields.io/pypi/v/django-simpleui.svg)](https://pypi.org/project/django-simpleui/#history) [![img](https://img.shields.io/badge/python-%3E=3.6.x-green.svg)](https://python.org/)  ![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-2.2-blue)[![img](https://img.shields.io/badge/node-%3E%3D%2012.0.0-brightgreen)](https://nodejs.org/zh-cn/download/releases/)[![img](https://img.shields.io/pypi/dm/django-simpleui.svg)](https://pypi.org/project/django-simpleui/)
+[![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitee.com/liqianglog/django-vue-admin/blob/master/LICENSE) [![img](https://img.shields.io/pypi/v/django-simpleui.svg)](https://pypi.org/project/django-simpleui/#history) [![img](https://img.shields.io/badge/python-%3E=3.6.x-green.svg)](https://python.org/)  ![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-2.2-blue)![img](https://img.shields.io/badge/node-%3E%3D%2012.0.0-brightgreen)
 
 
 
@@ -68,9 +68,6 @@ git clone https://gitee.com/liqianglog/django-vue-admin.git
 cd dvadmin-ui
 
 # 安装依赖
-npm install
-
-# 建议不要直接使用cnpm安装依赖，会有各种诡异的 bug。可以通过如下操作解决 npm 下载速度慢的问题。
 npm install --registry=https://registry.npm.taobao.org
 
 # 启动服务
@@ -95,7 +92,12 @@ npm run build:prod
 ~~~bash
 1. 进入项目目录 cd dvadmin-backend
 2. 在项目根目录中，复制 ./conf/env.example.py 文件为一份新的到 ./conf 文件夹下，并重命名为 env.py
+
 3. 在 env.py 中配置数据库信息
+	mysql数据库版本建议:5.7以上
+	mysql数据库字符集：utf8mb4
+	mysql数据库排序规则：utf8mb4_0900_ai_ci
+	
 4. 安装依赖环境
 	pip3 install -r requirements.txt
 5. 执行迁移命令：
@@ -104,10 +106,13 @@ npm run build:prod
 6. 初始化数据
 	python3 manage.py init
 7. 启动项目
-	python3 manage.py runserver 0.0.0.0:8000
+	python3 manage.py runserver 127.0.0.1:8000
 
 定时任务启动命令：
 	celery -A application  worker -B --loglevel=info
+注：
+	Windows 运行celery 需要安装 pip install eventlet
+	celery -A application  worker -P eventlet --loglevel=info
 
 初始账号：admin 密码：123456
 
