@@ -85,6 +85,8 @@ services:
     volumes:
       - ./dvadmin-backend:/dvadmin-backend
       - ./logs/log:/var/log
+    env_file:
+      - ./.env
     ports:
       - "8000:8000"
     expose:
