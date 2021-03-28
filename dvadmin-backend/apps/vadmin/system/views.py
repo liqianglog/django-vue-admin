@@ -218,11 +218,12 @@ class MessagePushModelViewSet(CustomModelViewSet):
         is_read = request.query_params.get('is_read', None)
         if is_read:
             if is_read == 'False':
-                queryset = queryset.filter(Q(messagepushuser_message_push__is_read=is_read) | Q(user=None))
-            else:
-                queryset = queryset.filter(messagepushuser_message_push__is_read=is_read)
-
-        queryset = queryset.filter(is_reviewed=True)
+                queryset = queryset.exclude(Q(messagepushuser_message_push__is_read=True),
+                                            Q(messagepushuser_message_push__user=request.user))
+            elif is_read == 'True':
+                queryset = queryset.filter(messagepushuser_message_push__is_read=True,
+                                           messagepushuser_message_push__user=request.user)
+        queryset = queryset.filter(is_reviewed=True).distinct()
         page = self.paginate_queryset(queryset)
         if hasattr(self, 'handle_logging'):
             self.handle_logging(request, *args, **kwargs)
