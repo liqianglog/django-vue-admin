@@ -130,7 +130,7 @@ class PermissionModeMiddleware(MiddlewareMixin):
         if user.is_superuser or (hasattr(user, 'role') and user.role.filter(status='1', admin=True).count()):
             return 20
         # (3)user的角色有该接口权限, 是:通过, 否:不通过
-        if view_path in user.get_user_interface_dict:
+        if view_path in user.get_user_interface_dict.get(method, []):
             return 30
         return -10
 
