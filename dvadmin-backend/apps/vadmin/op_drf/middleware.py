@@ -91,7 +91,7 @@ class PermissionModeMiddleware(MiddlewareMixin):
         :return:
         """
         white_list = ['/admin/logout/', '/admin/login/']
-        if os.getenv('DEMO_ENV') and not request.method == 'GET' and request.path not in white_list:
+        if os.getenv('DEMO_ENV') and not request.method in ['GET','OPTIONS'] and request.path not in white_list:
             return ErrorJsonResponse(data={}, msg=f'演示模式，不允许操作!')
 
     def has_interface_permission(self, request, method, view_path, user=None):
