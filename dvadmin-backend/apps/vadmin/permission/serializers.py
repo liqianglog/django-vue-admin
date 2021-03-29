@@ -226,8 +226,8 @@ class UserProfileSerializer(CustomModelSerializer):
         return False
 
     def get_unread_msg_count(self, obj: UserProfile):
-        return MessagePush.objects.filter(status='2').exclude(user=obj,
-                                                              messagepushuser_message_push__is_read=True).count()
+        return MessagePush.objects.filter(status='2').exclude(messagepushuser_message_push__is_read=True,
+                                                              messagepushuser_message_push__user=obj).count()
 
     class Meta:
         model = UserProfile
