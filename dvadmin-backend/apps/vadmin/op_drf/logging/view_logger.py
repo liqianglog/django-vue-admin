@@ -18,13 +18,6 @@ class ViewLogger(object):
         self.request = request
         self.model = None
         self.log_prefix: str = ''
-        if self.view and hasattr(self.view.get_queryset(), 'model'):
-            self.model: Model = self.view.get_queryset().model
-        elif self.view and hasattr(self.view.get_serializer(), 'Meta') and hasattr(self.view.get_serializer().Meta,
-                                                                                   'model'):
-            self.model: Model = self.view.get_serializer().Meta.model
-        if self.model:
-            request.session['model_name'] = str(getattr(self.model, '_meta').verbose_name)
 
     def handle(self, request: Request, *args, **kwargs):
         pass

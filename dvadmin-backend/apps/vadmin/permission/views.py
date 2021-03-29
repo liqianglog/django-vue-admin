@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from .permissions import CommonPermission
+from .permissions import CommonPermission, DeptDestroyPermission
 from ..op_drf.filters import DataLevelPermissionsFilter
 from ..op_drf.viewsets import CustomModelViewSet
 from ..permission.filters import MenuFilter, DeptFilter, PostFilter, RoleFilter, UserProfileFilter
@@ -129,7 +129,7 @@ class DeptModelViewSet(CustomModelViewSet):
     filter_class = DeptFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
     update_extra_permission_classes = (CommonPermission,)
-    destroy_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission, DeptDestroyPermission)
     create_extra_permission_classes = (CommonPermission,)
     search_fields = ('deptName',)
     ordering = 'create_datetime'  # 默认排序

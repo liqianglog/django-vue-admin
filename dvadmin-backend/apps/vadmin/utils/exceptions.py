@@ -65,8 +65,6 @@ def op_exception_handler(ex, context):
     """
     msg = ''
     code = '201'
-    request = context.get('request')
-    request.session['model_name'] = str(get_verbose_name(view=context.get('view')))
 
     if isinstance(ex, AuthenticationFailed):
         code = 401

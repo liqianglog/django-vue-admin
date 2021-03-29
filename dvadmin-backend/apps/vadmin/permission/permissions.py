@@ -93,3 +93,23 @@ class CommonPermission(CustomPermission):
         self.message = f"没有此数据操作权限!"
         res = self.check_queryset(request, instance)
         return res
+
+
+class DeptDestroyPermission(CustomPermission):
+    """
+    部门删除权限校验：判断部门下是否有用户存在，存在不可删除
+    """
+    message = '没有有操作权限'
+
+    def has_permission(self, request: Request, view: APIView):
+        return True
+
+    def check_queryset(self, request, instance):
+        if instance.values_list('userprofile', flat=True):
+            self.message = "该部门下有关联用户，无法删除！"
+            return False
+        return True
+
+    def has_object_permission(self, request: Request, view: APIView, instance):
+        res = self.check_queryset(request, instance)
+        return res
