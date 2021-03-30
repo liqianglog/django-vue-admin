@@ -70,7 +70,7 @@ class ApiLoggingMiddleware(MiddlewareMixin):
         log.save()
 
     def process_view(self, request, view_func, view_args, view_kwargs):
-        if view_func.cls and hasattr(view_func.cls, 'queryset'):
+        if hasattr(view_func, 'cls') and hasattr(view_func.cls, 'queryset'):
             request.session['model_name'] = get_verbose_name(view_func.cls.queryset)
         return
 
