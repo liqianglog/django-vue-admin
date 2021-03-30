@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.db.models import Q
 from rest_framework.request import Request
+from rest_framework.views import APIView
 
 from .models import LoginInfor, OperationLog, CeleryLog
 from ..op_drf.filters import DataLevelPermissionsFilter
@@ -23,6 +24,7 @@ from ..system.serializers import DictDataSerializer, DictDataCreateUpdateSeriali
 from ..utils.export_excel import export_excel_save_model
 from ..utils.file_util import get_all_files, remove_empty_dir, delete_files
 from ..utils.response import SuccessResponse
+from ..utils.system_info_utils import get_memory_used_percent, get_cpu_used_percent, get_disk_used_percent
 
 
 class DictDataModelViewSet(CustomModelViewSet):
@@ -328,3 +330,21 @@ class CeleryLogModelViewSet(CustomModelViewSet):
         """
         self.get_queryset().delete()
         return SuccessResponse(msg="清空成功")
+
+
+class SystemInfoApiView(APIView):
+    """
+    系统服务监控视图
+    """
+
+    def get(self, request, *args, **kwargs):
+        # 获取内存使用率
+        memory_used_percent = get_memory_used_percent()
+        # 获取cpu使用率
+        cpu_used_percent = get_cpu_used_percent()
+        # 获取硬盘使用率
+        disk_used_percent = get_disk_used_percent()
+        return SuccessResponse(data={"memory_used_percent": memory_used_percent,
+                                     "cpu_used_percent": cpu_used_percent,
+                                     "disk_used_percent": disk_used_percent
+                                     })
