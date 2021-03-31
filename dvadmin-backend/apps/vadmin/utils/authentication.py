@@ -12,8 +12,8 @@ from django.utils.translation import ugettext as _
 from rest_framework import exceptions
 from rest_framework_jwt.utils import jwt_decode_handler
 
-from .decorators import exceptionHandler
 from .jwt_util import jwt_get_session_id
+from ..permission.models.users import UserProfile
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -37,6 +37,8 @@ class OpAuthJwtAuthentication(object):
             msg = _('Error decoding signature.')
             raise exceptions.AuthenticationFailed(msg)
         except jwt.InvalidTokenError:
+            raise exceptions.AuthenticationFailed()
+        except UserProfile.DoesNotExist:
             raise exceptions.AuthenticationFailed()
 
         username = payload.get('username', None)

@@ -161,7 +161,7 @@
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                   <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-for="role in scope.row.role">{{role.roleName}}</el-dropdown-item>
+                    <el-dropdown-item v-for="(role,index) in scope.row.role" :key="index">{{role.roleName}}</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </template>
@@ -648,6 +648,7 @@
         this.$refs['form'].validate(valid => {
           if (valid) {
             if (this.form.id != undefined) {
+              this.form.creator = undefined
               updateUser(this.form).then(response => {
                 this.msgSuccess('修改成功')
                 this.open = false

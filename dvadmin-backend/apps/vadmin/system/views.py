@@ -200,7 +200,7 @@ class MessagePushModelViewSet(CustomModelViewSet):
     serializer_class = MessagePushSerializer
     create_serializer_class = MessagePushCreateUpdateSerializer
     update_serializer_class = MessagePushCreateUpdateSerializer
-    extra_filter_backends = [DataLevelPermissionsFilter]
+    # extra_filter_backends = [DataLevelPermissionsFilter]
     update_extra_permission_classes = (CommonPermission,)
     destroy_extra_permission_classes = (CommonPermission,)
     create_extra_permission_classes = (CommonPermission,)

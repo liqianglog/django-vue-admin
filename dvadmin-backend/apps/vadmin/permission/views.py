@@ -48,7 +48,10 @@ class GetRouters(APIView):
         return dict
 
     def get(self, request, format=None):
-        menus = Menu.objects.filter(role__userprofile=request.user) \
+        kwargs = {}
+        if not request.user.is_superuser:
+            kwargs['role__userprofile'] = request.user
+        menus = Menu.objects.filter(**kwargs) \
             .exclude(menuType='2').values('id', 'name', 'web_path', 'visible', 'status', 'isFrame', 'component_path',
                                           'icon', 'parentId', 'orderNum', 'isCache').distinct()
         data = []
@@ -359,7 +362,7 @@ class UserProfileModelViewSet(CustomModelViewSet):
         :return:
         """
         instance = self.queryset.get(id=request.user.id)
-        instance.mobile = request.data.get('newPassword', None)
+        instance.password = request.data.get('newPassword', None)
         if not authenticate(username=request.user.username, password=request.data.get('oldPassword', None)):
             return ErrorResponse(msg='旧密码不正确！')
         instance.set_password(request.data.get('newPassword'))

@@ -103,9 +103,11 @@
         // 修改通知查询状态
         if (this.badgeType === "danger") {
           updateIsRead(this.showingMsgItem).then(response => {
-            store.getters.unread_msg_count
-            this.open = false;
-            this.getList();
+            if(response.code === 200){
+              store.commit('SET_UNREAD_MSG_COUNT', store.getters.unread_msg_count - 1);
+              this.open = false;
+              this.getList();
+            }
           });
         }
       }
