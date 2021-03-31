@@ -12,26 +12,25 @@ Django-Vue-Admin 是一套全部开源的快速开发平台，毫无保留给个
 * 后端采用Python语言Django框架。
 * 权限认证使用Jwt，支持多终端认证系统。
 * 支持加载动态权限菜单，多方式轻松权限控制。
-* ~~高效率开发，使用代码生成器可以一键生成前后端代码。~~
-* 特别鸣谢：[RuoYi](https://gitee.com/y_project/RuoYi-Vue) ，[Vue-Element-Admin](https://github.com/PanJiaChen/vue-element-admin)，[eladmin-web](https://gitee.com/elunez/eladmin-web?_from=gitee_search)，[Gin-Vue-Admin](https://www.gin-vue-admin.com/)。
+* 特别鸣谢：<u>[Gin-Vue-Admin](https://www.gin-vue-admin.com/)</u>，[RuoYi](https://gitee.com/y_project/RuoYi-Vue) ，[Vue-Element-Admin](https://github.com/PanJiaChen/vue-element-admin)，[eladmin-web](https://gitee.com/elunez/eladmin-web?_from=gitee_search)。
 
 ## QQ群
 
 - QQ群号：812482043
 
-- 由于项目正在启步阶段，第一版预计3月底发，后序会慢慢维护其他版本，有什么不到位的请大家担待~
+- 二维码
 
   <img src='https://gitee.com/liqianglog/django-vue-admin/raw/master/dvadmin-ui/src/assets/images/qq.jpg' width='200'>
 
 ## 源码地址
 
-gitee地址：[https://gitee.com/liqianglog/django-vue-admin](https://gitee.com/liqianglog/django-vue-admin)
+gitee地址(主推)：[https://gitee.com/liqianglog/django-vue-admin](https://gitee.com/liqianglog/django-vue-admin)
 
 github地址：[https://github.com/liqianglog/django-vue-admin](https://github.com/liqianglog/django-vue-admin)
 
 ## 内置功能
 
-##### 预计3月底发布v1.0正式版本，个别功能开发中 [版本功能说明](https://gitee.com/liqianglog/django-vue-admin/wikis/releaseNote?sort_id=3615540)
+##### 后期版本 [版本功能说明](https://gitee.com/liqianglog/django-vue-admin/wikis/releaseNote?sort_id=3615540)
 
 1.  用户管理：用户是系统操作者，该功能主要完成系统用户配置。
 2.  部门管理：配置系统组织机构（公司、部门、小组），树结构展现支持数据权限。
