@@ -14,7 +14,7 @@
         <div class="right-menu-item hover-effect">
           <router-link to="/user/msg">
             <i class="el-icon-message-solid badge-item-icon"></i>
-            <el-badge :value="count" :max="99" style="margin-left: -4px;" v-if="count">
+            <el-badge :value="unread_msg_count" :max="99" style="margin-left: -4px;" v-if="unread_msg_count">
           </el-badge>
           </router-link>
         </div>
@@ -81,11 +81,11 @@ export default {
   },
   data() {
     return {
-      count: store.getters.unread_msg_count,
+      count: store.unread_msg_count,
     };
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar", "device"]),
+    ...mapGetters(["sidebar", "avatar", "device", "unread_msg_count"]),
     setting: {
       get() {
         return this.$store.state.settings.showSettings;

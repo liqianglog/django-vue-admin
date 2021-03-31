@@ -202,7 +202,7 @@ class MessagePushModelViewSet(CustomModelViewSet):
     serializer_class = MessagePushSerializer
     create_serializer_class = MessagePushCreateUpdateSerializer
     update_serializer_class = MessagePushCreateUpdateSerializer
-    extra_filter_backends = [DataLevelPermissionsFilter]
+    # extra_filter_backends = [DataLevelPermissionsFilter]
     update_extra_permission_classes = (CommonPermission,)
     destroy_extra_permission_classes = (CommonPermission,)
     create_extra_permission_classes = (CommonPermission,)
@@ -217,6 +217,7 @@ class MessagePushModelViewSet(CustomModelViewSet):
         获取用户自己消息列表
         """
         queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.filter(status=2)
         is_read = request.query_params.get('is_read', None)
         if is_read:
             if is_read == 'False':

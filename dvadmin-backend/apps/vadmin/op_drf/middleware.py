@@ -1,6 +1,7 @@
 """
 django中间件
 """
+import json
 import logging
 import os
 
@@ -11,7 +12,7 @@ from django.utils.deprecation import MiddlewareMixin
 from apps.vadmin.permission.models import Menu
 from apps.vadmin.system.models import OperationLog
 from ..utils.request_util import get_request_ip, get_request_data, get_request_path, get_browser, get_os, \
-    get_login_location, get_request_canonical_path, get_request_user
+    get_login_location, get_request_canonical_path, get_request_user, get_verbose_name
 from ..utils.response import ErrorJsonResponse
 
 logger = logging.getLogger(__name__)
@@ -42,9 +43,16 @@ class ApiLoggingMiddleware(MiddlewareMixin):
             body['password'] = '*' * len(body['password'])
         if not hasattr(response, 'data') or not isinstance(response.data, dict):
             response.data = {}
+        if not response.data and response.content:
+            try:
+                content = json.loads(response.content.decode())
+                response.data = content if isinstance(content, dict) else {}
+            except:
+                pass
+        user = get_request_user(request)
         info = {
             'request_ip': getattr(request, 'request_ip', 'unknown'),
-            'creator': request.user,
+            'creator': user if not isinstance(user, AnonymousUser) else None,
             'dept_belong_id': getattr(request.user, 'dept_id', None),
             'request_method': request.method,
             'request_path': request.request_path,
@@ -58,10 +66,13 @@ class ApiLoggingMiddleware(MiddlewareMixin):
             'json_result': {"code": response.data.get('code'), "msg": response.data.get('msg')},
             'request_modular': request.session.get('model_name'),
         }
-        if isinstance(request.user, AnonymousUser):
-            info['creator'] = None
         log = OperationLog(**info)
         log.save()
+
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        if hasattr(view_func, 'cls') and hasattr(view_func.cls, 'queryset'):
+            request.session['model_name'] = get_verbose_name(view_func.cls.queryset)
+        return
 
     def process_request(self, request):
         self.__handle_request(request)
@@ -85,14 +96,7 @@ class PermissionModeMiddleware(MiddlewareMixin):
     """
 
     def process_request(self, request):
-        """
-        判断环境变量中，是否为演示模式(正常可忽略此判断)
-        :param request:
-        :return:
-        """
-        white_list = ['/admin/logout/', '/admin/login/']
-        if os.getenv('DEMO_ENV') and not request.method == 'GET' and request.path not in white_list:
-            return ErrorJsonResponse(data={}, msg=f'演示模式，不允许操作!')
+        return
 
     def has_interface_permission(self, request, method, view_path, user=None):
         """
@@ -130,18 +134,23 @@ class PermissionModeMiddleware(MiddlewareMixin):
         if user.is_superuser or (hasattr(user, 'role') and user.role.filter(status='1', admin=True).count()):
             return 20
         # (3)user的角色有该接口权限, 是:通过, 否:不通过
-        if view_path in user.get_user_interface_dict:
+        if view_path in user.get_user_interface_dict.get(method, []):
             return 30
         return -10
 
     def process_view(self, request, view_func, view_args, view_kwargs):
+        # 判断环境变量中，是否为演示模式(正常可忽略此判断)
+        white_list = ['/admin/logout/', '/admin/login/']
+        if os.getenv('DEMO_ENV') and not request.method in ['GET', 'OPTIONS'] and request.path not in white_list:
+            return ErrorJsonResponse(data={}, msg=f'演示模式，不允许操作!')
+
         if not settings.INTERFACE_PERMISSION:
             return
         user = get_request_user(request)
 
         if user and not isinstance(user, AnonymousUser):
             method = request.method.upper()
-            if method == 'GET': # GET 不设置接口权限
+            if method == 'GET':  # GET 不设置接口权限
                 return
             view_path = get_request_canonical_path(request, *view_args, **view_kwargs)
             auth_code = self.has_interface_permission(request, method, view_path, user)

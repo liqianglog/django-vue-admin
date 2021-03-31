@@ -4,10 +4,10 @@ from django.contrib.auth.models import UserManager, AbstractUser
 from django.core.cache import cache
 from django.db.models import IntegerField, ForeignKey, CharField, TextField, ManyToManyField, CASCADE
 
-from ...op_drf.fields import CreateDateTimeField, UpdateDateTimeField
+from ...op_drf.models import CoreModel
 
 
-class UserProfile(AbstractUser):
+class UserProfile(AbstractUser, CoreModel):
     USER_TYPE_CHOICES = (
         (0, "后台用户"),
         (1, "前台用户"),
@@ -25,9 +25,6 @@ class UserProfile(AbstractUser):
     post = ManyToManyField(to='Post', verbose_name='关联岗位', db_constraint=False)
     role = ManyToManyField(to='Role', verbose_name='关联角色', db_constraint=False)
     dept = ForeignKey(to='Dept', verbose_name='归属部门', on_delete=CASCADE, db_constraint=False, null=True, blank=True)
-    dept_belong_id = CharField(max_length=64, verbose_name="数据归属部门", null=True, blank=True)
-    create_datetime = CreateDateTimeField()
-    update_datetime = UpdateDateTimeField()
 
     @property
     def get_user_interface_dict(self):
@@ -52,6 +49,7 @@ class UserProfile(AbstractUser):
         :return:
         """
         return cache.delete(f'permission_interface_dict_{self.username}')
+
     class Meta:
         verbose_name = '用户管理'
         verbose_name_plural = verbose_name

@@ -54,7 +54,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'vadmin.op_drf.middleware.PermissionModeMiddleware',  # 权限中间件
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -64,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'vadmin.op_drf.middleware.ApiLoggingMiddleware',  # 用于记录API访问日志
+    'vadmin.op_drf.middleware.PermissionModeMiddleware',  # 权限中间件
 ]
 # 允许跨域源
 CORS_ORIGIN_ALLOW_ALL = CORS_ORIGIN_ALLOW_ALL
