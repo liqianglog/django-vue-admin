@@ -359,7 +359,7 @@ class UserProfileModelViewSet(CustomModelViewSet):
         :return:
         """
         instance = self.queryset.get(id=request.user.id)
-        instance.mobile = request.data.get('newPassword', None)
+        instance.password = request.data.get('newPassword', None)
         if not authenticate(username=request.user.username, password=request.data.get('oldPassword', None)):
             return ErrorResponse(msg='旧密码不正确！')
         instance.set_password(request.data.get('newPassword'))
