@@ -23,6 +23,7 @@ services:
         npm install --registry=https://registry.npm.taobao.org
         rm -rf /dvadmin-ui/dist
         npm run build:prod
+        npm run dev
 
 
   dvadmin-redis:
