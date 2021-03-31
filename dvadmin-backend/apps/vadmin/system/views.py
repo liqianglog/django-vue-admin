@@ -215,6 +215,7 @@ class MessagePushModelViewSet(CustomModelViewSet):
         获取用户自己消息列表
         """
         queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.filter(status=2)
         is_read = request.query_params.get('is_read', None)
         if is_read:
             if is_read == 'False':
