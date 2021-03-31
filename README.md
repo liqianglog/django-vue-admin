@@ -118,6 +118,21 @@ npm run build:prod
 后端接口文档地址：http://127.0.0.1:8000/docs/
 ~~~
 
+### docker-compose 运行
+
+~~~shell
+# 先安装docker-compose (自行百度安装),执行此命令等待安装
+docker-compose up
+# 初始化后端数据(第一次执行即可)
+docker exec -ti dvadmin-django bash
+python manage.py init -y
+exit
+
+前端地址：http://127.0.0.1:8080
+后端地址：http://127.0.0.1:8000
+账号：admin 密码：123456
+~~~
+
 
 
 ## 演示图
