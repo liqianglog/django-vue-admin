@@ -48,7 +48,10 @@ class GetRouters(APIView):
         return dict
 
     def get(self, request, format=None):
-        menus = Menu.objects.filter(role__userprofile=request.user) \
+        kwargs = {}
+        if not request.user.is_superuser:
+            kwargs['role__userprofile'] = request.user
+        menus = Menu.objects.filter(**kwargs) \
             .exclude(menuType='2').values('id', 'name', 'web_path', 'visible', 'status', 'isFrame', 'component_path',
                                           'icon', 'parentId', 'orderNum', 'isCache').distinct()
         data = []
