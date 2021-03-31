@@ -26,3 +26,4 @@ xlrd==2.0.1
 coreapi==2.3.3
 user-agents==2.2.0
 eventlet==0.30.2
+psutil==5.8.0
