@@ -41,7 +41,10 @@ class Menu(CoreModel):
         获取所有接口列表
         :return:
         """
-        interface_dict = cache.get('permission_interface_dict', {})
+        try:
+            interface_dict = cache.get('permission_interface_dict', {})
+        except:
+            interface_dict = {}
         if not interface_dict:
             for ele in Menu.objects.filter(~Q(interface_path=''), ~Q(interface_path=None), status='1', ).values(
                     'interface_path', 'interface_method'):
