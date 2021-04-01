@@ -327,4 +327,4 @@ CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'  # Back
 # ************** 其他配置  ************** #
 # ================================================= #
 # 接口权限
-INTERFACE_PERMISSION = {locals().get("INTERFACE_PERMISSION", False)}
+INTERFACE_PERMISSION = locals().get("INTERFACE_PERMISSION", False)

@@ -28,7 +28,7 @@ class UserProfile(AbstractUser, CoreModel):
 
     @property
     def get_user_interface_dict(self):
-        interface_dict = cache.get(f'permission_interface_dict{self.username}', {})
+        interface_dict = cache.get(f'permission_interface_dict_{self.username}', {})
         if not interface_dict:
             for ele in self.role.filter(status='1', menu__status='1').values('menu__interface_path',
                                                                              'menu__interface_method').distinct():
