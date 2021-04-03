@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from ..system.views import DictDataModelViewSet, DictDetailsModelViewSet, \
     ConfigSettingsModelViewSet, SaveFileModelViewSet, MessagePushModelViewSet, LoginInforModelViewSet, \
-    OperationLogModelViewSet, CeleryLogModelViewSet
+    OperationLogModelViewSet, CeleryLogModelViewSet, SystemInfoApiView
 
 router = DefaultRouter()
 router.register(r'dict/type', DictDataModelViewSet)
@@ -20,10 +20,14 @@ urlpatterns = [
     re_path('config/configKey/(?P<pk>.*)/', ConfigSettingsModelViewSet.as_view({'get': 'get_config_key'})),
     # 参数管理导出
     re_path('config/export/', ConfigSettingsModelViewSet.as_view({'get': 'export'})),
+    # 清理参数缓存
+    re_path('config/clearCache/', ConfigSettingsModelViewSet.as_view({'delete': 'clearCache', })),
     # 导出字典管理数据
     re_path('dict/type/export/', DictDataModelViewSet.as_view({'get': 'export'})),
     # 导出字典详情数据
     re_path('dict/data/export/', DictDetailsModelViewSet.as_view({'get': 'export'})),
+    # 清理字典缓存
+    re_path('dict/type/clearCache/', DictDetailsModelViewSet.as_view({'delete': 'clearCache', })),
     # 消息通知导出
     re_path('message/export/', MessagePushModelViewSet.as_view({'get': 'export', })),
     # 用户个人消息列表
@@ -42,5 +46,9 @@ urlpatterns = [
     re_path('celery_log/clean/', CeleryLogModelViewSet.as_view({'delete': 'clean_all', })),
     # 导出定时日志
     re_path('celery_log/export/', CeleryLogModelViewSet.as_view({'get': 'export', })),
+    # 清除废弃文件
+    re_path('clearsavefile/', SaveFileModelViewSet.as_view({'post': 'clearsavefile', })),
+    # 获取系统信息cpu、内存、硬盘
+    re_path('sys/info/', SystemInfoApiView.as_view())
 ]
 urlpatterns += router.urls

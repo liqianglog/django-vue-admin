@@ -20,7 +20,7 @@ export function getConfig(configId) {
 // 根据参数键名查询参数值
 export function getConfigKey(configKey) {
   return request({
-    url: '/admin/system/config/configKey/' + configKey + '/',
+    url: '/admin/system/config/configKey/' + configKey + '/?status=1',
     method: 'get'
   })
 }

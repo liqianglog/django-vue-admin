@@ -1,4 +1,5 @@
-from django.db.models import IntegerField, ForeignKey, CharField, CASCADE
+from django.core.cache import cache
+from django.db.models import IntegerField, ForeignKey, CharField, CASCADE, Q
 
 from ...op_drf.models import CoreModel
 
@@ -33,6 +34,31 @@ class Menu(CoreModel):
     status = CharField(max_length=8, verbose_name="菜单状态")
     visible = CharField(max_length=8, verbose_name="显示状态")
     isCache = CharField(max_length=8, verbose_name="是否缓存")
+
+    @classmethod
+    def get_interface_dict(cls):
+        """
+        获取所有接口列表
+        :return:
+        """
+        interface_dict = cache.get('permission_interface_dict', {})
+        if not interface_dict:
+            for ele in Menu.objects.filter(~Q(interface_path=''), ~Q(interface_path=None), status='1', ).values(
+                    'interface_path', 'interface_method'):
+                if ele.get('interface_method') in interface_dict:
+                    interface_dict[ele.get('interface_method', '')].append(ele.get('interface_path'))
+                else:
+                    interface_dict[ele.get('interface_method', '')] = [ele.get('interface_path')]
+            cache.set('permission_interface_dict', interface_dict, 84600)
+        return interface_dict
+
+    @classmethod
+    def delete_cache(cls):
+        """
+        清空缓存中的接口列表
+        :return:
+        """
+        cache.delete('permission_interface_dict')
 
     class Meta:
         verbose_name = '菜单管理'

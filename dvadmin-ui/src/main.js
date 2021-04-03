@@ -23,6 +23,7 @@ import {
   parseTime,
   resetForm,
   selectDictLabel,
+  selectDictDefault,
   selectDictLabels
 } from "@/utils/ruoyi";
 import Pagination from "@/components/Pagination";
@@ -40,6 +41,7 @@ Vue.prototype.parseTime = parseTime
 Vue.prototype.resetForm = resetForm
 Vue.prototype.addDateRange = addDateRange
 Vue.prototype.selectDictLabel = selectDictLabel
+Vue.prototype.selectDictDefault = selectDictDefault
 Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.getCrontabData = getCrontabData
 Vue.prototype.getIntervalData = getIntervalData

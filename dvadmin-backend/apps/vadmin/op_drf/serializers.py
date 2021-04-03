@@ -20,6 +20,7 @@ class CustomModelSerializer(ModelSerializer):
     # 添加默认时间返回格式
     create_datetime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
     update_datetime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
+    creator_name = serializers.SlugRelatedField(slug_field="username", source="creator", read_only=True)
 
     def __init__(self, instance=None, data=empty, request=None, **kwargs):
         super().__init__(instance, data, **kwargs)

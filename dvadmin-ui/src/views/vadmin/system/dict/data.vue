@@ -79,6 +79,16 @@
           v-hasPermi="['system:dict:type:export:get']"
         >导出</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          plain
+          icon="el-icon-refresh"
+          size="mini"
+          @click="handleClearCache"
+          v-hasPermi="['system:dict:type:clearcache:delete']"
+        >清理缓存</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -181,7 +191,7 @@
 
 <script>
   import {addData, delData, exportData, getData, listData, updateData} from "@/api/vadmin/system/dict/data";
-  import {getType, listType} from "@/api/vadmin/system/dict/type";
+  import {getType, listType, clearCache} from "@/api/vadmin/system/dict/type";
 
   export default {
   name: "Data",
@@ -237,7 +247,6 @@
   },
   created() {
     const dictId = this.$route.params && this.$route.params.dictId;
-    console.log(11111,this.$route.params)
     this.getType(dictId);
     this.getTypeList();
     this.getDicts("sys_normal_disable").then(response => {
@@ -263,7 +272,6 @@
     getList() {
       this.loading = true;
       listData(this.queryParams).then(response => {
-        console.log(1212,response.data.count)
         this.dataList = response.data.results;
         this.total = response.data.count;
         this.loading = false;
@@ -285,7 +293,7 @@
         dictLabel: undefined,
         dictValue: undefined,
         sort: 0,
-        status: "0",
+        status: this.selectDictDefault(this.typeOptions),
         remark: undefined
       };
       this.resetForm("form");
@@ -379,6 +387,12 @@
         }).then(response => {
           this.download(response.data.file_url,response.data.name);
         })
+    },
+    /** 清理缓存按钮操作 */
+    handleClearCache() {
+      clearCache().then(response => {
+        this.msgSuccess("清理成功");
+      });
     }
   }
 };

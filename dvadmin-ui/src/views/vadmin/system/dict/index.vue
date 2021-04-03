@@ -274,7 +274,7 @@ export default {
         id: undefined,
         dictName: undefined,
         dictType: undefined,
-        status: "0",
+        status: this.selectDictDefault(this.statusOptions),
         remark: undefined
       };
       this.resetForm("form");

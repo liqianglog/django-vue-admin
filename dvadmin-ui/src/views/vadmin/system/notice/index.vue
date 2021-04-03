@@ -266,9 +266,9 @@ export default {
       this.form = {
         noticeId: undefined,
         noticeTitle: undefined,
-        noticeType: undefined,
+        noticeType: this.selectDictDefault(this.typeOptions),
         noticeContent: undefined,
-        status: "0"
+        status: this.selectDictDefault(this.statusOptions)
       };
       this.resetForm("form");
     },

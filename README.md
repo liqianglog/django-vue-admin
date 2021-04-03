@@ -1,6 +1,6 @@
 # Django-Vue-Admin
 
-[![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitee.com/liqianglog/django-vue-admin/blob/master/LICENSE) [![img](https://img.shields.io/pypi/v/django-simpleui.svg)](https://pypi.org/project/django-simpleui/#history) [![img](https://img.shields.io/badge/python-%3E=3.6.x-green.svg)](https://python.org/)  ![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-2.2-blue)[![img](https://img.shields.io/badge/node-%3E%3D%2012.0.0-brightgreen)](https://nodejs.org/zh-cn/download/releases/)[![img](https://img.shields.io/pypi/dm/django-simpleui.svg)](https://pypi.org/project/django-simpleui/)
+[![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitee.com/liqianglog/django-vue-admin/blob/master/LICENSE) [![img](https://img.shields.io/pypi/v/django-simpleui.svg)](https://pypi.org/project/django-simpleui/#history) [![img](https://img.shields.io/badge/python-%3E=3.6.x-green.svg)](https://python.org/)  ![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-2.2-blue)![img](https://img.shields.io/badge/node-%3E%3D%2012.0.0-brightgreen)
 
 
 
@@ -12,26 +12,25 @@ Django-Vue-Admin 是一套全部开源的快速开发平台，毫无保留给个
 * 后端采用Python语言Django框架。
 * 权限认证使用Jwt，支持多终端认证系统。
 * 支持加载动态权限菜单，多方式轻松权限控制。
-* ~~高效率开发，使用代码生成器可以一键生成前后端代码。~~
-* 特别鸣谢：[RuoYi](https://gitee.com/y_project/RuoYi-Vue) ，[Vue-Element-Admin](https://github.com/PanJiaChen/vue-element-admin)，[eladmin-web](https://gitee.com/elunez/eladmin-web?_from=gitee_search)，[Gin-Vue-Admin](https://www.gin-vue-admin.com/)。
+* 特别鸣谢：<u>[Gin-Vue-Admin](https://www.gin-vue-admin.com/)</u>，[RuoYi](https://gitee.com/y_project/RuoYi-Vue) ，[Vue-Element-Admin](https://github.com/PanJiaChen/vue-element-admin)，[eladmin-web](https://gitee.com/elunez/eladmin-web?_from=gitee_search)。
 
 ## QQ群
 
 - QQ群号：812482043
 
-- 由于项目正在启步阶段，第一版预计3月底发，后序会慢慢维护其他版本，有什么不到位的请大家担待~
+- 二维码
 
   <img src='https://gitee.com/liqianglog/django-vue-admin/raw/master/dvadmin-ui/src/assets/images/qq.jpg' width='200'>
 
 ## 源码地址
 
-gitee地址：[https://gitee.com/liqianglog/django-vue-admin](https://gitee.com/liqianglog/django-vue-admin)
+gitee地址(主推)：[https://gitee.com/liqianglog/django-vue-admin](https://gitee.com/liqianglog/django-vue-admin)
 
 github地址：[https://github.com/liqianglog/django-vue-admin](https://github.com/liqianglog/django-vue-admin)
 
 ## 内置功能
 
-##### 预计3月底发布v1.0正式版本，个别功能开发中 [版本功能说明](https://gitee.com/liqianglog/django-vue-admin/wikis/releaseNote?sort_id=3615540)
+##### 后期版本 [版本功能说明](https://gitee.com/liqianglog/django-vue-admin/wikis/releaseNote?sort_id=3615540)
 
 1.  用户管理：用户是系统操作者，该功能主要完成系统用户配置。
 2.  部门管理：配置系统组织机构（公司、部门、小组），树结构展现支持数据权限。
@@ -44,11 +43,10 @@ github地址：[https://github.com/liqianglog/django-vue-admin](https://github.c
 9.  通知公告：发布通知公告给所有人，进行消息的通知。
 10.  操作日志：系统正常操作日志记录和查询；系统异常信息日志记录和查询。
 11.  登录日志：系统登录日志记录查询包含登录异常。
-12.  在线用户：当前系统中活跃用户状态监控、用户强退功能。
-13.  定时任务：在线（添加、修改、删除)任务调度包含执行结果日志。
-14.  用户注册：新用户注册页面。
-15.  服务监控：监视当前系统CPU、内存、磁盘、堆栈、celery 当前状态等相关信息。
-16.  在线构建器：拖动表单元素生成相应的HTML代码。
+12.  定时日志：celery定时任务执行日志记录。
+13.  在线用户：当前系统中活跃用户状态监控、用户强退功能。
+14.  定时任务：在线（添加、修改、删除)任务调度包含执行结果日志。
+15.  在线构建器：拖动表单元素生成相应的HTML代码。
 
 ## 在线体验
 
@@ -68,9 +66,6 @@ git clone https://gitee.com/liqianglog/django-vue-admin.git
 cd dvadmin-ui
 
 # 安装依赖
-npm install
-
-# 建议不要直接使用cnpm安装依赖，会有各种诡异的 bug。可以通过如下操作解决 npm 下载速度慢的问题。
 npm install --registry=https://registry.npm.taobao.org
 
 # 启动服务
@@ -95,7 +90,12 @@ npm run build:prod
 ~~~bash
 1. 进入项目目录 cd dvadmin-backend
 2. 在项目根目录中，复制 ./conf/env.example.py 文件为一份新的到 ./conf 文件夹下，并重命名为 env.py
+
 3. 在 env.py 中配置数据库信息
+	mysql数据库版本建议:5.7以上
+	mysql数据库字符集：utf8mb4
+	mysql数据库排序规则：utf8mb4_0900_ai_ci
+	
 4. 安装依赖环境
 	pip3 install -r requirements.txt
 5. 执行迁移命令：
@@ -104,14 +104,32 @@ npm run build:prod
 6. 初始化数据
 	python3 manage.py init
 7. 启动项目
-	python3 manage.py runserver 0.0.0.0:8000
+	python3 manage.py runserver 127.0.0.1:8000
 
 定时任务启动命令：
 	celery -A application  worker -B --loglevel=info
+注：
+	Windows 运行celery 需要安装 pip install eventlet
+	celery -A application  worker -P eventlet --loglevel=info
 
 初始账号：admin 密码：123456
 
 后端接口文档地址：http://127.0.0.1:8000/docs/
+~~~
+
+### docker-compose 运行
+
+~~~shell
+# 先安装docker-compose (自行百度安装),执行此命令等待安装
+docker-compose up
+# 初始化后端数据(第一次执行即可)
+docker exec -ti dvadmin-django bash
+python manage.py init -y
+exit
+
+前端地址：http://127.0.0.1:8080
+后端地址：http://127.0.0.1:8000
+账号：admin 密码：123456
 ~~~
 
 

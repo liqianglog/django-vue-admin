@@ -242,7 +242,7 @@ export default {
         postCode: undefined,
         postName: undefined,
         postSort: 0,
-        status: "0",
+        status: this.selectDictDefault(this.statusOptions),
         remark: undefined
       };
       this.resetForm("form");

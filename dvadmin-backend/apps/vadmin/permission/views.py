@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
+from .permissions import CommonPermission, DeptDestroyPermission
 from ..op_drf.filters import DataLevelPermissionsFilter
 from ..op_drf.viewsets import CustomModelViewSet
 from ..permission.filters import MenuFilter, DeptFilter, PostFilter, RoleFilter, UserProfileFilter
@@ -12,7 +13,6 @@ from ..permission.serializers import UserProfileSerializer, MenuSerializer, Role
     PostSimpleSerializer, RoleSimpleSerializer, ExportUserProfileSerializer, ExportRoleSerializer, ExportPostSerializer, \
     UserProfileImportSerializer
 from ..system.models import DictDetails
-from ..utils.export_excel import export_excel_save_model
 from ..utils.response import SuccessResponse, ErrorResponse
 
 
@@ -25,6 +25,7 @@ class GetUserProfileView(APIView):
         user_dict = UserProfileSerializer(request.user).data
         permissions_list = ['*:*:*'] if user_dict.get('admin') else Menu.objects.filter(
             role__userprofile=request.user).values_list('perms', flat=True)
+        delete_cache = request.user.delete_cache
         return SuccessResponse({
             'permissions': [ele for ele in permissions_list if ele],
             'roles': Role.objects.filter(userprofile=request.user).values_list('roleKey', flat=True),
@@ -47,7 +48,10 @@ class GetRouters(APIView):
         return dict
 
     def get(self, request, format=None):
-        menus = Menu.objects.filter(role__userprofile=request.user) \
+        kwargs = {}
+        if not request.user.is_superuser:
+            kwargs['role__userprofile'] = request.user
+        menus = Menu.objects.filter(**kwargs) \
             .exclude(menuType='2').values('id', 'name', 'web_path', 'visible', 'status', 'isFrame', 'component_path',
                                           'icon', 'parentId', 'orderNum', 'isCache').distinct()
         data = []
@@ -78,9 +82,9 @@ class MenuModelViewSet(CustomModelViewSet):
     update_serializer_class = MenuCreateUpdateSerializer
     filter_class = MenuFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
-    # update_extra_permission_classes = (IsManagerPermission,)
-    # destroy_extra_permission_classes = (IsManagerPermission,)
-    # create_extra_permission_classes = (IsManagerPermission,)
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission,)
+    create_extra_permission_classes = (CommonPermission,)
     search_fields = ('name',)
     ordering = 'create_datetime'  # 默认排序
 
@@ -127,9 +131,9 @@ class DeptModelViewSet(CustomModelViewSet):
     update_serializer_class = DeptCreateUpdateSerializer
     filter_class = DeptFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
-    # update_extra_permission_classes = (IsManagerPermission,)
-    # destroy_extra_permission_classes = (IsManagerPermission,)
-    # create_extra_permission_classes = (IsManagerPermission,)
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission, DeptDestroyPermission)
+    create_extra_permission_classes = (CommonPermission,)
     search_fields = ('deptName',)
     ordering = 'create_datetime'  # 默认排序
 
@@ -192,23 +196,13 @@ class PostModelViewSet(CustomModelViewSet):
     update_serializer_class = PostCreateUpdateSerializer
     filter_class = PostFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
-    # update_extra_permission_classes = (IsManagerPermission,)
-    # destroy_extra_permission_classes = (IsManagerPermission,)
-    # create_extra_permission_classes = (IsManagerPermission,)
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission,)
+    create_extra_permission_classes = (CommonPermission,)
     search_fields = ('postName',)
     ordering = ['postSort', 'create_datetime']  # 默认排序
-
-    def export(self, request: Request, *args, **kwargs):
-        """
-        导出岗位
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        field_data = ['岗位序号', '岗位编码', '岗位名称', '岗位排序', '状态', '创建者', '修改者', '备注']
-        data = ExportPostSerializer(Post.objects.all(), many=True).data
-        return SuccessResponse(export_excel_save_model(request, field_data, data, '导出岗位数据.xls'))
+    export_field_data = ['岗位序号', '岗位编码', '岗位名称', '岗位排序', '状态', '创建者', '修改者', '备注']
+    export_serializer_class = ExportPostSerializer
 
 
 class RoleModelViewSet(CustomModelViewSet):
@@ -221,23 +215,13 @@ class RoleModelViewSet(CustomModelViewSet):
     update_serializer_class = RoleCreateUpdateSerializer
     filter_class = RoleFilter
     extra_filter_backends = [DataLevelPermissionsFilter]
-    # update_extra_permission_classes = (IsManagerPermission,)
-    # destroy_extra_permission_classes = (IsManagerPermission,)
-    # create_extra_permission_classes = (IsManagerPermission,)
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission,)
+    create_extra_permission_classes = (CommonPermission,)
     search_fields = ('roleName',)
     ordering = 'create_datetime'  # 默认排序
-
-    def export(self, request: Request, *args, **kwargs):
-        """
-        导出角色
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        field_data = ['角色序号', '角色名称', '角色权限', '角色排序', '数据范围', '角色状态', '创建者', '修改者', '备注']
-        data = ExportRoleSerializer(Role.objects.all(), many=True).data
-        return SuccessResponse(export_excel_save_model(request, field_data, data, '导出角色数据.xls'))
+    export_field_data = ['角色序号', '角色名称', '角色权限', '角色排序', '数据范围', '角色状态', '创建者', '修改者', '备注']
+    export_serializer_class = ExportRoleSerializer
 
 
 class UserProfileModelViewSet(CustomModelViewSet):
@@ -259,9 +243,9 @@ class UserProfileModelViewSet(CustomModelViewSet):
                          'gender': '用户性别(男/女/未知)',
                          'is_active': '帐号状态(启用/禁用)', 'password': '登录密码', 'dept': '部门ID', 'role': '角色ID',
                          'post': '岗位ID'}
-    # update_extra_permission_classes = (IsManagerPermission,)
-    # destroy_extra_permission_classes = (IsManagerPermission,)
-    # create_extra_permission_classes = (IsManagerPermission,)
+    update_extra_permission_classes = (CommonPermission,)
+    destroy_extra_permission_classes = (CommonPermission,)
+    create_extra_permission_classes = (CommonPermission,)
     search_fields = ('username',)
     ordering = 'create_datetime'  # 默认排序
 
@@ -291,8 +275,8 @@ class UserProfileModelViewSet(CustomModelViewSet):
         """
         userId = request.query_params.get('userId')
         data = {
-            'posts': PostSimpleSerializer(Post.objects.all().order_by('postSort'), many=True).data,
-            'roles': RoleSimpleSerializer(Role.objects.all().order_by('roleSort'), many=True).data
+            'posts': PostSimpleSerializer(Post.objects.filter(status='1').order_by('postSort'), many=True).data,
+            'roles': RoleSimpleSerializer(Role.objects.filter(status='1').order_by('roleSort'), many=True).data
         }
         if userId:
             instance = self.queryset.get(id=userId)
@@ -378,7 +362,7 @@ class UserProfileModelViewSet(CustomModelViewSet):
         :return:
         """
         instance = self.queryset.get(id=request.user.id)
-        instance.mobile = request.data.get('newPassword', None)
+        instance.password = request.data.get('newPassword', None)
         if not authenticate(username=request.user.username, password=request.data.get('oldPassword', None)):
             return ErrorResponse(msg='旧密码不正确！')
         instance.set_password(request.data.get('newPassword'))

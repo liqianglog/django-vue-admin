@@ -16,19 +16,14 @@ DATABASE_PASSWORD = "q1w2e3r4T%Y^U&MYSQL"
 DATABASE_NAME = "django-vue-admin"
 
 # ================================================= #
-# ************** mongodb 数据库配置  ************** #
-# ================================================= #
-MONGO_DATABASE_NAME = 'django-vue-admin'
-MONGO_HOST = 'localhost'
-MONGO_PORT = 27017
-
-# ================================================= #
 # ************** redis 数据库配置  ************** #
 # ================================================= #
 REDIS_DB = 1
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 REDIS_PASSWORD = 'q1w2e3r4T%Y^U&'
+# celery 定时任务redis 库号
+CELERY_DB = 2
 
 # ================================================= #
 # ************** 默认配置  ************** #
@@ -44,3 +39,5 @@ CAPTCHA_STATE = True
 # 操作日志配置
 API_LOG_ENABLE = True
 API_LOG_METHODS = ['POST', 'DELETE', 'PUT'] # 'ALL' or ['POST', 'DELETE']
+# 接口权限
+INTERFACE_PERMISSION = True

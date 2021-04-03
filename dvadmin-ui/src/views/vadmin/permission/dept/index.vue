@@ -253,7 +253,7 @@ export default {
         leader: undefined,
         phone: undefined,
         email: undefined,
-        status: "0"
+        status:  this.selectDictDefault(this.statusOptions),
       };
       this.resetForm("form");
     },

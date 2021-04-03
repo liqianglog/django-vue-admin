@@ -73,6 +73,20 @@ export function selectDictLabel(datas, value) {
 	})
 	return actions.join('');
 }
+// 获取字典默认值
+export function selectDictDefault(datas) {
+	var actions = [];
+	Object.keys(datas).some((key) => {
+		if (datas[key].is_default === true) {
+			actions.push(datas[key].dictValue);
+			return true;
+		}
+	})
+  if (!actions[0] && datas[0]) {
+    actions.push(datas[0].dictValue)
+  }
+	return actions.join('');
+}
 
 // 回显数据字典（字符串数组）
 export function selectDictLabels(datas, value, separator) {

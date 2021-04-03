@@ -232,9 +232,7 @@
         open: false,
         // 公告类型字典
         MessagePushTypeOptions: [],
-        // 状态类型字典
-        StatusOptions: [],
-        // 公告类型字典
+        // 公告状态字典
         MessagePushStatusOptions: [],
         // 查询公告
         queryParams: {
@@ -307,8 +305,8 @@
           content: undefined,
           to_path: undefined,
           is_reviewed: true,
-          message_type: "1",
-          status: '1',
+          message_type: this.selectDictDefault(this.MessagePushStatusOptions),
+          status: this.selectDictDefault(this.MessagePushStatusOptions),
         };
         this.resetForm("form");
       },
