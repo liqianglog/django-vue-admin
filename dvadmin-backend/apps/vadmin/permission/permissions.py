@@ -10,6 +10,7 @@ from rest_framework.permissions import (BasePermission,
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
+from .models import Dept
 from ..utils.model_util import get_dept
 
 logger = logging.getLogger(__name__)
@@ -105,8 +106,11 @@ class DeptDestroyPermission(CustomPermission):
         return True
 
     def check_queryset(self, request, instance):
-        if instance.values_list('userprofile', flat=True):
+        if list(filter(None, instance.values_list('userprofile', flat=True))):
             self.message = "该部门下有关联用户，无法删除！"
+            return False
+        if Dept.objects.filter(parentId__in=instance).count() > 0:
+            self.message = "该部门下有下级部门，请先删除下级部门！"
             return False
         return True
 
