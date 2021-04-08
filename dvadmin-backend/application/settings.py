@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'apps.vadmin.op_drf',
     'apps.vadmin.system',
     'apps.vadmin.celery',
+    'apps.vadmin.monitor',
 ]
 
 MIDDLEWARE = [
