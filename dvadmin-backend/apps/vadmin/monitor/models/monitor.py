@@ -5,12 +5,10 @@ from ...op_drf.models import CoreModel
 
 class Monitor(CoreModel):
     cpu_num = CharField(max_length=8, verbose_name='CPU核数')
-    cpu_free = CharField(max_length=8, verbose_name='CPU当前空闲率')
     cpu_sys = CharField(max_length=8, verbose_name='CPU已使用率')
     mem_num = CharField(max_length=32, verbose_name='内存总数(KB)')
-    mem_free = CharField(max_length=32, verbose_name='内存剩余大小(KB)')
     mem_sys = CharField(max_length=32, verbose_name='内存已使用大小(KB)')
-    seconds = CharField(max_length=32, verbose_name='运行已时间(秒)')
+    seconds = CharField(max_length=32, verbose_name='系统已运行时间')
     server = ForeignKey(to='Server', on_delete=CASCADE, verbose_name="关联服务器信息", db_constraint=False)
 
     class Meta:
