@@ -1,10 +1,11 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import *
 
 from ...op_drf.fields import UpdateDateTimeField, CreateDateTimeField
 from ...op_drf.models import CoreModel
-from ...permission.models import UserProfile
 
+UserProfile = get_user_model()
 """
 消息通知模型
 """

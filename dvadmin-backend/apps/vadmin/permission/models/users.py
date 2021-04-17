@@ -1,5 +1,6 @@
 from uuid import uuid4
 
+from django.conf import settings
 from django.contrib.auth.models import UserManager, AbstractUser
 from django.core.cache import cache
 from django.db.models import IntegerField, ForeignKey, CharField, TextField, ManyToManyField, CASCADE
@@ -51,6 +52,7 @@ class UserProfile(AbstractUser, CoreModel):
         return cache.delete(f'permission_interface_dict_{self.username}')
 
     class Meta:
+        abstract = settings.AUTH_USER_MODEL != 'permission.UserProfile'
         verbose_name = '用户管理'
         verbose_name_plural = verbose_name
 
