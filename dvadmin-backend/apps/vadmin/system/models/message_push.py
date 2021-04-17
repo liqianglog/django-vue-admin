@@ -1,11 +1,10 @@
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
 from django.db.models import *
 
 from ...op_drf.fields import UpdateDateTimeField, CreateDateTimeField
 from ...op_drf.models import CoreModel
 
-UserProfile = get_user_model()
 """
 消息通知模型
 """
@@ -18,7 +17,7 @@ class MessagePush(CoreModel):
     is_reviewed = BooleanField(default=True, verbose_name="是否审核")
     status = CharField(max_length=8, verbose_name="通知状态")
     to_path = CharField(max_length=256, verbose_name="跳转路径", null=True, blank=True, )
-    user = ManyToManyField(to="permission.UserProfile",
+    user = ManyToManyField(to=settings.AUTH_USER_MODEL,
                            related_name="user", related_query_name="user_query", through='MessagePushUser',
                            through_fields=('message_push', 'user'))
 
@@ -35,7 +34,7 @@ class MessagePushUser(models.Model):
                               related_name="messagepushuser_message_push",
                               verbose_name='消息通知', help_text='消息通知')
 
-    user = ForeignKey(UserProfile, on_delete=CASCADE, db_constraint=False,
+    user = ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=CASCADE, db_constraint=False,
                       related_name="messagepushuser_user",
                       verbose_name='用户', help_text='用户')
     is_read = BooleanField(default=False, verbose_name="是否已读")
