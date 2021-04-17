@@ -11,7 +11,7 @@ class Dept(CoreModel):
     phone = CharField(max_length=32, verbose_name="联系电话", null=True, blank=True)
     email = CharField(max_length=32, verbose_name="邮箱", null=True, blank=True)
     status = CharField(max_length=8, verbose_name="部门状态", null=True, blank=True)
-    parentId = ForeignKey(to='Dept', on_delete=CASCADE, default=False, verbose_name="上级部门",
+    parentId = ForeignKey(to='permission.Dept', on_delete=CASCADE, default=False, verbose_name="上级部门",
                           db_constraint=False, null=True, blank=True)
 
     class Meta:

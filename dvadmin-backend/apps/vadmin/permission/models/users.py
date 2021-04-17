@@ -23,9 +23,9 @@ class UserProfile(AbstractUser, CoreModel):
     gender = CharField(max_length=8, verbose_name="性别", null=True, blank=True)
     remark = TextField(verbose_name="备注", null=True)
     user_type = IntegerField(default=0, verbose_name="用户类型")
-    post = ManyToManyField(to='Post', verbose_name='关联岗位', db_constraint=False)
-    role = ManyToManyField(to='Role', verbose_name='关联角色', db_constraint=False)
-    dept = ForeignKey(to='Dept', verbose_name='归属部门', on_delete=CASCADE, db_constraint=False, null=True, blank=True)
+    post = ManyToManyField(to='permission.Post', verbose_name='关联岗位', db_constraint=False)
+    role = ManyToManyField(to='permission.Role', verbose_name='关联角色', db_constraint=False)
+    dept = ForeignKey(to='permission.Dept', verbose_name='归属部门', on_delete=CASCADE, db_constraint=False, null=True, blank=True)
 
     @property
     def get_user_interface_dict(self):

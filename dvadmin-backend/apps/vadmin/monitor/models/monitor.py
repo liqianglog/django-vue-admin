@@ -9,7 +9,7 @@ class Monitor(CoreModel):
     mem_num = CharField(max_length=32, verbose_name='内存总数(KB)')
     mem_sys = CharField(max_length=32, verbose_name='内存已使用大小(KB)')
     seconds = CharField(max_length=32, verbose_name='系统已运行时间')
-    server = ForeignKey(to='Server', on_delete=CASCADE, verbose_name="关联服务器信息", db_constraint=False)
+    server = ForeignKey(to='monitor.Server', on_delete=CASCADE, verbose_name="关联服务器信息", db_constraint=False)
 
     class Meta:
         verbose_name = '服务器监控信息'
