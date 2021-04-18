@@ -8,6 +8,8 @@ version: "3"
 services:
   dvadmin-ui:
     container_name: dvadmin-ui
+    ports:
+      - "8080:8080"
     build:
       context: ./
       dockerfile: ./docker_env/vue-ui/Dockerfile
