@@ -13,7 +13,18 @@ class ServerSerializer(CustomModelSerializer):
 
     class Meta:
         model = Server
-        fields = '__all__'
+        fields = ("id", "ip", "name", "os", "remark")
+
+
+class UpdateServerSerializer(CustomModelSerializer):
+    """
+    服务器信息 简单序列化器
+    """
+
+    class Meta:
+        model = Server
+        fields = ("name", "remark")
+
 
 # ================================================= #
 # ************** 服务器监控信息 序列化器  ************** #
