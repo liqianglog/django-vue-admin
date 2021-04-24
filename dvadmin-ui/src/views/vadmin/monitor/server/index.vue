@@ -322,10 +322,16 @@ export default {
 
     /** 清除监控日志 */
     cleanMonitorLogsInfo() {
-      cleanMonitorLog().then(results => {
-        this.msgSuccess(results.msg || '清除记录成功！')
-      }).catch(error => {
-        this.$message.warning(error.msg || '清除记录失败，请重试！')
+      this.$confirm('此操作将删除所有的监控记录，是否继续？', '提示', {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '放弃'
+      }).then(() => {
+        cleanMonitorLog().then(results => {
+          this.msgSuccess(results.msg || '清除记录成功！')
+        }).catch(error => {
+          this.$message.warning(error.msg || '清除记录失败，请重试！')
+        })
+      }).catch(() => {
       })
     },
 
