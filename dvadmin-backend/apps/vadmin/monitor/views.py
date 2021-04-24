@@ -81,7 +81,7 @@ class MonitorModelViewSet(CustomModelViewSet):
             "cpu": {
                 "total": int(data.get('cpu_num'), 0),
                 "used": "",  # cpu核心 可不传，如指cpu当前主频，该值可以传
-                "rate": float(data.get('cpu_sys', 0)),
+                "rate": float(data.get('cpu_sys', 0)) / 100,
                 "unit": "核心",  # 默认单位 核心
             },
             "memory": {
