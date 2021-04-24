@@ -9,13 +9,14 @@
           v-model="isOpeningMonitor"
           active-color="#13ce66"
           inactive-color="#ff4949"
+          title="控制所有监控项"
           @change="changeMonitorStatus"
         >
         </el-switch>
       </div>
       <!-- 更新频率设置 -->
       <div class="monitor-update-interval same-block">
-        更新频率：
+        监控频率：
         <el-input-number v-model="monitorUpdateInterval"
                          label=""
                          class="monitor-update-interval-blank"
@@ -43,13 +44,19 @@
         <el-input v-model="monitorLogSavingDays" class=" same-block" style="width: 120px;"></el-input>
         <el-button type="primary"
                    class="same-block"
+                   title="只有提交更改才会生效"
                    @click="updateMonitorStatusSettingsInfo"
         >更改
         </el-button>
       </div>
       <!-- 清空记录 -->
       <div class="clean-monitor-log same-block">
-        <el-button class="same-block" @click="cleanMonitorLogsInfo" type="warning">清空记录</el-button>
+        <el-button class="same-block"
+                   type="warning"
+                   title="清空所有监控记录"
+                   @click="cleanMonitorLogsInfo"
+        >清空记录
+        </el-button>
       </div>
     </div>
     <div class="server-monitor-top">
@@ -71,7 +78,12 @@
             >
             </el-option>
           </el-select>
-          <el-button type="primary" class="server-info-item" @click="updateServerInfo">更改</el-button>
+          <el-button type="primary"
+                     class="server-info-item"
+                     title="只有提交更改才会生效"
+                     @click="updateServerInfo"
+          >更改
+          </el-button>
         </div>
         <div class="server-info-detail">
           <div v-for="(key,index) in currentServerInfoKeys" :key="index" class="server-info-detail-line text item">
@@ -176,9 +188,9 @@ const CHART_KEY_NAME_MAPPING = {
 
 // 仪表盘字段映射
 const INSTRUMENT_BOARD_KEY_TO_NAME_MAPPING = {
-  cpu: "CPU使用率",
-  memory: "内存使用率",
-  disk: "磁盘使用率"
+  cpu: 'CPU使用率',
+  memory: '内存使用率',
+  disk: '磁盘使用率'
 }
 
 // 仪表盘颜色范围
@@ -297,8 +309,8 @@ export default {
     },
     /**修改服务器信息*/
     updateServerInfo() {
-      updateServerInfo(this.currentServer.id, this.currentServer).then(results => {
-        this.msgSuccess(results.msg || '修改服务器信息成功！')
+      updateServerInfo(this.currentServer.id, this.currentServer).then(() => {
+        this.msgSuccess('修改服务器信息成功！')
       }).catch(error => {
         this.$message.error(error.msg || '提交修改服务器信息出错！')
       })
@@ -306,27 +318,7 @@ export default {
     /** 获取服务器最新监控信息 */
     getServerLatestLogInfo(serverId) {
       getServerLatestLog(serverId).then(results => {
-        // this.instrumentBoardData = results.data
-        this.instrumentBoardData = {
-          cpu: {
-            total: 2,
-            used: '', // cpu核心 可不传，如指cpu当前主频，该值可以传
-            rate: 12,
-            unit: '核心' // 默认单位 核心
-          },
-          memory: {
-            total: 1024,
-            used: 512,
-            rate: 70,
-            unit: 'MB' // 默认单位 MB
-          },
-          disk: {
-            total: 50,
-            used: 30,
-            rate: 90,
-            unit: 'GB'  // 默认单位 GB
-          }
-        }
+        this.instrumentBoardData = results.data
       }).catch(error => {
         this.msgError(error.msg || '获取服务器最新监控信息错误！')
       })
@@ -334,11 +326,7 @@ export default {
     /** 获取监控日志信息 */
     getCurrentServerMonitorLogs() {
       getMonitorLogs(this.currentServer.id, { as: { 'create_datetime__range': this.timeRange } }).then(results => {
-        // this.lineChartData = results.data
-        this.lineChartData = {
-          cpu: [0.5, 0.43, 0.56, 0.89, 0.5, 0.43, 0.56, 0.89, 0.5, 0.43, 0.56, 0.89, 0.5, 0.43, 0.56, 0.89],
-          memory: [0.6, 0.43, 0.56, 0.56, 0.89, 0.5, 0.43, 0.43, 0.56, 0.56, 0.5, 0.43, 0.56, 0.89, 0.5]
-        }
+        this.lineChartData = results.data
       }).catch(error => {
         this.msgError(error.msg || '获取监控日志信息出错误！')
       })
@@ -356,9 +344,9 @@ export default {
     /** 获取监控配置信息 */
     getMonitorStatusSettingsInfo() {
       getMonitorStatusInfo().then(results => {
-        let { enabled, interval, save_days } = results
+        let { enabled, interval, save_days } = results.data
         this.isOpeningMonitor = enabled
-        this.monitorLogSavingDays = parseInt(save_days || 30)
+        this.monitorLogSavingDays = parseInt(save_days)
         this.formatInterval(parseInt(interval))
       }).catch(error => {
         this.msgError(error.msg || '获取服务器监控配置信息出错误！')
@@ -366,8 +354,8 @@ export default {
     },
     /** 更新监控配置信息 */
     updateMonitorStatusSettingsInfo() {
-      updateMonitorStatusInfo(this.monitorStatusInfo).then(result => {
-        this.msgSuccess(result.msg || '更新配置成功！')
+      updateMonitorStatusInfo(this.monitorStatusInfo).then(() => {
+        this.msgSuccess('更新配置成功！')
       }).catch((error) => {
         this.msgError(error.msg || '更新服务器监控配置信息出错误！')
       })
