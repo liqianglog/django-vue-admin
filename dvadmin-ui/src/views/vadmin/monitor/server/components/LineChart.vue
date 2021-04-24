@@ -26,7 +26,7 @@ import { getMonitorLogs } from '@/api/vadmin/monitor/server'
 const MONTH = moment().month()
 const YEAR = moment().year()
 const TODAY = moment().format('YYYY-MM-DD')
-const YESTERDAY = moment().subtract(7, 'days').format('YYYY-MM-DD')
+const YESTERDAY = moment().subtract(1, 'days').format('YYYY-MM-DD')
 const LAST_SEVEN_DAYS = moment().subtract(7, 'days').format('YYYY-MM-DD')
 const LAST_THIRTY_DAYS = moment().subtract(30, 'days').format('YYYY-MM-DD')
 
@@ -129,10 +129,8 @@ export default {
           containLabel: true
         },
         yAxis: {
-          type: 'category',
-          name: '百分比',
-          splitLine: { show: true },
-          data: ['10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%']
+          type: 'value',
+          name: '使用率',
         },
         series: [
           {
