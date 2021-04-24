@@ -66,7 +66,7 @@
         <div slot="header" class="clearfix">
           <div class="server-info-item">服务器</div>
           <el-select filterable
-                     v-model="currentServerName"
+                     :value="currentServerName"
                      class="server-info-item"
                      placeholder="请选择服务器"
                      @change="chooseServerInfo"
@@ -190,7 +190,7 @@ const CHART_KEY_NAME_MAPPING = {
 // 仪表盘字段映射
 const INSTRUMENT_BOARD_KEY_TO_NAME_MAPPING = {
   cpu: 'CPU使用率',
-  memory: '内存使用率',
+  memory: '内存使用率'
 }
 
 // 服务器信息可修改字段
@@ -299,6 +299,8 @@ export default {
         this.msgSuccess('修改服务器信息成功！')
       }).catch(error => {
         this.$message.error(error.msg || '提交修改服务器信息出错！')
+      }).finally(() => {
+        this.getServerList()
       })
     },
     /** 获取服务器最新监控信息 */
@@ -386,7 +388,7 @@ export default {
           this.intervalTypeUnits = interval.second
         }
       }
-    },
+    }
   }
 }
 </script>
