@@ -59,6 +59,7 @@
         </el-button>
       </div>
     </div>
+
     <div class="server-monitor-top">
       <!-- 左侧服务器信息 -->
       <el-card class="box-card server-information">
@@ -99,15 +100,15 @@
       </el-card>
 
       <!-- 右侧仪表盘 -->
-      <el-card class="box-card information-instrument-panel" v-for="(key, index)  of Object.keys(instrumentBoardData)"
+      <el-card class="box-card information-instrument-panel"
+               v-for="(key, index)  of Object.keys(instrumentBoardData)"
                :key="`${index}-${key}`">
         <instrument-board
-          :top-title="{show:true, text: key}"
-          :ring-graph-id="`${key}UsingRate`"
-          :using-rate="instrumentBoardData[key].rate"
+          :show-top-title="true"
+          :show-sub-title="true"
+          :ring-graph-key="key"
+          :instrument-board-data="instrumentBoardData[key]"
           :top-title-key-to-name-mapping="INSTRUMENT_BOARD_KEY_TO_NAME_MAPPING"
-          :sub-title="{show:true, used: instrumentBoardData[key].used, total:instrumentBoardData[key].total, unit: instrumentBoardData[key].unit}"
-          :using-rate-style="{...getCircleColor(instrumentBoardData[key].rate)}"
         ></instrument-board>
       </el-card>
     </div>
@@ -190,21 +191,6 @@ const CHART_KEY_NAME_MAPPING = {
 const INSTRUMENT_BOARD_KEY_TO_NAME_MAPPING = {
   cpu: 'CPU使用率',
   memory: '内存使用率',
-  disk: '磁盘使用率'
-}
-
-// 仪表盘颜色范围
-const NORMAL_COLOR = {
-  color: '#28BCFE',
-  itemColor: ['#25bfff', '#5284de', '#2a95f9']
-}
-const WARNING_COLOR = {
-  color: '#e6a23c',
-  itemColor: ['#e6a23c', '#cc8b1d', '#ffaf18']
-}
-const DANGER_COLOR = {
-  color: '#F56C6C',
-  itemColor: ['#fd666d', '#cf1717', '#b31212']
 }
 
 // 服务器信息可修改字段
@@ -401,16 +387,6 @@ export default {
         }
       }
     },
-    // 仪表盘样式-颜色
-    getCircleColor(usingRate) {
-      if (usingRate < 60) {
-        return NORMAL_COLOR
-      } else if (usingRate > 60 && usingRate < 80) {
-        return WARNING_COLOR
-      } else if (usingRate > 80) {
-        return DANGER_COLOR
-      }
-    }
   }
 }
 </script>

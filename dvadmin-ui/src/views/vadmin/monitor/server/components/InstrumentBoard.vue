@@ -1,10 +1,29 @@
 <template>
   <div class="instrument-board">
-    <div v-if="topTitle.show" class="instrument-board-title">
-      {{ topTitleKeyToNameMapping[topTitle.text] || topTitle.text }}
+    <div v-if="showTopTitle && haveMultipleData" class="instrument-board-title">
+      <el-select :value="topTitle"
+                 @change="chooseDisplayInstrumentBoardData"
+      >
+        <el-option
+          v-for="(item,index) in instrumentBoardData"
+          :key="index"
+          :label="item.name || item['dir_name']"
+          :value="index"
+        >
+        </el-option>
+      </el-select>
+
     </div>
+    <div v-else-if="showTopTitle" class="instrument-board-title">
+      {{ topTitle }}
+    </div>
+
     <div :id="ringGraphId" class="instrument-board-body"></div>
-    <div v-if="subTitle.show" class="instrument-board-subtitle">{{ subTitleContent }}</div>
+    <div v-if="showSubTitle"
+         class="instrument-board-subtitle"
+         :title="subTitle.title"
+    >{{ subTitle.content }}
+    </div>
   </div>
 </template>
 
@@ -14,58 +33,88 @@ import VueTypes from 'vue-types'
 const echarts = require('echarts/lib/echarts')
 require('echarts/lib/chart/gauge')
 
+// 仪表盘颜色范围
+const NORMAL_COLOR = {
+  color: '#28BCFE',
+  itemColor: ['#25bfff', '#5284de', '#2a95f9']
+}
+const WARNING_COLOR = {
+  color: '#e6a23c',
+  itemColor: ['#e6a23c', '#cc8b1d', '#ffaf18']
+}
+const DANGER_COLOR = {
+  color: '#F56C6C',
+  itemColor: ['#fd666d', '#cf1717', '#b31212']
+}
+
 export default {
   name: 'InstrumentBoard',
   props: {
-    // 组件唯一id
-    ringGraphId: VueTypes.string.isRequired,
+    // 组件key
+    ringGraphKey: VueTypes.string.isRequired,
     // 上标题
-    topTitle: VueTypes.shape({
-      show: VueTypes.bool,
-      text: VueTypes.string
-    }).def({
-      show: false
-    }),
+    showTopTitle: VueTypes.bool.def(false),
     // 下标题
-    subTitle: VueTypes.shape({
-      show: VueTypes.bool,
-      total: VueTypes.any,
-      used: VueTypes.any,
-      unit: VueTypes.string
-    }).def({
-      show: false
-    }),
-    // 使用率-数值
-    usingRate: VueTypes.number.isRequired,
-    // 使用率样式配置
-    usingRateStyle: VueTypes.object.def({
-      color: '#28BCFE',
-      fontSize: 18,
-      itemColor: ['#25BFFF', '#5284DE', '#2A95F9']
-    }),
+    showSubTitle: VueTypes.bool.def(false),
+    // top title 配置映射
     topTitleKeyToNameMapping: VueTypes.object.def({
       cpu: 'CPU使用率',
-      memory: '内存使用率',
-      disk: '磁盘使用率'
-    })
+      memory: '内存使用率'
+    }),
+    instrumentBoardData: VueTypes.any.isRequired
   },
   data() {
-    return {}
+    return {
+      // 当前显示的数据
+      currentInstrumentBoardData: {}
+    }
   },
   computed: {
-    subTitleContent() {
-      let used = this.subTitle.used ? this.subTitle.used + '/' : ''
-      let total = this.subTitle.total ? this.subTitle.total : ''
-      let unit = this.subTitle.unit ? ` (${this.subTitle.unit})` : ''
-      return `${used}${total}${unit} `
+    // 仪表盘是否存在多个数据
+    haveMultipleData() {
+      return this.instrumentBoardData instanceof Array && this.instrumentBoardData.length > 0
+    },
+    // 使用率
+    ringRate() {
+      let ringRate = this.currentInstrumentBoardData.rate
+      return ringRate < 1 ? ringRate * 100 : ringRate
+    },
+    // 仪表盘id
+    ringGraphId() {
+      return `${this.ringGraphKey}UsingRate`
+    },
+    // 上方标题
+    topTitle() {
+      return this.currentInstrumentBoardData['dir_name'] || this.topTitleKeyToNameMapping[this.ringGraphKey] || this.ringGraphKey
+    },
+    // 下方标题
+    subTitle() {
+      let used = this.currentInstrumentBoardData['used'] ? this.currentInstrumentBoardData['used'] + '/' : ''
+      let total = this.currentInstrumentBoardData['total'] ? this.currentInstrumentBoardData['total'] : ''
+      let unit = this.currentInstrumentBoardData['unit'] ? ` (${this.currentInstrumentBoardData['unit']})` : ''
+      let content = `${used}${total}${unit} `
+      let title = (this.currentInstrumentBoardData['used'] ? '已用/' : '') + '总量(单位)'
+      return { content, title }
+    },
+    // 使用率样式配置
+    usingRateStyle() {
+      return {
+        fontSize: 18,
+        ...this.getCircleColor(this.ringRate)
+      }
     }
   },
   mounted() {
+    if (this.haveMultipleData) {
+      this.currentInstrumentBoardData = this.instrumentBoardData[0]
+    } else {
+      this.currentInstrumentBoardData = this.instrumentBoardData
+    }
     this.drawBar()
   },
   methods: {
     drawBar() {
-      let currentRate = [this.usingRate]
+      let currentRate = [this.ringRate]
       // 基于dom，初始化echarts实例
       let RingGraph = echarts.init(document.getElementById(this.ringGraphId))
 
@@ -128,8 +177,24 @@ export default {
       }
       // 绘制图表
       RingGraph.setOption(option)
+    },
+    // 仪表盘样式-颜色
+    getCircleColor(usingRate) {
+      if (usingRate < 60) {
+        return NORMAL_COLOR
+      } else if (usingRate > 60 && usingRate < 80) {
+        return WARNING_COLOR
+      } else if (usingRate > 80) {
+        return DANGER_COLOR
+      }
+      return NORMAL_COLOR
+    },
+    chooseDisplayInstrumentBoardData(index) {
+      this.currentInstrumentBoardData = this.instrumentBoardData[index]
+      this.drawBar()
     }
   }
+
 }
 </script>
 
