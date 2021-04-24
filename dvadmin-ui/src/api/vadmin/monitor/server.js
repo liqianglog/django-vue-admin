@@ -50,7 +50,7 @@ export function cleanMonitorLog() {
 // 获取监控记录
 export function getMonitorLogs(id, params) {
   return request({
-    url: `admin/monitor/monitor/${id}/`,
+    url: `admin/monitor/monitor/rate/${id}/`,
     params,
     method: 'get'
   })
