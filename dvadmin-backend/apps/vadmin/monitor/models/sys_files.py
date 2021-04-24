@@ -9,7 +9,7 @@ class SysFiles(CoreModel):
     type_name = CharField(max_length=32, verbose_name='盘符类型')
     total = CharField(max_length=32, verbose_name='磁盘总大小(KB)')
     disk_sys = CharField(max_length=32, verbose_name='已使用大小(KB)')
-    monitor = ForeignKey(to='Monitor', on_delete=CASCADE, verbose_name="关联服务器监控信息", db_constraint=False)
+    monitor = ForeignKey(to='monitor.Monitor', on_delete=CASCADE, verbose_name="关联服务器监控信息", db_constraint=False)
 
     class Meta:
         verbose_name = '系统磁盘'

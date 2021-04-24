@@ -8,7 +8,8 @@ router.register(r'server', ServerModelViewSet)
 router.register(r'monitor', MonitorModelViewSet)
 
 urlpatterns = [
-    re_path('monitor/info/', MonitorModelViewSet.as_view({'get': 'get_monitor_info'})),
+    re_path('monitor/info/(?P<pk>.*)/', MonitorModelViewSet.as_view({'get': 'get_monitor_info'})),
+    re_path('monitor/rate/(?P<pk>.*)/', MonitorModelViewSet.as_view({'get': 'get_rate_info'})),
     re_path('monitor/enabled/', MonitorModelViewSet.as_view({'get': 'enabled_monitor_info'})),
     re_path('monitor/clean/', MonitorModelViewSet.as_view({'get': 'clean_all'})),
 ]

@@ -1,6 +1,7 @@
 import logging
 import os
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import connection
 
@@ -75,6 +76,7 @@ class Command(BaseCommand):
         parser.add_argument('-N', nargs='*')
 
     def handle(self, *args, **options):
+        user_name = "_".join(settings.AUTH_USER_MODEL.lower().split("."))
         init_dict = {
             'system_dictdata': [os.path.join('system', 'system_dictdata.sql'), '字典管理', 'system_dictdata'],
             'system_dictdetails': [os.path.join('system', 'system_dictdetails.sql'), '字典详情', 'system_dictdetails'],
@@ -86,8 +88,7 @@ class Command(BaseCommand):
             'permission_role': [os.path.join('permission', 'permission_role.sql'), '角色管理',
                                 ','.join(['permission_role', 'permission_role_dept', 'permission_role_menu'])],
             'permission_userprofile': [os.path.join('permission', 'permission_userprofile.sql'), '用户管理', ','.join(
-                ['permission_userprofile_groups', 'permission_userprofile', 'permission_userprofile_role',
-                 'permission_userprofile_post'])]
+                [f'{user_name}_groups', f'{user_name}', f'{user_name}_role', f'{user_name}_post'])]
         }
         init_name = options.get('init_name')
         is_yes = None

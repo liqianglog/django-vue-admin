@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
@@ -6,7 +6,7 @@ from .permissions import CommonPermission, DeptDestroyPermission
 from ..op_drf.filters import DataLevelPermissionsFilter
 from ..op_drf.viewsets import CustomModelViewSet
 from ..permission.filters import MenuFilter, DeptFilter, PostFilter, RoleFilter, UserProfileFilter
-from ..permission.models import Role, Menu, Dept, Post, UserProfile
+from ..permission.models import Role, Menu, Dept, Post
 from ..permission.serializers import UserProfileSerializer, MenuSerializer, RoleSerializer, \
     MenuCreateUpdateSerializer, DeptSerializer, DeptCreateUpdateSerializer, PostSerializer, PostCreateUpdateSerializer, \
     RoleCreateUpdateSerializer, DeptTreeSerializer, MenuTreeSerializer, UserProfileCreateUpdateSerializer, \
@@ -14,6 +14,8 @@ from ..permission.serializers import UserProfileSerializer, MenuSerializer, Role
     UserProfileImportSerializer
 from ..system.models import DictDetails
 from ..utils.response import SuccessResponse, ErrorResponse
+
+UserProfile = get_user_model()
 
 
 class GetUserProfileView(APIView):

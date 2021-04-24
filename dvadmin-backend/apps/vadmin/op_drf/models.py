@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.db.models import SET_NULL
 
@@ -24,7 +25,7 @@ class CoreModel(models.Model):
     增加审计字段, 覆盖字段时, 字段名称请勿修改, 必须统一审计字段名称
     """
     description = DescriptionField()  # 描述
-    creator = models.ForeignKey(to='permission.UserProfile', related_query_name='creator_query', null=True,
+    creator = models.ForeignKey(to=settings.AUTH_USER_MODEL, related_query_name='creator_query', null=True,
                                 verbose_name='创建者', on_delete=SET_NULL, db_constraint=False)  # 创建者
     modifier = ModifierCharField()  # 修改者
     dept_belong_id = models.CharField(max_length=64, verbose_name="数据归属部门", null=True, blank=True)
