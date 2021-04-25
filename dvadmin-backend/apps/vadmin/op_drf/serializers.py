@@ -1,7 +1,10 @@
+from functools import cached_property
+
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
 from rest_framework.fields import empty
 from rest_framework.request import Request
+from rest_framework.serializers import ModelSerializer
+from rest_framework.utils.serializer_helpers import BindingDict
 
 
 class CustomModelSerializer(ModelSerializer):
@@ -37,7 +40,7 @@ class CustomModelSerializer(ModelSerializer):
             if self.creator_field_name in self.fields.fields:
                 validated_data[self.creator_field_name] = self.request.user
             if self.dept_belong_id_field_name in self.fields.fields:
-                validated_data[self.dept_belong_id_field_name] = getattr(self.request.user,'dept_id',None)
+                validated_data[self.dept_belong_id_field_name] = getattr(self.request.user, 'dept_id', None)
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
@@ -51,11 +54,11 @@ class CustomModelSerializer(ModelSerializer):
             return getattr(self.request.user, 'username', None)
         return None
 
-
-
-    @property
+    @cached_property
     def fields(self):
-        fields = super().fields
+        fields = BindingDict(self)
+        for key, value in self.get_fields().items():
+            fields[key] = value
 
         if not hasattr(self, '_context'):
             return fields
