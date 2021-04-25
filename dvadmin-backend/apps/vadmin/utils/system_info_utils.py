@@ -4,6 +4,27 @@
 import psutil as psutil
 
 
+def get_cpu_info():
+    """
+    获取cpu所有信息
+    """
+    pass
+
+
+def get_memory_info():
+    """
+    获取内存所有信息
+    """
+    pass
+
+
+def get_disk_info():
+    """
+    获取硬盘所有信息
+    """
+    pass
+
+
 def get_cpu_used_percent():
     """
     获取CPU运行情况
@@ -31,7 +52,5 @@ def get_disk_used_percent():
         pass
 
 
-
-
 if __name__ == '__main__':
-    get_cpu_used_percent()
+    get_disk_used_percent()

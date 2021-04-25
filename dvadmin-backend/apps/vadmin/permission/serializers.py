@@ -1,9 +1,12 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from ..op_drf.serializers import CustomModelSerializer
-from ..permission.models import Menu, Dept, Post, Role, UserProfile
+from ..permission.models import Menu, Dept, Post, Role
 from ..system.models import MessagePush
+
+UserProfile = get_user_model()
 
 
 # ================================================= #

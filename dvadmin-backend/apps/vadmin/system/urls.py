@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from ..system.views import DictDataModelViewSet, DictDetailsModelViewSet, \
     ConfigSettingsModelViewSet, SaveFileModelViewSet, MessagePushModelViewSet, LoginInforModelViewSet, \
-    OperationLogModelViewSet, CeleryLogModelViewSet
+    OperationLogModelViewSet, CeleryLogModelViewSet, SystemInfoApiView
 
 router = DefaultRouter()
 router.register(r'dict/type', DictDataModelViewSet)
@@ -48,6 +48,7 @@ urlpatterns = [
     re_path('celery_log/export/', CeleryLogModelViewSet.as_view({'get': 'export', })),
     # 清除废弃文件
     re_path('clearsavefile/', SaveFileModelViewSet.as_view({'post': 'clearsavefile', })),
-
+    # 获取系统信息cpu、内存、硬盘
+    re_path('sys/info/', SystemInfoApiView.as_view())
 ]
 urlpatterns += router.urls

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'apps.vadmin.op_drf',
     'apps.vadmin.system',
     'apps.vadmin.celery',
+    'apps.vadmin.monitor',
 ]
 
 MIDDLEWARE = [
@@ -328,3 +329,5 @@ CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'  # Back
 # ================================================= #
 # 接口权限
 INTERFACE_PERMISSION = locals().get("INTERFACE_PERMISSION", False)
+INTERFACE_PERMISSION = {locals().get("INTERFACE_PERMISSION", False)}
+DJANGO_CELERY_BEAT_TZ_AWARE = False
