@@ -421,9 +421,10 @@ export default {
 }
 
 .information-instrument-panel {
+  width: 20%;
   display: inline-block;
   min-height: 300px;
-  min-width: 400px;
+  min-width: 300px;
   margin: 0 10px;
 }
 
