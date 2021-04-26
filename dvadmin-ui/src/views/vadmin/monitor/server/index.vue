@@ -74,7 +74,7 @@
             <el-option
               v-for="(item,index) in allServerInfo"
               :key="item.id"
-              :label="item.name"
+              :label="item.name || item.ip"
               :value="index"
             >
             </el-option>
@@ -288,7 +288,7 @@ export default {
         this.allServerInfo = response.data
         if (this.allServerInfo.length > 0) {
           this.currentServer = this.allServerInfo[serverIndex || this.currentServerIndex]
-          this.currentServerName = this.currentServer.name
+          this.currentServerName = this.currentServer.name || this.currentServer.ip
         }
         this.loading.close()
       })
@@ -368,7 +368,7 @@ export default {
     chooseServerInfo(index) {
       this.currentServerIndex = index
       this.currentServer = this.allServerInfo[index]
-      this.currentServerName = this.currentServer.name
+      this.currentServerName = this.currentServer.name || this.currentServer.ip
     },
     // 更改更新频率（周期）数值
     handleIntervalChange: debounce(function(value) {
