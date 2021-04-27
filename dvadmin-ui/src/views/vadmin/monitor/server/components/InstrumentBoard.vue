@@ -77,7 +77,8 @@ export default {
     // 使用率
     ringRate() {
       let ringRate = this.currentInstrumentBoardData.rate
-      return ringRate < 1 ? ringRate * 100 : ringRate
+      ringRate = ringRate < 1 ? ringRate * 100 : ringRate
+      return parseFloat(ringRate.toFixed(4))
     },
     // 仪表盘id
     ringGraphId() {
