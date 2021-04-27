@@ -65,7 +65,7 @@
             icon="el-icon-s-home"
             plain
             @click="goTarget('http://django-vue-admin.com')"
-            >monitorLogSavingDays</el-button
+            >访问主页</el-button
           >
         </p>
       </el-col>
