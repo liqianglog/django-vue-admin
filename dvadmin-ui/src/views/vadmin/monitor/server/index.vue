@@ -327,7 +327,7 @@ export default {
         cancelButtonText: '放弃'
       }).then(() => {
         cleanMonitorLog().then(results => {
-          this.msgSuccess( '清除记录成功！')
+          this.msgSuccess('清除记录成功！')
         }).catch(error => {
           this.$message.warning(error.msg || '清除记录失败，请重试！')
         })
@@ -405,12 +405,16 @@ export default {
 }
 
 .server-monitor-top {
-  padding: 0 10px;
+  padding: 10px 10px;
   text-align: justify-all;
+  overflow-x: scroll;
+  display: flex;
 }
 
 .server-monitor-bottom {
   text-align: left;
+  overflow-x: scroll;
+  display: flex;
 }
 
 .server-information {
@@ -489,6 +493,7 @@ export default {
   min-width: 500px;
   margin: 10px;
   display: inline-block;
+  overflow-x: scroll;
 }
 
 </style>
