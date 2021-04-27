@@ -58,7 +58,7 @@ class MonitorModelViewSet(CustomModelViewSet):
             "memory": [],
         }
         for ele in queryset:
-            data["cpu"].append(float(ele.get('cpu_sys', 0)))
+            data["cpu"].append(float(ele.get('cpu_sys', 0)) / 100)
             data["memory"].append(float(ele.get('mem_num', 0)) and round(float(ele.get('mem_sys', 0)) /
                                                                          float(ele.get('mem_num', 0)), 4))
         return SuccessResponse(data=data)
