@@ -3,6 +3,7 @@ import { getRouters } from '@/api/vadmin/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView';
 import { handleTree } from "@/utils/ruoyi";
+import de from 'element-ui/src/locale/lang/de'
 const permission = {
   state: {
     routes: [],
@@ -24,28 +25,11 @@ const permission = {
       return new Promise(resolve => {
         // 向后端请求路由数据
         getRouters().then(res => {
-          let tempData =  handleTree(res.data, "id");
-          tempData[2].children.push({
-            component: "vadmin/monitor/server/index",
-            hidden: false,
-            id: 97,
-            meta: {title: "服务监控", icon: "server", noCache: false},
-            name: "server",
-            orderNum: 3,
-            parentId: 66,
-            path: "server",
-            redirect: "server"
-          })
-          const data = tempData
-
-
-          // console.log("handleTree:", data)
+          const data =  handleTree(res.data, "id");
           const sdata = JSON.parse(JSON.stringify(data))
           const rdata = JSON.parse(JSON.stringify(data))
           const sidebarRoutes = filterAsyncRouter(sdata)
-          // console.log(sidebarRoutes)
           const rewriteRoutes = filterAsyncRouter(rdata, false, true)
-          // console.log(rewriteRoutes)
           rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
           commit('SET_ROUTES', rewriteRoutes)
           commit('SET_SIDEBAR_ROUTERS', sidebarRoutes)
