@@ -12,5 +12,6 @@ WORKDIR /dvadmin-backend
 COPY ./dvadmin-backend/requirements.txt /
 COPY ./dvadmin-backend/conf/env.example.py /dvadmin-backend/conf/env.py
 RUN python3 -m pip install -i https://mirrors.aliyun.com/pypi/simple/ -r /requirements.txt
+RUN python3 -m pip install -i https://mirrors.aliyun.com/pypi/simple/ uwsgi==2.0.19.1
 CMD ["/dvadmin-backend/docker_start.sh"]
 # ENTRYPOINT [ "uwsgi --ini /backend/azcrm/uwsgi.ini" ]
