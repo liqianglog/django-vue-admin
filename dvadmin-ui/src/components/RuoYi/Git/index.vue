@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg-icon icon-class="github" @click="goto"/>
+    <svg-icon icon-class="gitee" @click="goto"/>
   </div>
 </template>
 
@@ -9,7 +9,7 @@ export default {
   name: 'RuoYiGit',
   data() {
     return {
-      url: 'https://gitee.com/y_project/RuoYi-Vue'
+      url: 'https://gitee.com/liqianglog/django-vue-admin'
     }
   },
   methods: {

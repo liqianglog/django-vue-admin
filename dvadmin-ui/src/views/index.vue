@@ -64,7 +64,7 @@
             size="mini"
             icon="el-icon-s-home"
             plain
-            @click="goTarget('https://django-vue-admin.com')"
+            @click="goTarget('http://django-vue-admin.com')"
             >访问主页</el-button
           >
         </p>
@@ -113,9 +113,9 @@
           <div class="body">
             <p>
               <i class="el-icon-s-promotion"></i> 官网：<el-link
-                href="https://django-vue-admin.com"
+                href="http://django-vue-admin.com"
                 target="_blank"
-                >https://django-vue-admin.com</el-link
+                >http://django-vue-admin.com</el-link
               >
             </p>
             <p>
