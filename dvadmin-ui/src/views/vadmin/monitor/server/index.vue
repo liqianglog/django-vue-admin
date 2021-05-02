@@ -313,7 +313,7 @@ export default {
     },
     /** 获取监控日志信息 */
     getCurrentServerMonitorLogs() {
-      getMonitorLogs(this.currentServer.id, { as: { 'create_datetime__range': this.timeRange } }).then(results => {
+      getMonitorLogs(this.currentServer.id, { as: JSON.stringify( { 'create_datetime__range': this.timeRange })}).then(results => {
         this.lineChartData = results.data
       }).catch(error => {
         this.msgError(error.msg || '获取监控日志信息出错误！')

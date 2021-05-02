@@ -146,7 +146,7 @@ export default {
       this.getCurrentServerMonitorLogs()
     },
     getCurrentServerMonitorLogs() {
-      getMonitorLogs(this.serverInfo.id,{ as: { 'create_datetime__range': this.currentTimeLimitSetting.timeRange } }).then(results => {
+      getMonitorLogs(this.serverInfo.id, {as: JSON.stringify({create_datetime__range: this.currentTimeLimitSetting.timeRange})}).then(results => {
         this.lineChartData = results.data[this.lineChartKey]
         this.drawBar()
       }).catch(error => {
