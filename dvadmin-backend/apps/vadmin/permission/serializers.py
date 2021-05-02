@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 
 from ..op_drf.serializers import CustomModelSerializer
+from ..op_drf.validator import CustomUniqueValidator
 from ..permission.models import Menu, Dept, Post, Role
 from ..system.models import MessagePush
 
@@ -260,7 +260,8 @@ class UserProfileCreateUpdateSerializer(CustomModelSerializer):
     post = PostSerializer(many=True, read_only=True)
     role = RoleSerializer(many=True, read_only=True)
     username = serializers.CharField(required=True, max_length=150,
-                                     validators=[UniqueValidator(queryset=UserProfile.objects.all(), message="用戶已存在")],
+                                     validators=[
+                                         CustomUniqueValidator(queryset=UserProfile.objects.all(), message="用戶已存在")],
                                      error_messages={
                                          "blank": "请输入用户名称",
                                          "required": "用户名称不能为空",
