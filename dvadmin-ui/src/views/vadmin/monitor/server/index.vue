@@ -115,7 +115,7 @@
     <!--  下方折线图  -->
     <div class="server-monitor-bottom">
       <!-- 折线图 -->
-      <el-card class="box-card server-monitor-line-chart" v-for="(key, index) in Object.keys(lineChartData)"
+      <el-card class="box-card server-monitor-line-chart" v-for="(key, index) in Object.keys(lineChartData).slice(0,2)"
                :key="`${index}-${key}`">
         <line-chart :line-chart-key="key"
                     :server-info="currentServer"
@@ -313,7 +313,7 @@ export default {
     },
     /** 获取监控日志信息 */
     getCurrentServerMonitorLogs() {
-      getMonitorLogs(this.currentServer.id, { as: { 'create_datetime__range': this.timeRange } }).then(results => {
+      getMonitorLogs(this.currentServer.id, { as: JSON.stringify( { 'create_datetime__range': this.timeRange })}).then(results => {
         this.lineChartData = results.data
       }).catch(error => {
         this.msgError(error.msg || '获取监控日志信息出错误！')

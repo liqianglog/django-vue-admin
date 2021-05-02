@@ -74,14 +74,15 @@ export default {
     serverInfo: VueTypes.object.isRequired,
     lineChartKey: VueTypes.string.isRequired,
     chartTitle: VueTypes.string.isRequired,
-    chartData: VueTypes.array.isRequired
+    chartData: VueTypes.array.isRequired,
   },
   data() {
     return {
       TIME_LIMIT_SETTING,
       timeLimit: DEFAULT_TIME,
       lineChartId: this.lineChartKey + 'Chart',
-      lineChartData: this.chartData
+      lineChartData: this.chartData,
+      lineChartTime: this.chartData
     }
   },
 
@@ -107,9 +108,14 @@ export default {
       let barGraph = echarts.init(document.getElementById(this.lineChartId))
       // 绘制图表
       barGraph.setOption({
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} : {c}'
+        tooltip : {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            label: {
+              backgroundColor: '#6a7985',
+            }
+          }
         },
         legend: {
           left: 'center',
@@ -120,7 +126,8 @@ export default {
           type: 'category',
           name: 'x',
           splitLine: { show: false },
-          data: []
+          data:this.lineChartTime,
+          offset:20
         },
         grid: {
           left: '1%',
@@ -131,14 +138,19 @@ export default {
         yAxis: {
           type: 'value',
           name: '使用率',
+          axisLabel: {
+            show: true,
+            interval: 'auto',
+            formatter: '{value}%'
+          },
         },
         series: [
           {
             name: '使用率',
             type: 'line',
-            data: this.lineChartData
+            data: this.lineChartData,
           }
-        ]
+        ],
       })
     },
     changeTimeLimit(value) {
@@ -146,8 +158,9 @@ export default {
       this.getCurrentServerMonitorLogs()
     },
     getCurrentServerMonitorLogs() {
-      getMonitorLogs(this.serverInfo.id,{ as: { 'create_datetime__range': this.currentTimeLimitSetting.timeRange } }).then(results => {
+      getMonitorLogs(this.serverInfo.id, {as: JSON.stringify({create_datetime__range: this.currentTimeLimitSetting.timeRange})}).then(results => {
         this.lineChartData = results.data[this.lineChartKey]
+        this.lineChartTime = results.data["datetime"]
         this.drawBar()
       }).catch(error => {
         this.$message.warning(error.msg || `获取${this.chartTitle}数据失败！`)

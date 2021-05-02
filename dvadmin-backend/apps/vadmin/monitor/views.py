@@ -48,19 +48,22 @@ class MonitorModelViewSet(CustomModelViewSet):
         """
         pk = kwargs.get("pk")
         queryset = self.filter_queryset(self.get_queryset())
-        queryset = queryset.filter(server__id=pk).order_by("-create_datetime")
+        queryset = queryset.filter(server__id=pk).order_by("create_datetime")
         # 间隔取值
         queryset_count = queryset.count()
         Interval_num = 1 if queryset_count < 200 else int(queryset_count / 100)
-        queryset = queryset.values('cpu_sys', 'mem_num', 'mem_sys')[::Interval_num][:100]
+        queryset = queryset.values('cpu_sys', 'mem_num', 'mem_sys', 'create_datetime')[::Interval_num][:100]
         data = {
             "cpu": [],
             "memory": [],
+            "datetime": [],
         }
         for ele in queryset:
-            data["cpu"].append(float(ele.get('cpu_sys', 0)) / 100)
-            data["memory"].append(float(ele.get('mem_num', 0)) and round(float(ele.get('mem_sys', 0)) /
-                                                                         float(ele.get('mem_num', 0)), 4))
+            data["cpu"].append(round(float(ele.get('cpu_sys', 0)), 2))
+            data["datetime"].append(ele.get('create_datetime').strftime('%Y-%m-%d %H:%M:%S'))
+            data["memory"].append(round(float(ele.get('mem_num', 0)), 4) and round(float(ele.get('mem_sys', 0)) /
+                                                                                   float(ele.get('mem_num', 0)) * 100,
+                                                                                   2))
         return SuccessResponse(data=data)
 
     def get_monitor_info(self, request: Request, *args, **kwargs):

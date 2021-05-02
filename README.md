@@ -50,9 +50,9 @@ github地址：[https://github.com/liqianglog/django-vue-admin](https://github.c
 
 ## 在线体验
 
-演示地址：[https://demo.django-vue-admin.com/](https://demo.django-vue-admin.com/) 账号：admin 密码：123456
+演示地址：[http://demo.django-vue-admin.com/](http://demo.django-vue-admin.com/) 账号：admin 密码：123456
 
-文档地址：[https://django-vue-admin.com/](https://django-vue-admin.com/)
+文档地址：[http://django-vue-admin.com/](http://django-vue-admin.com/)
 
 ## 前端
 

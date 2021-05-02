@@ -25,7 +25,7 @@ const permission = {
       return new Promise(resolve => {
         // 向后端请求路由数据
         getRouters().then(res => {
-          const data =  handleTree(res.data, "id");
+          const data = handleTree(res.data, "id");
           const sdata = JSON.parse(JSON.stringify(data))
           const rdata = JSON.parse(JSON.stringify(data))
           const sidebarRoutes = filterAsyncRouter(sdata)
@@ -58,7 +58,11 @@ function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
     }
     if (route.children != null && route.children && route.children.length) {
       route.children = filterAsyncRouter(route.children, route, type)
-      route.alwaysShow = true
+      if (route.children.length === 1 && route.children[0].path === 'index') {
+        route.alwaysShow = false
+      } else {
+        route.alwaysShow = true
+      }
     } else {
       delete route['children']
       delete route['redirect']
