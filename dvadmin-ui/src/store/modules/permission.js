@@ -24,22 +24,7 @@ const permission = {
       return new Promise(resolve => {
         // 向后端请求路由数据
         getRouters().then(res => {
-          let tempData =  handleTree(res.data, "id");
-          tempData[2].children.push({
-            component: "vadmin/monitor/server/index",
-            hidden: false,
-            id: 97,
-            meta: {title: "服务监控", icon: "server", noCache: false},
-            name: "server",
-            orderNum: 3,
-            parentId: 66,
-            path: "server",
-            redirect: "server"
-          })
-          const data = tempData
-
-
-          // console.log("handleTree:", data)
+          const data = handleTree(res.data, "id");
           const sdata = JSON.parse(JSON.stringify(data))
           const rdata = JSON.parse(JSON.stringify(data))
           const sidebarRoutes = filterAsyncRouter(sdata)
