@@ -121,6 +121,7 @@
                     :server-info="currentServer"
                     :chart-title="CHART_KEY_NAME_MAPPING[key]"
                     :chart-data="lineChartData[key]"
+                    :chart-time="lineChartData['datetime']"
         ></line-chart>
       </el-card>
     </div>

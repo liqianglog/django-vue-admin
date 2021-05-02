@@ -75,6 +75,7 @@ export default {
     lineChartKey: VueTypes.string.isRequired,
     chartTitle: VueTypes.string.isRequired,
     chartData: VueTypes.array.isRequired,
+    chartTime: VueTypes.array.isRequired,
   },
   data() {
     return {
@@ -82,7 +83,7 @@ export default {
       timeLimit: DEFAULT_TIME,
       lineChartId: this.lineChartKey + 'Chart',
       lineChartData: this.chartData,
-      lineChartTime: this.chartData
+      lineChartTime: this.chartTime
     }
   },
 
