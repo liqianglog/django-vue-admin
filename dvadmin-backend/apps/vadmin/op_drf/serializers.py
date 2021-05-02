@@ -33,6 +33,8 @@ class CustomModelSerializer(ModelSerializer):
         return super().save(**kwargs)
 
     def create(self, validated_data):
+        if self.context.get('request'):
+            self.request = self.context.get('request')
         if self.request:
             username = self.get_request_username()
             if self.modifier_field_name in self.fields.fields:
