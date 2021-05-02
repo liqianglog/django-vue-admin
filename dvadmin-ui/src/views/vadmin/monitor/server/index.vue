@@ -115,7 +115,7 @@
     <!--  下方折线图  -->
     <div class="server-monitor-bottom">
       <!-- 折线图 -->
-      <el-card class="box-card server-monitor-line-chart" v-for="(key, index) in Object.keys(lineChartData)"
+      <el-card class="box-card server-monitor-line-chart" v-for="(key, index) in Object.keys(lineChartData).slice(0,2)"
                :key="`${index}-${key}`">
         <line-chart :line-chart-key="key"
                     :server-info="currentServer"
