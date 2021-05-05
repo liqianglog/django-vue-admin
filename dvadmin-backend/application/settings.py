@@ -243,15 +243,17 @@ else:
 
 # redis 缓存
 REDIS_URL = f'redis://:{REDIS_PASSWORD if REDIS_PASSWORD else ""}@{os.getenv("REDIS_HOST") or REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_URL,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    },
-}
+# 是否启用redis
+if locals().get("REDIS_ENABLE", True):
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": REDIS_URL,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        },
+    }
 # ================================================= #
 # ******************** JWT配置  ******************** #
 # ================================================= #
@@ -329,5 +331,4 @@ CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'  # Back
 # ================================================= #
 # 接口权限
 INTERFACE_PERMISSION = locals().get("INTERFACE_PERMISSION", False)
-INTERFACE_PERMISSION = {locals().get("INTERFACE_PERMISSION", False)}
 DJANGO_CELERY_BEAT_TZ_AWARE = False
