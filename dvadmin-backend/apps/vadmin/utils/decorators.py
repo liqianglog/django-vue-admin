@@ -27,7 +27,13 @@ def get_cache(alias=None):
 logger = logging.getLogger(__name__)
 
 
-def BaseCeleryApp(name):
+def BaseCeleryApp(name, save_success_logs=True):
+    """
+    celery 保存日志基础类
+    :param name: celery任务名字
+    :param save_success_logs: 是否保存成功的日志(适用于频率高的celery任务，成功不需要保存日志，则传False)
+    :return:
+    """
     def wraps(func):
         @app.task(name=name)
         @functools.wraps(func)
@@ -40,6 +46,8 @@ def BaseCeleryApp(name):
             res = None
             try:
                 res = func(*args, **kwargs)
+                if not save_success_logs:
+                    return res
                 obj.result = str(res)
                 obj.status = True
             except Exception as exc:

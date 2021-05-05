@@ -31,7 +31,7 @@ def getIP():
         return None
 
 
-@BaseCeleryApp(name='apps.vadmin.monitor.tasks.get_monitor_info')
+@BaseCeleryApp(name='apps.vadmin.monitor.tasks.get_monitor_info', save_success_logs=False)
 def get_monitor_info():
     """
     定时获取系统监控信息
