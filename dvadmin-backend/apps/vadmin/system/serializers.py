@@ -302,4 +302,4 @@ class ExportCeleryLogSerializer(CustomModelSerializer):
 
     class Meta:
         model = CeleryLog
-        fields = ('name', 'kwargs', 'seconds', 'state', 'result', 'creator_name')
+        fields = ('name', 'kwargs', 'seconds', 'status', 'result', 'creator_name')

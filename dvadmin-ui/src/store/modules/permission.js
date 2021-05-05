@@ -3,6 +3,7 @@ import { getRouters } from '@/api/vadmin/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView';
 import { handleTree } from "@/utils/ruoyi";
+import de from 'element-ui/src/locale/lang/de'
 const permission = {
   state: {
     routes: [],
@@ -51,13 +52,32 @@ function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
         route.component = Layout
       } else if (route.component === 'ParentView') {
         route.component = ParentView
+      } else if (typeof route.component === "string" && route.component === 'Layout/index' && !route.children) { // 首页定制
+        route.meta.affix = true
+        route.children = [
+          {
+            path: 'index',
+            component: 'index',
+            name: route.name,
+            meta: route.meta
+          }
+        ]
+        route.path = ''
+        route.name = ''
+        route.redirect = '/index'
+        route.alwaysShow = false
+        route.component = Layout
       } else {
         route.component = loadView(route.component)
       }
     }
     if (route.children != null && route.children && route.children.length) {
       route.children = filterAsyncRouter(route.children, route, type)
-      route.alwaysShow = true
+      if (route.children.length === 1 && route.children[0].path === 'index') {
+        route.alwaysShow = false
+      } else {
+        route.alwaysShow = true
+      }
     } else {
       delete route['children']
       delete route['redirect']

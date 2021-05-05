@@ -56,14 +56,14 @@ export const constantRoutes = [
   {
     path: '',
     component: Layout,
-    redirect: 'index',
+    redirect: '/index',
     children: [
-      {
-        path: 'index',
-        component: (resolve) => require(['@/views/index'], resolve),
-        name: '首页',
-        meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
-      }
+      // {
+      //   path: 'index',
+      //   component: (resolve) => require(['@/views/index'], resolve),
+      //   name: '首页',
+      //   meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
+      // }
     ]
   },
   {

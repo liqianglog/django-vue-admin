@@ -315,8 +315,9 @@ class ImportSerializerMixin:
         # 导出模板
         if request.method == 'GET':
             # 示例数据
+            queryset = self.filter_queryset(self.get_queryset())
             return SuccessResponse(
-                export_excel_save_model(request, self.import_field_data.values(), [], '导入用户数据模板.xls'))
+                export_excel_save_model(request, self.import_field_data.values(), [], f'导入{get_verbose_name(queryset)}模板.xls'))
         updateSupport = request.data.get('updateSupport')
         # 从excel中组织对应的数据结构，然后使用序列化器保存
         data = excel_to_data(request.data.get('file_url'), self.import_field_data)
