@@ -48,7 +48,10 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2021 ruoyi.vip All Rights Reserved.</span>
+      <span>Copyright © 2018-2021 django-vue-admin.com All Rights Reserved.</span> |
+      <a href="https://beian.miit.gov.cn/#/Integrated/index"
+               target="_blank"
+      > 晋ICP备18005113号-3</a>
     </div>
   </div>
 </template>
