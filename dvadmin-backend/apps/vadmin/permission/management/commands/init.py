@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     """
-    项目初始化命令: python manage.py initialization
+    项目初始化命令: python manage.py init
     """
 
     def customSql(self, sql_list, model_name, table_name, is_yes):
