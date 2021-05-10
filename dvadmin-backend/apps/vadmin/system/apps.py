@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class PermissionConfig(AppConfig):
+class SystemConfig(AppConfig):
     name = 'vadmin.system'
-    verbose_name = "权限管理"
+    verbose_name = "系统管理"
