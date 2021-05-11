@@ -30,6 +30,8 @@ import Pagination from "@/components/Pagination";
 // 自定义表格工具扩展
 import RightToolbar from "@/components/RightToolbar"
 import SmallDialog from '@/components/SmallDialog';
+import DeptTree from '@/components/DeptTree';
+import UsersTree from '@/components/UsersTree';
 import CommonIcon from '@/components/CommonIcon';
 import CommonStaticTable from '@/components/CommonStaticTable';
 import {getCrontabData, getIntervalData} from "./utils/validate"; // 通用图标组件
@@ -67,6 +69,8 @@ Vue.prototype.msgInfo = function (msg) {
 }
 // 自定义组件
 Vue.component('small-dialog', SmallDialog);
+Vue.component('dept-tree', DeptTree);
+Vue.component('users-tree', UsersTree);
 // 全局组件挂载
 Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
