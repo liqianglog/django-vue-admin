@@ -283,7 +283,7 @@ REST_FRAMEWORK = {
     ),
 
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'vadmin.op_drf.pagination.JsonPagination',
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'EXCEPTION_HANDLER': 'apps.vadmin.utils.exceptions.op_exception_handler',
 }
