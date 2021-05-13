@@ -42,4 +42,5 @@ class CaptchaRefresh(APIView):
 urlpatterns = [
     re_path(r'media/(?P<path>.*)', serve, {"document_root": settings.MEDIA_ROOT}),
     re_path(r'^admin/', include('apps.vadmin.urls')),
+    re_path(r'^project/', include('apps.project.urls')),
 ]
