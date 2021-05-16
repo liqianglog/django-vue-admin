@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from project.models import Project
 from vadmin.op_drf.serializers import CustomModelSerializer
 
@@ -12,7 +14,7 @@ class ProjectSerializer(CustomModelSerializer):
 
     class Meta:
         model = Project
-        exclude = ('description', 'creator', 'modifier')
+        fields = '__all__'
 
 
 class ProjectCreateUpdateSerializer(CustomModelSerializer):
@@ -33,7 +35,15 @@ class ExportProjectSerializer(CustomModelSerializer):
     """
     导出 项目管理 简单序列化器
     """
+    person__username = serializers.SerializerMethodField()
+    dept__deptName = serializers.SerializerMethodField()
+
+    def get_person__username(self, obj):
+        return "" if not hasattr(obj, 'person') else obj.person.username
+
+    def get_dept__deptName(self, obj):
+        return "" if not hasattr(obj, 'dept') else obj.dept.deptName
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'code', 'person__username', 'dept__deptName', 'creator', 'modifier', 'remark')
+        fields = ('id', 'name', 'code', 'person__username', 'dept__deptName', 'creator', 'modifier', 'description')
