@@ -35,8 +35,8 @@ class ExportProjectSerializer(CustomModelSerializer):
     """
     导出 项目管理 简单序列化器
     """
-    person__username = serializers.SerializerMethodField()
-    dept__deptName = serializers.SerializerMethodField()
+    person__username = serializers.SerializerMethodField(read_only=False)
+    dept__deptName = serializers.SerializerMethodField(read_only=False)
 
     def get_person__username(self, obj):
         return "" if not hasattr(obj, 'person') else obj.person.username
@@ -46,4 +46,5 @@ class ExportProjectSerializer(CustomModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'code', 'person__username', 'dept__deptName', 'creator', 'modifier', 'description')
+        fields = ('id', 'name', 'code', 'person', 'person__username', 'dept', 'dept__deptName', 'creator', 'modifier',
+                  'description')
