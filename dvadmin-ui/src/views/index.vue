@@ -158,6 +158,17 @@
           <el-collapse accordion>
             <el-collapse-item title="">
               <template slot="title">
+                v1.1.1 - 2021-05-17&nbsp;&nbsp;&nbsp;
+                <el-badge value="new" class="item" style="padding-top: 10px;padding-left: 10px;"/>
+              </template>
+              <ol>
+                <li>新功能(前端框架): 前端封装快速搭建CRUD</li>
+                <li>新功能(一键创建app命令): 一键创建app，并注册到settings和urls中</li>
+                <li>修复BUG(用户信息): 修复无法管理员更新用户信息BUG</li>
+              </ol>
+            </el-collapse-item>
+            <el-collapse-item title="">
+              <template slot="title">
                 v1.1.0 - 2021-05-05&nbsp;&nbsp;&nbsp;
                 <el-badge value="new" class="item" style="padding-top: 10px;padding-left: 10px;"/>
               </template>
@@ -213,7 +224,7 @@
     data() {
       return {
         // 版本号
-        version: "1.1.0",
+        version: "1.1.1",
       };
     },
     methods: {
