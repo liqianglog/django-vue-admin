@@ -71,10 +71,10 @@ Vue.prototype.msgInfo = function (msg) {
 }
 // 自定义组件
 Vue.component('small-dialog', SmallDialog);
+Vue.component('advanced-search-form', AdvancedSearchForm);
 Vue.component('dept-tree', DeptTree);
 Vue.component('users-tree', UsersTree);
 Vue.component('model-display', ModelDisplay);
-Vue.component('advanced-search-form', AdvancedSearchForm);
 // 全局组件挂载
 Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
