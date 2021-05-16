@@ -1,7 +1,7 @@
 <!-- 部门选择器 -->
 <template>
   <div>
-    <treeselect v-model="dept_value" :options="deptOptions" :multiple="multiple" :show-count="true"
+    <treeselect v-model="dept_value" :options="deptTree" :multiple="multiple" :show-count="true"
                 :placeholder="placeholder" :disable-branch-nodes="disable_branch_nodes"/>
   </div>
 </template>
@@ -27,12 +27,19 @@
     data() {
       return {
         deptOptions: [],
-        dept_value: this.value
+        deptTree: [],
+        dept_value: ''
       }
     },
     watch: {
       dept_value(newValue) {
         this.$emit('update:value', newValue)
+      },
+      value: {
+        handler: function (newValue) {
+          this.dept_value = newValue
+        },
+        immediate: true
       }
     },
     created() {
@@ -42,7 +49,8 @@
       /** 查询部门下拉树结构 */
       getTreeselect() {
         treeselect().then(response => {
-          this.deptOptions = this.handleTree(response.data, 'id')
+          this.deptOptions = response.data
+          this.deptTree = this.handleTree(response.data, 'id')
         })
       },
     }

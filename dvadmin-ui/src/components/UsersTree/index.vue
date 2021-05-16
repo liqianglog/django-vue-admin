@@ -27,12 +27,18 @@
     data() {
       return {
         usersOptions: [],
-        users_value: this.value
+        users_value: ''
       }
     },
     watch: {
-      dept_value(newValue) {
+      users_value(newValue) {
         this.$emit('update:value', newValue)
+      },
+      value: {
+        handler: function(newValue) {
+          this.users_value = newValue
+        },
+        immediate: true
       }
     },
     created() {

@@ -1,49 +1,129 @@
 <!--
-@author: ruoxing
-@description: 封装组件
+@description: 强大的CRUD组件封装
 -->
 <template>
-  <div style="padding-left: 10px;">
+  <div style="padding-left: 10px;padding-top: 10px;">
+    <div class="grid-content bg-purple">
+      <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="90px">
+        <el-row>
+          <el-form-item v-if="value.search" :label="value.label" :prop="value.prop" v-for="(value,index) in fields"
+                        :key="index">
+            <!--           date/option/bool/users/depts -->
+            <el-switch
+              v-if="value.type==='boolean'"
+              v-model="queryParams[value.prop]"
+              active-color="#13ce66"
+              inactive-color="#ff4949">
+            </el-switch>
+            <dept-tree ref="dept_tree" v-else-if="value.type==='depts'" :value.sync="queryParams[value.prop]"
+                       style="width: 150px;"></dept-tree>
+            <users-tree ref="users_tree" v-else-if="value.type==='users'" :value.sync="queryParams[value.prop]"
+                        style="width: 150px;"></users-tree>
+            <el-date-picker
+              v-else-if="value.type==='date'"
+              v-model="dateRange"
+              size="small"
+              style="width: 240px"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :default-time="['00:00:00', '23:59:59']"
+            ></el-date-picker>
+            <el-select
+              v-else-if="value.type==='option' && value.option_key"
+              v-model="queryParams[value.prop]"
+              :placeholder="value.label"
+              clearable
+              size="small"
+              style="width: 240px"
+            >
+              <el-option
+                v-for="dict in DictsOptions[value.option_key]"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+            <el-input
+              v-else
+              v-model="queryParams[value.prop]"
+              :placeholder="value.label"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-row>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleSearchFormSubmit">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <el-row v-if="topLayout" style="margin-bottom: 20px">
       <el-col v-if="topLayoutLeft" :span="18">
-        <div class="grid-content bg-purple">
-          <el-input
-            v-model="searchForm.search"
-            :disabled="tableLoading"
-            :size="$ELEMENT.size"
-            :placeholder="searchPlaceholder"
-            clearable
-            style="width: 200px;"
-            @keyup.enter.native="handleSearchFormSubmit"/>
-          <el-button
-            :size="$ELEMENT.size"
-            name="search"
-            type="primary"
-            icon="el-icon-search"
-            title="模糊查询"
-            @click="handleSearchFormSubmit"/>
-          <el-button
-            v-show="searchFormShow"
-            :size="$ELEMENT.size"
-            name="search"
-            type="primary"
-            title="高级搜索"
-            @click="handleAdvancedSearchFormShow">高级搜索
-          </el-button>
-          <slot name="button"/>
-        </div>
+        <el-row :gutter="10" class="mb8">
+          <el-col :span="1.5" v-for="(func,index) in funcs" :key="index">
+            <el-button
+              v-if="func.type==='add'"
+              type="primary"
+              plain
+              :icon="func.icon||'el-icon-plus'"
+              size="mini"
+              @click="handleAdd(func.api)"
+              v-hasPermi="func.permis"
+            >{{func.label}}
+            </el-button>
+            <el-button
+              v-else-if="func.type==='update'"
+              type="success"
+              plain
+              :disabled="multipleSelection.length!==1"
+              :icon="func.icon||'el-icon-edit'"
+              size="mini"
+              @click="handleUpdate(func.api,{})"
+              v-hasPermi="func.permis"
+            >{{func.label}}
+            </el-button>
+            <el-button
+              v-else-if="func.type==='delete'"
+              type="danger"
+              plain
+              :disabled="multipleSelection.length===0"
+              :icon="func.icon||'el-icon-delete'"
+              size="mini"
+              @click="handleDelete(func.api,{})"
+              v-hasPermi="func.permis"
+            >{{func.label}}
+            </el-button>
+            <el-button
+              v-else-if="func.type==='export'"
+              type="warning"
+              plain
+              :icon="func.icon||'el-icon-download'"
+              size="mini"
+              @click="handleExport(func.api)"
+              v-hasPermi="func.permis"
+            >{{func.label}}
+            </el-button>
+            <el-button
+              v-else-if="func.type==='import'"
+              type="info"
+              plain
+              :icon="func.icon||'el-icon-upload2'"
+              size="mini"
+              @click="handleImport(func.api)"
+              v-hasPermi="func.permis"
+            >{{func.label}}
+            </el-button>
+          </el-col>
+        </el-row>
       </el-col>
       <el-col v-if="topLayoutRight" :span="6">
         <div class="grid-content bg-purple-light" style="text-align: right">
           <slot name="tools"/>
-          <el-button
-            :size="$ELEMENT.size"
-            name="refresh"
-            type="info"
-            title="导出数据"
-            @click="handleExportTableData">
-            <svg-icon icon-class="icon-excel" style="font-size: 1em"/>
-          </el-button>
           <el-popover
             placement="bottom"
             width="200"
@@ -66,18 +146,6 @@
         </div>
       </el-col>
     </el-row>
-
-    <el-collapse v-show="showAdvancedSearchForm" value="as">
-      <el-collapse-item title="高级搜索功能" name="as">
-        <advanced-search-form
-          ref="advancedForm"
-          v-model="advancedSearchForm"
-          :fields="advancedSearchFields"
-          :size="$ELEMENT.size"
-          @submit="handleAdvancedSearchFormSubmit"
-          @reset="handleAdvancedSearchFormReset"/>
-      </el-collapse-item>
-    </el-collapse>
 
     <el-table
       v-loading="tableLoading"
@@ -119,6 +187,43 @@
           </template>
         </el-table-column>
       </template>
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        v-if="hasPermi(getOperationPermis())"
+      >
+        <template slot-scope="scope">
+          <span v-for="(func,index) in funcs" :key="index">
+            <el-button
+              v-if="func.type==='select'"
+              size="mini"
+              type="text"
+              :icon="func.icon||'el-icon-view'"
+              @click="handleSelect(func.api,scope.row)"
+              v-hasPermi="func.permis"
+            >{{func.label}}</el-button>
+            &nbsp;
+            <el-button
+              v-if="func.type==='update'"
+              size="mini"
+              type="text"
+              :icon="func.icon||'el-icon-edit'"
+              @click="handleUpdate(func.api,scope.row)"
+              v-hasPermi="func.permis"
+            >{{func.label}}</el-button>
+            &nbsp;
+            <el-button
+              v-else-if="func.type==='delete'"
+              size="mini"
+              type="text"
+              :icon="func.icon||'el-icon-delete'"
+              @click="handleDelete(func.api,scope.row)"
+              v-hasPermi="func.permis"
+            >{{func.label}}</el-button>
+          </span>
+        </template>
+      </el-table-column>
       <slot name="appendColumn"/>
       <slot name="column"/>
     </el-table>
@@ -142,23 +247,67 @@
         @size-change="handleChangePageSize"
         @current-change="handleChangeCurrentPage"/>
     </el-row>
-    <!--<avue-crud :data="tableData" :option="tableOption" :page="tablePagination" @row-save="rowSave"/>-->
-<!--    <table-export-dialog-->
-<!--      v-model="excelDialogVisible"-->
-<!--      :dialog-drag="dialogDrag"-->
-<!--      :fields="exportFields"-->
-<!--      :data="tableData"-->
-<!--      :selection="selection"-->
-<!--      :selected-data="multipleSelection"-->
-<!--      append-to-body-->
-<!--      width="40%"-->
-<!--      dialog-title="数据导出"/>-->
+
+    <!-- 添加或修改参数配置对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-form-item v-if="value.form" :label="value.label" :prop="value.prop" v-for="(value,index) in fields"
+                      :key="index">
+          <!--           date/option/bool/users/depts -->
+          <el-switch
+            v-if="value.type==='boolean'"
+            v-model="form[value.prop]"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+          <dept-tree ref="dept_tree" v-else-if="value.type==='depts'" :value.sync="form[value.prop]"
+                     style="width: 200px;"></dept-tree>
+          <users-tree ref="users_tree" v-else-if="value.type==='users'" :value.sync="form[value.prop]"
+                      style="width: 200px;"></users-tree>
+          <el-date-picker
+            v-else-if="value.type==='date'"
+            v-model="form[value.prop]"
+            type="date"
+            size="small"
+            style="width: 240px"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            placeholder="选择日期">
+          </el-date-picker>
+          <el-select
+            v-else-if="value.type==='option' && value.option_key"
+            v-model="form[value.prop]"
+            :placeholder="value.label"
+            clearable
+            size="small"
+            style="width: 240px"
+          >
+            <el-option
+              v-for="dict in DictsOptions[value.option_key]"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+          <el-input
+            v-else
+            v-model="form[value.prop]"
+            :placeholder="value.label"
+            clearable
+            size="small"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm" v-if="this.title!=='详情'">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 <script>
   import moment from 'moment';
   import * as Utils from '@/utils';
-  import request from '@/utils/request';
 
   export default {
     name: 'ModelDisplay',
@@ -196,19 +345,9 @@
         type: Boolean,
         default: false
       },
-      searchPlaceholder: {
-        type: String,
-        default: '模糊搜索'
-      },
       emptyText: {
         type: String,
         default: '暂无数据'
-      },
-      dialogDrag: {type: Boolean, default: false},
-      axios: {
-        type: Object,
-        default: () => {
-        }
       },
       paginationParams: {
         // 新增。分页参数, 当分页格式返回的属性名称不同使用, 可使用该属性覆盖默认分页属性名称
@@ -223,20 +362,10 @@
           };
         }
       },
-      api: {
+      listApi: {
         // 用于替换method + url属性
         type: Function,
         default: null
-      },
-      url: {
-        // 后端接口uri(必选), 已废用。请使用api代替
-        type: String,
-        default: ''
-      },
-      method: {
-        // 后端接口方法(默认, GET), 已废用。请使用api代替
-        type: String,
-        default: 'get'
       },
       topLayout: {
         // 用于控制表格顶部的按钮、工具的显示。默认左右的按钮、功能都显示
@@ -252,19 +381,19 @@
           return [];
         }
       },
-      selection: {
-        // 开始开启多选(默认不开启, false)
-        type: Boolean,
-        default: false
-      },
-      params: {
-        // 基本请求参数,最终请求参数=基本参数+基本高级搜索参数+组件封装的基本参数+租金组件封装的高级搜索参数
-        type: Object,
+      funcs: {
+        // 菜单配置字段
+        type: Array,
         default: () => {
-          return {};
+          return [];
         }
       },
-      baseParams: {
+      selection: {
+        // 开始开启多选(默认开启, true)
+        type: Boolean,
+        default: true
+      },
+      params: {
         // 基本请求参数,最终请求参数=基本参数+基本高级搜索参数+组件封装的基本参数+租金组件封装的高级搜索参数
         type: Object,
         default: () => {
@@ -288,39 +417,38 @@
     },
     data() {
       return {
-        tableEditable: true,
         showFields: [], // 显示的字段
-        buttonTagList: [], // 所有按钮标签
         searchForm: {
           search: '',
           ordering: ''
         },
-        excelDialogVisible: false,
+        queryParams: {},
         tableLoading: false,
-        showAdvancedSearchForm: false,
-        advancedSearchForm: {},
-        advancedSearchFields: [],
         tableData: [],
         rowKey: '',
+        dateRange: [],
         multipleSelection: [],
         pagination: {
           page: 1,
           page_size: 10,
           total: 0
         },
-        excelHeader: [],
-        excelData: [],
+        // 表单参数
+        form: {},
+        rules: this.getFormRules(),
+        open: false,
+        // 提交时api
+        submitFormApi: '',
+        // 单个查询api
+        selectApi: '',
+        DictsOptions: {},
         getRowKeys: row => {
           if (this.rowKey) {
             return row[this.rowKey];
           }
           return row.id || row.uuid;
         },
-        exportFields: [],
-        fields1: [],
-        tableOption: {},
-        tablePagination: {},
-        asParams: {}
+        title: '',
       };
     },
     computed: {
@@ -330,9 +458,6 @@
       topLayoutRight() {
         return this.topLayout.indexOf('right') >= 0;
       },
-      searchFormShow() {
-        return this.advancedSearchFields.length > 0;
-      }
     },
     watch: {
       params: {
@@ -341,20 +466,18 @@
           this.getTableData();
         }
       },
-      baseParams: {
-        deep: true,
-        handler: function (newValue, oldValue) {
-          this.getTableData();
-        }
-      }
     },
     mounted() {
     },
     created() {
-      // this.getTableOption();
       this.initComponentData();
-      this.initAdvancedSearchFields();
+      this.initDictsOptions();
       this.getTableData();
+      this.funcs.map(value => {
+        if (value.type === 'select') {
+          this.selectApi = value.api
+        }
+      })
     },
     methods: {
       initComponentData() {
@@ -392,13 +515,6 @@
           }
         });
       },
-      initAdvancedSearchFields() {
-        this.advancedSearchFields = this.fields
-          .filter(field => field.search)
-          .map(field => {
-            return {...field};
-          });
-      },
       formatColumnData(row, field) {
         const type = field.type || 'string';
         const prop = field.prop;
@@ -413,6 +529,12 @@
           return this.formatDate(row[prop]);
         } else if (type === 'time') {
           return this.formatTime(row[prop]);
+        } else if (type === 'option') {
+          return this.formatOptions(field.option_key, row[prop]);
+        } else if (type === 'users') {
+          return this.formatUsers(row[prop]);
+        } else if (type === 'depts') {
+          return this.formatDepts(row[prop]);
         } else if (type.startsWith('bool')) {
           return row[prop] ? '是' : '否';
         } else if (type === 'choices') {
@@ -439,43 +561,42 @@
       formatTime(time) {
         return moment(time).format('HH:mm:ss');
       },
+      formatOptions(option_key, id) {
+        var data = this.DictsOptions[option_key]
+        if (!id || !data) return ""
+        for (var i = 0; i < data.length; i++) {
+          if (data[i].dictValue === id) {
+            return data[i].dictLabel
+          }
+        }
+        return ""
+      },
+      formatUsers(id) {
+        if (!id) return ""
+        var data = this.$refs.users_tree[0].usersOptions
+        for (var i = 0; i < data.length; i++) {
+          if (data[i].id === id) {
+            return data[i].label
+          }
+        }
+        return ""
+      },
+      formatDepts(id) {
+        if (!id) return ""
+        var data = this.$refs.dept_tree[0].deptOptions
+        for (var i = 0; i < data.length; i++) {
+          if (data[i].id === id) {
+            return data[i].label
+          }
+        }
+        return ""
+      },
       sortMethod(a, b) {
         return -1;
       },
       getTableData() {
         this.listInterfaceData(this.getRequestParams());
         return this.tableData;
-      },
-      reset(refresh = false) {
-        this.tableData = [];
-        this.pagination = {page: 1, page_size: this.pageSizes[0], total: this.tableData.length};
-        if (refresh) {
-          this.getTableData();
-        }
-      },
-      rowSave(row, done, loading) {
-        console.dir(row);
-        done();
-      },
-      async getTableOption() {
-        const url = this.url;
-        const method = this.method;
-        await request({
-          url,
-          method,
-          params: {query_type: 'tableOption'}
-        }).then(response => {
-          this.tableOption = response.data.option;
-          this.tablePagination = response.data.page;
-        }).catch(error => {
-          console.error(error);
-        });
-        this.initComponentData();
-        this.initAdvancedSearchFields();
-        this.getTableData();
-      },
-      getMultipleSelection() {
-        return this.multipleSelection || [];
       },
       getFormattedPaginationParams() {
         const pageParamName = this.paginationParams.page;
@@ -488,38 +609,28 @@
       // 根据搜索框的内容, 组装请求参数
       getRequestParams() {
         // 组装分页参数、高级搜索参数
-        const asForm = {};
-        const tmpAsParams = {...this.baseParams, ...JSON.parse(JSON.stringify(this.asParams))};
-        for (const prop of Object.keys(tmpAsParams)) {
-          if (tmpAsParams[prop]) {
-            asForm[prop] = tmpAsParams[prop];
-          }
-        }
-        const tmpParams = {...this.params, ...this.getFormattedPaginationParams()};
+        const tmpParams = {...this.params, ...this.getFormattedPaginationParams(), ...this.queryParams};
         const params = {};
         for (const prop of Object.keys(tmpParams)) {
           if (tmpParams[prop]) {
             params[prop] = tmpParams[prop];
           }
         }
-        if (Object.keys(asForm).length) {
-          params['as'] = JSON.stringify(asForm);
-        }
         // 组装普遍模糊搜索的参数
         if (this.searchForm.search) {
           params['search'] = this.searchForm.search;
         }
-        // 组装普遍模糊搜索的参数
+        // 组装普遍排序搜索的参数
         if (this.searchForm.ordering) {
           params['ordering'] = this.searchForm.ordering;
         }
         // console.dir(params);
-        return params;
+        return this.addDateRange(params, this.dateRange);
       },
       // 封装后端接口, 后端接口返回数据必须规范一致
       listInterfaceData(params) {
         this.tableLoading = true;
-        this.api(params).then(response => {
+        this.listApi(params).then(response => {
           this.tableLoading = false;
           if (response.status === 'success') {
             const resultsParamName = this.paginationParams.results;
@@ -534,44 +645,43 @@
           console.error(error);
         });
       },
+      /** 清空已选择 */
       clearMultipleSelection() {
         this.clearSelection();
       },
+      /** 清空已选择 */
       clearSelection() {
         this.$refs.tableData.clearSelection();
       },
       handleSelectField(e, field) {
         field.show = e;
       },
-      // 处理点击高级搜索按钮事件
-      handleAdvancedSearchFormSubmit(params) {
-        this.pagination.page = 1;
-        this.asParams = params;
-        this.listInterfaceData(this.getRequestParams());
-      },
-      handleAdvancedSearchFormReset() {
-        this.advancedSearchForm = {};
-      },
       // 处理提交表单, 点击搜索按钮事件
       handleSearchFormSubmit() {
         this.pagination.page = 1;
         this.getTableData();
       },
-      // 处理显示/隐藏高级搜索表单按钮点击事件
-      handleAdvancedSearchFormShow() {
-        this.showAdvancedSearchForm = !this.showAdvancedSearchForm;
+      /** 搜索按钮操作 */
+      handleQuery() {
+        this.queryParams.pageNum = 1;
+        this.getTableData();
       },
-      handleEditFormSubmit(form, done) {
-        done();
-        this.handleCloseEditDialog();
+      /** 重置按钮操作 */
+      resetQuery() {
+        this.dateRange = [];
+        this.queryParams = {}
+        this.resetForm("queryForm");
+        this.handleQuery();
       },
-      // 导出表格的数据, 当前数据、当前列
-      handleExportTableData() {
-        this.excelDialogVisible = true;
-        this.exportFields = this.fields.map(field => {
-          return {prop: field.prop, label: field.label, show: field.show};
-        });
-        this.excelHeader = this.showFields.map(field => field['prop']);
+      /** 获取Dicts值 */
+      initDictsOptions() {
+        this.fields.map(value => {
+          if (value.option_key) {
+            this.getDicts(value.option_key).then(response => {
+              this.DictsOptions[value.option_key] = response.data
+            })
+          }
+        })
       },
       // 处理修改多选的值
       handleSelectionChange(val) {
@@ -587,13 +697,6 @@
       handleChangeCurrentPage(val) {
         this.pagination.page = val;
         this.getTableData();
-      },
-      handleOpenEditDialog(row) {
-        this.editForm = {...row};
-        this.editDialogVisible = true;
-      },
-      handleCloseEditDialog() {
-        this.editDialogVisible = false;
       },
       handleSortChange(info) {
         const {prop, order} = info;
@@ -620,6 +723,132 @@
       },
       handleHeaderClick(column, event) {
         this.$emit('header-click', column, event);
+      },
+      /**新增按钮*/
+      handleAdd(api) {
+        this.dateRange = [];
+        this.queryParams = {}
+        this.resetForm("queryForm");
+        this.open = true;
+        this.title = "新增";
+        this.submitFormApi = api
+
+      },
+      /**修改按钮*/
+      handleUpdate(api, row) {
+        this.dateRange = [];
+        this.queryParams = {}
+        this.resetForm("queryForm");
+        this.submitFormApi = api
+        const id = row.id || this.multipleSelection.map(item => item.id);
+        if (this.selectApi) {
+          this.selectApi(id).then(response => {
+            this.form = response.data;
+            this.open = true;
+            this.title = "修改";
+          });
+        } else {
+          this.open = true;
+          this.title = "修改";
+        }
+      },
+      /**修改按钮*/
+      handleSelect(api, row) {
+        this.dateRange = [];
+        this.queryParams = {}
+        this.resetForm("queryForm");
+        this.submitFormApi = api
+        const id = row.id || this.multipleSelection.map(item => item.id);
+        if (this.selectApi) {
+          this.selectApi(id).then(response => {
+            this.form = response.data;
+            this.open = true;
+            this.title = "详情";
+          });
+        } else {
+          this.open = true;
+          this.title = "详情";
+        }
+      },
+      /** 删除按钮操作 */
+      handleDelete(api, row) {
+        const ids = row.id || this.multipleSelection.map(item => item.id);
+        this.$confirm('是否确认删除编号为"' + ids + '"的数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function () {
+          return api(ids);
+        }).then(() => {
+          this.getTableData();
+          this.msgSuccess("删除成功");
+        })
+      },
+      /** 导出按钮操作 */
+      handleExport(api) {
+        const queryParams = this.queryParams;
+        this.$confirm('是否确认导出所有符合条件的数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function () {
+          return api(queryParams);
+        }).then(response => {
+          this.download(response.data.file_url, response.data.name);
+        })
+      },
+      /** 导入按钮操作 */
+      handleImport() {
+        this.upload.title = '用户导入'
+        this.upload.open = true
+      }, /** 获取表单校验 */
+      getFormRules() {
+        let dict = {}
+        this.fields.map(value => {
+          if (value.form) {
+            dict[value.prop] = [{
+              required: value.required,
+              message: value.rules_message || value.label + "不能为空",
+              trigger: value.trigger || "blur"
+            }]
+          }
+        })
+        console.log(2, dict)
+        return dict
+      },
+      /** 提交按钮 */
+      submitForm() {
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+            if (this.form.id !== undefined) {
+              this.submitFormApi(this.form).then(response => {
+                this.msgSuccess("修改成功");
+                this.open = false;
+                this.getTableData();
+              });
+            } else {
+              this.submitFormApi(this.form).then(response => {
+                this.msgSuccess("新增成功");
+                this.open = false;
+                this.getTableData();
+              });
+            }
+          }
+        })
+      },
+      // 取消按钮
+      cancel() {
+        this.open = false;
+      },
+      // 获取操作的权限列表
+      getOperationPermis() {
+        let Permis = []
+        this.funcs.map(value => {
+          if (['update', 'delete', 'select'].indexOf(value.type) !== 0) {
+            Permis.push(value.permis)
+          }
+        })
+        return Permis
       }
     }
   };
