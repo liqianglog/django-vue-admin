@@ -140,7 +140,7 @@ class PermissionModeMiddleware(MiddlewareMixin):
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         # 判断环境变量中，是否为演示模式(正常可忽略此判断)
-        white_list = ['/admin/logout/', '/admin/login/']
+        white_list = ['/admin/logout/', '/admin/login/', '/admin/api-auth/login/']
         if os.getenv('DEMO_ENV') and not request.method in ['GET', 'OPTIONS'] and request.path not in white_list:
             return ErrorJsonResponse(data={}, msg=f'演示模式，不允许操作!')
 
