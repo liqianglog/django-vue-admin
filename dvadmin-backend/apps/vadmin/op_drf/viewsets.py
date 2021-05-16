@@ -29,7 +29,7 @@ def get_object_or_404(queryset, *filter_args, **filter_kwargs):
 
 class GenericViewSet(ViewSetMixin, GenericAPIView):
     extra_filter_backends = []
-    pagination_class = Pagination
+    pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter, AdvancedSearchFilter]
     view_logger_classes = (CustomerModelViewLogger,)
 

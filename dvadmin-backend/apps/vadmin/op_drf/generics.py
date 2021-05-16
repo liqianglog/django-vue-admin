@@ -45,7 +45,7 @@ class GenericAPIView(CustomAPIView):
     filter_backends = api_settings.DEFAULT_FILTER_BACKENDS
 
     # The style to use for queryset pagination.
-    pagination_class = Pagination
+    pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
 
     def get_queryset(self):
         """

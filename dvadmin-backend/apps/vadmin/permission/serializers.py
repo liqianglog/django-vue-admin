@@ -235,7 +235,7 @@ class UserProfileSerializer(CustomModelSerializer):
     class Meta:
         model = UserProfile
         depth = 1
-        exclude = ('password', 'secret', 'user_permissions', 'groups', 'is_superuser', 'date_joined')
+        exclude = ('password', 'secret', 'user_permissions', 'groups', 'is_superuser', 'date_joined', 'creator')
 
 
 class ExportUserProfileSerializer(CustomModelSerializer):
