@@ -288,6 +288,15 @@
               :value="dict.dictValue"
             />
           </el-select>
+          <model-select
+            v-else-if="value.type==='model_select' && value.select_data"
+            v-model="form[value.prop]"
+            :placeholder="value.select_data.placeholder|| '请选择'"
+            :multiple="value.select_data.multiple|| false"
+            :disable_branch_nodes="value.select_data.disable_branch_nodes|| false"
+            :label_name="value.select_data.label_name|| 'name'"
+            :listApi="value.select_data.listApi|| null"
+          />
           <el-input
             v-else
             v-model="form[value.prop]"
@@ -339,9 +348,11 @@
   import moment from 'moment';
   import * as Utils from '@/utils';
   import {getToken} from '@/utils/auth'
+  import ModelSelect from "../ModelSelect/index";
 
   export default {
     name: 'ModelDisplay',
+    components: {ModelSelect},
     props: {
       value: {
         // table的Data
