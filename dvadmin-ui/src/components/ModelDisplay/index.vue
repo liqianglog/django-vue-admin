@@ -290,7 +290,7 @@
           </el-select>
           <model-select
             v-else-if="value.type==='model_select' && value.select_data"
-            v-model="form[value.prop]"
+            :value.sync="form[value.prop]"
             :placeholder="value.select_data.placeholder|| '请选择'"
             :multiple="value.select_data.multiple|| false"
             :disable_branch_nodes="value.select_data.disable_branch_nodes|| false"
