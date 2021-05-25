@@ -37,10 +37,12 @@ import AdvancedSearchForm from '@/components/AdvancedSearchForm';
 import CommonIcon from '@/components/CommonIcon';
 import CommonStaticTable from '@/components/CommonStaticTable';
 import {getCrontabData, getIntervalData} from "./utils/validate"; // 通用图标组件
+import {getModelSelect} from "@/utils/modelSelect";
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey
+Vue.prototype.getModelSelect = getModelSelect
 Vue.prototype.parseTime = parseTime
 Vue.prototype.resetForm = resetForm
 Vue.prototype.addDateRange = addDateRange

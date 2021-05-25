@@ -6,7 +6,7 @@
 
 <script>
   import * as Project from '../../../api/project/project';
-
+  import {treeselect} from '@/api/vadmin/permission/dept'
   export default {
     name: "project",
     data() {
@@ -17,7 +17,8 @@
           {prop: 'name', label: '项目名称', show: true, search: true, form: true, required: true,},
           {prop: 'code', label: '项目编码', show: true, search: true, form: true, required: true,},
           {prop: 'person', label: '项目负责人', show: true, search: true, sortable: true, type: 'users', form:true,required: true,},
-          {prop: 'dept', label: '部门', show: true, search: true, type: 'depts', form:true,required: true},
+          {prop: 'dept', label: '部门', show: true, search: true, type: 'model_select', form:true,required: true,
+            select_data:{placeholder:"请选择部门", listApi:treeselect ,label_name:"label"}},
           {prop: 'create_datetime', label: '创建时间', show: true, search: true, type: 'date'},
           {prop: 'creator_name', label: '创建者', show: true, search: false},
           {prop: 'description', label: '描述', show: true, search: false, form:true}

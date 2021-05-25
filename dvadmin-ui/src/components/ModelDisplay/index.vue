@@ -15,12 +15,23 @@
               active-color="#13ce66"
               inactive-color="#ff4949">
             </el-switch>
+            <model-select
+              v-else-if="value.type==='model_select' && value.select_data"
+              :value.sync="queryParams[value.prop]"
+              :prop="value.prop"
+              :placeholder="value.select_data.placeholder|| '请选择'"
+              :multiple="value.select_data.multiple|| false"
+              :disable_branch_nodes="value.select_data.disable_branch_nodes|| false"
+              :label_name="value.select_data.label_name|| 'name'"
+              :select_options="modelSelect[value.prop] || []"
+              style="width: 180px;line-height: 20px;"
+            />
             <dept-tree ref="dept_tree" v-else-if="value.type==='depts'" :value.sync="queryParams[value.prop]"
                        style="width: 150px;"></dept-tree>
             <users-tree ref="users_tree" v-else-if="value.type==='users'" :value.sync="queryParams[value.prop]"
                         style="width: 150px;"></users-tree>
             <el-date-picker
-              v-else-if="value.type==='date'"
+              v-else-if="value.type==='date'|| value.type==='datetime'"
               v-model="dateRange"
               size="small"
               style="width: 240px"
@@ -37,7 +48,6 @@
               :placeholder="value.label"
               clearable
               size="small"
-              style="width: 240px"
             >
               <el-option
                 v-for="dict in DictsOptions[value.option_key]"
@@ -55,11 +65,13 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
+          <el-form-item>
+            <el-col :offset="8">
+              <el-button type="primary" icon="el-icon-search" size="mini" @click="handleSearchFormSubmit">搜索</el-button>
+              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+            </el-col>
+          </el-form-item>
         </el-row>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleSearchFormSubmit">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-        </el-form-item>
       </el-form>
     </div>
     <el-row v-if="topLayout" style="margin-bottom: 20px">
@@ -72,7 +84,7 @@
               plain
               :icon="func.icon||'el-icon-plus'"
               size="mini"
-              @click="handleAdd(func.api)"
+              @click="handleAdd(func)"
               v-hasPermi="func.permis"
             >{{func.label}}
             </el-button>
@@ -83,7 +95,7 @@
               :disabled="multipleSelection.length!==1"
               :icon="func.icon||'el-icon-edit'"
               size="mini"
-              @click="handleUpdate(func.api,{})"
+              @click="handleUpdate(func,{})"
               v-hasPermi="func.permis"
             >{{func.label}}
             </el-button>
@@ -94,7 +106,7 @@
               :disabled="multipleSelection.length===0"
               :icon="func.icon||'el-icon-delete'"
               size="mini"
-              @click="handleDelete(func.api,{})"
+              @click="handleDelete(func,{})"
               v-hasPermi="func.permis"
             >{{func.label}}
             </el-button>
@@ -104,7 +116,7 @@
               plain
               :icon="func.icon||'el-icon-download'"
               size="mini"
-              @click="handleExport(func.api)"
+              @click="handleExport(func)"
               v-hasPermi="func.permis"
             >{{func.label}}
             </el-button>
@@ -178,7 +190,6 @@
           :label="field.label"
           :sortable="field.sortable"
           :width="field.width || ''"
-          :sort-method="sortMethod"
           show-overflow-tooltip>
           <template slot-scope="scope">
             <slot :name="field.prop" :values="scope.row" :prop="field.prop" :field="field">
@@ -190,6 +201,7 @@
       <el-table-column
         label="操作"
         align="center"
+        width="220"
         class-name="small-padding fixed-width"
         v-if="hasPermi(getOperationPermis())"
       >
@@ -200,7 +212,7 @@
               size="mini"
               type="text"
               :icon="func.icon||'el-icon-view'"
-              @click="handleSelect(func.api,scope.row)"
+              @click="handleSelect(func,scope.row)"
               v-hasPermi="func.permis"
             >{{func.label}}</el-button>
             &nbsp;
@@ -209,7 +221,7 @@
               size="mini"
               type="text"
               :icon="func.icon||'el-icon-edit'"
-              @click="handleUpdate(func.api,scope.row)"
+              @click="handleUpdate(func,scope.row)"
               v-hasPermi="func.permis"
             >{{func.label}}</el-button>
             &nbsp;
@@ -218,7 +230,7 @@
               size="mini"
               type="text"
               :icon="func.icon||'el-icon-delete'"
-              @click="handleDelete(func.api,scope.row)"
+              @click="handleDelete(func,scope.row)"
               v-hasPermi="func.permis"
             >{{func.label}}</el-button>
           </span>
@@ -249,8 +261,8 @@
     </el-row>
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body @close="close">
+      <el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px">
         <el-form-item v-if="value.form" :label="value.label" :prop="value.prop" v-for="(value,index) in fields"
                       :key="index">
           <!--           date/option/bool/users/depts -->
@@ -261,11 +273,11 @@
             inactive-color="#ff4949">
           </el-switch>
           <dept-tree ref="dept_tree" v-else-if="value.type==='depts'" :value.sync="form[value.prop]"
-                     style="width: 200px;"></dept-tree>
+                     ></dept-tree>
           <users-tree ref="users_tree" v-else-if="value.type==='users'" :value.sync="form[value.prop]"
-                      style="width: 200px;"></users-tree>
+                      ></users-tree>
           <el-date-picker
-            v-else-if="value.type==='date'"
+            v-else-if="value.type==='date' || value.type==='datetime'"
             v-model="form[value.prop]"
             type="date"
             size="small"
@@ -279,7 +291,7 @@
             :placeholder="value.label"
             clearable
             size="small"
-            style="width: 240px"
+            style="width: 100%"
           >
             <el-option
               v-for="dict in DictsOptions[value.option_key]"
@@ -288,6 +300,13 @@
               :value="dict.dictValue"
             />
           </el-select>
+          <el-input
+            v-else-if="value.type==='text'"
+            v-model="form[value.prop]"
+            :placeholder="value.label"
+            type="textarea"
+            clearable
+            size="small"/>
           <model-select
             v-else-if="value.type==='model_select' && value.select_data"
             :value.sync="form[value.prop]"
@@ -295,7 +314,8 @@
             :multiple="value.select_data.multiple|| false"
             :disable_branch_nodes="value.select_data.disable_branch_nodes|| false"
             :label_name="value.select_data.label_name|| 'name'"
-            :listApi="value.select_data.listApi|| null"
+            :select_options="modelSelect[value.prop] || []"
+            style="line-height: 20px;"
           />
           <el-input
             v-else
@@ -349,7 +369,8 @@
   import * as Utils from '@/utils';
   import {getToken} from '@/utils/auth'
   import ModelSelect from "../ModelSelect/index";
-
+  import {listUser} from '@/api/vadmin/permission/user'
+  import {treeselect} from '@/api/vadmin/permission/dept'
   export default {
     name: 'ModelDisplay',
     components: {ModelSelect},
@@ -486,6 +507,7 @@
         // 导入api
         importApi: '',
         DictsOptions: {},
+        modelSelect: {},
         getRowKeys: row => {
           if (this.rowKey) {
             return row[this.rowKey];
@@ -530,8 +552,9 @@
     },
     created() {
       this.initComponentData();
-      this.initDictsOptions();
-      this.getTableData();
+      this.initOptions();
+      this.getOperationPermis()
+      // this.getTableData();
       this.funcs.map(value => {
         if (value.type === 'select') {
           this.selectApi = value.api
@@ -591,9 +614,11 @@
         } else if (type === 'option') {
           return this.formatOptions(field.option_key, row[prop]);
         } else if (type === 'users') {
-          return this.formatUsers(row[prop]);
+          return this.formatSelect(row[prop],prop);
         } else if (type === 'depts') {
-          return this.formatDepts(row[prop]);
+          return this.formatSelect(row[prop],prop);
+        } else if (type === 'model_select') {
+          return this.formatSelect(row[prop], prop);
         } else if (type.startsWith('bool')) {
           return row[prop] ? '是' : '否';
         } else if (type === 'choices') {
@@ -622,7 +647,7 @@
       },
       formatOptions(option_key, id) {
         var data = this.DictsOptions[option_key]
-        if (!id || !data) return ""
+        if (id === null || !data) return ""
         for (var i = 0; i < data.length; i++) {
           if (data[i].dictValue === id) {
             return data[i].dictLabel
@@ -630,28 +655,15 @@
         }
         return ""
       },
-      formatUsers(id) {
-        if (!id) return ""
-        var data = this.$refs.users_tree[0].usersOptions
+      formatSelect(id, prop) {
+        var data = this.modelSelect[prop]
+        if (!id || !data) return ""
         for (var i = 0; i < data.length; i++) {
           if (data[i].id === id) {
             return data[i].label
           }
         }
         return ""
-      },
-      formatDepts(id) {
-        if (!id) return ""
-        var data = this.$refs.dept_tree[0].deptOptions
-        for (var i = 0; i < data.length; i++) {
-          if (data[i].id === id) {
-            return data[i].label
-          }
-        }
-        return ""
-      },
-      sortMethod(a, b) {
-        return -1;
       },
       getTableData() {
         this.listInterfaceData(this.getRequestParams());
@@ -732,14 +744,33 @@
         this.resetForm("queryForm");
         this.handleQuery();
       },
-      /** 获取Dicts值 */
-      initDictsOptions() {
+      /** 初始化 Options */
+      initOptions() {
+        let Promises = []
         this.fields.map(value => {
           if (value.option_key) {
-            this.getDicts(value.option_key).then(response => {
+            Promises.push(this.getDicts(value.option_key).then(response => {
               this.DictsOptions[value.option_key] = response.data
-            })
+            }))
           }
+          if (value.type === "model_select" && value.select_data) {
+            Promises.push(this.getModelSelect(value.prop, value.select_data.label_name, value.select_data.listApi).then(response => {
+              this.modelSelect[value.prop] = response
+            }))
+          }
+          if (value.type === "users") {
+            Promises.push(this.getModelSelect(value.prop, "name", listUser,{_fields:"id,name"}).then(response => {
+              this.modelSelect[value.prop] = response
+            }))
+          }
+          if (value.type === "depts") {
+            Promises.push(this.getModelSelect(value.prop, "label", treeselect).then(response => {
+              this.modelSelect[value.prop] = response
+            }))
+          }
+        })
+        Promise.all(Promises).then(() => {
+          this.getTableData()
         })
       },
       // 处理修改多选的值
@@ -784,74 +815,77 @@
         this.$emit('header-click', column, event);
       },
       /**新增按钮*/
-      handleAdd(api) {
+      handleAdd(func) {
         this.dateRange = [];
         this.queryParams = {}
         this.resetForm("queryForm");
         this.open = true;
-        this.title = "新增";
-        this.submitFormApi = api
-
+        this.title = func.label;
+        this.submitFormApi = func.api
       },
       /**修改按钮*/
-      handleUpdate(api, row) {
+      handleUpdate(func, row) {
         this.dateRange = [];
         this.queryParams = {}
         this.resetForm("queryForm");
-        this.submitFormApi = api
+        this.submitFormApi = func.api
         const id = row.id || this.multipleSelection.map(item => item.id);
         if (this.selectApi) {
           this.selectApi(id).then(response => {
-            this.form = response.data;
+            let data = response.data
+            if (data && typeof data === "object") {
+              this.form = data[Object.keys(data)[0]]
+            }
             this.open = true;
-            this.title = "修改";
           });
         } else {
           this.open = true;
-          this.title = "修改";
         }
+        this.title = func.label;
       },
-      /**修改按钮*/
-      handleSelect(api, row) {
+      /**详情按钮*/
+      handleSelect(func, row) {
         this.dateRange = [];
         this.queryParams = {}
         this.resetForm("queryForm");
-        this.submitFormApi = api
+        this.submitFormApi = func.api
         const id = row.id || this.multipleSelection.map(item => item.id);
         if (this.selectApi) {
           this.selectApi(id).then(response => {
-            this.form = response.data;
+            let data = response.data
+            if (data && typeof data === "object") {
+              this.form = data[Object.keys(data)[0]]
+            }
             this.open = true;
-            this.title = "详情";
           });
         } else {
           this.open = true;
-          this.title = "详情";
         }
+        this.title = func.label;
       },
       /** 删除按钮操作 */
-      handleDelete(api, row) {
+      handleDelete(func, row) {
         const ids = row.id || this.multipleSelection.map(item => item.id);
-        this.$confirm('是否确认删除编号为"' + ids + '"的数据项?', "警告", {
+        this.$confirm('是否确认' + func.label + '编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function () {
-          return api(ids);
+          return func.api(ids);
         }).then(() => {
           this.getTableData();
           this.msgSuccess("删除成功");
         })
       },
       /** 导出按钮操作 */
-      handleExport(api) {
+      handleExport(func) {
         const queryParams = this.queryParams;
         this.$confirm('是否确认导出所有符合条件的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function () {
-          return api(queryParams);
+          return func.api(queryParams);
         }).then(response => {
           this.download(response.data.file_url, response.data.name);
         })
@@ -865,28 +899,35 @@
         let dict = {}
         this.fields.map(value => {
           if (value.form) {
+            if (value.required) {
             dict[value.prop] = [{
               required: value.required,
               message: value.rules_message || value.label + "不能为空",
-              trigger: value.trigger || "blur"
+              trigger: value.trigger || "change"
             }]
+              if (value.validator) {
+                dict[value.prop][1] = {
+                  validator: value.validator,
+                  trigger: value.trigger || "change"
+                }
+              }
+            }
           }
         })
-        console.log(2, dict)
         return dict
       },
       /** 提交按钮 */
       submitForm() {
-        this.$refs["form"].validate(valid => {
+        this.$refs["ruleForm"].validate(valid => {
           if (valid) {
             if (this.form.id !== undefined) {
-              this.submitFormApi(this.form).then(response => {
+              this.submitFormApi(this.form).then(() => {
                 this.msgSuccess("修改成功");
                 this.open = false;
                 this.getTableData();
               });
             } else {
-              this.submitFormApi(this.form).then(response => {
+              this.submitFormApi(this.form).then(() => {
                 this.msgSuccess("新增成功");
                 this.open = false;
                 this.getTableData();
@@ -898,6 +939,10 @@
       // 取消按钮
       cancel() {
         this.open = false;
+      },
+      close(){
+        this.$refs["ruleForm"].resetFields()
+        this.form = {}
       },
       // 获取操作的权限列表
       getOperationPermis() {
