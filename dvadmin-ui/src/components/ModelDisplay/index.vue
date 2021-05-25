@@ -131,6 +131,7 @@
             >{{func.label}}
             </el-button>
           </el-col>
+          <slot name="head_button"/>
         </el-row>
       </el-col>
       <el-col v-if="topLayoutRight" :span="6">
@@ -272,6 +273,13 @@
             active-color="#13ce66"
             inactive-color="#ff4949">
           </el-switch>
+          <el-input-number
+            v-if="value.type==='number'"
+            v-model="form[value.prop]"
+            :precision="value.precision || 0"
+            :step="value.step || 1"
+            :max="value.step || Infinity">
+          </el-input-number>
           <dept-tree ref="dept_tree" v-else-if="value.type==='depts'" :value.sync="form[value.prop]"
                      ></dept-tree>
           <users-tree ref="users_tree" v-else-if="value.type==='users'" :value.sync="form[value.prop]"
@@ -834,7 +842,7 @@
           this.selectApi(id).then(response => {
             let data = response.data
             if (data && typeof data === "object") {
-              this.form = data[Object.keys(data)[0]]
+              this.form = data
             }
             this.open = true;
           });
@@ -854,7 +862,7 @@
           this.selectApi(id).then(response => {
             let data = response.data
             if (data && typeof data === "object") {
-              this.form = data[Object.keys(data)[0]]
+              this.form = data
             }
             this.open = true;
           });
@@ -900,11 +908,11 @@
         this.fields.map(value => {
           if (value.form) {
             if (value.required) {
-            dict[value.prop] = [{
-              required: value.required,
-              message: value.rules_message || value.label + "不能为空",
-              trigger: value.trigger || "change"
-            }]
+              dict[value.prop] = [{
+                required: value.required,
+                message: value.rules_message || value.label + "不能为空",
+                trigger: value.trigger || "change"
+              }]
               if (value.validator) {
                 dict[value.prop][1] = {
                   validator: value.validator,
