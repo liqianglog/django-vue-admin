@@ -426,8 +426,8 @@
         type: Object,
         default: () => {
           return {
-            page: 'page',
-            pageSize: 'page_size',
+            page: 'pageNum',
+            pageSize: 'pageSize',
             count: 'count',
             results: 'results'
           };
@@ -882,6 +882,7 @@
           return func.api(ids);
         }).then(() => {
           this.getTableData();
+          this.$emit('delete', ids)
           this.msgSuccess("删除成功");
         })
       },
@@ -933,12 +934,14 @@
                 this.msgSuccess("修改成功");
                 this.open = false;
                 this.getTableData();
+                this.$emit('update', this.form)
               });
             } else {
               this.submitFormApi(this.form).then(() => {
                 this.msgSuccess("新增成功");
                 this.open = false;
                 this.getTableData();
+                this.$emit('add', this.form)
               });
             }
           }
@@ -956,8 +959,8 @@
       getOperationPermis() {
         let Permis = []
         this.funcs.map(value => {
-          if (['update', 'delete', 'select'].indexOf(value.type) !== 0) {
-            Permis.push(value.permis)
+          if (['update', 'delete', 'select'].indexOf(value.type) !== -1) {
+            Permis = Permis + value.permis
           }
         })
         return Permis

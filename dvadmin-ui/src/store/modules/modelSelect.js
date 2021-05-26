@@ -18,7 +18,8 @@ const modelSelect = {
       let labelName = paramsMap["labelName"]
       let listApi = paramsMap["listApi"]
       let params = paramsMap["params"]
-      if (state.modelSelectMap[modelName]) {
+      let reset = paramsMap["reset"]
+      if (!reset && state.modelSelectMap[modelName]) {
         return state.modelSelectMap[modelName]
       } else {
         const res = await listApi({pageNum: "all", ...params})
