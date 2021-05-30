@@ -274,16 +274,16 @@
             inactive-color="#ff4949">
           </el-switch>
           <el-input-number
-            v-if="value.type==='number'"
+            v-else-if="value.type==='number'"
             v-model="form[value.prop]"
             :precision="value.precision || 0"
             :step="value.step || 1"
             :max="value.step || Infinity">
           </el-input-number>
           <dept-tree ref="dept_tree" v-else-if="value.type==='depts'" :value.sync="form[value.prop]"
-                     ></dept-tree>
+          ></dept-tree>
           <users-tree ref="users_tree" v-else-if="value.type==='users'" :value.sync="form[value.prop]"
-                      ></users-tree>
+          ></users-tree>
           <el-date-picker
             v-else-if="value.type==='date' || value.type==='datetime'"
             v-model="form[value.prop]"
@@ -324,6 +324,15 @@
             :label_name="value.select_data.label_name|| 'name'"
             :select_options="modelSelect[value.prop] || []"
             style="line-height: 20px;"
+          />
+          <el-cascader
+            v-else-if="value.type==='cascader' && value.select_data"
+            v-model="form[value.prop]"
+            :placeholder="value.select_data.placeholder|| '请选择'"
+            :options="modelSelect[value.prop] || []"
+            :clearable="value.select_data.clearable|| false"
+            :filterable="value.select_data.filterable|| false"
+            style="width: 100%"
           />
           <el-input
             v-else
@@ -764,6 +773,11 @@
           if (value.type === "model_select" && value.select_data) {
             Promises.push(this.getModelSelect(value.prop, value.select_data.label_name, value.select_data.listApi).then(response => {
               this.modelSelect[value.prop] = response
+            }))
+          }
+          if (value.type === "cascader" && value.select_data) {
+            Promises.push(value.select_data.listApi().then(response => {
+              this.modelSelect[value.prop] = response.data
             }))
           }
           if (value.type === "users") {
