@@ -156,13 +156,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="状态" prop="status">
+            <el-form-item label="是否发送" prop="status">
               <el-radio-group v-model="form.status">
                 <el-radio
                   v-for="dict in MessagePushStatusOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
-                >{{dict.dictLabel}}
+                >{{ dict.dictLabel == "待发送" ? "否" : "是"}}
                 </el-radio>
               </el-radio-group>
             </el-form-item>

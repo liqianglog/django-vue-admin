@@ -34,6 +34,13 @@
             </template>
           </el-menu-item>
         </el-menu>
+          <el-alert
+            v-if="messageList.length == 0"
+            title="还没有消息!"
+            type="warning"
+            :closable="false"
+          >
+          </el-alert>
       </div>
       <div class="message-page-con message-view-con">
         <div class="message-view-header">
@@ -96,6 +103,7 @@
       handleSelect(key, keyPath) {
         this.messageList = key[0] === "1" ? this.messageUnreadList : this.messageReadedList
         this.badgeType = key[0] === "1" ? 'danger' : 'info'
+        this.showingMsgItem = {}
       },
       // 通知列表激活后
       handleListSelect(key, keyPath) {
@@ -104,7 +112,8 @@
         if (this.badgeType === "danger") {
           updateIsRead(this.showingMsgItem).then(response => {
             if(response.code === 200){
-              store.commit('SET_UNREAD_MSG_COUNT', store.getters.unread_msg_count - 1);
+              let unread_msg_count = store.getters.unread_msg_count - 1;
+              store.commit('SET_UNREAD_MSG_COUNT', unread_msg_count > 0 ? unread_msg_count : 0);
               this.open = false;
               this.getList();
             }
