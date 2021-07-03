@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'captcha',
     'django_celery_beat',
+    'drf_yasg',  # swagger 接口
     # 自定义app
     'apps.vadmin.permission',
     'apps.vadmin.op_drf',
@@ -332,4 +333,4 @@ CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'  # Back
 # 接口权限
 INTERFACE_PERMISSION = locals().get("INTERFACE_PERMISSION", False)
 DJANGO_CELERY_BEAT_TZ_AWARE = False
-CELERY_TIMEZONE = 'Asia/Shanghai' # celery 时区问题
+CELERY_TIMEZONE = 'Asia/Shanghai'  # celery 时区问题
