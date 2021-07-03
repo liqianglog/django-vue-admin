@@ -31,7 +31,8 @@ class LogoutView(APIView):
         user.user_secret = uuid4()
         user.save()
         key = f"{self.prefix}_{user.username}"
-        cache.delete(key)
+        if getattr(settings, "REDIS_ENABLE", False):
+            cache.delete(key)
         return SuccessResponse()
 
 
@@ -87,7 +88,8 @@ class LoginView(ObtainJSONWebToken):
                 username = user.username
                 session_id = jwt_get_session_id(token)
                 key = f"{self.prefix}_{session_id}_{username}"
-                cache.set(key, token, self.ex.total_seconds())
+                if getattr(settings, "REDIS_ENABLE", False):
+                    cache.set(key, token, self.ex.total_seconds())
                 self.save_login_infor(request, '登录成功', session_id=session_id)
             if self.JWT_AUTH_COOKIE and token:
                 expiration = (datetime.datetime.utcnow() + self.ex)

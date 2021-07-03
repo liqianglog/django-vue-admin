@@ -10,6 +10,7 @@ from django.core.cache import cache
 from django.urls.resolvers import ResolverMatch
 from user_agents import parse
 
+from application import settings
 from apps.vadmin.utils.authentication import OpAuthJwtAuthentication
 
 logger = logging.getLogger(__name__)
@@ -161,11 +162,12 @@ def get_login_location(request, *args, **kwargs):
     :param kwargs:
     :return:
     """
+    if not getattr(settings, "ENABLE_LOGIN_LOCATION", False): return ""
     import requests
     import eventlet  # 导入eventlet这个模块
     request_ip = get_request_ip(request)
     # 从缓存中获取
-    location = cache.get(request_ip)
+    location = cache.get(request_ip) if getattr(settings, "REDIS_ENABLE", False) else ""
     if location:
         return location
     # 通过api 获取，再缓存redis
@@ -176,7 +178,8 @@ def get_login_location(request, *args, **kwargs):
             r = requests.get(apiurl)
             content = r.content.decode('GBK')
             location = str(content).replace('\r', '').replace('\n', '')[:64]
-            cache.set(request_ip, location, 86400)
+            if getattr(settings, "REDIS_ENABLE", False):
+                cache.set(request_ip, location, 86400)
             return location
     except Exception as e:
         pass

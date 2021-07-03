@@ -306,7 +306,7 @@ class CacheResponse(object):
             is_no_cache = True
         response = None
         if not is_no_cache:
-            response = self.cache.get(key)
+            response = self.cache.get(key)  if getattr(settings, "REDIS_ENABLE", False) else None
         if not response:
             response = view_method(view_instance, request, *args, **kwargs)
             response = view_instance.finalize_response(request, response, *args, **kwargs)
@@ -314,10 +314,11 @@ class CacheResponse(object):
 
             if not response.status_code >= 400 or self.cache_errors:
                 if not is_no_cache:
-                    if isinstance(response, Response):
-                        self.cache.set(key, response.data, self.timeout)
-                    else:
-                        self.cache.set(key, response, self.timeout)
+                    if getattr(settings, "REDIS_ENABLE", False):
+                        if isinstance(response, Response):
+                            self.cache.set(key, response.data, self.timeout)
+                        else:
+                            self.cache.set(key, response, self.timeout)
                     handle_refresh_cache_fun = getattr(view_instance, 'handle_refresh_cache', None)
                     if handle_refresh_cache_fun:
                         handle_refresh_cache_fun(request=request, key=key, cache=self.cache)

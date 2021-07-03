@@ -72,7 +72,7 @@ class DictDetailsModelViewSet(CustomModelViewSet):
         :param kwargs:
         :return:
         """
-        dict_details_dic = cache.get('system_dict_details', {})
+        dict_details_dic = cache.get('system_dict_details', {}) if getattr(settings, "REDIS_ENABLE", False) else {}
         if not dict_details_dic:
             queryset = self.filter_queryset(self.get_queryset())
             queryset_dic = queryset.order_by('sort').values('dict_data__dictType', 'dictLabel', 'dictValue',
@@ -83,7 +83,8 @@ class DictDetailsModelViewSet(CustomModelViewSet):
                     dict_details_dic[dictType].append(ele)
                 else:
                     dict_details_dic[dictType] = [ele]
-            cache.set('system_dict_details', dict_details_dic, 84600)
+            if getattr(settings, "REDIS_ENABLE", False):
+                cache.set('system_dict_details', dict_details_dic, 84600)
         return SuccessResponse(dict_details_dic.get(kwargs.get('pk'), []))
 
     def clearCache(self, request: Request, *args, **kwargs):
@@ -94,7 +95,8 @@ class DictDetailsModelViewSet(CustomModelViewSet):
         :param kwargs:
         :return:
         """
-        cache.delete('system_dict_details')
+        if getattr(settings, "REDIS_ENABLE", False):
+            cache.delete('system_dict_details')
         return SuccessResponse(msg='清理成功！')
 
     def export(self, request: Request, *args, **kwargs):
@@ -137,12 +139,13 @@ class ConfigSettingsModelViewSet(CustomModelViewSet):
         :param kwargs:
         :return:
         """
-        config_key_dic = cache.get('system_configKey')
+        config_key_dic = cache.get('system_configKey') if getattr(settings, "REDIS_ENABLE", False) else ""
         if not config_key_dic:
             queryset = self.filter_queryset(self.get_queryset())
             config_key_dic = {ele.get('configKey'): ele.get('configValue') for ele in
                               queryset.values('configValue', 'configKey')}
-            cache.set('system_configKey', config_key_dic, 84600)
+            if getattr(settings, "REDIS_ENABLE", False):
+                cache.set('system_configKey', config_key_dic, 84600)
         return SuccessResponse(msg=config_key_dic.get(kwargs.get('pk'), ''))
 
     def clearCache(self, request: Request, *args, **kwargs):
@@ -153,7 +156,8 @@ class ConfigSettingsModelViewSet(CustomModelViewSet):
         :param kwargs:
         :return:
         """
-        cache.delete('system_configKey')
+        if getattr(settings, "REDIS_ENABLE", False):
+            cache.delete('system_configKey')
         return SuccessResponse(msg='清理成功！')
 
 
@@ -173,6 +177,13 @@ class SaveFileModelViewSet(CustomModelViewSet):
     search_fields = ('configName',)
     ordering = '-create_datetime'  # 默认排序
 
+    def create(self, request: Request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return SuccessResponse(serializer.data, status=201, headers=headers)
+
     def clearsavefile(self, request: Request, *args, **kwargs):
         """
         清理废弃文件
@@ -185,8 +196,8 @@ class SaveFileModelViewSet(CustomModelViewSet):
         file_list = get_all_files(os.path.join(settings.MEDIA_ROOT, 'system'))
         queryset_files = [os.path.join(os.path.join(settings.MEDIA_ROOT) + os.sep, ele) for ele in
                           list(self.get_queryset().values_list('file', flat=True))]
-
-        delete_list = list(set(file_list) - set(queryset_files))
+        queryset_files_dir = set(map(lambda absdir: os.path.abspath(absdir), queryset_files))
+        delete_list = list(set(file_list) - queryset_files_dir)
         # 进行文件删除操作
         delete_files(delete_list)
         # 递归删除空文件

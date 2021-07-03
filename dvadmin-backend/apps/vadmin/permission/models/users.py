@@ -30,7 +30,8 @@ class UserProfile(AbstractUser, CoreModel):
 
     @property
     def get_user_interface_dict(self):
-        interface_dict = cache.get(f'permission_interface_dict_{self.username}', {})
+        interface_dict = cache.get(f'permission_interface_dict_{self.username}', {}) if \
+            getattr(settings, "REDIS_ENABLE", False) else {}
         if not interface_dict:
             for ele in self.role.filter(status='1', menu__status='1').values('menu__interface_path',
                                                                              'menu__interface_method').distinct():
@@ -41,7 +42,8 @@ class UserProfile(AbstractUser, CoreModel):
                     interface_dict[ele.get('menu__interface_method', '')].append(interface_path)
                 else:
                     interface_dict[ele.get('menu__interface_method', '')] = [interface_path]
-            cache.set(f'permission_interface_dict_{self.username}', interface_dict, 84600)
+            if getattr(settings, "REDIS_ENABLE", False):
+                cache.set(f'permission_interface_dict_{self.username}', interface_dict, 84600)
         return interface_dict
 
     @property
@@ -50,6 +52,7 @@ class UserProfile(AbstractUser, CoreModel):
         清空缓存中的接口列表
         :return:
         """
+        if not getattr(settings, "REDIS_ENABLE", False): return ""
         return cache.delete(f'permission_interface_dict_{self.username}')
 
     class Meta:

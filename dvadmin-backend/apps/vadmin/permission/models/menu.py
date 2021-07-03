@@ -1,6 +1,7 @@
 from django.core.cache import cache
 from django.db.models import IntegerField, ForeignKey, CharField, CASCADE, Q
 
+from application import settings
 from apps.vadmin.op_drf.models import CoreModel
 
 
@@ -42,7 +43,8 @@ class Menu(CoreModel):
         :return:
         """
         try:
-            interface_dict = cache.get('permission_interface_dict', {})
+            interface_dict = cache.get('permission_interface_dict', {}) if getattr(settings, "REDIS_ENABLE",
+                                                                                   False) else {}
         except:
             interface_dict = {}
         if not interface_dict:
@@ -52,7 +54,8 @@ class Menu(CoreModel):
                     interface_dict[ele.get('interface_method', '')].append(ele.get('interface_path'))
                 else:
                     interface_dict[ele.get('interface_method', '')] = [ele.get('interface_path')]
-            cache.set('permission_interface_dict', interface_dict, 84600)
+            if getattr(settings, "REDIS_ENABLE", False):
+                cache.set('permission_interface_dict', interface_dict, 84600)
         return interface_dict
 
     @classmethod
@@ -61,7 +64,8 @@ class Menu(CoreModel):
         清空缓存中的接口列表
         :return:
         """
-        cache.delete('permission_interface_dict')
+        if getattr(settings, "REDIS_ENABLE", False):
+            cache.delete('permission_interface_dict')
 
     class Meta:
         verbose_name = '菜单管理'
