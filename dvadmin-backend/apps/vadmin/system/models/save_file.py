@@ -1,10 +1,10 @@
 import os
 import uuid
 
-from django.db.models import CharField, FileField,BooleanField
+from django.db.models import CharField, FileField, BooleanField
 from django.utils import timezone
 
-from ...op_drf.models import CoreModel
+from apps.vadmin.op_drf.models import CoreModel
 
 
 def files_path(instance, filename):

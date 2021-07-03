@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from typing import Any
 
 from rest_framework.pagination import PageNumberPagination, _positive_int
 from rest_framework.utils.urls import replace_query_param

@@ -2,18 +2,18 @@ from django.contrib.auth import authenticate, get_user_model
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from .permissions import CommonPermission, DeptDestroyPermission
-from ..op_drf.filters import DataLevelPermissionsFilter
-from ..op_drf.viewsets import CustomModelViewSet
-from ..permission.filters import MenuFilter, DeptFilter, PostFilter, RoleFilter, UserProfileFilter
-from ..permission.models import Role, Menu, Dept, Post
-from ..permission.serializers import UserProfileSerializer, MenuSerializer, RoleSerializer, \
+from apps.vadmin.op_drf.response import SuccessResponse, ErrorResponse
+from apps.vadmin.permission.permissions import CommonPermission, DeptDestroyPermission
+from apps.vadmin.op_drf.filters import DataLevelPermissionsFilter
+from apps.vadmin.op_drf.viewsets import CustomModelViewSet
+from apps.vadmin.permission.filters import MenuFilter, DeptFilter, PostFilter, RoleFilter, UserProfileFilter
+from apps.vadmin.permission.models import Role, Menu, Dept, Post
+from apps.vadmin.permission.serializers import UserProfileSerializer, MenuSerializer, RoleSerializer, \
     MenuCreateUpdateSerializer, DeptSerializer, DeptCreateUpdateSerializer, PostSerializer, PostCreateUpdateSerializer, \
     RoleCreateUpdateSerializer, DeptTreeSerializer, MenuTreeSerializer, UserProfileCreateUpdateSerializer, \
     PostSimpleSerializer, RoleSimpleSerializer, ExportUserProfileSerializer, ExportRoleSerializer, ExportPostSerializer, \
     UserProfileImportSerializer
-from ..system.models import DictDetails
-from ..utils.response import SuccessResponse, ErrorResponse
+from apps.vadmin.system.models import DictDetails
 
 UserProfile = get_user_model()
 

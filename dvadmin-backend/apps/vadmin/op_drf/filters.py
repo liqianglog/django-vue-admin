@@ -10,7 +10,7 @@ from django.utils import six
 from mongoengine.queryset import visitor
 from rest_framework.filters import BaseFilterBackend, SearchFilter, OrderingFilter
 
-from ..utils.model_util import get_dept
+from apps.vadmin.utils.model_util import get_dept
 
 logger = logging.getLogger(__name__)
 

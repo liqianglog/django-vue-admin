@@ -1,7 +1,7 @@
 from django.core.cache import cache
 from django.db.models import IntegerField, ForeignKey, CharField, CASCADE, Q
 
-from ...op_drf.models import CoreModel
+from apps.vadmin.op_drf.models import CoreModel
 
 
 class Menu(CoreModel):

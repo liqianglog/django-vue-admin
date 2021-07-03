@@ -2,13 +2,11 @@ from django_celery_beat.admin import TaskSelectWidget
 from django_celery_beat.models import IntervalSchedule, CrontabSchedule, PeriodicTask
 from rest_framework.views import APIView
 
-from ..celery.filters import IntervalScheduleFilter, CrontabScheduleFilter, PeriodicTaskFilter
-from ..celery.serializers import IntervalScheduleSerializer, CrontabScheduleSerializer, PeriodicTaskSerializer
-from ..op_drf.views import CustomAPIView
-from ..op_drf.viewsets import CustomModelViewSet
-from ..system.models import DictData
-from ..system.serializers import DictDataSerializer
-from ..utils.response import SuccessResponse
+from apps.vadmin.celery.filters import IntervalScheduleFilter, CrontabScheduleFilter, PeriodicTaskFilter
+from apps.vadmin.celery.serializers import IntervalScheduleSerializer, CrontabScheduleSerializer, PeriodicTaskSerializer
+from apps.vadmin.op_drf.views import CustomAPIView
+from apps.vadmin.op_drf.viewsets import CustomModelViewSet
+from apps.vadmin.op_drf.response import SuccessResponse
 
 
 class IntervalScheduleModelViewSet(CustomModelViewSet):

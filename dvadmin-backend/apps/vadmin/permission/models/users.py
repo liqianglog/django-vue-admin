@@ -5,7 +5,7 @@ from django.contrib.auth.models import UserManager, AbstractUser
 from django.core.cache import cache
 from django.db.models import IntegerField, ForeignKey, CharField, TextField, ManyToManyField, CASCADE
 
-from ...op_drf.models import CoreModel
+from apps.vadmin.op_drf.models import CoreModel
 
 
 class UserProfile(AbstractUser, CoreModel):
@@ -25,7 +25,8 @@ class UserProfile(AbstractUser, CoreModel):
     user_type = IntegerField(default=0, verbose_name="用户类型")
     post = ManyToManyField(to='permission.Post', verbose_name='关联岗位', db_constraint=False)
     role = ManyToManyField(to='permission.Role', verbose_name='关联角色', db_constraint=False)
-    dept = ForeignKey(to='permission.Dept', verbose_name='归属部门', on_delete=CASCADE, db_constraint=False, null=True, blank=True)
+    dept = ForeignKey(to='permission.Dept', verbose_name='归属部门', on_delete=CASCADE, db_constraint=False, null=True,
+                      blank=True)
 
     @property
     def get_user_interface_dict(self):

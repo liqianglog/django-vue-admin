@@ -5,10 +5,10 @@ import time
 
 import psutil
 
-from ..monitor.models import Server, Monitor, SysFiles
-from ..op_drf.response import SuccessResponse
-from ..system.models import ConfigSettings
-from ..utils.decorators import BaseCeleryApp
+from apps.vadmin.monitor.models import Server, Monitor, SysFiles
+from apps.vadmin.op_drf.response import SuccessResponse
+from apps.vadmin.system.models import ConfigSettings
+from apps.vadmin.utils.decorators import BaseCeleryApp
 
 logger = logging.getLogger(__name__)
 from platform import platform

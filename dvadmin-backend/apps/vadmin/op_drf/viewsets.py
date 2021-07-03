@@ -11,7 +11,7 @@ from rest_framework.request import Request
 from rest_framework.settings import api_settings
 from rest_framework.viewsets import ViewSetMixin
 
-from ..utils.exceptions import APIException
+from apps.vadmin.utils.exceptions import APIException
 from . import mixins
 from .filters import MongoSearchFilter, MongoOrderingFilter, AdvancedSearchFilter, MongoAdvancedSearchFilter
 from .generics import GenericAPIView

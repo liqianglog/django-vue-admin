@@ -1,9 +1,9 @@
 from django.core.cache import cache
 from rest_framework import serializers
 
-from .models import LoginInfor, OperationLog, CeleryLog
-from ..op_drf.serializers import CustomModelSerializer
-from ..system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush, MessagePushUser
+from apps.vadmin.op_drf.serializers import CustomModelSerializer
+from apps.vadmin.system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush, MessagePushUser
+from apps.vadmin.system.models import LoginInfor, OperationLog, CeleryLog
 
 
 # ================================================= #

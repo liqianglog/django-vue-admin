@@ -6,25 +6,25 @@ from django.db.models import Q
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from .models import LoginInfor, OperationLog, CeleryLog
-from ..op_drf.filters import DataLevelPermissionsFilter
-from ..op_drf.viewsets import CustomModelViewSet
-from ..permission.permissions import CommonPermission
-from ..system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter, MessagePushFilter, \
+from apps.vadmin.op_drf.filters import DataLevelPermissionsFilter
+from apps.vadmin.op_drf.response import SuccessResponse
+from apps.vadmin.op_drf.viewsets import CustomModelViewSet
+from apps.vadmin.permission.permissions import CommonPermission
+from apps.vadmin.system.filters import DictDetailsFilter, DictDataFilter, ConfigSettingsFilter, MessagePushFilter, \
     SaveFileFilter, LoginInforFilter, OperationLogFilter, CeleryLogFilter
-from ..system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
-from ..system.models import MessagePushUser
-from ..system.serializers import DictDataSerializer, DictDataCreateUpdateSerializer, DictDetailsSerializer, \
+from apps.vadmin.system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush
+from apps.vadmin.system.models import LoginInfor, OperationLog, CeleryLog
+from apps.vadmin.system.models import MessagePushUser
+from apps.vadmin.system.serializers import DictDataSerializer, DictDataCreateUpdateSerializer, DictDetailsSerializer, \
     DictDetailsCreateUpdateSerializer, ConfigSettingsSerializer, \
     ConfigSettingsCreateUpdateSerializer, SaveFileSerializer, SaveFileCreateUpdateSerializer, \
     ExportConfigSettingsSerializer, ExportDictDataSerializer, ExportDictDetailsSerializer, \
     MessagePushSerializer, MessagePushCreateUpdateSerializer, ExportMessagePushSerializer, LoginInforSerializer, \
     OperationLogSerializer, ExportOperationLogSerializer, ExportLoginInforSerializer, CeleryLogSerializer, \
     ExportCeleryLogSerializer
-from ..utils.export_excel import export_excel_save_model
-from ..utils.file_util import get_all_files, remove_empty_dir, delete_files
-from ..utils.response import SuccessResponse
-from ..utils.system_info_utils import get_memory_used_percent, get_cpu_used_percent, get_disk_used_percent
+from apps.vadmin.utils.export_excel import export_excel_save_model
+from apps.vadmin.utils.file_util import get_all_files, remove_empty_dir, delete_files
+from apps.vadmin.utils.system_info_utils import get_memory_used_percent, get_cpu_used_percent, get_disk_used_percent
 
 
 class DictDataModelViewSet(CustomModelViewSet):

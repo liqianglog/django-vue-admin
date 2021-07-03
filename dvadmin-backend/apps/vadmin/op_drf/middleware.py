@@ -9,11 +9,11 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.utils.deprecation import MiddlewareMixin
 
+from apps.vadmin.op_drf.response import ErrorJsonResponse
 from apps.vadmin.permission.models import Menu
 from apps.vadmin.system.models import OperationLog
-from ..utils.request_util import get_request_ip, get_request_data, get_request_path, get_browser, get_os, \
+from apps.vadmin.utils.request_util import get_request_ip, get_request_data, get_request_path, get_browser, get_os, \
     get_login_location, get_request_canonical_path, get_request_user, get_verbose_name
-from ..utils.response import ErrorJsonResponse
 
 logger = logging.getLogger(__name__)
 

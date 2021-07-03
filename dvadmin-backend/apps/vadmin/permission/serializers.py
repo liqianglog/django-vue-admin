@@ -1,10 +1,10 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from ..op_drf.serializers import CustomModelSerializer
-from ..op_drf.validator import CustomUniqueValidator
-from ..permission.models import Menu, Dept, Post, Role
-from ..system.models import MessagePush
+from apps.vadmin.op_drf.serializers import CustomModelSerializer
+from apps.vadmin.op_drf.validator import CustomUniqueValidator
+from apps.vadmin.permission.models import Menu, Dept, Post, Role
+from apps.vadmin.system.models import MessagePush
 
 UserProfile = get_user_model()
 

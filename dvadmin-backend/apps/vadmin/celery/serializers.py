@@ -1,8 +1,8 @@
 from django_celery_beat.models import IntervalSchedule, CrontabSchedule, PeriodicTask
 from rest_framework import serializers
 
-from ..op_drf.serializers import CustomModelSerializer
-from ..utils.exceptions import APIException
+from apps.vadmin.op_drf.serializers import CustomModelSerializer
+from apps.vadmin.utils.exceptions import APIException
 
 
 class IntervalScheduleSerializer(CustomModelSerializer):

@@ -10,12 +10,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_jwt.views import ObtainJSONWebToken, jwt_response_payload_handler
 
-from .exceptions import GenException
-from .jwt_util import jwt_get_session_id
-from .request_util import get_request_ip, get_os, get_browser, get_login_location
-from .response import SuccessResponse, ErrorResponse
-# from .jwt_util import jwt_response_payload_handler
-from ..system.models.logininfor import LoginInfor
+from apps.vadmin.system.models.logininfor import LoginInfor
+from apps.vadmin.utils.exceptions import GenException
+from apps.vadmin.utils.jwt_util import jwt_get_session_id
+from apps.vadmin.utils.request_util import get_request_ip, get_os, get_browser, get_login_location
+from apps.vadmin.op_drf.response import SuccessResponse, ErrorResponse
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +61,7 @@ class LoginView(ObtainJSONWebToken):
         else:
             raise GenException(message='验证码错误')
 
-    def save_login_infor(self, request, msg='',status=True,session_id=''):
+    def save_login_infor(self, request, msg='', status=True, session_id=''):
         User = get_user_model()
         instance = LoginInfor()
         instance.session_id = session_id
@@ -89,7 +88,7 @@ class LoginView(ObtainJSONWebToken):
                 session_id = jwt_get_session_id(token)
                 key = f"{self.prefix}_{session_id}_{username}"
                 cache.set(key, token, self.ex.total_seconds())
-                self.save_login_infor(request, '登录成功',session_id=session_id)
+                self.save_login_infor(request, '登录成功', session_id=session_id)
             if self.JWT_AUTH_COOKIE and token:
                 expiration = (datetime.datetime.utcnow() + self.ex)
                 response.set_cookie(self.JWT_AUTH_COOKIE,
@@ -98,7 +97,7 @@ class LoginView(ObtainJSONWebToken):
                                     domain=settings.SESSION_COOKIE_DOMAIN,
                                     httponly=False)
             return response
-        self.save_login_infor(request, '登录失败，账户/密码不正确',False)
+        self.save_login_infor(request, '登录失败，账户/密码不正确', False)
         return ErrorResponse(data=serializer.errors, msg='账户/密码不正确')
 
     # def handle_exception(self, exc):

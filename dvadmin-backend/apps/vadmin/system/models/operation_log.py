@@ -1,6 +1,6 @@
 from django.db.models import TextField, CharField, BooleanField
 
-from ...op_drf.models import CoreModel
+from apps.vadmin.op_drf.models import CoreModel
 
 
 class OperationLog(CoreModel):
@@ -12,7 +12,7 @@ class OperationLog(CoreModel):
     request_ip = CharField(max_length=32, verbose_name="请求ip地址", null=True, blank=True)
     request_browser = CharField(max_length=64, verbose_name="请求浏览器", null=True, blank=True)
     response_code = CharField(max_length=32, verbose_name="响应状态码", null=True, blank=True)
-    request_location = CharField(max_length=64,verbose_name="操作地点", null=True, blank=True)
+    request_location = CharField(max_length=64, verbose_name="操作地点", null=True, blank=True)
     request_os = CharField(max_length=64, verbose_name="操作系统", null=True, blank=True)
     json_result = TextField(verbose_name="返回信息", null=True, blank=True)
     status = BooleanField(default=False, verbose_name="响应状态")

@@ -12,8 +12,8 @@ from django.utils.translation import ugettext as _
 from rest_framework import exceptions
 from rest_framework_jwt.utils import jwt_decode_handler
 
-from .jwt_util import jwt_get_session_id
-from ..permission.models.users import UserProfile
+from apps.vadmin.permission.models.users import UserProfile
+from apps.vadmin.utils.jwt_util import jwt_get_session_id
 
 logger = logging.getLogger(__name__)
 User = get_user_model()

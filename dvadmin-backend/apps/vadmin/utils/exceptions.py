@@ -4,8 +4,7 @@ import traceback
 from rest_framework import exceptions
 from rest_framework.views import set_rollback
 
-from .request_util import get_verbose_name
-from .response import ErrorResponse
+from apps.vadmin.op_drf.response import ErrorResponse
 
 logger = logging.getLogger(__name__)
 

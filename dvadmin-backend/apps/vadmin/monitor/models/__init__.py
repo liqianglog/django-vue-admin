@@ -1,3 +1,3 @@
-from ..models.monitor import Monitor
-from ..models.server import Server
-from ..models.sys_files import SysFiles
+from apps.vadmin.monitor.models.monitor import Monitor
+from apps.vadmin.monitor.models.server import Server
+from apps.vadmin.monitor.models.sys_files import SysFiles

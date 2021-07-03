@@ -40,7 +40,7 @@ class Command(BaseCommand):
 
 
 class {name.capitalize()}Config(AppConfig):
-    name = '{name}'
+    name = 'apps.{name}'
     verbose_name = "{name}App"
 """
             with open(os.path.join(app_path, "apps.py"), 'w', encoding='UTF-8') as f:

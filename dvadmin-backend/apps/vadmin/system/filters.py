@@ -1,7 +1,7 @@
 import django_filters
 
-from .models import LoginInfor, OperationLog, CeleryLog
-from ..system.models import DictDetails, DictData, ConfigSettings, MessagePush, SaveFile
+from apps.vadmin.system.models import DictDetails, DictData, ConfigSettings, MessagePush, SaveFile
+from apps.vadmin.system.models import LoginInfor, OperationLog, CeleryLog
 
 
 class DictDataFilter(django_filters.rest_framework.FilterSet):

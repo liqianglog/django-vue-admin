@@ -22,9 +22,9 @@ from django.urls import re_path, include
 from rest_framework.documentation import include_docs_urls
 from rest_framework.views import APIView
 
-from .permission.views import GetUserProfileView, GetRouters
-from .utils.login import LoginView, LogoutView
-from .utils.response import SuccessResponse
+from apps.vadmin.permission.views import GetUserProfileView, GetRouters
+from apps.vadmin.utils.login import LoginView, LogoutView
+from apps.vadmin.op_drf.response import SuccessResponse
 
 
 class CaptchaRefresh(APIView):

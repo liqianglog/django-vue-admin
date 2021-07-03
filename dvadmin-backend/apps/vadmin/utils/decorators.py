@@ -15,8 +15,8 @@ from rest_framework.response import Response
 from rest_framework_extensions.settings import extensions_api_settings
 
 from application.celery import app
-from .string_util import bas64_encode_text, bas64_decode_text
-from ..system.models import CeleryLog
+from apps.vadmin.system.models import CeleryLog
+from apps.vadmin.utils.string_util import bas64_encode_text, bas64_decode_text
 
 
 def get_cache(alias=None):
@@ -34,12 +34,13 @@ def BaseCeleryApp(name, save_success_logs=True):
     :param save_success_logs: 是否保存成功的日志(适用于频率高的celery任务，成功不需要保存日志，则传False)
     :return:
     """
+
     def wraps(func):
         @app.task(name=name)
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             obj = CeleryLog()
-            obj.name = ''.join(str(func.__doc__).replace(' ','').split('\n')[:2])
+            obj.name = ''.join(str(func.__doc__).replace(' ', '').split('\n')[:2])
             obj.func_name = str(func.__name__)
             obj.kwargs = f"*args：{args}\n**kwargs：{kwargs}"
             start_time = datetime.now()

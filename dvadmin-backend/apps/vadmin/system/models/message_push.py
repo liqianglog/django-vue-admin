@@ -2,8 +2,8 @@ from django.conf import settings
 from django.db import models
 from django.db.models import *
 
-from ...op_drf.fields import UpdateDateTimeField, CreateDateTimeField
-from ...op_drf.models import CoreModel
+from apps.vadmin.op_drf.fields import UpdateDateTimeField, CreateDateTimeField
+from apps.vadmin.op_drf.models import CoreModel
 
 """
 消息通知模型

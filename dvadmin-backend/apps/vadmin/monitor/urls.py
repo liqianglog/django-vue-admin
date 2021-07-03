@@ -1,7 +1,7 @@
 from django.urls import re_path
 from rest_framework.routers import DefaultRouter
 
-from .views import ServerModelViewSet, MonitorModelViewSet
+from apps.vadmin.monitor.views import ServerModelViewSet, MonitorModelViewSet
 
 router = DefaultRouter()
 router.register(r'server', ServerModelViewSet)
