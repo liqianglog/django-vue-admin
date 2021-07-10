@@ -33,18 +33,18 @@
         </el-button>
       </template>
       <!--以下是自定义新增的工具栏内容-->
-      <template slot="tools">
-        <el-popover placement="bottom" title="温馨提示" width="400" trigger="click" style="margin-left: 10px">
-          <li>待编写</li>
-          <el-button
-            slot="reference"
-            name="refresh"
-            type="info"
-            size="small"
-            icon="el-icon-info"
-            title="温馨提示"/>
-        </el-popover>
-      </template>
+<!--      <template slot="tools">-->
+<!--        <el-popover placement="bottom" title="温馨提示" width="400" trigger="click" style="margin-left: 10px">-->
+<!--          <li>待编写</li>-->
+<!--          <el-button-->
+<!--            slot="reference"-->
+<!--            name="refresh"-->
+<!--            type="info"-->
+<!--            size="small"-->
+<!--            icon="el-icon-info"-->
+<!--            title="温馨提示"/>-->
+<!--        </el-popover>-->
+<!--      </template>-->
       <!--以下是自定义新增的列的配置内容-->
       <template slot="column">
         <el-table-column fixed="right" label="操作" align="center" width="150">
@@ -146,7 +146,7 @@
     },
     methods: {
       initData() {
-        SyncDataApi.listPeriodicTask({ page_size: 1000 }).then((response) => {
+        SyncDataApi.listPeriodicTask({ pageSize: 1000 }).then((response) => {
           this.detail = response.data.results || [];
         });
       },

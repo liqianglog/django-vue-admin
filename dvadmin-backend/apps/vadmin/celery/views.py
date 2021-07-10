@@ -57,7 +57,7 @@ class PeriodicTaskModelViewSet(CustomModelViewSet):
     enabled 是否开启
 
     """
-    queryset = PeriodicTask.objects.all()
+    queryset = PeriodicTask.objects.exclude(name="celery.backend_cleanup")
     serializer_class = PeriodicTaskSerializer
     filter_class = PeriodicTaskFilter
     search_fields = ('name', 'task', 'date_changed')

@@ -77,7 +77,7 @@
         },
         methods: {
             initData() {
-                SyncDataApi.listIntervalschedule({ page_size: 1000 }).then((response) => {
+                SyncDataApi.listIntervalschedule({ pageSize: 1000 }).then((response) => {
                     this.detail = response.data.results || [];
                     this.$store.state.Interval = this.detail;
                 });

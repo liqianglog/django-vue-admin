@@ -80,7 +80,7 @@
     },
     methods: {
       initData() {
-        SyncDataApi.listCrontabSchedule({ page_size: 1000 }).then((response) => {
+        SyncDataApi.listCrontabSchedule({ pageSize: 1000 }).then((response) => {
           this.detail = response.data.results || [];
           this.$store.state.Crontab = this.detail;
         });
