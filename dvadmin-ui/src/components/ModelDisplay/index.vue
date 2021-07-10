@@ -262,7 +262,11 @@
     </el-row>
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body @close="close">
+    <el-dialog :title="title"
+               :visible.sync="open"
+               width="500px"
+               append-to-body @close="close"
+               :close-on-click-modal="close_on_click_modal">
       <el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px">
         <el-form-item v-if="value.form" :label="value.label" :prop="value.prop" v-for="(value,index) in fields"
                       :key="index">
@@ -406,6 +410,11 @@
         default: 700
       },
       stripe: {
+        type: Boolean,
+        default: true
+      },
+      // 是否可以通过点击 窗口外 关闭 Dialog
+      close_on_click_modal: {
         type: Boolean,
         default: true
       },
