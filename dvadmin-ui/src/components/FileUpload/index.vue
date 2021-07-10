@@ -1,6 +1,7 @@
 <template>
   <div class="upload-file">
     <el-upload
+      ref="upload"
       :action="uploadFileUrl"
       :before-upload="handleBeforeUpload"
       :file-list="fileList"
@@ -11,12 +12,11 @@
       :show-file-list="false"
       :headers="headers"
       class="upload-file-uploader"
-      ref="upload"
     >
       <!-- 上传按钮 -->
       <el-button size="mini" type="primary">选取文件</el-button>
       <!-- 上传提示 -->
-      <div class="el-upload__tip" slot="tip" v-if="showTip">
+      <div v-if="showTip" slot="tip" class="el-upload__tip">
         请上传
         <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b> </template>
         <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b> </template>
@@ -26,12 +26,12 @@
 
     <!-- 文件列表 -->
     <transition-group class="upload-file-list el-upload-list el-upload-list--text" name="el-fade-in-linear" tag="ul">
-      <li :key="file.uid" class="el-upload-list__item ele-upload-list__item-content" v-for="(file, index) in list">
+      <li v-for="(file, index) in list" :key="file.uid" class="el-upload-list__item ele-upload-list__item-content">
         <el-link :href="file.url" :underline="false" target="_blank">
           <span class="el-icon-document"> {{ getFileName(file.name) }} </span>
         </el-link>
         <div class="ele-upload-list__item-content-action">
-          <el-link :underline="false" @click="handleDelete(index)" type="danger">删除</el-link>
+          <el-link :underline="false" type="danger" @click="handleDelete(index)">删除</el-link>
         </div>
       </li>
     </transition-group>
@@ -39,21 +39,22 @@
 </template>
 
 <script>
-  import {getToken} from "@/utils/auth";
+import { getToken } from "@/utils/auth";
 
-  export default {
+export default {
+  name: "FileUpload",
   props: {
     // 值
     value: [String, Object, Array],
     // 大小限制(MB)
     fileSize: {
       type: Number,
-      default: 5,
+      default: 5
     },
     // 文件类型, 例如['png', 'jpg', 'jpeg']
     fileType: {
       type: Array,
-      default: () => ["doc", "xls", "ppt", "txt", "pdf"],
+      default: () => ["doc", "xls", "ppt", "txt", "pdf"]
     },
     // 是否显示提示
     isShowTip: {
@@ -61,14 +62,13 @@
       default: true
     }
   },
-  name:'FileUpload',
   data() {
     return {
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/admin/system/savefile/", // 上传的图片服务器地址
       headers: {
-        Authorization: "Bearer " + getToken(),
+        Authorization: "Bearer " + getToken()
       },
-      fileList: [],
+      fileList: []
     };
   },
   computed: {
@@ -94,13 +94,16 @@
         this.fileList = [];
         return [];
       }
-    },
+    }
+  },
+  created() {
+    this.fileList = this.list;
   },
   methods: {
     // 上传前校检格式和大小
     handleBeforeUpload(file) {
       // 校检文件类型
-      if (this.fileType && this.fileType[0] !== 'ALL') {
+      if (this.fileType && this.fileType[0] !== "ALL") {
         let fileExtension = "";
         if (file.name.lastIndexOf(".") > -1) {
           fileExtension = file.name.slice(file.name.lastIndexOf(".") + 1);
@@ -130,7 +133,7 @@
       this.$message.error(`只允许上传单个文件`);
     },
     // 上传失败
-    handleUploadError(err) {
+    handleUploadError() {
       this.$message.error("上传失败, 请重试");
     },
     // 上传成功回调
@@ -145,7 +148,7 @@
     // 删除文件
     handleDelete(index) {
       this.fileList.splice(index, 1);
-      this.$emit("input", '');
+      this.$emit("input", "");
     },
     // 获取文件名称
     getFileName(name) {
@@ -155,10 +158,7 @@
         return "";
       }
     }
-  },
-  created() {
-    this.fileList = this.list;
-  },
+  }
 };
 </script>
 

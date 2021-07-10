@@ -36,26 +36,26 @@
 </template>
 
 <script>
-import svgIcons from './svg-icons'
-import elementIcons from './element-icons'
+import svgIcons from "./svg-icons";
+import elementIcons from "./element-icons";
 
 export default {
-  name: 'Icons',
+  name: "Icons",
   data() {
     return {
       svgIcons,
       elementIcons
-    }
+    };
   },
   methods: {
     generateIconCode(symbol) {
-      return `<svg-icon icon-class="${symbol}" />`
+      return `<svg-icon icon-class="${symbol}" />`;
     },
     generateElementIconCode(symbol) {
-      return `<i class="el-icon-${symbol}" />`
+      return `<i class="el-icon-${symbol}" />`;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

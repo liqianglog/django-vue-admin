@@ -2,7 +2,7 @@
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
       <h3 class="title">{{ title }}</h3>
-      <el-form-item prop="username" >
+      <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
         </el-input>
@@ -29,7 +29,7 @@
           <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
         </el-input>
         <div class="login-code">
-          <img :src="codeUrl" @click="getCode" class="login-code-img"/>
+          <img :src="codeUrl" class="login-code-img" @click="getCode">
         </div>
       </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
@@ -49,23 +49,24 @@
     <!--  底部  -->
     <div class="el-login-footer">
       <span>Copyright © 2018-2021 django-vue-admin.com All Rights Reserved.</span> |
-      <a href="https://beian.miit.gov.cn/#/Integrated/index"
-               target="_blank"
+      <a
+        href="https://beian.miit.gov.cn/#/Integrated/index"
+        target="_blank"
       > 晋ICP备18005113号-3</a>
     </div>
   </div>
 </template>
 
 <script>
-  import {getCodeImg} from "@/api/vadmin/login";
-  import Cookies from "js-cookie";
-  import {decrypt, encrypt} from '@/utils/jsencrypt'
+import { getCodeImg } from "@/api/vadmin/login";
+import Cookies from "js-cookie";
+import { decrypt, encrypt } from "@/utils/jsencrypt";
 
-  export default {
+export default {
   name: "Login",
   data() {
     return {
-      title: process.env.VUE_APP_TITLE || 'dvAdmin管理系统',
+      title: process.env.VUE_APP_TITLE || "dvAdmin管理系统",
       codeUrl: "",
       cookiePassword: "",
       loginForm: {
@@ -110,7 +111,7 @@
     getCookie() {
       const username = Cookies.get("username");
       const password = Cookies.get("password");
-      const rememberMe = Cookies.get('rememberMe')
+      const rememberMe = Cookies.get("rememberMe");
       this.loginForm = {
         username: username === undefined ? this.loginForm.username : username,
         password: password === undefined ? this.loginForm.password : decrypt(password),
@@ -124,14 +125,14 @@
           if (this.loginForm.rememberMe) {
             Cookies.set("username", this.loginForm.username, { expires: 30 });
             Cookies.set("password", encrypt(this.loginForm.password), { expires: 30 });
-            Cookies.set('rememberMe', this.loginForm.rememberMe, { expires: 30 });
+            Cookies.set("rememberMe", this.loginForm.rememberMe, { expires: 30 });
           } else {
             Cookies.remove("username");
             Cookies.remove("password");
-            Cookies.remove('rememberMe');
+            Cookies.remove("rememberMe");
           }
           this.$store.dispatch("Login", this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
+            this.$router.push({ path: this.redirect || "/" }).catch(() => {});
           }).catch(() => {
             this.loading = false;
             this.getCode();

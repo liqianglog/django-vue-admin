@@ -5,16 +5,17 @@
         <el-menu
           default-active="1"
           class="el-menu-vertical-demo"
-          @select="handleSelect">
+          @select="handleSelect"
+        >
           <el-menu-item index="1">
             <template slot="title">
               <span class="category-title">未读消息</span>
-              <el-badge style="margin-bottom: 3px" :value="countUnread" :hidden="countUnread===0"></el-badge>
+              <el-badge style="margin-bottom: 3px" :value="countUnread" :hidden="countUnread===0" />
             </template>
           </el-menu-item>
           <el-menu-item index="2">
             <span class="category-title">已读消息</span>
-            <el-badge style="margin-bottom: 3px" type="info" :value="countReaded"></el-badge>
+            <el-badge style="margin-bottom: 3px" type="info" :value="countReaded" />
           </el-menu-item>
         </el-menu>
       </div>
@@ -22,13 +23,14 @@
         <el-menu
           default-active="2"
           class="el-menu-vertical-demo"
-          @select="handleListSelect">
+          @select="handleListSelect"
+        >
           <el-menu-item v-for="(item,index) in messageList" :key="index" :index="index.toString()">
             <template slot="title">
               <div style="line-height: 10px!important;height: 20px;">
                 <p class="msg-title">{{ item.title }}</p>
-                <el-badge is-dot class="item" :type="badgeType"></el-badge>
-                {{item.create_datetime}}
+                <el-badge is-dot class="item" :type="badgeType" />
+                {{ item.create_datetime }}
 
               </div>
             </template>
@@ -40,79 +42,77 @@
           <h2 class="message-view-title">{{ showingMsgItem.title }}</h2>
           <time class="message-view-time">{{ showingMsgItem.create_datetime }}</time>
         </div>
-        <div v-html="showingMsgItem.content"></div>
+        <div v-html="showingMsgItem.content" />
       </div>
     </el-card>
   </div>
 </template>
 
 <script>
-  import {updateIsRead, userMessage} from "@/api/vadmin/system/message";
-  import store from "@/store";
+import { updateIsRead, userMessage } from "@/api/vadmin/system/message";
+import store from "@/store";
 
-  export default {
-    name: "Mymessage",
-    data() {
-      return {
-        // 查询通知
-        queryParams: {
-          pageNum: 1,
-          pageSize: 10,
-        },
-        messageList: [],
-        // 已读通知
-        countReaded: 0,
-        messageReadedList: [],
-        // 未读消息列表
-        messageUnreadList: [],
-        countUnread: 0,
-        badgeType: 'danger',
-        // 选中查询后的详细信息
-        showingMsgItem: {}
-      };
-    },
-    created() {
-      this.getList()
-
-    },
-    methods: {
-      /** 查询通知列表 */
-      getList() {
-        // 已读通知列表
-        userMessage(this.addDateRange({...this.queryParams, is_read: 'True'})).then(response => {
-            this.messageReadedList = response.data.results;
-            this.countReaded = response.data.count;
-
-          }
-        );
-        // 未读通知列表
-        userMessage(this.addDateRange({...this.queryParams, is_read: 'False'})).then(response => {
-            this.messageUnreadList = response.data.results;
-            this.countUnread = response.data.count;
-            this.messageList = this.messageUnreadList
-          }
-        );
+export default {
+  name: "Mymessage",
+  data() {
+    return {
+      // 查询通知
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10
       },
-      handleSelect(key, keyPath) {
-        this.messageList = key[0] === "1" ? this.messageUnreadList : this.messageReadedList
-        this.badgeType = key[0] === "1" ? 'danger' : 'info'
-      },
-      // 通知列表激活后
-      handleListSelect(key, keyPath) {
-        this.showingMsgItem = this.messageList[key[0]]
-        // 修改通知查询状态
-        if (this.badgeType === "danger") {
-          updateIsRead(this.showingMsgItem).then(response => {
-            if(response.code === 200){
-              store.commit('SET_UNREAD_MSG_COUNT', store.getters.unread_msg_count - 1);
-              this.open = false;
-              this.getList();
-            }
-          });
-        }
+      messageList: [],
+      // 已读通知
+      countReaded: 0,
+      messageReadedList: [],
+      // 未读消息列表
+      messageUnreadList: [],
+      countUnread: 0,
+      badgeType: "danger",
+      // 选中查询后的详细信息
+      showingMsgItem: {}
+    };
+  },
+  created() {
+    this.getList();
+  },
+  methods: {
+    /** 查询通知列表 */
+    getList() {
+      // 已读通知列表
+      userMessage(this.addDateRange({ ...this.queryParams, is_read: "True" })).then(response => {
+        this.messageReadedList = response.data.results;
+        this.countReaded = response.data.count;
+      }
+      );
+      // 未读通知列表
+      userMessage(this.addDateRange({ ...this.queryParams, is_read: "False" })).then(response => {
+        this.messageUnreadList = response.data.results;
+        this.countUnread = response.data.count;
+        this.messageList = this.messageUnreadList;
+      }
+      );
+    },
+    handleSelect(key, keyPath) {
+      this.messageList = key[0] === "1" ? this.messageUnreadList : this.messageReadedList;
+      this.badgeType = key[0] === "1" ? "danger" : "info";
+    },
+    // 通知列表激活后
+    handleListSelect(key, keyPath) {
+      this.showingMsgItem = this.messageList[key[0]];
+      // 修改通知查询状态
+      if (this.badgeType === "danger") {
+        updateIsRead(this.showingMsgItem).then(response => {
+          if (response.code === 200) {
+            store.commit("SET_UNREAD_MSG_COUNT", store.getters.unread_msg_count - 1);
+            this.open = false;
+            this.getList();
+          }
+        });
       }
     }
-  };
+  }
+};
 </script>
 <style scoped>
   .app-container {
@@ -135,7 +135,6 @@
     display: inline-block;
     width: 65px;
   }
-
 
   .message-list-con {
     border-right: 1px solid #e6e6e6;

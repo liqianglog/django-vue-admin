@@ -1,6 +1,6 @@
 <template>
   <div :class="classObj" class="app-wrapper" :style="{'--current-color': theme}">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
+    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBg : variables.menuLightBg }" />
     <div :class="{hasTagsView:needTagsView}" class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
@@ -16,14 +16,14 @@
 </template>
 
 <script>
-import RightPanel from '@/components/RightPanel'
-import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
-import ResizeMixin from './mixin/ResizeHandler'
-import { mapState } from 'vuex'
-import variables from '@/assets/styles/variables.scss'
+import RightPanel from "@/components/RightPanel";
+import { AppMain, Navbar, Settings, Sidebar, TagsView } from "./components";
+import ResizeMixin from "./mixin/ResizeHandler";
+import { mapState } from "vuex";
+import variables from "@/assets/styles/variables.scss";
 
 export default {
-  name: 'Layout',
+  name: "Layout",
   components: {
     AppMain,
     Navbar,
@@ -48,8 +48,8 @@ export default {
         hideSidebar: !this.sidebar.opened,
         openSidebar: this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === 'mobile'
-      }
+        mobile: this.device === "mobile"
+      };
     },
     variables() {
       return variables;
@@ -57,10 +57,10 @@ export default {
   },
   methods: {
     handleClickOutside() {
-      this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
+      this.$store.dispatch("app/closeSideBar", { withoutAnimation: false });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

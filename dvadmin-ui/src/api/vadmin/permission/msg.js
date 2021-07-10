@@ -6,23 +6,23 @@
  * @Description: In User Settings Edit
  * @FilePath: \dvadmin-ui\src\api\permission\msg.js
  */
-import request from '@/utils/request'
+import request from "@/utils/request";
 
 // 查询消息列表
 export function getList(query) {
   return request({
-    url: '/admin/system/config/',
-    method: 'get',
+    url: "/admin/system/config/",
+    method: "get",
     params: query
-  })
+  });
 }
 
 // 查看详情
 export function getDesc(configId) {
   return request({
-    url: '/admin/system/config/' + configId + '/',
-    method: 'get'
-  })
+    url: "/admin/system/config/" + configId + "/",
+    method: "get"
+  });
 }
 
 // // 根据消息标题查询
@@ -36,35 +36,34 @@ export function getDesc(configId) {
 // 新增消息
 export function addMsg(data) {
   return request({
-    url: '/admin/system/config/',
-    method: 'post',
+    url: "/admin/system/config/",
+    method: "post",
     data: data
-  })
+  });
 }
 
 // 修改消息
 export function updateMsg(data) {
   return request({
-    url: '/admin/system/config/' + data.id + '/',
-    method: 'put',
+    url: "/admin/system/config/" + data.id + "/",
+    method: "put",
     data: data
-  })
+  });
 }
 
 // 删除消息
 export function delMsg(configId) {
   return request({
-    url: '/admin/system/config/' + configId + '/',
-    method: 'delete'
-  })
+    url: "/admin/system/config/" + configId + "/",
+    method: "delete"
+  });
 }
-
 
 // 导出消息
 export function exportMsg(query) {
   return request({
-    url: '/admin/system/config/export/',
-    method: 'get',
+    url: "/admin/system/config/export/",
+    method: "get",
     params: query
-  })
+  });
 }

@@ -14,32 +14,32 @@
 </template>
 
 <script>
-import logoImg from '@/assets/logo/logo.png'
-import variables from '@/assets/styles/variables.scss'
+import logoImg from "@/assets/logo/logo.png";
+import variables from "@/assets/styles/variables.scss";
 
 export default {
-  name: 'SidebarLogo',
+  name: "SidebarLogo",
   props: {
     collapse: {
       type: Boolean,
       required: true
     }
   },
+  data() {
+    return {
+      title: process.env.VUE_APP_TITLE || "dvAdmin管理系统",
+      logo: logoImg
+    };
+  },
   computed: {
     variables() {
       return variables;
     },
-	sideTheme() {
-      return this.$store.state.settings.sideTheme
-    }
-  },
-  data() {
-    return {
-      title: process.env.VUE_APP_TITLE || 'dvAdmin管理系统',
-      logo: logoImg
+    sideTheme() {
+      return this.$store.state.settings.sideTheme;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

@@ -1,21 +1,21 @@
 <template>
   <div>
-    <svg-icon icon-class="gitee" @click="goto"/>
+    <svg-icon icon-class="gitee" @click="goto" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'RuoYiGit',
+  name: "RuoYiGit",
   data() {
     return {
-      url: 'https://gitee.com/liqianglog/django-vue-admin'
-    }
+      url: "https://gitee.com/liqianglog/django-vue-admin"
+    };
   },
   methods: {
     goto() {
-      window.open(this.url)
+      window.open(this.url);
     }
   }
-}
+};
 </script>

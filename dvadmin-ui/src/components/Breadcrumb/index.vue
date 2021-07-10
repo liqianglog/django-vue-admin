@@ -14,49 +14,49 @@ export default {
   data() {
     return {
       levelList: null
-    }
+    };
   },
   watch: {
     $route(route) {
       // if you go to the redirect page, do not update the breadcrumbs
-      if (route.path.startsWith('/redirect/')) {
-        return
+      if (route.path.startsWith("/redirect/")) {
+        return;
       }
-      this.getBreadcrumb()
+      this.getBreadcrumb();
     }
   },
   created() {
-    this.getBreadcrumb()
+    this.getBreadcrumb();
   },
   methods: {
     getBreadcrumb() {
       // only show routes with meta.title
-      let matched = this.$route.matched.filter(item => item.meta && item.meta.title)
-      const first = matched[0]
+      const matched = this.$route.matched.filter(item => item.meta && item.meta.title);
+      const first = matched[0];
 
       if (!this.isDashboard(first)) {
         // matched = [{ path: '/index', meta: { title: '首页' }}].concat(matched)
       }
 
-      this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)
+      this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false);
     },
     isDashboard(route) {
-      const name = route && route.name
+      const name = route && route.name;
       if (!name) {
-        return false
+        return false;
       }
-      return name.trim() === '首页'
+      return name.trim() === "首页";
     },
     handleLink(item) {
-      const { redirect, path } = item
+      const { redirect, path } = item;
       if (redirect) {
-        this.$router.push(redirect)
-        return
+        this.$router.push(redirect);
+        return;
       }
-      this.$router.push(path)
+      this.$router.push(path);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

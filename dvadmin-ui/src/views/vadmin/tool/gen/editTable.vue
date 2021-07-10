@@ -15,7 +15,7 @@
           />
           <el-table-column label="字段描述" min-width="10%">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.columnComment"></el-input>
+              <el-input v-model="scope.row.columnComment" />
             </template>
           </el-table-column>
           <el-table-column
@@ -38,28 +38,28 @@
           </el-table-column>
           <el-table-column label="java属性" min-width="10%">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.javaField"></el-input>
+              <el-input v-model="scope.row.javaField" />
             </template>
           </el-table-column>
 
           <el-table-column label="插入" min-width="5%">
             <template slot-scope="scope">
-              <el-checkbox true-label="1" v-model="scope.row.isInsert"></el-checkbox>
+              <el-checkbox v-model="scope.row.isInsert" true-label="1" />
             </template>
           </el-table-column>
           <el-table-column label="编辑" min-width="5%">
             <template slot-scope="scope">
-              <el-checkbox true-label="1" v-model="scope.row.isEdit"></el-checkbox>
+              <el-checkbox v-model="scope.row.isEdit" true-label="1" />
             </template>
           </el-table-column>
           <el-table-column label="列表" min-width="5%">
             <template slot-scope="scope">
-              <el-checkbox true-label="1" v-model="scope.row.isList"></el-checkbox>
+              <el-checkbox v-model="scope.row.isList" true-label="1" />
             </template>
           </el-table-column>
           <el-table-column label="查询" min-width="5%">
             <template slot-scope="scope">
-              <el-checkbox true-label="1" v-model="scope.row.isQuery"></el-checkbox>
+              <el-checkbox v-model="scope.row.isQuery" true-label="1" />
             </template>
           </el-table-column>
           <el-table-column label="查询方式" min-width="10%">
@@ -78,7 +78,7 @@
           </el-table-column>
           <el-table-column label="必填" min-width="5%">
             <template slot-scope="scope">
-              <el-checkbox true-label="1" v-model="scope.row.isRequired"></el-checkbox>
+              <el-checkbox v-model="scope.row.isRequired" true-label="1" />
             </template>
           </el-table-column>
           <el-table-column label="显示类型" min-width="12%">
@@ -103,17 +103,18 @@
                   v-for="dict in dictOptions"
                   :key="dict.dictType"
                   :label="dict.dictName"
-                  :value="dict.dictType">
+                  :value="dict.dictType"
+                >
                   <span style="float: left">{{ dict.dictName }}</span>
                   <span style="float: right; color: #8492a6; font-size: 13px">{{ dict.dictType }}</span>
-              </el-option>
+                </el-option>
               </el-select>
             </template>
           </el-table-column>
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="生成信息" name="genInfo">
-        <gen-info-form ref="genInfo" :info="info" :tables="tables" :menus="menus"/>
+        <gen-info-form ref="genInfo" :info="info" :tables="tables" :menus="menus" />
       </el-tab-pane>
     </el-tabs>
     <el-form label-width="100px">
@@ -130,7 +131,7 @@ import { optionselect as getDictOptionselect } from "@/api/vadmin/system/dict/ty
 import { listMenu as getMenuTreeselect } from "@/api/vadmin/permission/menu";
 import basicInfoForm from "./basicInfoForm";
 import genInfoForm from "./genInfoForm";
-import Sortable from 'sortablejs'
+import Sortable from "sortablejs";
 
 export default {
   name: "GenEdit",
@@ -175,6 +176,19 @@ export default {
       });
     }
   },
+  mounted() {
+    const el = this.$refs.dragTable.$el.querySelectorAll(".el-table__body-wrapper > table > tbody")[0];
+    Sortable.create(el, {
+      handle: ".allowDrag",
+      onEnd: evt => {
+        const targetRow = this.cloumns.splice(evt.oldIndex, 1)[0];
+        this.cloumns.splice(evt.newIndex, 0, targetRow);
+        for (const index in this.cloumns) {
+          this.cloumns[index].sort = parseInt(index) + 1;
+        }
+      }
+    });
+  },
   methods: {
     /** 提交按钮 */
     submitForm() {
@@ -212,21 +226,8 @@ export default {
     /** 关闭按钮 */
     close() {
       this.$store.dispatch("tagsView/delView", this.$route);
-      this.$router.push({ path: "/tool/gen", query: { t: Date.now()}})
+      this.$router.push({ path: "/tool/gen", query: { t: Date.now() }});
     }
-  },
-  mounted() {
-    const el = this.$refs.dragTable.$el.querySelectorAll(".el-table__body-wrapper > table > tbody")[0];
-    const sortable = Sortable.create(el, {
-      handle: ".allowDrag",
-      onEnd: evt => {
-        const targetRow = this.cloumns.splice(evt.oldIndex, 1)[0];
-        this.cloumns.splice(evt.newIndex, 0, targetRow);
-        for (let index in this.cloumns) {
-          this.cloumns[index].sort = parseInt(index) + 1;
-        }
-      }
-    });
   }
 };
 </script>

@@ -17,7 +17,7 @@
         </div>
       </el-image>
       <div v-else class="image">
-        <el-image :src="value" :style="`width:150px;height:150px;`" fit="fill"/>
+        <el-image :src="value" :style="`width:150px;height:150px;`" fit="fill" />
         <div class="mask">
           <div class="actions">
             <span title="预览" @click.stop="dialogVisible = true">
@@ -40,21 +40,22 @@
 import { getToken } from "@/utils/auth";
 
 export default {
+  props: {
+    value: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {
       dialogVisible: false,
       uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
       headers: {
-        Authorization: "Bearer " + getToken(),
-      },
+        Authorization: "Bearer " + getToken()
+      }
     };
   },
-  props: {
-    value: {
-      type: String,
-      default: "",
-    },
-  },
+  watch: {},
   methods: {
     removeImage() {
       this.$emit("input", "");
@@ -67,18 +68,17 @@ export default {
       this.loading = this.$loading({
         lock: true,
         text: "上传中",
-        background: "rgba(0, 0, 0, 0.7)",
+        background: "rgba(0, 0, 0, 0.7)"
       });
     },
     handleUploadError() {
       this.$message({
         type: "error",
-        message: "上传失败",
+        message: "上传失败"
       });
       this.loading.close();
-    },
-  },
-  watch: {},
+    }
+  }
 };
 </script>
 

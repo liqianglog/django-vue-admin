@@ -1,21 +1,21 @@
 <template>
   <div>
-    <svg-icon icon-class="github" @click="goto"/>
+    <svg-icon icon-class="github" @click="goto" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'RuoYiMsg',
+  name: "RuoYiMsg",
   data() {
     return {
-      url: 'https://gitee.com/y_project/RuoYi-Vue'
-    }
+      url: "https://gitee.com/y_project/RuoYi-Vue"
+    };
   },
   methods: {
     goto() {
-      window.open(this.url)
+      window.open(this.url);
     }
   }
-}
+};
 </script>

@@ -23,15 +23,17 @@
                 icon="el-icon-edit"
                 size="mini"
                 circle
-                @click="handleOpenEditIntervalForm(false, val)"/>
+                @click="handleOpenEditIntervalForm(false, val)"
+              />
               <el-button
                 type="danger"
                 icon="el-icon-delete"
                 size="mini"
                 circle
-                @click="handleRemoveIntervalTable(val)"/>
+                @click="handleRemoveIntervalTable(val)"
+              />
             </div>
-            <el-divider/>
+            <el-divider />
           </div>
           <div v-if="detail.length===0" style="text-align: center">
             暂无信息
@@ -45,86 +47,87 @@
       :create="editIntervalCreate"
       :periodic-data="periodicData"
       :width="'30%'"
-      @success="handleSuccessEditInterval"/>
+      @success="handleSuccessEditInterval"
+    />
   </div>
 </template>
 
 <script>
-    import * as SyncDataApi from "@/api/vadmin/monitor/celery";
-    import EditFormIntervalTask from './edit-form-Interval-task';
+import * as SyncDataApi from "@/api/vadmin/monitor/celery";
+import EditFormIntervalTask from "./edit-form-Interval-task";
 
-    export default {
-        components: { EditFormIntervalTask },
-        props: {},
-        data() {
-            return {
-                periodicData: [],
-                multipleSelection: [],
-                IntervalTagList: [],
-                editInterval: {},
-                editIntervalFormVisible: false,
-                editIntervalCreate: false,
-                modelFormVisible: false,
-                modelSwaggerVisible: false,
-                batchEditFormVisible: false,
-                detail: []
-            };
-        },
-        computed: {},
-        watch: {},
-        created() {
-            this.initData();
-        },
-        methods: {
-            initData() {
-                SyncDataApi.listIntervalschedule({ pageSize: 1000 }).then((response) => {
-                    this.detail = response.data.results || [];
-                    this.$store.state.Interval = this.detail;
-                });
-            },
-            handleRefresh(infos) {
-                this.$refs.table.clearSelection();
-                this.$emit('update');
-            },
-            handleIntervalSelectionChange(infos) {
-                this.multipleSelection = infos;
-            },
-            handleOpenEditIntervalForm(create = false, info) {
-                if (create) {
-                    this.editInterval = { periodic: this.detail.id };
-                } else {
-                    this.editInterval = { ...info };
-                }
-                this.editIntervalCreate = create;
-                this.editIntervalFormVisible = true;
-            },
-            handleRemoveIntervalTable(info) {
-                this.$confirm('确认删除？', '确认信息', {
-                    distinguishCancelAndClose: true,
-                    confirmButtonText: '删除',
-                    cancelButtonText: '取消'
-                }).then(() => {
-                    SyncDataApi.deleteIntervalschedule(info.id).then(response => {
-                        const name = info.name ? info.name + ':' : '';
-                        this.msgSuccess(name + '删除成功');
-                        this.initData();
-                    });
-                });
-            },
-            handleSuccessEditInterval() {
-                this.$emit('update');
-            },
-            handleOpenModelForm() {
-                this.modelFormVisible = true;
-            },
-            handleOpenSwagger(model = false) {
-                this.modelSwaggerVisible = true;
-            },
-            handleBatchEdit() {
-                this.batchEditFormVisible = true;
-            }
-        }
+export default {
+  components: { EditFormIntervalTask },
+  props: {},
+  data() {
+    return {
+      periodicData: [],
+      multipleSelection: [],
+      IntervalTagList: [],
+      editInterval: {},
+      editIntervalFormVisible: false,
+      editIntervalCreate: false,
+      modelFormVisible: false,
+      modelSwaggerVisible: false,
+      batchEditFormVisible: false,
+      detail: []
     };
+  },
+  computed: {},
+  watch: {},
+  created() {
+    this.initData();
+  },
+  methods: {
+    initData() {
+      SyncDataApi.listIntervalschedule({ pageSize: 1000 }).then((response) => {
+        this.detail = response.data.results || [];
+        this.$store.state.Interval = this.detail;
+      });
+    },
+    handleRefresh(infos) {
+      this.$refs.table.clearSelection();
+      this.$emit("update");
+    },
+    handleIntervalSelectionChange(infos) {
+      this.multipleSelection = infos;
+    },
+    handleOpenEditIntervalForm(create = false, info) {
+      if (create) {
+        this.editInterval = { periodic: this.detail.id };
+      } else {
+        this.editInterval = { ...info };
+      }
+      this.editIntervalCreate = create;
+      this.editIntervalFormVisible = true;
+    },
+    handleRemoveIntervalTable(info) {
+      this.$confirm("确认删除？", "确认信息", {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "删除",
+        cancelButtonText: "取消"
+      }).then(() => {
+        SyncDataApi.deleteIntervalschedule(info.id).then(response => {
+          const name = info.name ? info.name + ":" : "";
+          this.msgSuccess(name + "删除成功");
+          this.initData();
+        });
+      });
+    },
+    handleSuccessEditInterval() {
+      this.$emit("update");
+    },
+    handleOpenModelForm() {
+      this.modelFormVisible = true;
+    },
+    handleOpenSwagger(model = false) {
+      this.modelSwaggerVisible = true;
+    },
+    handleBatchEdit() {
+      this.batchEditFormVisible = true;
+    }
+  }
+};
 </script>
 
 <style scoped>
