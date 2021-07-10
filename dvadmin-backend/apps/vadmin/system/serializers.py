@@ -252,7 +252,7 @@ class ExportLoginInforSerializer(CustomModelSerializer):
     class Meta:
         model = LoginInfor
         fields = ('id', 'creator_name', 'ipaddr', 'loginLocation', 'browser', 'os',
-                  'status', 'msg', 'creator_name')
+                  'status', 'msg')
 
 
 # ================================================= #
