@@ -3,7 +3,8 @@
     <el-form
       v-show="showSearch"
       ref="queryForm"
-      :model="queryParams" :inline="true"
+      :model="queryParams"
+      :inline="true"
       label-width="68px"
     >
       <el-form-item label="字典名称" prop="dictType">
@@ -41,9 +42,12 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery"
-          >搜索</el-button
-        >
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+        >搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -188,7 +192,10 @@
           <el-input-number v-model="form.sort" controls-position="right" :min="0" />
         </el-form-item>
         <el-form-item label="是否默认" prop="is_default">
-          <el-switch v-model="form.is_default" active-text="是" inactive-text="否"
+          <el-switch
+            v-model="form.is_default"
+            active-text="是"
+            inactive-text="否"
           />
         </el-form-item>
         <el-form-item label="状态" prop="status">
@@ -197,8 +204,7 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-              >{{ dict.dictLabel }}</el-radio
-            >
+            >{{ dict.dictLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -214,7 +220,7 @@
 </template>
 
 <script>
-import { addData, delData, exportData, getData, listData, updateData ,} from "@/api/vadmin/system/dict/data";
+import { addData, delData, exportData, getData, listData, updateData } from "@/api/vadmin/system/dict/data";
 import { getType, listType, clearCache } from "@/api/vadmin/system/dict/type";
 
 export default {
@@ -251,7 +257,7 @@ export default {
         pageSize: 10,
         dictName: undefined,
         dictType: undefined,
-        status: undefined,
+        status: undefined
       },
       // 表单参数
       form: {},
@@ -259,8 +265,8 @@ export default {
       rules: {
         name: [{ required: true, message: "数据标签不能为空", trigger: "blur" }],
         dictValue: [{ required: true, message: "数据键值不能为空", trigger: "blur" }],
-        sort: [{ required: true, message: "数据顺序不能为空", trigger: "blur" }],
-      },
+        sort: [{ required: true, message: "数据顺序不能为空", trigger: "blur" }]
+      }
     };
   },
   created() {
@@ -312,7 +318,7 @@ export default {
         dictValue: undefined,
         sort: 0,
         status: this.selectDictDefault(this.typeOptions),
-        remark: undefined,
+        remark: undefined
       };
       this.resetForm("form");
     },
@@ -358,7 +364,7 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id !== undefined) {
@@ -385,13 +391,14 @@ export default {
       this.$confirm('是否确认删除字典编码为"' + dictCodes + '"的数据项?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       }).then(function() {
-        return delData(dictCodes);})
-      .then(() => {
-        this.getList();
-        this.msgSuccess("删除成功");
-      });
+        return delData(dictCodes);
+      })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        });
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -399,19 +406,20 @@ export default {
       this.$confirm("是否确认导出所有数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       }).then(function() {
-        return exportData(queryParams);})
-      .then((response) => {
-        this.download(response.data.file_url, response.data.name);
-      });
+        return exportData(queryParams);
+      })
+        .then((response) => {
+          this.download(response.data.file_url, response.data.name);
+        });
     },
     /** 清理缓存按钮操作 */
     handleClearCache() {
       clearCache().then((response) => {
         this.msgSuccess("清理成功");
       });
-    },
-  },
+    }
+  }
 };
 </script>
