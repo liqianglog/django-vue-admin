@@ -14,32 +14,32 @@
 </template>
 
 <script>
-import icons from './requireIcons'
+import icons from "./requireIcons";
 export default {
-  name: 'IconSelect',
+  name: "IconSelect",
   data() {
     return {
-      name: '',
+      name: "",
       iconList: icons
-    }
+    };
   },
   methods: {
     filterIcons() {
-      this.iconList = icons
+      this.iconList = icons;
       if (this.name) {
-        this.iconList = this.iconList.filter(item => item.includes(this.name))
+        this.iconList = this.iconList.filter(item => item.includes(this.name));
       }
     },
     selectedIcon(name) {
-      this.$emit('selected', name)
-      document.body.click()
+      this.$emit("selected", name);
+      document.body.click();
     },
     reset() {
-      this.name = ''
-      this.iconList = icons
+      this.name = "";
+      this.iconList = icons;
     }
   }
-}
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

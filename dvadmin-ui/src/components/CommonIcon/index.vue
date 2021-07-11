@@ -8,32 +8,32 @@
     <use :xlink:href="commonName"/>
   </svg>-->
   <span>
-    <slot name="prepend"/>
+    <slot name="prepend" />
     <svg v-if="iconType && iconType.toLocaleLowerCase() === 'svg'" :class="commonClass" aria-hidden="true">
-      <use :xlink:href="commonName"/>
+      <use :xlink:href="commonName" />
     </svg>
-    <i v-if="iconType && iconType.toLocaleLowerCase() === 'el'" :class="commonClass"/>
+    <i v-if="iconType && iconType.toLocaleLowerCase() === 'el'" :class="commonClass" />
     <span v-if="showTitle">{{ iconTitle }}</span>
-    <slot name="append"/>
+    <slot name="append" />
   </span>
 </template>
 
 <script>
 export default {
-  name: 'CommonIcon',
+  name: "CommonIcon",
   props: {
     value: {
       type: String,
-      default: ''
+      default: ""
     },
     iconTitle: {
       type: String,
-      default: ''
+      default: ""
     },
     iconClass: {
       type: String,
       required: false,
-      default: ''
+      default: ""
     },
     showTitle: {
       type: Boolean,
@@ -42,10 +42,10 @@ export default {
   },
   data() {
     return {
-      iconType: '',
-      iconName: '',
-      commonName: '',
-      commonClass: ''
+      iconType: "",
+      iconName: "",
+      commonName: "",
+      commonClass: ""
     };
   },
   computed: {
@@ -62,42 +62,42 @@ export default {
   },
   methods: {
     change(val) {
-      const arr = val.split(':');
+      const arr = val.split(":");
       if (arr.length >= 2) {
         this.iconType = arr[0];
         this.iconName = arr[1];
       } else {
-        this.iconType = '';
-        this.iconName = '';
+        this.iconType = "";
+        this.iconName = "";
       }
       this.commonName = this.getCommonName();
       this.commonClass = this.getCommonClass();
     },
     getCommonName() {
-      if (this.iconType && this.iconType.toLocaleLowerCase() === 'svg') {
+      if (this.iconType && this.iconType.toLocaleLowerCase() === "svg") {
         return `#icon-${this.iconName}`;
       }
-      if (this.iconType && this.iconType.toLocaleLowerCase() === 'el') {
+      if (this.iconType && this.iconType.toLocaleLowerCase() === "el") {
         return `${this.iconName}`;
       }
-      return '';
+      return "";
     },
     getCommonClass() {
-      if (this.iconType && this.iconType.toLocaleLowerCase() === 'svg') {
+      if (this.iconType && this.iconType.toLocaleLowerCase() === "svg") {
         if (this.className) {
-          return 'svg-icon ' + this.className;
+          return "svg-icon " + this.className;
         } else {
-          return 'svg-icon';
+          return "svg-icon";
         }
       }
-      if (this.iconType && this.iconType.toLocaleLowerCase() === 'el') {
+      if (this.iconType && this.iconType.toLocaleLowerCase() === "el") {
         if (this.className) {
-          return this.iconName + ' ' + this.className;
+          return this.iconName + " " + this.className;
         } else {
           return this.iconName;
         }
       }
-      return '';
+      return "";
     }
   }
 };

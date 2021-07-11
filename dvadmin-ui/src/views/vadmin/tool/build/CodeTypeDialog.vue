@@ -51,33 +51,33 @@
 <script>
 export default {
   inheritAttrs: false,
-  props: ['showFileName'],
+  props: ["showFileName"],
   data() {
     return {
       formData: {
         fileName: undefined,
-        type: 'file'
+        type: "file"
       },
       rules: {
         fileName: [{
           required: true,
-          message: '请输入文件名',
-          trigger: 'blur'
+          message: "请输入文件名",
+          trigger: "blur"
         }],
         type: [{
           required: true,
-          message: '生成类型不能为空',
-          trigger: 'change'
+          message: "生成类型不能为空",
+          trigger: "change"
         }]
       },
       typeOptions: [{
-        label: '页面',
-        value: 'file'
+        label: "页面",
+        value: "file"
       }, {
-        label: '弹窗',
-        value: 'dialog'
+        label: "弹窗",
+        value: "dialog"
       }]
-    }
+    };
   },
   computed: {
   },
@@ -86,21 +86,21 @@ export default {
   methods: {
     onOpen() {
       if (this.showFileName) {
-        this.formData.fileName = `${+new Date()}.vue`
+        this.formData.fileName = `${+new Date()}.vue`;
       }
     },
     onClose() {
     },
     close(e) {
-      this.$emit('update:visible', false)
+      this.$emit("update:visible", false);
     },
     handelConfirm() {
       this.$refs.elForm.validate(valid => {
-        if (!valid) return
-        this.$emit('confirm', { ...this.formData })
-        this.close()
-      })
+        if (!valid) return;
+        this.$emit("confirm", { ...this.formData });
+        this.close();
+      });
     }
   }
-}
+};
 </script>

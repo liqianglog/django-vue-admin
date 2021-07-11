@@ -12,8 +12,8 @@ from django.utils.translation import ugettext as _
 from rest_framework import exceptions
 from rest_framework_jwt.utils import jwt_decode_handler
 
-from .jwt_util import jwt_get_session_id
-from ..permission.models.users import UserProfile
+from apps.vadmin.permission.models.users import UserProfile
+from apps.vadmin.utils.jwt_util import jwt_get_session_id
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -92,7 +92,7 @@ class RedisOpAuthJwtAuthentication(OpAuthJwtAuthentication):
 
     def authenticate(self, request):
         res = super().authenticate(request)
-        if res:
+        if res and getattr(settings, "REDIS_ENABLE", False):
             user, token = res
             session_id = jwt_get_session_id(token)
             key = f"{self.prefix}_{session_id}_{user.username}"
@@ -101,4 +101,4 @@ class RedisOpAuthJwtAuthentication(OpAuthJwtAuthentication):
                 return user, token
             else:
                 raise exceptions.AuthenticationFailed("登录信息失效，请重新登录！")
-        return None
+        return res

@@ -1,5 +1,5 @@
 <template>
-    <div class="editor" ref="editor" :style="styles"></div>
+  <div ref="editor" class="editor" :style="styles" />
 </template>
 
 <script>
@@ -14,18 +14,18 @@ export default {
     /* 编辑器的内容 */
     value: {
       type: String,
-      default: "",
+      default: ""
     },
     /* 高度 */
     height: {
       type: Number,
-      default: null,
+      default: null
     },
     /* 最小高度 */
     minHeight: {
       type: Number,
-      default: null,
-    },
+      default: null
+    }
   },
   data() {
     return {
@@ -38,26 +38,26 @@ export default {
         modules: {
           // 工具栏配置
           toolbar: [
-            ["bold", "italic", "underline", "strike"],       // 加粗 斜体 下划线 删除线
-            ["blockquote", "code-block"],                    // 引用  代码块
-            [{ list: "ordered" }, { list: "bullet" }],       // 有序、无序列表
-            [{ indent: "-1" }, { indent: "+1" }],            // 缩进
-            [{ size: ["small", false, "large", "huge"] }],   // 字体大小
-            [{ header: [1, 2, 3, 4, 5, 6, false] }],         // 标题
-            [{ color: [] }, { background: [] }],             // 字体颜色、字体背景颜色
-            [{ align: [] }],                                 // 对齐方式
-            ["clean"],                                       // 清除文本格式
-            ["link", "image", "video"]                       // 链接、图片、视频
-          ],
+            ["bold", "italic", "underline", "strike"], // 加粗 斜体 下划线 删除线
+            ["blockquote", "code-block"], // 引用  代码块
+            [{ list: "ordered" }, { list: "bullet" }], // 有序、无序列表
+            [{ indent: "-1" }, { indent: "+1" }], // 缩进
+            [{ size: ["small", false, "large", "huge"] }], // 字体大小
+            [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
+            [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
+            [{ align: [] }], // 对齐方式
+            ["clean"], // 清除文本格式
+            ["link", "image", "video"] // 链接、图片、视频
+          ]
         },
         placeholder: "请输入内容",
-        readOnly: false,
-      },
+        readOnly: false
+      }
     };
   },
   computed: {
     styles() {
-      let style = {};
+      const style = {};
       if (this.minHeight) {
         style.minHeight = `${this.minHeight}px`;
       }
@@ -65,7 +65,7 @@ export default {
         style.height = `${this.height}px`;
       }
       return style;
-    },
+    }
   },
   watch: {
     value: {
@@ -77,8 +77,8 @@ export default {
           }
         }
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   mounted() {
     this.init();
@@ -108,8 +108,8 @@ export default {
       this.Quill.on("editor-change", (eventName, ...args) => {
         this.$emit("on-editor-change", eventName, ...args);
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

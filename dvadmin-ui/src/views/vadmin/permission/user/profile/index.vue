@@ -8,36 +8,36 @@
           </div>
           <div>
             <div class="text-center">
-              <userAvatar :user="user"/>
+              <userAvatar :user="user" />
             </div>
             <ul class="list-group list-group-striped">
               <li class="list-group-item">
-                <svg-icon icon-class="user"/>
+                <svg-icon icon-class="user" />
                 用户名称
                 <div class="pull-right">{{ user.username }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="phone"/>
+                <svg-icon icon-class="phone" />
                 手机号码
                 <div class="pull-right">{{ user.mobile }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="email"/>
+                <svg-icon icon-class="email" />
                 用户邮箱
                 <div class="pull-right">{{ user.email }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="tree"/>
+                <svg-icon icon-class="tree" />
                 所属部门
-                <div class="pull-right" v-if="user.dept">{{ user.dept.deptName }} / {{ postGroup }}</div>
+                <div v-if="user.dept" class="pull-right">{{ user.dept.deptName }} / {{ postGroup }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="peoples"/>
+                <svg-icon icon-class="peoples" />
                 所属角色
                 <div class="pull-right">{{ roleGroup }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="date"/>
+                <svg-icon icon-class="date" />
                 创建日期
                 <div class="pull-right">{{ user.create_datetime }}</div>
               </li>
@@ -52,10 +52,10 @@
           </div>
           <el-tabs v-model="activeTab">
             <el-tab-pane label="基本资料" name="userinfo">
-              <userInfo :user="user"/>
+              <userInfo :user="user" />
             </el-tab-pane>
             <el-tab-pane label="修改密码" name="resetPwd">
-              <resetPwd :user="user"/>
+              <resetPwd :user="user" />
             </el-tab-pane>
           </el-tabs>
         </el-card>
@@ -65,37 +65,37 @@
 </template>
 
 <script>
-  import userAvatar from "./userAvatar";
-  import userInfo from "./userInfo";
-  import resetPwd from "./resetPwd";
-  import {getUserProfile} from "@/api/vadmin/permission/user";
+import userAvatar from "./userAvatar";
+import userInfo from "./userInfo";
+import resetPwd from "./resetPwd";
+import { getUserProfile } from "@/api/vadmin/permission/user";
 
-  export default {
-    name: "Profile",
-    components: {userAvatar, userInfo, resetPwd},
-    data() {
-      return {
-        user: {},
-        roleGroup: {},
-        postGroup: {},
-        activeTab: "userinfo"
-      };
-    },
-    created() {
-      this.getUser();
-    },
-    methods: {
-      getUser() {
-        getUserProfile().then(response => {
-          this.user = response.data;
-          this.roleGroup = response.data.role.map(val => {
-            return val.roleName
-          }).toString();
-          this.postGroup = response.data.post.map(val => {
-            return val.postName
-          }).toString();
-        });
-      }
+export default {
+  name: "Profile",
+  components: { userAvatar, userInfo, resetPwd },
+  data() {
+    return {
+      user: {},
+      roleGroup: {},
+      postGroup: {},
+      activeTab: "userinfo"
+    };
+  },
+  created() {
+    this.getUser();
+  },
+  methods: {
+    getUser() {
+      getUserProfile().then(response => {
+        this.user = response.data;
+        this.roleGroup = response.data.role.map(val => {
+          return val.roleName;
+        }).toString();
+        this.postGroup = response.data.post.map(val => {
+          return val.postName;
+        }).toString();
+      });
     }
-  };
+  }
+};
 </script>

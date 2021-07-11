@@ -6,7 +6,7 @@ from django.apps.config import AppConfig
 from django.db.models.fields import Field
 from rest_framework.renderers import JSONRenderer
 
-from ..permission.models import Dept
+from apps.vadmin.permission.models import Dept
 
 
 def get_primary_field(model, many=False):

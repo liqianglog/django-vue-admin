@@ -7,8 +7,8 @@ import xlrd
 import xlwt
 from django.conf import settings
 
-from ..system.models import SaveFile
-from ..system.serializers import SaveFileSerializer
+from apps.vadmin.system.models import SaveFile
+from apps.vadmin.system.serializers import SaveFileSerializer
 
 
 def len_byte(value):
@@ -152,7 +152,7 @@ def excel_to_data(file_url, field_data):
     :return:
     """
     # 读取excel 文件
-    data = xlrd.open_workbook(os.path.join(settings.BASE_DIR, *file_url.split(os.sep)))
+    data = xlrd.open_workbook(os.path.join(settings.BASE_DIR.replace('\\', os.sep), *file_url.split(os.sep)))
     table = data.sheets()[0]
     # 创建一个空列表，存储Excel的数据
     tables = []

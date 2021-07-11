@@ -1,5 +1,5 @@
-from .models import Server, Monitor
-from ..op_drf.serializers import CustomModelSerializer
+from apps.vadmin.monitor.models import Server, Monitor
+from apps.vadmin.op_drf.serializers import CustomModelSerializer
 
 
 # ================================================= #

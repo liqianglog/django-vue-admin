@@ -6,11 +6,8 @@ from rest_framework.exceptions import APIException as DRFAPIException
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from ..utils import exceptions
-from ..utils.model_util import ModelRelateUtils
-from .logging.view_logger import CustomerRelationshipViewLogger
-from .response import SuccessResponse, ErrorResponse
-from .serializers import CustomModelSerializer
+from apps.vadmin.utils import exceptions
+from .response import ErrorResponse
 
 logger = logging.getLogger(__name__)
 

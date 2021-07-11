@@ -1,12 +1,9 @@
 import logging
 
-from captcha.models import CaptchaStore
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 from django.utils import timezone
 from rest_framework.authentication import SessionAuthentication as DjangoSessionAuthentication
-
 
 logger = logging.getLogger(__name__)
 UserModel = get_user_model()

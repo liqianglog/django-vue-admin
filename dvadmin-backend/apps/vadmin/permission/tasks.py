@@ -3,8 +3,8 @@ import logging
 
 from captcha.models import CaptchaStore
 
-from ..utils.decorators import BaseCeleryApp
-from ..utils.response import SuccessResponse
+from apps.vadmin.utils.decorators import BaseCeleryApp
+from apps.vadmin.op_drf.response import SuccessResponse
 
 logger = logging.getLogger(__name__)
 @BaseCeleryApp(name='apps.vadmin.permission.tasks.clear_invalid_captcha')

@@ -1,6 +1,6 @@
 from django.db.models import TextField, CharField,ForeignKey
 
-from ...op_drf.models import CoreModel
+from apps.vadmin.op_drf.models import CoreModel
 
 
 class DictData(CoreModel):

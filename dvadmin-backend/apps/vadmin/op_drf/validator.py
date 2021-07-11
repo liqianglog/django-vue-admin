@@ -3,7 +3,7 @@
 """
 from rest_framework.validators import UniqueValidator, qs_exists
 
-from vadmin.utils.exceptions import APIException
+from apps.vadmin.utils.exceptions import APIException
 
 
 class CustomUniqueValidator(UniqueValidator):

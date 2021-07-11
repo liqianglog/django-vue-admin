@@ -1,6 +1,6 @@
 from django.db.models import CharField, ForeignKey, CASCADE
 
-from ...op_drf.models import CoreModel
+from apps.vadmin.op_drf.models import CoreModel
 
 
 class SysFiles(CoreModel):

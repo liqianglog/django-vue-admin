@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
       <el-form-item label="登录地址" prop="ipaddr">
         <el-input
           v-model="queryParams.ipaddr"
@@ -32,7 +32,7 @@
     >
       <el-table-column label="序号" type="index" align="center">
         <template slot-scope="scope">
-          <span>{{(pageNum - 1) * pageSize + scope.$index + 1}}</span>
+          <span>{{ (pageNum - 1) * pageSize + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="会话编号" align="center" prop="tokenId" :show-overflow-tooltip="true" />
@@ -50,11 +50,11 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-hasPermi="['monitor:online:forceLogout']"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleForceLogout(scope.row)"
-            v-hasPermi="['monitor:online:forceLogout']"
           >强退</el-button>
         </template>
       </el-table-column>
@@ -112,15 +112,15 @@ export default {
     /** 强退按钮操作 */
     handleForceLogout(row) {
       this.$confirm('是否确认强退名称为"' + row.userName + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return forceLogout(row.tokenId);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("强退成功");
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return forceLogout(row.tokenId);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("强退成功");
+      });
     }
   }
 };

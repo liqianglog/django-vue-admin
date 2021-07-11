@@ -1,11 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 
 /* Layout */
-import Layout from '@/layout'
-import ParentView from '@/components/ParentView';
+import Layout from "@/layout";
 
 /**
  * Note: 路由配置项
@@ -28,35 +27,35 @@ import ParentView from '@/components/ParentView';
 // 公共路由
 export const constantRoutes = [
   {
-    path: '/redirect',
+    path: "/redirect",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: '/redirect/:path(.*)',
-        component: (resolve) => require(['@/views/redirect'], resolve)
+        path: "/redirect/:path(.*)",
+        component: (resolve) => require(["@/views/redirect"], resolve)
       }
     ]
   },
   {
-    path: '/login',
-    component: (resolve) => require(['@/views/login'], resolve),
+    path: "/login",
+    component: (resolve) => require(["@/views/login"], resolve),
     hidden: true
   },
   {
-    path: '/404',
-    component: (resolve) => require(['@/views/error/404'], resolve),
+    path: "/404",
+    component: (resolve) => require(["@/views/error/404"], resolve),
     hidden: true
   },
   {
-    path: '/401',
-    component: (resolve) => require(['@/views/error/401'], resolve),
+    path: "/401",
+    component: (resolve) => require(["@/views/error/401"], resolve),
     hidden: true
   },
   {
-    path: '',
+    path: "",
     component: Layout,
-    redirect: '/index',
+    redirect: "/index",
     children: [
       // {
       //   path: 'index',
@@ -67,42 +66,42 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/user',
+    path: "/user",
     component: Layout,
     hidden: true,
-    redirect: 'noredirect',
+    redirect: "noredirect",
     children: [
       {
-        path: 'profile',
-        component: (resolve) => require(['@/views/vadmin/permission/user/profile/index'], resolve),
-        name: 'Profile',
-        meta: { title: '个人中心', icon: 'user' }
+        path: "profile",
+        component: (resolve) => require(["@/views/vadmin/permission/user/profile/index"], resolve),
+        name: "Profile",
+        meta: { title: "个人中心", icon: "user" }
       },
       {
-        path: 'msg',
-        component: (resolve) => require(['@/views/vadmin/system/message/Mymessage'], resolve),
-        name: 'msg',
-        meta: { title: '消息通知', icon: 'user' }
+        path: "msg",
+        component: (resolve) => require(["@/views/vadmin/system/message/Mymessage"], resolve),
+        name: "msg",
+        meta: { title: "消息通知", icon: "user" }
       }
     ]
   },
   {
-    path: '/dict',
+    path: "/dict",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'type/data/:dictId(\\d+)',
-        component: (resolve) => require(['@/views/vadmin/system/dict/data'], resolve),
-        name: 'Data',
-        meta: { title: '字典数据', icon: '' }
+        path: "type/data/:dictId(\\d+)",
+        component: (resolve) => require(["@/views/vadmin/system/dict/data"], resolve),
+        name: "Data",
+        meta: { title: "字典数据", icon: "" }
       }
     ]
   }
-]
+];
 
 export default new Router({
-  mode: 'history', // 去掉url中的#
+  mode: "history", // 去掉url中的#
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
-})
+});

@@ -5,7 +5,7 @@ from django.contrib.auth.models import UserManager, AbstractUser
 from django.core.cache import cache
 from django.db.models import IntegerField, ForeignKey, CharField, TextField, ManyToManyField, CASCADE
 
-from ...op_drf.models import CoreModel
+from apps.vadmin.op_drf.models import CoreModel
 
 
 class UserProfile(AbstractUser, CoreModel):
@@ -25,11 +25,13 @@ class UserProfile(AbstractUser, CoreModel):
     user_type = IntegerField(default=0, verbose_name="用户类型")
     post = ManyToManyField(to='permission.Post', verbose_name='关联岗位', db_constraint=False)
     role = ManyToManyField(to='permission.Role', verbose_name='关联角色', db_constraint=False)
-    dept = ForeignKey(to='permission.Dept', verbose_name='归属部门', on_delete=CASCADE, db_constraint=False, null=True, blank=True)
+    dept = ForeignKey(to='permission.Dept', verbose_name='归属部门', on_delete=CASCADE, db_constraint=False, null=True,
+                      blank=True)
 
     @property
     def get_user_interface_dict(self):
-        interface_dict = cache.get(f'permission_interface_dict_{self.username}', {})
+        interface_dict = cache.get(f'permission_interface_dict_{self.username}', {}) if \
+            getattr(settings, "REDIS_ENABLE", False) else {}
         if not interface_dict:
             for ele in self.role.filter(status='1', menu__status='1').values('menu__interface_path',
                                                                              'menu__interface_method').distinct():
@@ -40,7 +42,8 @@ class UserProfile(AbstractUser, CoreModel):
                     interface_dict[ele.get('menu__interface_method', '')].append(interface_path)
                 else:
                     interface_dict[ele.get('menu__interface_method', '')] = [interface_path]
-            cache.set(f'permission_interface_dict_{self.username}', interface_dict, 84600)
+            if getattr(settings, "REDIS_ENABLE", False):
+                cache.set(f'permission_interface_dict_{self.username}', interface_dict, 84600)
         return interface_dict
 
     @property
@@ -49,6 +52,7 @@ class UserProfile(AbstractUser, CoreModel):
         清空缓存中的接口列表
         :return:
         """
+        if not getattr(settings, "REDIS_ENABLE", False): return ""
         return cache.delete(f'permission_interface_dict_{self.username}')
 
     class Meta:

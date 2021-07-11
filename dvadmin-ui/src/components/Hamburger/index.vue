@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: 'Hamburger',
+  name: "Hamburger",
   props: {
     isActive: {
       type: Boolean,
@@ -24,10 +24,10 @@ export default {
   },
   methods: {
     toggleClick() {
-      this.$emit('toggleClick')
+      this.$emit("toggleClick");
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -23,15 +23,17 @@
                 icon="el-icon-edit"
                 size="mini"
                 circle
-                @click="handleOpenEditCrontabForm(false, val)"/>
+                @click="handleOpenEditCrontabForm(false, val)"
+              />
               <el-button
                 type="danger"
                 icon="el-icon-delete"
                 size="mini"
                 circle
-                @click="handleRemoveCrontabTable(val)"/>
+                @click="handleRemoveCrontabTable(val)"
+              />
             </div>
-            <el-divider/>
+            <el-divider />
           </div>
           <div v-if="detail.length===0" style="text-align: center">
             暂无信息
@@ -45,86 +47,87 @@
       :create="editCrontabCreate"
       :periodic-data="periodicData"
       :width="'30%'"
-      @success="handleSuccessEditCrontab"/>
+      @success="handleSuccessEditCrontab"
+    />
   </div>
 </template>
 
 <script>
-  import * as SyncDataApi from "@/api/vadmin/monitor/celery";
-  import EditFormCrontabTask from './edit-form-crontab-task';
+import * as SyncDataApi from "@/api/vadmin/monitor/celery";
+import EditFormCrontabTask from "./edit-form-crontab-task";
 
-  export default {
-    components: { EditFormCrontabTask },
-    props: {
+export default {
+  components: { EditFormCrontabTask },
+  props: {
+  },
+  data() {
+    return {
+      periodicData: [],
+      multipleSelection: [],
+      CrontabTagList: [],
+      editCrontab: {},
+      editCrontabFormVisible: false,
+      editCrontabCreate: false,
+      modelFormVisible: false,
+      modelSwaggerVisible: false,
+      batchEditFormVisible: false,
+      detail: []
+    };
+  },
+  computed: {
+  },
+  watch: {
+  },
+  created() {
+    this.initData();
+  },
+  methods: {
+    initData() {
+      SyncDataApi.listCrontabSchedule({ pageSize: 1000 }).then((response) => {
+        this.detail = response.data.results || [];
+        this.$store.state.Crontab = this.detail;
+      });
     },
-    data() {
-      return {
-        periodicData: [],
-        multipleSelection: [],
-        CrontabTagList: [],
-        editCrontab: {},
-        editCrontabFormVisible: false,
-        editCrontabCreate: false,
-        modelFormVisible: false,
-        modelSwaggerVisible: false,
-        batchEditFormVisible: false,
-        detail: []
-      };
+    handleRefresh(infos) {
+      this.$refs.table.clearSelection();
+      this.$emit("update");
     },
-    computed: {
-    },
-    watch: {
-    },
-    created() {
-      this.initData();
-    },
-    methods: {
-      initData() {
-        SyncDataApi.listCrontabSchedule({ page_size: 1000 }).then((response) => {
-          this.detail = response.data.results || [];
-          this.$store.state.Crontab = this.detail;
-        });
-      },
-      handleRefresh(infos) {
-        this.$refs.table.clearSelection();
-        this.$emit('update');
-      },
-      handleOpenEditCrontabForm(create = false, info) {
-        if (create) {
-          this.editCrontab = { periodic: this.detail.id };
-        } else {
-          this.editCrontab = { ...info };
-        }
-        this.editCrontabCreate = create;
-        this.editCrontabFormVisible = true;
-      },
-      handleRemoveCrontabTable(info) {
-        this.$confirm('确认删除？', '确认信息', {
-          distinguishCancelAndClose: true,
-          confirmButtonText: '删除',
-          cancelButtonText: '取消'
-        }).then(() => {
-          SyncDataApi.deleteCrontabSchedule(info.id).then(response => {
-            const name = info.name ? info.name + ':' : '';
-            this.msgSuccess(name + '删除成功!');
-            this.initData();
-          });
-        });
-      },
-      handleSuccessEditCrontab() {
-        this.$emit('update');
-      },
-      handleOpenModelForm() {
-        this.modelFormVisible = true;
-      },
-      handleOpenSwagger(model = false) {
-        this.modelSwaggerVisible = true;
-      },
-      handleBatchEdit() {
-        this.batchEditFormVisible = true;
+    handleOpenEditCrontabForm(create = false, info) {
+      if (create) {
+        this.editCrontab = { periodic: this.detail.id };
+      } else {
+        this.editCrontab = { ...info };
       }
+      this.editCrontabCreate = create;
+      this.editCrontabFormVisible = true;
+    },
+    handleRemoveCrontabTable(info) {
+      this.$confirm("确认删除？", "确认信息", {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "删除",
+        cancelButtonText: "取消"
+      }).then(() => {
+        SyncDataApi.deleteCrontabSchedule(info.id).then(response => {
+          const name = info.name ? info.name + ":" : "";
+          this.msgSuccess(name + "删除成功!");
+          this.initData();
+        });
+      });
+    },
+    handleSuccessEditCrontab() {
+      this.$emit("update");
+    },
+    handleOpenModelForm() {
+      this.modelFormVisible = true;
+    },
+    handleOpenSwagger(model = false) {
+      this.modelSwaggerVisible = true;
+    },
+    handleBatchEdit() {
+      this.batchEditFormVisible = true;
     }
-  };
+  }
+};
 </script>
 
 <style scoped>

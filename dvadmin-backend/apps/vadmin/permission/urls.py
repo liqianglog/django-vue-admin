@@ -1,7 +1,7 @@
 from django.urls import re_path
 from rest_framework.routers import DefaultRouter
 
-from ..permission.views import MenuModelViewSet, DeptModelViewSet, PostModelViewSet, RoleModelViewSet, \
+from apps.vadmin.permission.views import MenuModelViewSet, DeptModelViewSet, PostModelViewSet, RoleModelViewSet, \
     UserProfileModelViewSet
 
 router = DefaultRouter()

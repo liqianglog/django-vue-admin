@@ -1,13 +1,13 @@
 from django_celery_beat.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from rest_framework.request import Request
 
-from .filters import ServerFilter, MonitorFilter
-from .models import Server, Monitor, SysFiles
-from .serializers import ServerSerializer, MonitorSerializer, UpdateServerSerializer
-from ..op_drf.response import SuccessResponse, ErrorResponse
-from ..op_drf.viewsets import CustomModelViewSet
-from ..permission.permissions import CommonPermission
-from ..system.models import ConfigSettings
+from apps.vadmin.monitor.filters import ServerFilter, MonitorFilter
+from apps.vadmin.monitor.models import Server, Monitor, SysFiles
+from apps.vadmin.monitor.serializers import ServerSerializer, MonitorSerializer, UpdateServerSerializer
+from apps.vadmin.op_drf.response import SuccessResponse, ErrorResponse
+from apps.vadmin.op_drf.viewsets import CustomModelViewSet
+from apps.vadmin.permission.permissions import CommonPermission
+from apps.vadmin.system.models import ConfigSettings
 
 
 class ServerModelViewSet(CustomModelViewSet):

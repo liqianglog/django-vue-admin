@@ -10,8 +10,8 @@ from rest_framework.permissions import (BasePermission,
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from .models import Dept
-from ..utils.model_util import get_dept
+from apps.vadmin.permission.models import Dept
+from apps.vadmin.utils.model_util import get_dept
 
 logger = logging.getLogger(__name__)
 User = get_user_model()

@@ -5,9 +5,9 @@ from rest_framework import status
 from rest_framework.relations import ManyRelatedField, RelatedField, PrimaryKeyRelatedField
 from rest_framework.request import Request
 
+from apps.vadmin.utils.export_excel import excel_to_data, export_excel_save_model
+from apps.vadmin.utils.request_util import get_verbose_name
 from .response import SuccessResponse
-from ..utils.export_excel import excel_to_data, export_excel_save_model
-from ..utils.request_util import get_verbose_name
 
 
 class CreateModelMixin(mixins.CreateModelMixin):
@@ -317,7 +317,8 @@ class ImportSerializerMixin:
             # 示例数据
             queryset = self.filter_queryset(self.get_queryset())
             return SuccessResponse(
-                export_excel_save_model(request, self.import_field_data.values(), [], f'导入{get_verbose_name(queryset)}模板.xls'))
+                export_excel_save_model(request, self.import_field_data.values(), [],
+                                        f'导入{get_verbose_name(queryset)}模板.xls'))
         updateSupport = request.data.get('updateSupport')
         # 从excel中组织对应的数据结构，然后使用序列化器保存
         data = excel_to_data(request.data.get('file_url'), self.import_field_data)

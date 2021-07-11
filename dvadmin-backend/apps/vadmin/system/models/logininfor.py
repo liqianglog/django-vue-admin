@@ -1,6 +1,6 @@
 from django.db.models import CharField, BooleanField, TextField
 
-from ...op_drf.models import CoreModel
+from apps.vadmin.op_drf.models import CoreModel
 
 
 class LoginInfor(CoreModel):

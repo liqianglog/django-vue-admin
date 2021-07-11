@@ -1,6 +1,6 @@
 import django_filters
 
-from .models import Server, Monitor
+from apps.vadmin.monitor.models import Server, Monitor
 
 
 class ServerFilter(django_filters.rest_framework.FilterSet):

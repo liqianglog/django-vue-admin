@@ -44,3 +44,5 @@ API_LOG_ENABLE = True
 API_LOG_METHODS = ['POST', 'DELETE', 'PUT'] # 'ALL' or ['POST', 'DELETE']
 # 接口权限
 INTERFACE_PERMISSION = True
+# 是否开启登录ip转换成城市位置
+ENABLE_LOGIN_LOCATION = True

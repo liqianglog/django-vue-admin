@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form v-show="showSearch" ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
       <el-form-item label="岗位编码" prop="postCode">
         <el-input
           v-model="queryParams.postCode"
@@ -38,47 +38,47 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['permission:post:post']"
           type="primary"
           plain
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['permission:post:post']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['permission:post:{id}:put']"
           type="success"
           plain
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['permission:post:{id}:put']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['permission:post:{id}:delete']"
           type="danger"
           plain
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['permission:post:{id}:delete']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['permission:post:export:get']"
           type="warning"
           plain
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['permission:post:export:get']"
         >导出</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
     </el-row>
 
     <el-table v-loading="loading" :data="postList" @selection-change="handleSelectionChange">
@@ -94,25 +94,25 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="hasPermi(['permission:post:{id}:put', 'permission:post:{id}:delete'])"
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
-        v-if="hasPermi(['permission:post:{id}:put', 'permission:post:{id}:delete'])"
       >
         <template slot-scope="scope">
           <el-button
+            v-hasPermi="['permission:post:{id}:put']"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['permission:post:{id}:put']"
           >修改</el-button>
           <el-button
+            v-hasPermi="['permission:post:{id}:delete']"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['permission:post:{id}:delete']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -144,7 +144,7 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
+            >{{ dict.dictLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -259,9 +259,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.id);
+      this.single = selection.length != 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -272,7 +272,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
+      const id = row.id || this.ids;
       getPost(id).then(response => {
         this.form = response.data;
         this.open = true;
@@ -303,28 +303,28 @@ export default {
     handleDelete(row) {
       const postIds = row.id || this.ids;
       this.$confirm('是否确认删除岗位编号为"' + postIds + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delPost(postIds);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return delPost(postIds);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有岗位数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportPost(queryParams);
-        }).then(response => {
-          this.download(response.data.file_url,response.data.name);
-        })
+      this.$confirm("是否确认导出所有岗位数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return exportPost(queryParams);
+      }).then(response => {
+        this.download(response.data.file_url, response.data.name);
+      });
     }
   }
 };

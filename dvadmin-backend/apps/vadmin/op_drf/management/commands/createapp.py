@@ -13,6 +13,7 @@ class Command(BaseCommand):
     创建App命令:
     python manage.py createapp app名
     python manage.py createapp app01 app02 ...
+    python manage.py createapp 一级文件名/app01 ...    # 支持多级目录建app
     """
 
     def add_arguments(self, parser):
@@ -21,7 +22,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         app_name = options.get('app_name')
         for name in app_name:
-            app_path = os.path.join(BASE_DIR, "apps", name)
+            names = name.split('/')
+            dnames = ".".join(names)
+            app_path = os.path.join(BASE_DIR, "apps", *names)
             # 判断app是否存在
             if os.path.exists(app_path):
                 print(f"创建失败，App {name} 已存在！")
@@ -39,20 +42,20 @@ class Command(BaseCommand):
             content = f"""from django.apps import AppConfig
 
 
-class {name.capitalize()}Config(AppConfig):
-    name = '{name}'
-    verbose_name = "{name}App"
+class {name[-1].capitalize()}Config(AppConfig):
+    name = 'apps.{dnames}'
+    verbose_name = "{names[-1]}App"
 """
             with open(os.path.join(app_path, "apps.py"), 'w', encoding='UTF-8') as f:
                 f.write(content)
                 f.close()
             # 注册app到 settings.py 中
-            injection(os.path.join(BASE_DIR, "application", "settings.py"), f"    'apps.{name}',\n", "INSTALLED_APPS",
+            injection(os.path.join(BASE_DIR, "application", "settings.py"), f"    'apps.{dnames}',\n", "INSTALLED_APPS",
                       "]")
 
             # 注册app到 urls.py 中
             injection(os.path.join(BASE_DIR, "application", "urls.py"),
-                      f"    re_path(r'^{name}/', include('apps.{name}.urls')),\n", "urlpatterns = [",
+                      f"    re_path(r'^{name}/', include('apps.{dnames}.urls')),\n", "urlpatterns = [",
                       "]")
 
             print(f"创建 {name} App成功")

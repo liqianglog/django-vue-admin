@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form v-show="showSearch" ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
       <el-form-item label="参数名称" prop="configName">
         <el-input
           v-model="queryParams.configName"
@@ -40,57 +40,57 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:config:post']"
           type="primary"
           plain
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:config:post']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:config:{id}:put']"
           type="success"
           plain
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:config:{id}:put']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:config:{id}:delete']"
           type="danger"
           plain
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:config:{id}:delete']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:config:export:get']"
           type="warning"
           plain
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:config:export:get']"
         >导出</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:config:clearcache:get']"
           type="danger"
           plain
           icon="el-icon-refresh"
           size="mini"
           @click="handleClearCache"
-          v-hasPermi="['system:config:clearcache:get']"
         >清理缓存</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
     </el-row>
 
     <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
@@ -108,24 +108,25 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="hasPermi(['system:config:{id}:put','system:config:{id}:delete'])"
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
-        v-if="hasPermi(['system:config:{id}:put','system:config:{id}:delete'])">
+      >
         <template slot-scope="scope">
           <el-button
+            v-hasPermi="['system:config:{id}:put']"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:config:{id}:put']"
           >修改</el-button>
           <el-button
+            v-hasPermi="['system:config:{id}:delete']"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:config:{id}:delete']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -157,7 +158,7 @@
               v-for="dict in typeOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
+            >{{ dict.dictLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="状态" prop="status">
@@ -166,7 +167,7 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
+            >{{ dict.dictLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -249,10 +250,10 @@ export default {
     getList() {
       this.loading = true;
       listConfig(this.addDateRange(this.queryParams)).then(response => {
-          this.configList = response.data.results;
-          this.total = response.data.count;
-          this.loading = false;
-        }
+        this.configList = response.data.results;
+        this.total = response.data.count;
+        this.loading = false;
+      }
       );
     },
     // 参数系统内置字典翻译
@@ -299,14 +300,14 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
+      const id = row.id || this.ids;
       getConfig(id).then(response => {
         this.form = response.data;
         this.open = true;
@@ -317,7 +318,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != undefined) {
+          if (this.form.id !== undefined) {
             updateConfig(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -337,28 +338,28 @@ export default {
     handleDelete(row) {
       const configIds = row.id || this.ids;
       this.$confirm('是否确认删除参数编号为"' + configIds + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delConfig(configIds);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return delConfig(configIds);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有参数数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportConfig(queryParams);
-        }).then(response => {
-          this.download(response.data.file_url,response.data.name);
-        })
+      this.$confirm("是否确认导出所有参数数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return exportConfig(queryParams);
+      }).then(response => {
+        this.download(response.data.file_url, response.data.name);
+      });
     },
     /** 清理缓存按钮操作 */
     handleClearCache() {

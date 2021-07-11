@@ -1,7 +1,7 @@
 from django.db.models import CASCADE
 from django.db.models import CharField, IntegerField, ForeignKey
 
-from ...op_drf.models import CoreModel
+from apps.vadmin.op_drf.models import CoreModel
 
 
 class Dept(CoreModel):

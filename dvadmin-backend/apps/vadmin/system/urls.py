@@ -1,7 +1,7 @@
 from django.urls import re_path
 from rest_framework.routers import DefaultRouter
 
-from ..system.views import DictDataModelViewSet, DictDetailsModelViewSet, \
+from apps.vadmin.system.views import DictDataModelViewSet, DictDetailsModelViewSet, \
     ConfigSettingsModelViewSet, SaveFileModelViewSet, MessagePushModelViewSet, LoginInforModelViewSet, \
     OperationLogModelViewSet, CeleryLogModelViewSet, SystemInfoApiView
 

@@ -1,9 +1,10 @@
 from django.core.cache import cache
 from rest_framework import serializers
 
-from .models import LoginInfor, OperationLog, CeleryLog
-from ..op_drf.serializers import CustomModelSerializer
-from ..system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush, MessagePushUser
+from application import settings
+from apps.vadmin.op_drf.serializers import CustomModelSerializer
+from apps.vadmin.system.models import DictData, DictDetails, ConfigSettings, SaveFile, MessagePush, MessagePushUser
+from apps.vadmin.system.models import LoginInfor, OperationLog, CeleryLog
 
 
 # ================================================= #
@@ -81,7 +82,8 @@ class DictDetailsCreateUpdateSerializer(CustomModelSerializer):
     """
 
     def save(self, **kwargs):
-        cache.delete('system_dict_details')
+        if getattr(settings, "REDIS_ENABLE", False):
+            cache.delete('system_dict_details')
         return super().save(**kwargs)
 
     class Meta:
@@ -120,7 +122,8 @@ class ConfigSettingsCreateUpdateSerializer(CustomModelSerializer):
     """
 
     def save(self, **kwargs):
-        cache.delete('system_configKey')
+        if getattr(settings, "REDIS_ENABLE", False):
+            cache.delete('system_configKey')
         return super().save(**kwargs)
 
     class Meta:
@@ -147,7 +150,10 @@ class SaveFileCreateUpdateSerializer(CustomModelSerializer):
     """
     文件管理 创建/更新时的列化器
     """
-    file_url = serializers.CharField(source='file.url', read_only=True)
+    file_url = serializers.SerializerMethodField(read_only=True)
+
+    def get_file_url(self, obj: SaveFile):
+        return getattr(obj.file, "url", obj.file) if hasattr(obj, "file") else ""
 
     def save(self, **kwargs):
         files = self.context.get('request').FILES.get('file')

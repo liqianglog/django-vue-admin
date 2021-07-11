@@ -1,8 +1,8 @@
 import django_filters
 from django.contrib.auth import get_user_model
 
-from ..permission.models import Menu, Dept, Post, Role
-from ..utils.model_util import get_dept
+from apps.vadmin.permission.models import Menu, Dept, Post, Role
+from apps.vadmin.utils.model_util import get_dept
 
 UserProfile = get_user_model()
 

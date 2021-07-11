@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import connection
 
-from ....scripts import getSql
+from apps.vadmin.scripts import getSql
 
 logger = logging.getLogger(__name__)
 
