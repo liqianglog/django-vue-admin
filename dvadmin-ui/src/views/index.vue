@@ -154,8 +154,28 @@
           <el-collapse accordion>
             <el-collapse-item title="">
               <template slot="title">
-                v1.1.1 - 2021-05-17&nbsp;&nbsp;&nbsp;
+                v1.1.2 - 2021-07-11&nbsp;&nbsp;&nbsp;
                 <el-badge value="new" class="item" style="padding-top: 10px;padding-left: 10px;" />
+              </template>
+              <ol>
+                <li>新功能: 所有包引入都加apps</li>
+                <li>新功能: 支持多级目录建app，python manage.py createapp 一级文件名/app01 ... </li>
+                <li>新功能: 新增弹出框设置参数，在点击弹窗外不关闭弹窗功能</li>
+                <li>新功能: 接入drf-yasg，进行swagger形式的api展示</li>
+                <li>新功能: 配置文件中可取消redis</li>
+                <li>修复BUG: Windows文件上传问题修复</li>
+                <li>修复BUG: CURD表单点击重置分页器失灵修复</li>
+                <li>修复BUG: 修复系统接口菜单无法显示问题</li>
+                <li>修复BUG: 部门动态加载,根据角色分配</li>
+                <li>修复BUG: init初始数据中的普通用户角色，默认添加首页权限</li>
+                <li>修复BUG: 取消在线用户功能</li>
+                <li>修复BUG: 修复定时任务只显示10条问题</li>
+              </ol>
+            </el-collapse-item>
+            <el-collapse-item title="">
+              <template slot="title">
+                v1.1.1 - 2021-05-17&nbsp;&nbsp;&nbsp;
+                <el-badge class="item" style="padding-top: 10px;padding-left: 10px;" />
               </template>
               <ol>
                 <li>新功能(前端框架): 前端封装快速搭建CRUD</li>
@@ -166,7 +186,7 @@
             <el-collapse-item title="">
               <template slot="title">
                 v1.1.0 - 2021-05-05&nbsp;&nbsp;&nbsp;
-                <el-badge value="new" class="item" style="padding-top: 10px;padding-left: 10px;" />
+                <el-badge class="item" style="padding-top: 10px;padding-left: 10px;" />
               </template>
               <ol>
                 <li>新增服务监控功能</li>

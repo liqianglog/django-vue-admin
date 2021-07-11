@@ -2,7 +2,7 @@
 
 [![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitee.com/liqianglog/django-vue-admin/blob/master/LICENSE)  [![img](https://img.shields.io/badge/python-%3E=3.6.x-green.svg)](https://python.org/)  [![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-2.2-blue)](https://docs.djangoproject.com/zh-hans/2.2/) [![img](https://img.shields.io/badge/node-%3E%3D%2012.0.0-brightgreen)](https://nodejs.org/zh-cn/) [![img](https://gitee.com/liqianglog/django-vue-admin/badge/star.svg?theme=dark)](https://gitee.com/liqianglog/django-vue-admin)
 
-
+[预 览](https://demo.django-vue-admin.com) | [官 网文档](https://www.django-vue-admin.com) | [群聊](https://qm.qq.com/cgi-bin/qm/qr?k=fOdnHhC8DJlRHGYSnyhoB8P5rgogA6Vs&jump_from=webapi) | [社区](https://bbs.django-vue-admin.com/) | [Github](https://github.com/liqianglog/django-vue-admin)
 
 ## 平台简介
 
@@ -14,9 +14,11 @@ Django-Vue-Admin 是一套全部开源的快速开发平台，毫无保留给个
 * 支持加载动态权限菜单，多方式轻松权限控制。
 * 特别鸣谢：<u>[Gin-Vue-Admin](https://www.gin-vue-admin.com/)</u>，[RuoYi](https://gitee.com/y_project/RuoYi-Vue) ，[Vue-Element-Admin](https://github.com/PanJiaChen/vue-element-admin)。
 
-## QQ群
+## 交流
 
-- QQ群号：812482043
+- 社区：[戳我](https://bbs.django-vue-admin.com)
+
+- QQ群号：812482043 <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=fOdnHhC8DJlRHGYSnyhoB8P5rgogA6Vs&jump_from=webapi"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="django-vue-admin交流01群" title="django-vue-admin交流01群"></a>
 
 - 二维码
 
