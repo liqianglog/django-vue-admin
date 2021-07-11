@@ -26,25 +26,25 @@
 </template>
 
 <script>
-import errGif from '@/assets/401_images/401.gif'
+import errGif from "@/assets/401_images/401.gif";
 
 export default {
-  name: 'Page401',
+  name: "Page401",
   data() {
     return {
-      errGif: errGif + '?' + +new Date()
-    }
+      errGif: errGif + "?" + +new Date()
+    };
   },
   methods: {
     back() {
       if (this.$route.query.noGoBack) {
-        this.$router.push({ path: '/' })
+        this.$router.push({ path: "/" });
       } else {
-        this.$router.go(-1)
+        this.$router.go(-1);
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

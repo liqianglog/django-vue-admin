@@ -6,31 +6,31 @@
   <div>
     <el-row>
       <el-col :span="8">
-        <interval-index/>
+        <interval-index />
       </el-col>
       <el-col :span="8">
-        <crontabe-index/>
+        <crontabe-index />
       </el-col>
     </el-row>
-    <periodic-task/>
+    <periodic-task />
   </div>
 </template>
 <script>
-  import PeriodicTask from './periodic-task/periodic-index';
-  import IntervalIndex from './interval-task/interval-index';
-  import CrontabeIndex from './crontab-task/crontab-index';
-  export default {
-    components: { IntervalIndex, PeriodicTask, CrontabeIndex },
-    props: {},
-    data() {
-      return {};
-    },
-    mounted() {
-    },
-    created() {
-    },
-    methods: {}
-  };
+import PeriodicTask from "./periodic-task/periodic-index";
+import IntervalIndex from "./interval-task/interval-index";
+import CrontabeIndex from "./crontab-task/crontab-index";
+export default {
+  components: { IntervalIndex, PeriodicTask, CrontabeIndex },
+  props: {},
+  data() {
+    return {};
+  },
+  mounted() {
+  },
+  created() {
+  },
+  methods: {}
+};
 </script>
 
 <style scoped>

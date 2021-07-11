@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form v-show="showSearch" ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
       <el-form-item label="任务名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -48,7 +48,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :default-time="['00:00:00', '23:59:59']"
-        ></el-date-picker>
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -59,36 +59,36 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['admin:system:celery_log:{id}:delete']"
           type="danger"
           plain
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['admin:system:celery_log:{id}:delete']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['admin:system:celery_log:clean:delete']"
           type="danger"
           plain
           icon="el-icon-delete"
           size="mini"
           @click="handleClean"
-          v-hasPermi="['admin:system:celery_log:clean:delete']"
         >清空</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['admin:system:celery_log:export:get']"
           type="warning"
           plain
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['admin:system:celery_log:export:get']"
         >导出</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
@@ -98,7 +98,7 @@
       <el-table-column label="执行函数名称" align="center" prop="func_name" :show-overflow-tooltip="true" />
       <el-table-column label="执行参数" align="center" prop="kwargs" :show-overflow-tooltip="true" />
       <el-table-column label="执行时间" width="80" align="center" prop="seconds" />
-      <el-table-column label="运行状态" width="80" align="center" prop="status" :formatter="statusFormat"/>
+      <el-table-column label="运行状态" width="80" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="任务结果" align="center" prop="result" :show-overflow-tooltip="true" />
       <el-table-column label="执行日期" align="center" prop="create_datetime" width="180">
         <template slot-scope="scope">
@@ -108,11 +108,11 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-hasPermi="['admin:system:celerylog:get']"
             size="mini"
             type="text"
             icon="el-icon-view"
             @click="handleView(scope.row,scope.index)"
-            v-hasPermi="['admin:system:celerylog:get']"
           >详细
           </el-button>
         </template>
@@ -128,70 +128,71 @@
     />
 
     <!-- 表单类详情dialog-->
-    <detail-form-dialog v-if="openDetailModal"
-                        dialog-title="定时日志详细"
-                        modalWidth="700px"
-                        :openDetailModal="openDetailModal"
-                        :formData="form"
-                        :formItem="formItem"
-                        @closeDialog="value=>{openDetailModal=value}"
-    ></detail-form-dialog>
+    <detail-form-dialog
+      v-if="openDetailModal"
+      dialog-title="定时日志详细"
+      modal-width="700px"
+      :open-detail-modal="openDetailModal"
+      :form-data="form"
+      :form-item="formItem"
+      @closeDialog="value=>{openDetailModal=value}"
+    />
   </div>
 </template>
 
 <script>
 import { list, delCeleryLog, cleanCeleryLog, exportCeleryLog } from "@/api/vadmin/monitor/celery";
-import DetailFormDialog from '@/components/Modal/DetailFormDialog'
+import DetailFormDialog from "@/components/Modal/DetailFormDialog";
 
 const CELERY_LOG_FORM_ITEM = [
   {
     index: 1,
-    label: '日志编号',
-    key: 'id'
+    label: "日志编号",
+    key: "id"
   },
   {
     index: 2,
-    label: '任务名称',
-    key: 'name'
+    label: "任务名称",
+    key: "name"
   },
   {
     index: 3,
-    label: '执行函数名称',
-    key: 'func_name',
+    label: "执行函数名称",
+    key: "func_name",
     width: "auto"
   },
   {
     index: 4,
-    label: '执行参数',
-    key: 'kwargs',
+    label: "执行参数",
+    key: "kwargs",
     singleLine: true
   },
   {
     index: 5,
-    label: '执行时间',
-    key: 'seconds'
+    label: "执行时间",
+    key: "seconds"
   },
   {
     index: 6,
-    label: '运行状态',
-    key: 'status',
-    labelType: 'boolean',
+    label: "运行状态",
+    key: "status",
+    labelType: "boolean",
     labelChoices: {
-      false: '失败',
-      true: '正常'
+      false: "失败",
+      true: "正常"
     }
   },
   {
     index: 7,
-    label: '任务结果',
-    key: 'result',
+    label: "任务结果",
+    key: "result",
     singleLine: true
   },
   {
     index: 8,
-    label: '执行日期',
-    key: 'create_datetime',
-    labelType: 'time',
+    label: "执行日期",
+    key: "create_datetime",
+    labelType: "time",
     singleLine: true
   }
 ];
@@ -216,7 +217,7 @@ export default {
       openDetailModal: false,
       list: [],
       // 状态数据字典
-      statusOptions:[{dictLabel: '成功', dictValue: true}, {dictLabel: '失败', dictValue: false}],
+      statusOptions: [{ dictLabel: "成功", dictValue: true }, { dictLabel: "失败", dictValue: false }],
       // 日期范围
       dateRange: [],
       form: {},
@@ -244,10 +245,10 @@ export default {
     getList() {
       this.loading = true;
       list(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.list = response.data.results;
-          this.total = response.data.count;
-          this.loading = false;
-        }
+        this.list = response.data.results;
+        this.total = response.data.count;
+        this.loading = false;
+      }
       );
     },
     // 运行状态字典翻译
@@ -257,7 +258,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
-      console.log(this.queryParams)
+      console.log(this.queryParams);
       this.getList();
     },
     /** 重置按钮操作 */
@@ -268,55 +269,55 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.id);
+      this.multiple = !selection.length;
     },
 
     /** 详细按钮操作 */
     handleView(row) {
-      this.openDetailModal = true
-      this.form = row
+      this.openDetailModal = true;
+      this.form = row;
     },
 
     /** 删除按钮操作 */
     handleDelete(row) {
       const infoIds = row.id || this.ids;
       this.$confirm('是否确认删除访问编号为"' + infoIds + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delCeleryLog(infoIds);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return delCeleryLog(infoIds);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      });
     },
     /** 清空按钮操作 */
     handleClean() {
-        this.$confirm('是否确认清空所有登录日志数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return cleanCeleryLog();
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("清空成功");
-        })
+      this.$confirm("是否确认清空所有登录日志数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return cleanCeleryLog();
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("清空成功");
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有定时日志数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportCeleryLog(queryParams);
-        }).then(response => {
-          this.download(response.data.file_url,response.data.name);
-        })
+      this.$confirm("是否确认导出所有定时日志数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return exportCeleryLog(queryParams);
+      }).then(response => {
+        this.download(response.data.file_url, response.data.name);
+      });
     }
   }
 };

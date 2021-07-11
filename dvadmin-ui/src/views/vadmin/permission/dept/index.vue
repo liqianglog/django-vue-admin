@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch">
+    <el-form v-show="showSearch" ref="queryForm" :model="queryParams" :inline="true">
       <el-form-item label="部门名称" prop="deptName">
         <el-input
           v-model="queryParams.deptName"
@@ -29,15 +29,15 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['permission:dept:post']"
           type="primary"
           plain
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['permission:dept:post']"
         >新增</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
     </el-row>
 
     <el-table
@@ -47,9 +47,9 @@
       default-expand-all
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="deptName" label="部门名称"></el-table-column>
-      <el-table-column prop="orderNum" label="排序" width="200"></el-table-column>
-      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="200"></el-table-column>
+      <el-table-column prop="deptName" label="部门名称" />
+      <el-table-column prop="orderNum" label="排序" width="200" />
+      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="200" />
       <el-table-column label="更新时间" align="center" prop="update_datetime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.update_datetime) }}</span>
@@ -61,33 +61,33 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="hasPermi(['permission:dept:{id}:put','permission:dept:post','permission:dept:{id}:delete'])"
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
-        v-if="hasPermi(['permission:dept:{id}:put','permission:dept:post','permission:dept:{id}:delete'])"
       >
         <template slot-scope="scope">
           <el-button
+            v-hasPermi="['permission:dept:{id}:put']"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['permission:dept:{id}:put']"
           >修改</el-button>
           <el-button
+            v-hasPermi="['permission:dept:post']"
             size="mini"
             type="text"
             icon="el-icon-plus"
             @click="handleAdd(scope.row)"
-            v-hasPermi="['permission:dept:post']"
           >新增</el-button>
           <el-button
-            v-if="scope.row.parentId != 0"
+            v-if="scope.row.parentId !== 0"
+            v-hasPermi="['permission:dept:{id}:delete']"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['permission:dept:{id}:delete']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -97,7 +97,7 @@
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
-          <el-col :span="24" v-if="form.parentId !== 0">
+          <el-col v-if="form.parentId !== 0" :span="24">
             <el-form-item label="上级部门" prop="parentId">
               <treeselect v-model="form.parentId" :options="deptOptions" :normalizer="normalizer" placeholder="选择上级部门" />
             </el-form-item>
@@ -134,7 +134,7 @@
                   v-for="dict in statusOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
+                >{{ dict.dictLabel }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -176,7 +176,7 @@ export default {
       queryParams: {
         deptName: undefined,
         status: undefined,
-        pageNum: 'all'
+        pageNum: "all"
       },
       // 表单参数
       form: {},
@@ -253,7 +253,7 @@ export default {
         leader: undefined,
         phone: undefined,
         email: undefined,
-        status:  this.selectDictDefault(this.statusOptions),
+        status: this.selectDictDefault(this.statusOptions)
       };
       this.resetForm("form");
     },
@@ -269,13 +269,13 @@ export default {
     /** 新增按钮操作 */
     handleAdd(row) {
       this.reset();
-      if (row != undefined) {
+      if (row !== undefined) {
         this.form.parentId = row.id;
       }
       this.open = true;
       this.title = "添加部门";
-      listDept({pageNum: 'all'}).then(response => {
-	        this.deptOptions = this.handleTree(response.data, "id");
+      listDept({ pageNum: "all" }).then(response => {
+        this.deptOptions = this.handleTree(response.data, "id");
       });
     },
     /** 修改按钮操作 */
@@ -287,18 +287,18 @@ export default {
         this.title = "修改部门";
       });
       listDeptExcludeChild(row.id).then(response => {
-	        this.deptOptions = this.handleTree(response.data, "id");
+        this.deptOptions = this.handleTree(response.data, "id");
       });
     },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          const cloneData = JSON.parse(JSON.stringify(this.form))
-          if (cloneData.parentId===0){
-            delete cloneData['parentId']
+          const cloneData = JSON.parse(JSON.stringify(this.form));
+          if (cloneData.parentId === 0) {
+            delete cloneData["parentId"];
           }
-          if (this.form.id != undefined) {
+          if (this.form.id !== undefined) {
             updateDept(cloneData).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -317,15 +317,15 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       this.$confirm('是否确认删除名称为"' + row.deptName + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delDept(row.id);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return delDept(row.id);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      });
     }
   }
 };

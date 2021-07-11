@@ -21,7 +21,9 @@
             @end="onEnd"
           >
             <div
-              v-for="(element, index) in inputComponents" :key="index" class="components-item"
+              v-for="(element, index) in inputComponents"
+              :key="index"
+              class="components-item"
               @click="addComponent(element)"
             >
               <div class="components-body">
@@ -58,12 +60,18 @@
             <svg-icon icon-class="component" /> 布局型组件
           </div>
           <draggable
-            class="components-draggable" :list="layoutComponents"
-            :group="{ name: 'componentsGroup', pull: 'clone', put: false }" :clone="cloneComponent"
-            draggable=".components-item" :sort="false" @end="onEnd"
+            class="components-draggable"
+            :list="layoutComponents"
+            :group="{ name: 'componentsGroup', pull: 'clone', put: false }"
+            :clone="cloneComponent"
+            draggable=".components-item"
+            :sort="false"
+            @end="onEnd"
           >
             <div
-              v-for="(element, index) in layoutComponents" :key="index" class="components-item"
+              v-for="(element, index) in layoutComponents"
+              :key="index"
+              class="components-item"
               @click="addComponent(element)"
             >
               <div class="components-body">
@@ -136,34 +144,33 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'
-import { saveAs } from 'file-saver'
-import beautifier from 'js-beautify'
-import ClipboardJS from 'clipboard'
-import render from '@/utils/generator/render'
-import RightPanel from './RightPanel'
+import draggable from "vuedraggable";
+import { saveAs } from "file-saver";
+import beautifier from "js-beautify";
+import ClipboardJS from "clipboard";
+import render from "@/utils/generator/render";
+import RightPanel from "./RightPanel";
 import {
   inputComponents,
   selectComponents,
   layoutComponents,
   formConf
-} from '@/utils/generator/config'
+} from "@/utils/generator/config";
 import {
-  exportDefault, beautifierConf, isNumberStr, titleCase
-} from '@/utils/index'
+  beautifierConf, titleCase
+} from "@/utils/index";
 import {
   makeUpHtml, vueTemplate, vueScript, cssStyle
-} from '@/utils/generator/html'
-import { makeUpJs } from '@/utils/generator/js'
-import { makeUpCss } from '@/utils/generator/css'
-import drawingDefalut from '@/utils/generator/drawingDefalut'
-import logo from '@/assets/logo/logo.png'
-import CodeTypeDialog from './CodeTypeDialog'
-import DraggableItem from './DraggableItem'
+} from "@/utils/generator/html";
+import { makeUpJs } from "@/utils/generator/js";
+import { makeUpCss } from "@/utils/generator/css";
+import drawingDefalut from "@/utils/generator/drawingDefalut";
+import logo from "@/assets/logo/logo.png";
+import CodeTypeDialog from "./CodeTypeDialog";
+import DraggableItem from "./DraggableItem";
 
-const emptyActiveData = { style: {}, autosize: {} }
-let oldActiveId
-let tempActiveData
+let oldActiveId;
+let tempActiveData;
 
 export default {
   components: {
@@ -191,189 +198,189 @@ export default {
       generateConf: null,
       showFileName: false,
       activeData: drawingDefalut[0]
-    }
+    };
   },
   computed: {
   },
   watch: {
     // eslint-disable-next-line func-names
-    'activeData.label': function (val, oldVal) {
+    "activeData.label": function(val, oldVal) {
       if (
-        this.activeData.placeholder === undefined
-        || !this.activeData.tag
-        || oldActiveId !== this.activeId
+        this.activeData.placeholder === undefined ||
+        !this.activeData.tag ||
+        oldActiveId !== this.activeId
       ) {
-        return
+        return;
       }
-      this.activeData.placeholder = this.activeData.placeholder.replace(oldVal, '') + val
+      this.activeData.placeholder = this.activeData.placeholder.replace(oldVal, "") + val;
     },
     activeId: {
       handler(val) {
-        oldActiveId = val
+        oldActiveId = val;
       },
       immediate: true
     }
   },
   mounted() {
-    const clipboard = new ClipboardJS('#copyNode', {
+    const clipboard = new ClipboardJS("#copyNode", {
       text: trigger => {
-        const codeStr = this.generateCode()
+        const codeStr = this.generateCode();
         this.$notify({
-          title: '成功',
-          message: '代码已复制到剪切板，可粘贴。',
-          type: 'success'
-        })
-        return codeStr
+          title: "成功",
+          message: "代码已复制到剪切板，可粘贴。",
+          type: "success"
+        });
+        return codeStr;
       }
-    })
-    clipboard.on('error', e => {
-      this.$message.error('代码复制失败')
-    })
+    });
+    clipboard.on("error", e => {
+      this.$message.error("代码复制失败");
+    });
   },
   methods: {
     activeFormItem(element) {
-      this.activeData = element
-      this.activeId = element.formId
+      this.activeData = element;
+      this.activeId = element.formId;
     },
     onEnd(obj, a) {
       if (obj.from !== obj.to) {
-        this.activeData = tempActiveData
-        this.activeId = this.idGlobal
+        this.activeData = tempActiveData;
+        this.activeId = this.idGlobal;
       }
     },
     addComponent(item) {
-      const clone = this.cloneComponent(item)
-      this.drawingList.push(clone)
-      this.activeFormItem(clone)
+      const clone = this.cloneComponent(item);
+      this.drawingList.push(clone);
+      this.activeFormItem(clone);
     },
     cloneComponent(origin) {
-      const clone = JSON.parse(JSON.stringify(origin))
-      clone.formId = ++this.idGlobal
-      clone.span = formConf.span
-      clone.renderKey = +new Date() // 改变renderKey后可以实现强制更新组件
-      if (!clone.layout) clone.layout = 'colFormItem'
-      if (clone.layout === 'colFormItem') {
-        clone.vModel = `field${this.idGlobal}`
-        clone.placeholder !== undefined && (clone.placeholder += clone.label)
-        tempActiveData = clone
-      } else if (clone.layout === 'rowFormItem') {
-        delete clone.label
-        clone.componentName = `row${this.idGlobal}`
-        clone.gutter = this.formConf.gutter
-        tempActiveData = clone
+      const clone = JSON.parse(JSON.stringify(origin));
+      clone.formId = ++this.idGlobal;
+      clone.span = formConf.span;
+      clone.renderKey = +new Date(); // 改变renderKey后可以实现强制更新组件
+      if (!clone.layout) clone.layout = "colFormItem";
+      if (clone.layout === "colFormItem") {
+        clone.vModel = `field${this.idGlobal}`;
+        clone.placeholder !== undefined && (clone.placeholder += clone.label);
+        tempActiveData = clone;
+      } else if (clone.layout === "rowFormItem") {
+        delete clone.label;
+        clone.componentName = `row${this.idGlobal}`;
+        clone.gutter = this.formConf.gutter;
+        tempActiveData = clone;
       }
-      return tempActiveData
+      return tempActiveData;
     },
     AssembleFormData() {
       this.formData = {
         fields: JSON.parse(JSON.stringify(this.drawingList)),
         ...this.formConf
-      }
+      };
     },
     generate(data) {
-      const func = this[`exec${titleCase(this.operationType)}`]
-      this.generateConf = data
-      func && func(data)
+      const func = this[`exec${titleCase(this.operationType)}`];
+      this.generateConf = data;
+      func && func(data);
     },
     execRun(data) {
-      this.AssembleFormData()
-      this.drawerVisible = true
+      this.AssembleFormData();
+      this.drawerVisible = true;
     },
     execDownload(data) {
-      const codeStr = this.generateCode()
-      const blob = new Blob([codeStr], { type: 'text/plain;charset=utf-8' })
-      saveAs(blob, data.fileName)
+      const codeStr = this.generateCode();
+      const blob = new Blob([codeStr], { type: "text/plain;charset=utf-8" });
+      saveAs(blob, data.fileName);
     },
     execCopy(data) {
-      document.getElementById('copyNode').click()
+      document.getElementById("copyNode").click();
     },
     empty() {
-      this.$confirm('确定要清空所有组件吗？', '提示', { type: 'warning' }).then(
+      this.$confirm("确定要清空所有组件吗？", "提示", { type: "warning" }).then(
         () => {
-          this.drawingList = []
+          this.drawingList = [];
         }
-      )
+      );
     },
     drawingItemCopy(item, parent) {
-      let clone = JSON.parse(JSON.stringify(item))
-      clone = this.createIdAndKey(clone)
-      parent.push(clone)
-      this.activeFormItem(clone)
+      let clone = JSON.parse(JSON.stringify(item));
+      clone = this.createIdAndKey(clone);
+      parent.push(clone);
+      this.activeFormItem(clone);
     },
     createIdAndKey(item) {
-      item.formId = ++this.idGlobal
-      item.renderKey = +new Date()
-      if (item.layout === 'colFormItem') {
-        item.vModel = `field${this.idGlobal}`
-      } else if (item.layout === 'rowFormItem') {
-        item.componentName = `row${this.idGlobal}`
+      item.formId = ++this.idGlobal;
+      item.renderKey = +new Date();
+      if (item.layout === "colFormItem") {
+        item.vModel = `field${this.idGlobal}`;
+      } else if (item.layout === "rowFormItem") {
+        item.componentName = `row${this.idGlobal}`;
       }
       if (Array.isArray(item.children)) {
-        item.children = item.children.map(childItem => this.createIdAndKey(childItem))
+        item.children = item.children.map(childItem => this.createIdAndKey(childItem));
       }
-      return item
+      return item;
     },
     drawingItemDelete(index, parent) {
-      parent.splice(index, 1)
+      parent.splice(index, 1);
       this.$nextTick(() => {
-        const len = this.drawingList.length
+        const len = this.drawingList.length;
         if (len) {
-          this.activeFormItem(this.drawingList[len - 1])
+          this.activeFormItem(this.drawingList[len - 1]);
         }
-      })
+      });
     },
     generateCode() {
-      const { type } = this.generateConf
-      this.AssembleFormData()
-      const script = vueScript(makeUpJs(this.formData, type))
-      const html = vueTemplate(makeUpHtml(this.formData, type))
-      const css = cssStyle(makeUpCss(this.formData))
-      return beautifier.html(html + script + css, beautifierConf.html)
+      const { type } = this.generateConf;
+      this.AssembleFormData();
+      const script = vueScript(makeUpJs(this.formData, type));
+      const html = vueTemplate(makeUpHtml(this.formData, type));
+      const css = cssStyle(makeUpCss(this.formData));
+      return beautifier.html(html + script + css, beautifierConf.html);
     },
     download() {
-      this.dialogVisible = true
-      this.showFileName = true
-      this.operationType = 'download'
+      this.dialogVisible = true;
+      this.showFileName = true;
+      this.operationType = "download";
     },
     run() {
-      this.dialogVisible = true
-      this.showFileName = false
-      this.operationType = 'run'
+      this.dialogVisible = true;
+      this.showFileName = false;
+      this.operationType = "run";
     },
     copy() {
-      this.dialogVisible = true
-      this.showFileName = false
-      this.operationType = 'copy'
+      this.dialogVisible = true;
+      this.showFileName = false;
+      this.operationType = "copy";
     },
     tagChange(newTag) {
-      newTag = this.cloneComponent(newTag)
-      newTag.vModel = this.activeData.vModel
-      newTag.formId = this.activeId
-      newTag.span = this.activeData.span
-      delete this.activeData.tag
-      delete this.activeData.tagIcon
-      delete this.activeData.document
+      newTag = this.cloneComponent(newTag);
+      newTag.vModel = this.activeData.vModel;
+      newTag.formId = this.activeId;
+      newTag.span = this.activeData.span;
+      delete this.activeData.tag;
+      delete this.activeData.tagIcon;
+      delete this.activeData.document;
       Object.keys(newTag).forEach(key => {
-        if (this.activeData[key] !== undefined
-          && typeof this.activeData[key] === typeof newTag[key]) {
-          newTag[key] = this.activeData[key]
+        if (this.activeData[key] !== undefined &&
+          typeof this.activeData[key] === typeof newTag[key]) {
+          newTag[key] = this.activeData[key];
         }
-      })
-      this.activeData = newTag
-      this.updateDrawingList(newTag, this.drawingList)
+      });
+      this.activeData = newTag;
+      this.updateDrawingList(newTag, this.drawingList);
     },
     updateDrawingList(newTag, list) {
-      const index = list.findIndex(item => item.formId === this.activeId)
+      const index = list.findIndex(item => item.formId === this.activeId);
       if (index > -1) {
-        list.splice(index, 1, newTag)
+        list.splice(index, 1, newTag);
       } else {
         list.forEach(item => {
-          if (Array.isArray(item.children)) this.updateDrawingList(newTag, item.children)
-        })
+          if (Array.isArray(item.children)) this.updateDrawingList(newTag, item.children);
+        });
       }
     }
   }
-}
+};
 </script>
 
 <style lang='scss'>

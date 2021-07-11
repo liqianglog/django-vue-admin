@@ -10,10 +10,19 @@
             <img src="@/assets/images/dark.svg" alt="dark">
             <div v-if="sideTheme === 'theme-dark'" class="setting-drawer-block-checbox-selectIcon" style="display: block;">
               <i aria-label="图标: check" class="anticon anticon-check">
-                <svg viewBox="64 64 896 896" data-icon="check" width="1em" height="1em" :fill="theme" aria-hidden="true"
-                     focusable="false" class="">
+                <svg
+                  viewBox="64 64 896 896"
+                  data-icon="check"
+                  width="1em"
+                  height="1em"
+                  :fill="theme"
+                  aria-hidden="true"
+                  focusable="false"
+                  class=""
+                >
                   <path
-                    d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"/>
+                    d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"
+                  />
                 </svg>
               </i>
             </div>
@@ -22,10 +31,19 @@
             <img src="@/assets/images/light.svg" alt="light">
             <div v-if="sideTheme === 'theme-light'" class="setting-drawer-block-checbox-selectIcon" style="display: block;">
               <i aria-label="图标: check" class="anticon anticon-check">
-                <svg viewBox="64 64 896 896" data-icon="check" width="1em" height="1em" :fill="theme" aria-hidden="true"
-                     focusable="false" class="">
+                <svg
+                  viewBox="64 64 896 896"
+                  data-icon="check"
+                  width="1em"
+                  height="1em"
+                  :fill="theme"
+                  aria-hidden="true"
+                  focusable="false"
+                  class=""
+                >
                   <path
-                    d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"/>
+                    d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"
+                  />
                 </svg>
               </i>
             </div>
@@ -38,7 +56,7 @@
         </div>
       </div>
 
-      <el-divider/>
+      <el-divider />
 
       <h3 class="drawer-title">系统布局配置</h3>
 
@@ -62,69 +80,69 @@
 </template>
 
 <script>
-import ThemePicker from '@/components/ThemePicker'
+import ThemePicker from "@/components/ThemePicker";
 
 export default {
   components: { ThemePicker },
   data() {
-    return {}
+    return {};
   },
   computed: {
     theme() {
-      return this.$store.state.settings.theme
+      return this.$store.state.settings.theme;
     },
     sideTheme() {
-      return this.$store.state.settings.sideTheme
+      return this.$store.state.settings.sideTheme;
     },
     fixedHeader: {
       get() {
-        return this.$store.state.settings.fixedHeader
+        return this.$store.state.settings.fixedHeader;
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'fixedHeader',
+        this.$store.dispatch("settings/changeSetting", {
+          key: "fixedHeader",
           value: val
-        })
+        });
       }
     },
     tagsView: {
       get() {
-        return this.$store.state.settings.tagsView
+        return this.$store.state.settings.tagsView;
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'tagsView',
+        this.$store.dispatch("settings/changeSetting", {
+          key: "tagsView",
           value: val
-        })
+        });
       }
     },
     sidebarLogo: {
       get() {
-        return this.$store.state.settings.sidebarLogo
+        return this.$store.state.settings.sidebarLogo;
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'sidebarLogo',
+        this.$store.dispatch("settings/changeSetting", {
+          key: "sidebarLogo",
           value: val
-        })
+        });
       }
-    },
+    }
   },
   methods: {
     themeChange(val) {
-      this.$store.dispatch('settings/changeSetting', {
-        key: 'theme',
+      this.$store.dispatch("settings/changeSetting", {
+        key: "theme",
         value: val
-      })
+      });
     },
     handleTheme(val) {
-      this.$store.dispatch('settings/changeSetting', {
-        key: 'sideTheme',
+      this.$store.dispatch("settings/changeSetting", {
+        key: "sideTheme",
         value: val
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

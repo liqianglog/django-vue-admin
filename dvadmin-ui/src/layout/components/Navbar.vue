@@ -13,9 +13,8 @@
       <template v-if="device !== 'mobile'">
         <div class="right-menu-item hover-effect">
           <router-link to="/user/msg">
-            <i class="el-icon-message-solid badge-item-icon"></i>
-            <el-badge :value="unread_msg_count" :max="99" style="margin-left: -4px;" v-if="unread_msg_count">
-          </el-badge>
+            <i class="el-icon-message-solid badge-item-icon" />
+            <el-badge v-if="unread_msg_count" :value="unread_msg_count" :max="99" style="margin-left: -4px;" />
           </router-link>
         </div>
         <search id="header-search" class="right-menu-item" />
@@ -39,7 +38,7 @@
         trigger="click"
       >
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar" />
+          <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -77,11 +76,11 @@ export default {
     SizeSelect,
     Search,
     RuoYiGit,
-    RuoYiDoc,
+    RuoYiDoc
   },
   data() {
     return {
-      count: store.unread_msg_count,
+      count: store.unread_msg_count
     };
   },
   computed: {
@@ -93,10 +92,10 @@ export default {
       set(val) {
         this.$store.dispatch("settings/changeSetting", {
           key: "showSettings",
-          value: val,
+          value: val
         });
-      },
-    },
+      }
+    }
   },
   methods: {
     toggleSideBar() {
@@ -106,14 +105,14 @@ export default {
       this.$confirm("确定注销并退出系统吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       }).then(() => {
         this.$store.dispatch("LogOut").then(() => {
           location.href = "/index";
         });
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

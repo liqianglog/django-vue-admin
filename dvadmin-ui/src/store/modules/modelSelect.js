@@ -1,50 +1,50 @@
 const modelSelect = {
   namespaced: true,
   state: {
-    modelSelectMap: {},
+    modelSelectMap: {}
   },
   mutations: {
     setModelSelectMap(state, modelSelectMap) {
-      state.modelSelectMap = {...state.modelSelectMap, ...modelSelectMap}
-    },
+      state.modelSelectMap = { ...state.modelSelectMap, ...modelSelectMap };
+    }
   },
   actions: {
     // 从后台获取需要 select 选择数据
     // modelName : 模型 name
     // labelName : 后端接口返回时，配置下拉选择时显示的名字字段，如：name/title/nickName
     // listApi : 查询列表的api
-    async getModelSelect({commit, state}, paramsMap) {
-      let modelName = paramsMap["modelName"]
-      let labelName = paramsMap["labelName"]
-      let listApi = paramsMap["listApi"]
-      let params = paramsMap["params"]
-      let reset = paramsMap["reset"]
+    async getModelSelect({ commit, state }, paramsMap) {
+      const modelName = paramsMap["modelName"];
+      const labelName = paramsMap["labelName"];
+      const listApi = paramsMap["listApi"];
+      const params = paramsMap["params"];
+      const reset = paramsMap["reset"];
       if (!reset && state.modelSelectMap[modelName]) {
-        return state.modelSelectMap[modelName]
+        return state.modelSelectMap[modelName];
       } else {
-        const res = await listApi({pageNum: "all", ...params})
+        const res = await listApi({ pageNum: "all", ...params });
         if (res.code === 200) {
-          const modelSelectMap = {}
-          const dict = []
+          const modelSelectMap = {};
+          const dict = [];
           res.data && res.data.map(item => {
             dict.push({
               label: item[labelName],
               value: item.id,
               id: item.id,
               parentId: item.parentId
-            })
-          })
-          modelSelectMap[modelName] = dict
-          commit("setModelSelectMap", modelSelectMap)
-          return state.modelSelectMap[modelName]
+            });
+          });
+          modelSelectMap[modelName] = dict;
+          commit("setModelSelectMap", modelSelectMap);
+          return state.modelSelectMap[modelName];
         }
       }
     }
   },
   getters: {
     getModelSelect(state) {
-      return state.modelSelectMap
+      return state.modelSelectMap;
     }
   }
-}
-export default modelSelect
+};
+export default modelSelect;

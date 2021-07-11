@@ -34,42 +34,42 @@
   </div>
 </template>
 <script>
-import iconList from '@/utils/generator/icon.json'
+import iconList from "@/utils/generator/icon.json";
 
-const originList = iconList.map(name => `el-icon-${name}`)
+const originList = iconList.map(name => `el-icon-${name}`);
 
 export default {
   inheritAttrs: false,
-  props: ['current'],
+  props: ["current"],
   data() {
     return {
       iconList: originList,
       active: null,
-      key: ''
-    }
+      key: ""
+    };
   },
   watch: {
     key(val) {
       if (val) {
-        this.iconList = originList.filter(name => name.indexOf(val) > -1)
+        this.iconList = originList.filter(name => name.indexOf(val) > -1);
       } else {
-        this.iconList = originList
+        this.iconList = originList;
       }
     }
   },
   methods: {
     onOpen() {
-      this.active = this.current
-      this.key = ''
+      this.active = this.current;
+      this.key = "";
     },
     onClose() {},
     onSelect(icon) {
-      this.active = icon
-      this.$emit('select', icon)
-      this.$emit('update:visible', false)
+      this.active = icon;
+      this.$emit("select", icon);
+      this.$emit("update:visible", false);
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .icon-ul {

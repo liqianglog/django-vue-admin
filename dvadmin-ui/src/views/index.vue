@@ -4,47 +4,46 @@
       <el-col :sm="24" :lg="24">
         <blockquote class="text-warning" style="font-size: 14px">
           领取阿里云通用云产品1888优惠券，精选云服务器 ECS 1核2G 87.12元/年
-          <br/>
+          <br>
           <el-link
             href="https://www.aliyun.com/activity/new?source=5176.11533457&userCode=jpef8a71"
             type="primary"
             target="_blank"
           >https://www.aliyun.com/activity/new?source=5176.11533457&userCode=jpef8a71
-          </el-link
-          >
-          <br/>
+          </el-link>
+          <br>
           领取腾讯云通用云产品2860优惠券，半价购买，满200减100，满500减250
-          <br/>
+          <br>
           <el-link
             href="https://curl.qcloud.com/yWalJsQY"
             type="primary"
             target="_blank"
           >https://curl.qcloud.com/yWalJsQY
-          </el-link
-          >
-          <br/>
+          </el-link>
+          <br>
           阿里云服务器折扣区
-          <el-link href="https://www.aliyun.com/minisite/goods?source=5176.11533457&userCode=jpef8a71" type="primary"
-                   target="_blank"
+          <el-link
+            href="https://www.aliyun.com/minisite/goods?source=5176.11533457&userCode=jpef8a71"
+            type="primary"
+            target="_blank"
           >>☛☛点我进入☚☚
-          </el-link
-          >
+          </el-link>
           &nbsp;&nbsp;&nbsp; 腾讯云服务器秒杀区
-          <el-link href="https://curl.qcloud.com/cRu8Ljf8" type="primary" target="_blank"
+          <el-link
+            href="https://curl.qcloud.com/cRu8Ljf8"
+            type="primary"
+            target="_blank"
           >>☛☛点我进入☚☚
-          </el-link
-          >
-          <br/>
+          </el-link>
+          <br>
           <h4 class="text-danger">
             云产品通用红包，可叠加官网常规优惠使用。(仅限新用户)
             <br>
             通过推广链接购买服务器者，可免费提供搭建环境服务一次。
           </h4>
-          <h4 class="text-danger">
-
-          </h4>
+          <h4 class="text-danger" />
         </blockquote>
-        <hr/>
+        <hr>
       </el-col>
     </el-row>
     <el-row :gutter="20">
@@ -69,16 +68,14 @@
             plain
             @click="goTarget('https://gitee.com/liqianglog/django-vue-admin')"
           >访问码云
-          </el-button
-          >
+          </el-button>
           <el-button
             size="mini"
             icon="el-icon-s-home"
             plain
             @click="goTarget('http://django-vue-admin.com')"
           >访问主页
-          </el-button
-          >
+          </el-button>
         </p>
       </el-col>
 
@@ -116,7 +113,7 @@
         </el-row>
       </el-col>
     </el-row>
-    <el-divider/>
+    <el-divider />
     <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <el-card class="update-log">
@@ -125,27 +122,26 @@
           </div>
           <div class="body">
             <p>
-              <i class="el-icon-s-promotion"></i> 官网：
+              <i class="el-icon-s-promotion" /> 官网：
               <el-link
                 href="http://django-vue-admin.com"
                 target="_blank"
               >http://django-vue-admin.com
-              </el-link
-              >
+              </el-link>
             </p>
             <p>
-              <i class="el-icon-user-solid"></i> QQ群：
-              <a href="https://qm.qq.com/cgi-bin/qm/qr?k=E2fte0FJlSr56-thAmabGcV3Lv6vLsp9&jump_from=webapi"
-                 target="_blank"
-              > 812482043</a
-              >
+              <i class="el-icon-user-solid" /> QQ群：
+              <a
+                href="https://qm.qq.com/cgi-bin/qm/qr?k=E2fte0FJlSr56-thAmabGcV3Lv6vLsp9&jump_from=webapi"
+                target="_blank"
+              > 812482043</a>
             </p>
             <p>
               <img
                 src="@/assets/images/qq.jpg"
                 alt="donate"
                 width="25%"
-              />
+              >
             </p>
           </div>
         </el-card>
@@ -159,7 +155,7 @@
             <el-collapse-item title="">
               <template slot="title">
                 v1.1.1 - 2021-05-17&nbsp;&nbsp;&nbsp;
-                <el-badge value="new" class="item" style="padding-top: 10px;padding-left: 10px;"/>
+                <el-badge value="new" class="item" style="padding-top: 10px;padding-left: 10px;" />
               </template>
               <ol>
                 <li>新功能(前端框架): 前端封装快速搭建CRUD</li>
@@ -170,7 +166,7 @@
             <el-collapse-item title="">
               <template slot="title">
                 v1.1.0 - 2021-05-05&nbsp;&nbsp;&nbsp;
-                <el-badge value="new" class="item" style="padding-top: 10px;padding-left: 10px;"/>
+                <el-badge value="new" class="item" style="padding-top: 10px;padding-left: 10px;" />
               </template>
               <ol>
                 <li>新增服务监控功能</li>
@@ -207,7 +203,7 @@
               src="@/assets/images/collection_code.jpg"
               alt="donate"
               width="100%"
-            />
+            >
             <!--            <span style="display: inline-block; height: 30px; line-height: 30px"-->
             <!--              >加群交流就是最好的支持~</span-->
             <!--            >-->
@@ -219,20 +215,20 @@
 </template>
 
 <script>
-  export default {
-    name: "index",
-    data() {
-      return {
-        // 版本号
-        version: "1.1.1",
-      };
-    },
-    methods: {
-      goTarget(href) {
-        window.open(href, "_blank");
-      },
-    },
-  };
+export default {
+  name: "Index",
+  data() {
+    return {
+      // 版本号
+      version: "1.1.1"
+    };
+  },
+  methods: {
+    goTarget(href) {
+      window.open(href, "_blank");
+    }
+  }
+};
 </script>
 
 <style scoped lang="scss">

@@ -1,21 +1,21 @@
-import Vue from 'vue'
+import Vue from "vue";
 
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 
-import Element from 'element-ui'
-import './assets/styles/element-variables.scss'
+import Element from "element-ui";
+import "./assets/styles/element-variables.scss";
 
-import '@/assets/styles/index.scss' // global css
-import '@/assets/styles/ruoyi.scss' // ruoyi css
-import App from './App'
-import store from './store'
-import router from './router'
-import permission from './directive/permission'
+import "@/assets/styles/index.scss"; // global css
+import "@/assets/styles/ruoyi.scss"; // ruoyi css
+import App from "./App";
+import store from "./store";
+import router from "./router";
+import permission from "./directive/permission";
 
-import './assets/icons' // icon
-import './permission' // permission control
-import {getDicts} from "@/api/vadmin/system/dict/data";
-import {getConfigKey} from "@/api/vadmin/system/config";
+import "./assets/icons"; // icon
+import "./permission"; // permission control
+import { getDicts } from "@/api/vadmin/system/dict/data";
+import { getConfigKey } from "@/api/vadmin/system/config";
 import {
   addDateRange,
   download,
@@ -28,60 +28,60 @@ import {
 } from "@/utils/ruoyi";
 import Pagination from "@/components/Pagination";
 // 自定义表格工具扩展
-import RightToolbar from "@/components/RightToolbar"
-import SmallDialog from '@/components/SmallDialog';
-import DeptTree from '@/components/DeptTree';
-import UsersTree from '@/components/UsersTree';
-import ModelDisplay from '@/components/ModelDisplay';
-import CommonIcon from '@/components/CommonIcon';
-import CommonStaticTable from '@/components/CommonStaticTable';
-import {getCrontabData, getIntervalData} from "./utils/validate"; // 通用图标组件
-import {getModelSelect} from "@/utils/modelSelect";
+import RightToolbar from "@/components/RightToolbar";
+import SmallDialog from "@/components/SmallDialog";
+import DeptTree from "@/components/DeptTree";
+import UsersTree from "@/components/UsersTree";
+import ModelDisplay from "@/components/ModelDisplay";
+import CommonIcon from "@/components/CommonIcon";
+import CommonStaticTable from "@/components/CommonStaticTable";
+import { getCrontabData, getIntervalData } from "./utils/validate"; // 通用图标组件
+import { getModelSelect } from "@/utils/modelSelect";
 
 // 全局方法挂载
-Vue.prototype.getDicts = getDicts
-Vue.prototype.getConfigKey = getConfigKey
-Vue.prototype.getModelSelect = getModelSelect
-Vue.prototype.parseTime = parseTime
-Vue.prototype.resetForm = resetForm
-Vue.prototype.addDateRange = addDateRange
-Vue.prototype.selectDictLabel = selectDictLabel
-Vue.prototype.selectDictDefault = selectDictDefault
-Vue.prototype.selectDictLabels = selectDictLabels
-Vue.prototype.getCrontabData = getCrontabData
-Vue.prototype.getIntervalData = getIntervalData
-Vue.prototype.download = download
-Vue.prototype.handleTree = handleTree
-Vue.prototype.hasPermi = function (values) {
-  const permissions = store.getters && store.getters.permissions
+Vue.prototype.getDicts = getDicts;
+Vue.prototype.getConfigKey = getConfigKey;
+Vue.prototype.getModelSelect = getModelSelect;
+Vue.prototype.parseTime = parseTime;
+Vue.prototype.resetForm = resetForm;
+Vue.prototype.addDateRange = addDateRange;
+Vue.prototype.selectDictLabel = selectDictLabel;
+Vue.prototype.selectDictDefault = selectDictDefault;
+Vue.prototype.selectDictLabels = selectDictLabels;
+Vue.prototype.getCrontabData = getCrontabData;
+Vue.prototype.getIntervalData = getIntervalData;
+Vue.prototype.download = download;
+Vue.prototype.handleTree = handleTree;
+Vue.prototype.hasPermi = function(values) {
+  const permissions = store.getters && store.getters.permissions;
   return permissions.some(permission => {
-    return "*:*:*" === permission || values.includes(permission)
-  })
+    return permission === "*:*:*" || values.includes(permission);
+  });
 };
 
-Vue.prototype.msgSuccess = function (msg) {
-  this.$message({showClose: true, message: msg, type: "success"});
-}
+Vue.prototype.msgSuccess = function(msg) {
+  this.$message({ showClose: true, message: msg, type: "success" });
+};
 
-Vue.prototype.msgError = function (msg) {
-  this.$message({showClose: true, message: msg, type: "error"});
-}
+Vue.prototype.msgError = function(msg) {
+  this.$message({ showClose: true, message: msg, type: "error" });
+};
 
-Vue.prototype.msgInfo = function (msg) {
+Vue.prototype.msgInfo = function(msg) {
   this.$message.info(msg);
-}
+};
 // 自定义组件
-Vue.component('small-dialog', SmallDialog);
-Vue.component('dept-tree', DeptTree);
-Vue.component('users-tree', UsersTree);
-Vue.component('model-display', ModelDisplay);
+Vue.component("SmallDialog", SmallDialog);
+Vue.component("DeptTree", DeptTree);
+Vue.component("UsersTree", UsersTree);
+Vue.component("ModelDisplay", ModelDisplay);
 // 全局组件挂载
-Vue.component('Pagination', Pagination)
-Vue.component('RightToolbar', RightToolbar)
-Vue.component('common-icon', CommonIcon);
-Vue.component('common-static-table', CommonStaticTable);
+Vue.component("Pagination", Pagination);
+Vue.component("RightToolbar", RightToolbar);
+Vue.component("CommonIcon", CommonIcon);
+Vue.component("CommonStaticTable", CommonStaticTable);
 
-Vue.use(permission)
+Vue.use(permission);
 
 /**
  * If you don't want to use mock-server
@@ -93,14 +93,14 @@ Vue.use(permission)
  */
 
 Vue.use(Element, {
-  size: Cookies.get('size') || 'medium' // set element-ui default size
-})
+  size: Cookies.get("size") || "medium" // set element-ui default size
+});
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
-  el: '#app',
+  el: "#app",
   router,
   store,
   render: h => h(App)
-})
+});

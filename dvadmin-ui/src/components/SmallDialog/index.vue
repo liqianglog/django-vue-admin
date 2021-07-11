@@ -19,14 +19,14 @@
   >
     <el-row slot="title">
       <el-col :span="18" style="text-align: left;">
-        <common-icon :icon-title="dialogTitle || 'Dialog组件'" :value="icon" style="font-size: 1.2em"/>
+        <common-icon :icon-title="dialogTitle || 'Dialog组件'" :value="icon" style="font-size: 1.2em" />
       </el-col>
       <el-col :span="6" style="text-align: right">
-        <i class="el-icon-close" style="font-size: 30px; cursor: pointer" title="关闭" @click="dialogClose"/>
+        <i class="el-icon-close" style="font-size: 30px; cursor: pointer" title="关闭" @click="dialogClose" />
       </el-col>
     </el-row>
     <div class="dialog-body">
-      <slot/>
+      <slot />
     </div>
     <slot name="footer">
       <div class="dialog-button">
@@ -38,62 +38,62 @@
 
 </template>
 <script>
-  export default {
-    name: 'SmallDialog',
-    props: {
-      value: { type: Boolean, default: false },
-      dialogTitle: { type: String, default: '' },
-      width: { type: String, default: '50%' },
-      icon: { type: String, default: 'el:el-icon-platform-eleme' },
-      buttons: { type: Array, default: () => ['cancel', 'confirm'] },
-      loading: { type: Boolean, default: false },
-      appendToBody: { type: Boolean, default: false },
-      destroyOnClose: { type: Boolean, default: false },
-      closeOnClickModal: { type: Boolean, default: true }
+export default {
+  name: "SmallDialog",
+  props: {
+    value: { type: Boolean, default: false },
+    dialogTitle: { type: String, default: "" },
+    width: { type: String, default: "50%" },
+    icon: { type: String, default: "el:el-icon-platform-eleme" },
+    buttons: { type: Array, default: () => ["cancel", "confirm"] },
+    loading: { type: Boolean, default: false },
+    appendToBody: { type: Boolean, default: false },
+    destroyOnClose: { type: Boolean, default: false },
+    closeOnClickModal: { type: Boolean, default: true }
+  },
+  data() {
+    return {
+      visible: false,
+      size: null
+    };
+  },
+  watch: {
+    value(val) {
+      this.visible = val;
     },
-    data() {
-      return {
-        visible: false,
-        size: null
-      };
-    },
-    watch: {
-      value(val) {
-        this.visible = val;
-      },
-      visible(val) {
-        this.$emit('input', val);
-      }
-    },
-    created() {
-    },
-    methods: {
-      open() {
-        this.$emit('open');
-      },
-      opened() {
-        this.$emit('opened');
-      },
-      close() {
-        this.$emit('close');
-      },
-      closed() {
-        this.$emit('closed');
-      },
-      confirm() {
-        this.$emit('confirm');
-      },
-      cancel() {
-        this.$emit('cancel');
-        this.dialogClose();
-      },
-      dialogOpen() {
-      },
-      dialogClose() {
-        this.visible = false;
-      }
+    visible(val) {
+      this.$emit("input", val);
     }
-  };
+  },
+  created() {
+  },
+  methods: {
+    open() {
+      this.$emit("open");
+    },
+    opened() {
+      this.$emit("opened");
+    },
+    close() {
+      this.$emit("close");
+    },
+    closed() {
+      this.$emit("closed");
+    },
+    confirm() {
+      this.$emit("confirm");
+    },
+    cancel() {
+      this.$emit("cancel");
+      this.dialogClose();
+    },
+    dialogOpen() {
+    },
+    dialogClose() {
+      this.visible = false;
+    }
+  }
+};
 </script>
 <style rel="stylesheet/scss" lang="scss">
   .small-dialog {

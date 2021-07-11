@@ -1,10 +1,10 @@
 module.exports = {
-  title: process.env.VUE_APP_TITLE || 'dvAdmin管理系统',
+  title: process.env.VUE_APP_TITLE || "dvAdmin管理系统",
 
   /**
    * 侧边栏主题 深色主题theme-dark，浅色主题theme-light
    */
-  sideTheme: 'theme-dark',
+  sideTheme: "theme-dark",
 
   /**
    * 是否系统布局配置
@@ -32,5 +32,5 @@ module.exports = {
    * The default is only used in the production env
    * If you want to also use it in dev, you can pass ['production', 'development']
    */
-  errorLog: 'production'
-}
+  errorLog: "production"
+};

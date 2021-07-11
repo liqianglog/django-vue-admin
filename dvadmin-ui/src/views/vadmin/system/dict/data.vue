@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form v-show="showSearch" ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
       <el-form-item label="字典名称" prop="dictType">
         <el-select v-model="queryParams.dictType" size="small">
           <el-option
@@ -39,57 +39,57 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:dict:type:post']"
           type="primary"
           plain
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:dict:type:post']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:dict:type:{id}:put']"
           type="success"
           plain
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:dict:type:{id}:put']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:dict:type:{id}:delete']"
           type="danger"
           plain
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:dict:type:{id}:delete']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:dict:type:export:get']"
           type="warning"
           plain
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:dict:type:export:get']"
         >导出</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:dict:type:clearcache:delete']"
           type="danger"
           plain
           icon="el-icon-refresh"
           size="mini"
           @click="handleClearCache"
-          v-hasPermi="['system:dict:type:clearcache:delete']"
         >清理缓存</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
@@ -98,12 +98,12 @@
       <el-table-column label="字典标签" align="center" prop="dictLabel" />
       <el-table-column label="字典键值" align="center" prop="dictValue" />
       <el-table-column label="字典排序" align="center" prop="sort" />
-      <el-table-column label="是否默认" align="center" prop="is_default" >
+      <el-table-column label="是否默认" align="center" prop="is_default">
         <template slot-scope="scope">
           <el-switch
             disabled
-            :value="scope.row.is_default">
-          </el-switch>
+            :value="scope.row.is_default"
+          />
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
@@ -114,25 +114,25 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="hasPermi(['system:dict:type:{id}:put','system:dict:type:{id}:delete'])"
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
-        v-if="hasPermi(['system:dict:type:{id}:put','system:dict:type:{id}:delete'])"
       >
         <template slot-scope="scope">
           <el-button
+            v-hasPermi="['system:dict:type:{id}:put']"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:dict:type:{id}:put']"
           >修改</el-button>
           <el-button
+            v-hasPermi="['system:dict:type:{id}:delete']"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:dict:type:{id}:delete']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -165,8 +165,8 @@
           <el-switch
             v-model="form.is_default"
             active-text="是"
-            inactive-text="否">
-          </el-switch>
+            inactive-text="否"
+          />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -174,11 +174,11 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
+            >{{ dict.dictLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -190,10 +190,10 @@
 </template>
 
 <script>
-  import {addData, delData, exportData, getData, listData, updateData} from "@/api/vadmin/system/dict/data";
-  import {getType, listType, clearCache} from "@/api/vadmin/system/dict/type";
+import { addData, delData, exportData, getData, listData, updateData } from "@/api/vadmin/system/dict/data";
+import { getType, listType, clearCache } from "@/api/vadmin/system/dict/type";
 
-  export default {
+export default {
   name: "Data",
   data() {
     return {
@@ -264,7 +264,7 @@
     },
     /** 查询字典类型列表 */
     getTypeList() {
-      listType({pageNum: 'all'}).then(response => {
+      listType({ pageNum: "all" }).then(response => {
         this.typeOptions = response.data;
       });
     },
@@ -300,13 +300,13 @@
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      let dictId = ''
+      let dictId = "";
       this.typeOptions.map(val => {
         if (val.dictType === this.queryParams.dictType) {
-          dictId = val.id
+          dictId = val.id;
         }
-      })
-      this.$route.params.dictId = dictId
+      });
+      this.$route.params.dictId = dictId;
       this.queryParams.pageNum = 1;
       this.getList();
     },
@@ -325,14 +325,14 @@
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
+      const id = row.id || this.ids;
       getData(id).then(response => {
         this.form = response.data;
         this.open = true;
@@ -343,7 +343,7 @@
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != undefined) {
+          if (this.form.id !== undefined) {
             updateData(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -351,7 +351,7 @@
             });
           } else {
             const dictId = this.$route.params && this.$route.params.dictId;
-            this.form.dict_data = dictId
+            this.form.dict_data = dictId;
             addData(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
@@ -365,28 +365,28 @@
     handleDelete(row) {
       const dictCodes = row.id || this.ids;
       this.$confirm('是否确认删除字典编码为"' + dictCodes + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delData(dictCodes);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return delData(dictCodes);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportData(queryParams);
-        }).then(response => {
-          this.download(response.data.file_url,response.data.name);
-        })
+      this.$confirm("是否确认导出所有数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return exportData(queryParams);
+      }).then(response => {
+        this.download(response.data.file_url, response.data.name);
+      });
     },
     /** 清理缓存按钮操作 */
     handleClearCache() {
