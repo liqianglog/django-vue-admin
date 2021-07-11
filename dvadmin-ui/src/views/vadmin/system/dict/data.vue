@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form v-show="showSearch" ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+    <el-form
+      v-show="showSearch"
+      ref="queryForm"
+      :model="queryParams" :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="字典名称" prop="dictType">
         <el-select v-model="queryParams.dictType" size="small">
           <el-option
@@ -21,7 +26,12 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="数据状态" clearable size="small">
+        <el-select
+          v-model="queryParams.status"
+          placeholder="数据状态"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in statusOptions"
             :key="dict.dictValue"
@@ -31,7 +41,9 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery"
+          >搜索</el-button
+        >
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -92,7 +104,11 @@
       <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
     </el-row>
 
-    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="dataList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="字典编码" align="center" prop="id" />
       <el-table-column label="字典标签" align="center" prop="dictLabel" />
@@ -106,8 +122,18 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
-      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
+      <el-table-column
+        label="状态"
+        align="center"
+        prop="status"
+        :formatter="statusFormat"
+      />
+      <el-table-column
+        label="备注"
+        align="center"
+        prop="remark"
+        :show-overflow-tooltip="true"
+      />
       <el-table-column label="创建时间" align="center" prop="create_datetime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.create_datetime) }}</span>
@@ -139,7 +165,7 @@
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -162,10 +188,7 @@
           <el-input-number v-model="form.sort" controls-position="right" :min="0" />
         </el-form-item>
         <el-form-item label="是否默认" prop="is_default">
-          <el-switch
-            v-model="form.is_default"
-            active-text="是"
-            inactive-text="否"
+          <el-switch v-model="form.is_default" active-text="是" inactive-text="否"
           />
         </el-form-item>
         <el-form-item label="状态" prop="status">
@@ -174,7 +197,8 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-            >{{ dict.dictLabel }}</el-radio>
+              >{{ dict.dictLabel }}</el-radio
+            >
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -190,7 +214,7 @@
 </template>
 
 <script>
-import { addData, delData, exportData, getData, listData, updateData } from "@/api/vadmin/system/dict/data";
+import { addData, delData, exportData, getData, listData, updateData ,} from "@/api/vadmin/system/dict/data";
 import { getType, listType, clearCache } from "@/api/vadmin/system/dict/type";
 
 export default {
@@ -224,39 +248,33 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 1000,
+        pageSize: 10,
         dictName: undefined,
         dictType: undefined,
-        status: undefined
+        status: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        name: [
-          { required: true, message: "数据标签不能为空", trigger: "blur" }
-        ],
-        dictValue: [
-          { required: true, message: "数据键值不能为空", trigger: "blur" }
-        ],
-        sort: [
-          { required: true, message: "数据顺序不能为空", trigger: "blur" }
-        ]
-      }
+        name: [{ required: true, message: "数据标签不能为空", trigger: "blur" }],
+        dictValue: [{ required: true, message: "数据键值不能为空", trigger: "blur" }],
+        sort: [{ required: true, message: "数据顺序不能为空", trigger: "blur" }],
+      },
     };
   },
   created() {
     const dictId = this.$route.params && this.$route.params.dictId;
     this.getType(dictId);
     this.getTypeList();
-    this.getDicts("sys_normal_disable").then(response => {
+    this.getDicts("sys_normal_disable").then((response) => {
       this.statusOptions = response.data;
     });
   },
   methods: {
     /** 查询字典类型详细 */
     getType(dictId) {
-      getType(dictId).then(response => {
+      getType(dictId).then((response) => {
         this.queryParams.dictType = response.data.dictType;
         this.defaultDictType = response.data.dictType;
         this.getList();
@@ -264,14 +282,14 @@ export default {
     },
     /** 查询字典类型列表 */
     getTypeList() {
-      listType({ pageNum: "all" }).then(response => {
+      listType({ pageNum: "all" }).then((response) => {
         this.typeOptions = response.data;
       });
     },
     /** 查询字典数据列表 */
     getList() {
       this.loading = true;
-      listData(this.queryParams).then(response => {
+      listData(this.queryParams).then((response) => {
         this.dataList = response.data.results;
         this.total = response.data.count;
         this.loading = false;
@@ -294,14 +312,14 @@ export default {
         dictValue: undefined,
         sort: 0,
         status: this.selectDictDefault(this.typeOptions),
-        remark: undefined
+        remark: undefined,
       };
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
       let dictId = "";
-      this.typeOptions.map(val => {
+      this.typeOptions.map((val) => {
         if (val.dictType === this.queryParams.dictType) {
           dictId = val.id;
         }
@@ -325,7 +343,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
@@ -333,18 +351,18 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getData(id).then(response => {
+      getData(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改字典数据";
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id !== undefined) {
-            updateData(this.form).then(response => {
+            updateData(this.form).then((response) => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
@@ -352,7 +370,7 @@ export default {
           } else {
             const dictId = this.$route.params && this.$route.params.dictId;
             this.form.dict_data = dictId;
-            addData(this.form).then(response => {
+            addData(this.form).then((response) => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -367,10 +385,10 @@ export default {
       this.$confirm('是否确认删除字典编码为"' + dictCodes + '"的数据项?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       }).then(function() {
-        return delData(dictCodes);
-      }).then(() => {
+        return delData(dictCodes);})
+      .then(() => {
         this.getList();
         this.msgSuccess("删除成功");
       });
@@ -381,19 +399,19 @@ export default {
       this.$confirm("是否确认导出所有数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       }).then(function() {
-        return exportData(queryParams);
-      }).then(response => {
+        return exportData(queryParams);})
+      .then((response) => {
         this.download(response.data.file_url, response.data.name);
       });
     },
     /** 清理缓存按钮操作 */
     handleClearCache() {
-      clearCache().then(response => {
+      clearCache().then((response) => {
         this.msgSuccess("清理成功");
       });
-    }
-  }
+    },
+  },
 };
 </script>
