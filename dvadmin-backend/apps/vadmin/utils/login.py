@@ -56,10 +56,12 @@ class LoginView(ObtainJSONWebToken):
         try:
             get_captcha = CaptchaStore.objects.get(hashkey=idKeyC)
             if str(get_captcha.response).lower() == idValueC.lower():  # 如果验证码匹配
+                get_captcha.delete()
                 return True
         except:
             pass
         else:
+            if get_captcha: get_captcha.delete()
             raise GenException(message='验证码错误')
 
     def save_login_infor(self, request, msg='', status=True, session_id=''):
