@@ -18,6 +18,7 @@
 
 <script>
 import { updateUserPwd } from "@/api/vadmin/permission/user";
+import md5 from "js-md5";
 
 export default {
   data() {
@@ -55,7 +56,9 @@ export default {
     submit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          updateUserPwd(this.user.oldPassword, this.user.newPassword).then(
+          const oldPassword = md5(this.user.oldPassword);
+          const newPassword = md5(this.user.newPassword);
+          updateUserPwd(oldPassword, newPassword).then(
             response => {
               this.msgSuccess("修改成功");
             }

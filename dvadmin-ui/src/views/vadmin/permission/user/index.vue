@@ -421,6 +421,7 @@ import { getToken } from "@/utils/auth";
 import { treeselect } from "@/api/vadmin/permission/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import md5 from "js-md5";
 
 export default {
   name: "User",
@@ -667,7 +668,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
       }).then(({ value }) => {
-        resetUserPwd(row.id, value).then(response => {
+        resetUserPwd(row.id, md5(value)).then(response => {
           this.msgSuccess("修改成功，新密码是：" + value);
         });
       }).catch(() => {

@@ -1,3 +1,5 @@
+import hashlib
+
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
@@ -300,7 +302,8 @@ class UserProfileImportSerializer(CustomModelSerializer):
 
     def save(self, **kwargs):
         data = super().save(**kwargs)
-        data.set_password(self.initial_data.get('password', None))
+        password = hashlib.new('md5', self.initial_data.get('password', '').encode(encoding='UTF-8')).hexdigest()
+        data.set_password(password)
         data.save()
         return data
 

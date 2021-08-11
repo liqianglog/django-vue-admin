@@ -61,6 +61,7 @@
 import { getCodeImg } from "@/api/vadmin/login";
 import Cookies from "js-cookie";
 import { decrypt, encrypt } from "@/utils/jsencrypt";
+import md5 from "js-md5";
 
 export default {
   name: "Login",
@@ -131,7 +132,9 @@ export default {
             Cookies.remove("password");
             Cookies.remove("rememberMe");
           }
-          this.$store.dispatch("Login", this.loginForm).then(() => {
+          const loginForm = JSON.parse(JSON.stringify(this.loginForm));
+          loginForm.password = md5(loginForm.password);
+          this.$store.dispatch("Login", loginForm).then(() => {
             this.$router.push({ path: this.redirect || "/" }).catch(() => {});
           }).catch(() => {
             this.loading = false;
