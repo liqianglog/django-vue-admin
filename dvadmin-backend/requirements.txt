@@ -27,4 +27,7 @@ coreapi==2.3.3
 user-agents==2.2.0
 eventlet==0.30.2
 psutil==5.8.0
-drf-yasg ==1.20.0
+drf-yasg==1.20.0
+daphne==3.0.2
+channels==3.0.3
+channels-redis==3.2.0
