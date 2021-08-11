@@ -320,6 +320,7 @@
             :precision="value.precision || 0"
             :step="value.step || 1"
             :max="value.step || Infinity"
+            :min="value.min || Infinity"
           />
           <dept-tree
             v-else-if="value.type==='depts'"
