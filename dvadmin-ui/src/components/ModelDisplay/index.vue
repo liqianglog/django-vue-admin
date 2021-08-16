@@ -43,9 +43,30 @@
               :value.sync="queryParams[value.prop]"
               style="width: 150px;"
             />
+            <el-cascader
+              v-else-if="value.type === 'cascader' && value.select_data"
+              v-model="queryParams[value.prop]"
+              :placeholder="value.select_data.placeholder || '请选择'"
+              :options="modelSelect[value.prop] || []"
+              :clearable="value.select_data.clearable || false"
+              :filterable="value.select_data.filterable || false"
+              style="width: 100%"
+            />
             <el-date-picker
-              v-else-if="value.type==='date'|| value.type==='datetime'"
-              v-model="dateRange"
+              v-else-if="value.type === 'date'"
+              v-model="dateRange[value.prop + '__range']"
+              size="small"
+              style="width: 240px"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :default-time="['00:00:00', '23:59:59']"
+            ></el-date-picker>
+            <el-date-picker
+              v-else-if="value.type === 'datetime'"
+              v-model="dateRange[value.prop + '__range']"
               size="small"
               style="width: 240px"
               value-format="yyyy-MM-dd HH:mm:ss"
@@ -54,7 +75,14 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               :default-time="['00:00:00', '23:59:59']"
-            />
+            ></el-date-picker>
+            <el-time-select
+              v-else-if="value.type === 'time'"
+              v-model="dateRange[value.prop + '__range']"
+              :picker-options="value.options"
+              placeholder="选择时间"
+              :default-time="['00:00:00', '23:59:59']"
+            >
             <el-select
               v-else-if="value.type==='option' && value.option_key"
               v-model="queryParams[value.prop]"
