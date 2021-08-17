@@ -588,7 +588,7 @@ export default {
       tableLoading: false,
       tableData: [],
       rowKey: "",
-      dateRange: [],
+      dateRange: {},
       multipleSelection: [],
       pagination: {
         page: 1,
@@ -838,7 +838,7 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.dateRange = [];
+      this.dateRange = {};
       this.queryParams = {};
       this.resetForm("queryForm");
       this.handleQuery();
@@ -920,7 +920,7 @@ export default {
     },
     /** 新增按钮*/
     handleAdd(func) {
-      this.dateRange = [];
+      this.dateRange = {};
       this.queryParams = {};
       this.resetForm("queryForm");
       this.open = true;
@@ -929,7 +929,7 @@ export default {
     },
     /** 修改按钮*/
     handleUpdate(func, row) {
-      this.dateRange = [];
+      this.dateRange = {};
       this.queryParams = {};
       this.resetForm("queryForm");
       this.submitFormApi = func.api;
@@ -949,7 +949,7 @@ export default {
     },
     /** 详情按钮*/
     handleSelect(func, row) {
-      this.dateRange = [];
+      this.dateRange = {};
       this.queryParams = {};
       this.resetForm("queryForm");
       this.submitFormApi = func.api;
