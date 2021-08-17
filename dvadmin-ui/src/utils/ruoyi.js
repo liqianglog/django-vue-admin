@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 通用js方法封装处理
  * Copyright (c) 2019 ruoyi
  */
@@ -53,9 +53,14 @@ export function resetForm(refName) {
 
 // 添加日期范围
 export function addDateRange(params, dateRange, propName) {
-  const search = JSON.parse(JSON.stringify(params));
-  if (dateRange != null && dateRange !== "" && dateRange.length !== 0) {
-    search.as = JSON.stringify({ create_datetime__range: dateRange });
+	let search = JSON.parse(JSON.stringify(params));
+  for (var key in dateRange) {
+    if (!dateRange[key]) {
+      delete dateRange[key]
+    }
+  }
+  if (null != dateRange && '' !== dateRange && JSON.stringify(dateRange) !== '{}') {
+    search.as = JSON.stringify(dateRange);
   }
   return search;
 }
