@@ -84,6 +84,7 @@ def clean_surplus_monitor_info():
     :return:
     """
     config_settings_obj = ConfigSettings.objects.filter(configKey='sys.monitor.info.save_days').first()
-    Monitor.objects.filter(
-        update_datetime__lt=datetime.timedelta(days=int(config_settings_obj.configValue or 30))).delete()
+    today = datetime.datetime.now().date()
+    clean_day_before = today - datetime.timedelta(days=int(config_settings_obj.configValue or 30))
+    Monitor.objects.filter(update_datetime__lt=clean_day_before).delete()
     logger.info(f"成功清空{config_settings_obj.configValue}天前数据")
