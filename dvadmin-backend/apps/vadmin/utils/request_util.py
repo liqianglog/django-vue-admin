@@ -40,16 +40,14 @@ def get_request_ip(request):
     :param request:
     :return:
     """
-    ip = getattr(request, 'request_ip', None)
-    if ip:
-        return ip
-    ip = request.META.get('REMOTE_ADDR', '')
-    if not ip:
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR', '')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[-1].strip()
-        else:
-            ip = 'unknown'
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR', '')
+    if x_forwarded_for:
+        return x_forwarded_for.split(',')[-1].strip()
+    remote_addr = request.META.get('REMOTE_ADDR', '')
+    if remote_addr:
+        return remote_addr
+    ip = getattr(request, 'request_ip', 'unknown')
+    
     return ip
 
 
