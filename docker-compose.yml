@@ -1,92 +1,37 @@
-# start django command
-# local domain
-#   saas-local.anthembj.com
-#   ceshi-local.anthembj.com
-# docker-compose run --entrypoint '/backend/docker_start.sh' -p 8000:8000 docker_django
-
 version: "3"
 services:
-  dvadmin-ui:
-    container_name: dvadmin-ui
+  DVAdmin-web:
+    container_name: DVAdmin-web
     ports:
       - "8080:8080"
     build:
       context: ./
-      dockerfile: ./docker_env/vue-ui/Dockerfile
+      dockerfile: ./docker_env/web/Dockerfile
     environment:
       TZ: Asia/Shanghai
     volumes:
-      - "./dvadmin-ui:/dvadmin-ui"
-    command:
-      - /bin/bash
-      - -c
-      - |
-        cd /dvadmin-ui
-        npm install --registry=https://registry.npm.taobao.org
-        rm -rf /dvadmin-ui/dist
-        npm run build:prod
-        npm run dev
-
-
-  dvadmin-redis:
-    image: redis:latest
-    container_name: dvadmin-redis
-    ports:
-      - "6380:6379"
+      - ./docker_env/nginx/my.conf:/etc/nginx/conf.d/my.conf
     expose:
-      - "6379"
-    volumes:
-      - ./docker_env/redis/data:/data
-      - ./docker_env/redis/redis.conf:/etc/redis/redis.conf
-    command: redis-server /etc/redis/redis.conf
+      - "8080"
     networks:
-      - dvadmin_net
+      network:
+        ipv4_address: 177.7.0.11
 
-
-  dvadmin-mysql:
-    image: mysql:5.7
-    container_name: dvadmin-mysql
-    #使用该参数，container内的root拥有真正的root权限，否则，container内的root只是外部的一个普通用户权限
-    #设置为true，不然数据卷可能挂载不了，启动不起
-    privileged: true
-    restart: always
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: "q1w2e3r4T%Y^U&MYSQL"
-      MYSQL_DATABASE: "django-vue-admin"
-      TZ: Asia/Shanghai
-    command:
-      --wait_timeout=31536000
-      --interactive_timeout=31536000
-      --max_connections=1000
-      --default-authentication-plugin=mysql_native_password
-    volumes:
-      #映射mysql的数据目录到宿主机，保存数据
-      - "./docker_env/mysql/data:/var/lib/mysql"
-      #根据宿主机下的配置文件创建容器
-      - "./docker_env/mysql/conf.d:/etc/mysql/conf.d"
-      - "./docker_env/mysql/logs:/logs"
-    networks:
-      - dvadmin_net
-
-  dvadmin-django:
+  DVAdmin-django:
     build:
       context: .
       dockerfile: ./docker_env/django/Dockerfile
-    # image: django:2.2
-    container_name: dvadmin-django
-    working_dir: /dvadmin-backend
-    # command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py runserver"
-    # command: bash
-    depends_on:
-      - dvadmin-mysql
-      - dvadmin-redis
+    container_name: DVAdmin-django
+    working_dir: /backend
+# 打开mysql 时，打开此选项
+#    depends_on:
+#      - DVAdmin-mysql
     environment:
-      - REDIS_HOST=dvadmin-redis
-      - DATABASE_HOST=dvadmin-mysql
+      PYTHONUNBUFFERED: 1
+      DATABASE_HOST: DVAdmin-mysql
+      TZ: Asia/Shanghai
     volumes:
-      - ./dvadmin-backend:/dvadmin-backend
+      - ./backend:/backend
       - ./logs/log:/var/log
     ports:
       - "8000:8000"
@@ -94,31 +39,62 @@ services:
       - "8000"
     restart: always
     networks:
-      - dvadmin_net
+      network:
+        ipv4_address: 177.7.0.12
+
+#  DVAdmin-mysql:
+#    image: mysql:5.7
+#    container_name: DVAdmin-mysql
+#    #使用该参数，container内的root拥有真正的root权限，否则，container内的root只是外部的一个普通用户权限
+#    #设置为true，不然数据卷可能挂载不了，启动不起
+##    privileged: true
+#    restart: always
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: "123456"
+#      MYSQL_DATABASE: "dvadmin_pro"
+#      TZ: Asia/Shanghai
+#    command:
+#      --wait_timeout=31536000
+#      --interactive_timeout=31536000
+#      --max_connections=1000
+#      --default-authentication-plugin=mysql_native_password
+#    volumes:
+#      - "./docker_env/mysql/data:/var/lib/mysql"
+#      - "./docker_env/mysql/conf.d:/etc/mysql/conf.d"
+#      - "./docker_env/mysql/logs:/logs"
+#    networks:
+#      network:
+#        ipv4_address: 177.7.0.13
 
 
-  dvadmin-celery:
-    build:
-      context: .
-      dockerfile: ./docker_env/celery/Dockerfile
-    # image: django:2.2
-    container_name: dvadmin-celery
-    working_dir: /dvadmin-backend
-    # command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py runserver"
-    # command: bash
-    depends_on:
-      - dvadmin-mysql
-      - dvadmin-redis
-    environment:
-      - REDIS_HOST=dvadmin-redis
-      - DATABASE_HOST=dvadmin-mysql
-    volumes:
-      - ./dvadmin-backend:/dvadmin-backend
-      - ./logs/log:/var/log
-    restart: always
-    networks:
-      - dvadmin_net
+# 如果使用celery 插件，请自行打开此注释
+#  DVAdmin-celery:
+#    build:
+#      context: .
+#      dockerfile: ./docker_env/celery/Dockerfile
+#    # image: django:2.2
+#    container_name: DVAdmin-celery
+#    working_dir: /backend
+#    depends_on:
+#      - DVAdmin-mysql
+#    environment:
+#      PYTHONUNBUFFERED: 1
+#      DATABASE_HOST: DVAdmin-mysql
+#      TZ: Asia/Shanghai
+#    volumes:
+#      - ./backend:/backend
+#      - ./logs/log:/var/log
+#    restart: always
+#    networks:
+#      network:
+#        ipv4_address: 177.7.0.14
 
 networks:
-  dvadmin_net:
-    driver: bridge
+  network:
+    ipam:
+      driver: default
+      config:
+        - subnet: '177.7.0.0/16'
+
