@@ -47,7 +47,7 @@ class DeptViewSet(CustomModelViewSet):
     """
     queryset = Dept.objects.all()
     serializer_class = DeptSerializer
-    # extra_filter_backends = []
+    extra_filter_backends = []
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
