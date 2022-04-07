@@ -8,9 +8,7 @@
 """
 
 from dvadmin.system.models import Dept
-from dvadmin.utils.filters import DataLevelPermissionsFilter
 from dvadmin.utils.json_response import SuccessResponse
-from dvadmin.utils.permission import AnonymousUserPermission
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 
@@ -31,6 +29,12 @@ class DeptCreateUpdateSerializer(CustomModelSerializer):
     部门管理 创建/更新时的列化器
     """
 
+    def create(self, validated_data):
+        instance = super().create(validated_data)
+        instance.dept_belong_id = instance.id
+        instance.save()
+        return instance
+
     class Meta:
         model = Dept
         fields = '__all__'
@@ -47,7 +51,9 @@ class DeptViewSet(CustomModelViewSet):
     """
     queryset = Dept.objects.all()
     serializer_class = DeptSerializer
-    extra_filter_backends = []
+    create_serializer_class = DeptCreateUpdateSerializer
+    update_serializer_class = DeptCreateUpdateSerializer
+    # extra_filter_backends = []
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())

@@ -236,6 +236,6 @@ export const crudOptions = (vm) => {
         }
       }
     }
-    ].concat(vm.commonEndColumns({ dept_belong_id: { showForm: true, showTable: false } }))
+    ].concat(vm.commonEndColumns())
   }
 }
