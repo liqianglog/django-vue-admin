@@ -18,7 +18,7 @@
             <span>友情链接</span>
 
             <el-button style="float: right; padding: 3px 0" type="text">
-              <el-link href="https://bbs.django-vue-admin.com/links" target="_blank" type="primary">更多</el-link>
+              <el-link href="https://bbs.django-vue-admin.com" target="_blank" type="primary">更多</el-link>
             </el-button>
           </div>
           <el-row>
@@ -37,26 +37,6 @@
               </el-card>
               </el-col>
           </el-row>
-        </el-card>
-
-        <el-card class="box-card" style="margin-top: 25px">
-          <div slot="header" class="clearfix">
-            <span>最新动态</span>
-            <el-button style="float: right; padding: 3px 0" type="text">更多</el-button>
-          </div>
-
-          <el-row>
-            <el-col :span="24" v-for="({avatar,message,createTime},index) of activities" :key="index" class="activity">
-              <el-avatar :src="avatar" size="small" :key="index" class="activity-avatar"></el-avatar>
-              <div style="display: inline-block" class="activity-detail">
-                <p v-text="message"></p>
-                <p v-text="createTime" style="color: #333333;font-size: 10px"></p>
-
-              </div>
-              <el-divider v-if="index+1 < activities.length"></el-divider>
-            </el-col>
-          </el-row>
-
         </el-card>
 
       </el-col>
@@ -85,16 +65,6 @@
               <d2-icon-svg name="work" style="margin-left: 50%;transform: translateX(-50%);height: 216px"/>
             </div>
           </el-card>
-
-          <el-card class="box-card"  style="margin-top: 25px">
-            <div slot="header" class="clearfix">
-              <span>部门统计</span>
-            </div>
-
-            <div>
-              <v-chart class="chart" :option="option" />
-            </div>
-          </el-card>
         </div>
       </el-col>
     </el-row>
@@ -111,7 +81,7 @@ import {
   TooltipComponent,
   LegendComponent
 } from 'echarts/components'
-import VChart, { THEME_KEY } from 'vue-echarts'
+
 use([
   CanvasRenderer,
   PieChart,
@@ -121,52 +91,20 @@ use([
 ])
 export default {
   name: 'workbench',
-  components: {
-    VChart
-  },
-  provide: {
-    [THEME_KEY]: 'westeros'
-  },
   data () {
     return {
-      activities: [
-        {
-          avatar: 'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640',
-          message: '我们经济落后5000，但我们阵容值10000',
-          createTime: '1个小时前'
-        },
-        {
-          avatar: 'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640',
-          message: 'fnc已经神志不清了',
-          createTime: '2个小时前'
-        },
-        {
-          avatar: 'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640',
-          message: '这个炼金很有艺术性',
-          createTime: '3个小时前'
-        },
-        {
-          avatar: 'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640',
-          message: '对面打得很好，什么？打个分？四分吧',
-          createTime: '4个小时前'
-        },
-        {
-          avatar: 'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640',
-          message: '这个炼金很有艺术性',
-          createTime: '3个小时前'
-        },
-        {
-          avatar: 'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640',
-          message: '对面打得很好，什么？打个分？四分吧',
-          createTime: '4个小时前'
-        }
-      ],
       projects: [
         {
           name: '官方文档',
           imageUrl: '/image/django-vue-admin.png',
           slogan: 'Django-Vue-Admin 是一套全部开源的快速开发平台，毫无保留给个人及企业免费使用。',
           link: 'http://django-vue-admin.com'
+        },
+        {
+          name: '官方论坛',
+          imageUrl: '/image/django-vue-admin.png',
+          slogan: 'Django-Vue-Admin 官方论坛',
+          link: 'http://bbs.django-vue-admin.com'
         },
         {
           name: 'D2admin',
@@ -176,28 +114,22 @@ export default {
           link: 'https://d2.pub/zh'
         },
         {
-          name: '若依',
-          imageUrl: '/image/ruoyi.png',
-          slogan: '基于SpringBoot、Shiro、Mybatis的权限后台管理系统。',
-          link: 'http://ruoyi.vip/'
-        },
-        {
           name: 'SimpleUi',
           imageUrl: '/image/simple-ui.png',
           slogan: '一个基于Django Admin的现代化主题。',
           link: 'https://simpleui.72wo.com/'
         },
         {
+          name: '若依',
+          imageUrl: '/image/ruoyi.png',
+          slogan: '基于SpringBoot、Shiro、Mybatis的权限后台管理系统。',
+          link: 'http://ruoyi.vip/'
+        },
+        {
           name: 'Gin-Vue-Admin',
           imageUrl: '/image/gin-vue-admin.png',
           slogan: '使用gin+vue进行极速开发的全栈后台管理系统。',
           link: 'https://www.gin-vue-admin.com/'
-        },
-        {
-          name: 'BBS-GO',
-          imageUrl: '/image/bbs-go.png',
-          slogan: '基于Go语言的开源BBS系统',
-          link: 'https://docs.bbs-go.com/'
         },
         {
           name: 'DCM',
@@ -277,52 +209,6 @@ export default {
           { 日期: '1月4日', 销售额: 4123 },
           { 日期: '1月5日', 销售额: 3123 },
           { 日期: '1月6日', 销售额: 7123 }
-        ]
-      },
-      option: {
-        textStyle: {
-          fontFamily: 'Inter, "Helvetica Neue", Arial, sans-serif'
-        },
-        title: {
-          text: 'Traffic Sources',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
-        },
-        legend: {
-          orient: 'vertical',
-          left: 'left',
-          data: [
-            'Direct',
-            'Email',
-            'Ad Networks',
-            'Video Ads',
-            'Search Engines'
-          ]
-        },
-        series: [
-          {
-            name: 'Traffic Sources',
-            type: 'pie',
-            radius: '55%',
-            center: ['50%', '60%'],
-            data: [
-              { value: 335, name: 'Direct' },
-              { value: 310, name: 'Email' },
-              { value: 234, name: 'Ad Networks' },
-              { value: 135, name: 'Video Ads' },
-              { value: 1548, name: 'Search Engines' }
-            ],
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            }
-          }
         ]
       }
     }

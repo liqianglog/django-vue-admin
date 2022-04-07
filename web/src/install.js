@@ -13,7 +13,6 @@ import {
 } from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
 // http请求
 import { request } from '@/api/service'
-import ECharts from 'vue-echarts'
 import util from '@/libs/util'
 import XEUtils from 'xe-utils'
 import { urlPrefix as deptPrefix } from '@/views/system/dept/api'
@@ -169,7 +168,6 @@ Vue.use(D2pUploader, {
 const selectType = d2CrudPlus.util.columnResolve.getType('select')
 selectType.component.props.color = 'auto' // 修改官方的字段类型，设置为支持自动染色
 
-Vue.component('v-chart', ECharts)
 // 默认Columns 结尾 showForm：显示在form中，showTable：显示在table中
 Vue.prototype.commonEndColumns = function (param = {}) {
   /**
