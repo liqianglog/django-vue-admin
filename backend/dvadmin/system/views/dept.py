@@ -10,6 +10,7 @@
 from dvadmin.system.models import Dept
 from dvadmin.utils.filters import DataLevelPermissionsFilter
 from dvadmin.utils.json_response import SuccessResponse
+from dvadmin.utils.permission import AnonymousUserPermission
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 
@@ -46,7 +47,7 @@ class DeptViewSet(CustomModelViewSet):
     """
     queryset = Dept.objects.all()
     serializer_class = DeptSerializer
-    permission_classes = []
+    # extra_filter_backends = []
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
