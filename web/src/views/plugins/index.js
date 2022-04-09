@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 function importAll (r) {
   const __modules = []
   r.keys().forEach(key => {
@@ -8,10 +10,18 @@ function importAll (r) {
   return __modules
 }
 
+export const checkPlugins = async function install (pluginName) {
+  if (!window.pluginsAll) {
+    plugins(Vue)
+  }
+  return (window.pluginsAll && window.pluginsAll.indexOf(pluginName) !== -1)
+}
+
 export const plugins = async function install (Vue, options) {
   // 查找 src/views/plugins 目录所有插件，插件目录下需有 index.js 文件
   // 再查找 node_modules/@great-dream/ 目录下所有插件
   // 进行去重并vue注册导入
+  if (window.pluginsAll) return
   let components = []
   components = components.concat(importAll(require.context('./', true, /index\.js$/)))
   components = components.concat(importAll(require.context('@great-dream/', true, /index\.js$/)))
