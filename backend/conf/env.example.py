@@ -10,6 +10,11 @@ from application.settings import BASE_DIR
 DATABASE_ENGINE = "django.db.backends.sqlite3"
 # 数据库名
 DATABASE_NAME = os.path.join(BASE_DIR, 'db.sqlite3')
+
+# 使用mysql时，改为此配置
+# DATABASE_ENGINE = "django.db.backends.mysql"
+# DATABASE_NAME = 'django-vue-admin' # mysql 时使用
+
 # 数据库地址 改为自己数据库地址
 DATABASE_HOST = "127.0.0.1"
 # 数据库端口

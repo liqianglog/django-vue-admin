@@ -31,9 +31,9 @@
 
 👩‍👧‍👦演示地址：[http://demo.django-vue-admin.com](http://demo.django-vue-admin.com) 
 
-​			账号：superadmin 
+- 账号：superadmin 
 
-​			密码：superadmin123456
+- 密码：admin123456
 
 👩‍👦‍👦文档地址：[https://django-vue-admin.com](https://django-vue-admin.com)
 
@@ -130,7 +130,7 @@ npm run dev
 8. 启动项目
 	python3 manage.py runserver 0.0.0.0:8000
 或使用 daphne :
-  daphne -b 0.0.0.0 -8000 application.asgi:application
+  daphne -b 0.0.0.0 -p 8000 application.asgi:application
 ~~~
 
 ### 访问项目
