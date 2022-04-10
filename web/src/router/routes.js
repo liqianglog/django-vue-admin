@@ -2,7 +2,7 @@ import layoutHeaderAside from '@/layout/header-aside'
 import { checkPlugins } from '@/views/plugins/index.js'
 // 由于懒加载页面太多的话会造成webpack热更新太慢，所以开发环境不使用懒加载，只有生产环境使用懒加载
 const _import = require('@/libs/util.import.' + process.env.NODE_ENV)
-
+const pluginImport = require('@/libs/util.import.plugin')
 /**
  * 在主框架内显示
  */
@@ -189,11 +189,12 @@ const frameOut = [
 /**
  * 第三方登录
  */
-if (checkPlugins('third-party-login')) {
+const pluginsType = checkPlugins('third-party-login')
+if (pluginsType) {
   frameOut.push({
     path: '/thirdPartyLogin',
     name: 'login',
-    component: _import('plugins/third-party-login/src/login/index')
+    component: pluginsType === 'local' ? _import('plugins/third-party-login/src/login/index') : pluginImport('third-party-login/src/login/index')
   })
 }
 /**

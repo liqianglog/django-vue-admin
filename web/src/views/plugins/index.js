@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 function importAll (r) {
   const __modules = []
   r.keys().forEach(key => {
@@ -11,10 +9,19 @@ function importAll (r) {
 }
 
 export const checkPlugins = async function install (pluginName) {
-  if (!window.pluginsAll) {
-    plugins(Vue)
+  let pluginsList
+  pluginsList = importAll(require.context('./', true, /index\.js$/))
+  if (pluginsList && pluginsList.indexOf(pluginName) !== -1) {
+    // 本地插件
+    return 'local'
   }
-  return (window.pluginsAll && window.pluginsAll.indexOf(pluginName) !== -1)
+  pluginsList = importAll(require.context('@great-dream/', true, /index\.js$/))
+  if (pluginsList && pluginsList.indexOf(pluginName) !== -1) {
+    // node_modules 封装插件
+    return 'plugins'
+  }
+  // 未找到插件
+  return undefined
 }
 
 export const plugins = async function install (Vue, options) {
