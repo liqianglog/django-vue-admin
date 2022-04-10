@@ -189,12 +189,12 @@ const frameOut = [
 /**
  * 第三方登录
  */
-const pluginsType = checkPlugins('third-party-login')
+const pluginsType = checkPlugins('dvadmin-oauth2-web')
 if (pluginsType) {
   frameOut.push({
-    path: '/thirdPartyLogin',
+    path: '/oauth2',
     name: 'login',
-    component: pluginsType === 'local' ? _import('plugins/third-party-login/src/login/index') : pluginImport('third-party-login/src/login/index')
+    component: pluginsType === 'local' ? _import('plugins/dvadmin-oauth2-web/src/login/index') : pluginImport('dvadmin-oauth2-web/src/login/index')
   })
 }
 /**

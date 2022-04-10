@@ -41,7 +41,7 @@ const router = new VueRouter({
  */
 router.beforeEach(async (to, from, next) => {
   // 白名单
-  const whiteList = ['/login', '/auth-redirect', '/bind', '/register', '/thirdPartyLogin']
+  const whiteList = ['/login', '/auth-redirect', '/bind', '/register', '/oauth2']
   // 确认已经加载多标签页数据 https://github.com/d2-projects/d2-admin/issues/201
   await store.dispatch('d2admin/page/isLoaded')
   // 确认已经加载组件尺寸设置 https://github.com/d2-projects/d2-admin/issues/198

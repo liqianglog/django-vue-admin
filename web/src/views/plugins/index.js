@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 function importAll (r) {
   const __modules = []
   r.keys().forEach(key => {
@@ -8,17 +10,32 @@ function importAll (r) {
   return __modules
 }
 
-export const checkPlugins = async function install (pluginName) {
+export const checkPlugins = function install (pluginName) {
   let pluginsList
   pluginsList = importAll(require.context('./', true, /index\.js$/))
   if (pluginsList && pluginsList.indexOf(pluginName) !== -1) {
-    // 本地插件
-    return 'local'
+    try {
+      const Module = import('@/views/plugins/' + pluginName + '/src/index')
+      // 注册组件
+      if (Module.default) {
+        Vue.use(Module.default)
+      }
+      // 本地插件
+      return 'local'
+    } catch (exception) {}
   }
   pluginsList = importAll(require.context('@great-dream/', true, /index\.js$/))
   if (pluginsList && pluginsList.indexOf(pluginName) !== -1) {
     // node_modules 封装插件
-    return 'plugins'
+    try {
+      const Module = import('@great-dream/' + pluginName + '/src/index')
+      // 注册组件
+      if (Module.default) {
+        Vue.use(Module.default)
+      }
+      // 本地插件
+      return 'plugins'
+    } catch (exception) {}
   }
   // 未找到插件
   return undefined
