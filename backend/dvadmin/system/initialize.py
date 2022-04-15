@@ -163,6 +163,17 @@ class Initialize(CoreInitialize):
                 "name": "导出",
                 "value": "Export",
                 "creator_id": 1
+            },
+            {
+                "id": 9,
+                "description": None,
+                "modifier": "1",
+                "dept_belong_id": 1,
+                "update_datetime": datetime.datetime.now(),
+                "create_datetime": datetime.datetime.now(),
+                "name": "重置密码",
+                "value": "ResetPwd",
+                "creator_id": 1
             }
         ]
         self.save(Button, self.button_data, "权限表标识")
@@ -517,19 +528,19 @@ class Initialize(CoreInitialize):
         """
         self.menu_button_data = [
             {
-            "id": 1,
-            "description": None,
-            "modifier": "1",
-            "dept_belong_id": 1,
-            "update_datetime": datetime.datetime.now(),
-            "create_datetime": datetime.datetime.now(),
-            "name": "查询",
-            "value": "Search",
-            "api": "/api/system/menu/",
-            "method": 0,
-            "creator_id": 1,
-            "menu_id": 1
-        },
+                "id": 1,
+                "description": None,
+                "modifier": "1",
+                "dept_belong_id": 1,
+                "update_datetime": datetime.datetime.now(),
+                "create_datetime": datetime.datetime.now(),
+                "name": "查询",
+                "value": "Search",
+                "api": "/api/system/menu/",
+                "method": 0,
+                "creator_id": 1,
+                "menu_id": 1
+            },
             {
                 "id": 2,
                 "description": None,
@@ -1243,6 +1254,20 @@ class Initialize(CoreInitialize):
                 "method": 1,
                 "creator_id": 1,
                 "menu_id": 13
+            },
+            {
+                "id": 53,
+                "description": None,
+                "modifier": "1",
+                "dept_belong_id": 1,
+                "update_datetime": datetime.datetime.now(),
+                "create_datetime": datetime.datetime.now(),
+                "name": "重置密码",
+                "value": "ResetPwd",
+                "api": "/api/system/user/reset_password/{id}/",
+                "method": 2,
+                "creator_id": 1,
+                "menu_id": 3
             }
         ]
         self.save(MenuButton, self.menu_button_data, "菜单按钮表")
