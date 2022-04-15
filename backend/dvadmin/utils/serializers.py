@@ -68,7 +68,7 @@ class CustomModelSerializer(DynamicFieldsMixin,ModelSerializer):
     def update(self, instance, validated_data):
         if self.request:
             if hasattr(self.instance, self.modifier_field_id):
-                self.instance[self.modifier_field_id] = self.get_request_user_id()
+                setattr(self.instance, self.modifier_field_id, self.get_request_user_id())
         return super().update(instance, validated_data)
 
     def get_request_username(self):
