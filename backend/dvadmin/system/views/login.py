@@ -51,6 +51,7 @@ class CaptchaView(APIView):
         return SuccessResponse(data=json_data)
 
 
+
 class LoginSerializer(TokenObtainPairSerializer):
     """
     登录的序列化器:
@@ -68,7 +69,10 @@ class LoginSerializer(TokenObtainPairSerializer):
     }
 
     def validate(self, attrs):
+        captcha = getattr(attrs,'captcha',None)
         if settings.CAPTCHA_STATE:
+            if captcha is None:
+                raise CustomValidationError("验证码不能为空")
             self.image_code = CaptchaStore.objects.filter(
                 id=self.initial_data['captchaKey']).first()
             five_minute_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
@@ -76,7 +80,6 @@ class LoginSerializer(TokenObtainPairSerializer):
                 self.image_code and self.image_code.delete()
                 raise CustomValidationError('验证码过期')
             else:
-                captcha = attrs['captcha']
                 if self.image_code and (self.image_code.response == captcha or self.image_code.challenge == captcha):
                     self.image_code and self.image_code.delete()
                 else:
