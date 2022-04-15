@@ -6,6 +6,7 @@
 @Created on: 2021/6/3 003 0:30
 @Remark: 角色管理
 """
+from rest_framework import serializers
 
 from dvadmin.system.models import Dept
 from dvadmin.utils.json_response import SuccessResponse
@@ -17,7 +18,7 @@ class DeptSerializer(CustomModelSerializer):
     """
     部门-序列化器
     """
-
+    parent_name = serializers.CharField(read_only=True,source='parent.name')
     class Meta:
         model = Dept
         fields = "__all__"
@@ -55,11 +56,11 @@ class DeptViewSet(CustomModelViewSet):
     update_serializer_class = DeptCreateUpdateSerializer
     # extra_filter_backends = []
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True, request=request)
-            return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(queryset, many=True, request=request)
-        return SuccessResponse(data=serializer.data, msg="获取成功")
+    # def list(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     page = self.paginate_queryset(queryset)
+    #     if page is not None:
+    #         serializer = self.get_serializer(page, many=True, request=request)
+    #         return self.get_paginated_response(serializer.data)
+    #     serializer = self.get_serializer(queryset, many=True, request=request)
+    #     return SuccessResponse(data=serializer.data, msg="获取成功")
