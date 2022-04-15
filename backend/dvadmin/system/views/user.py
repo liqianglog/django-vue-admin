@@ -11,6 +11,7 @@ import hashlib
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 from dvadmin.system.models import Users
 from dvadmin.utils.json_response import ErrorResponse, DetailResponse
@@ -147,7 +148,7 @@ class UserViewSet(CustomModelViewSet):
                          'gender': '用户性别(男/女/未知)',
                          'is_active': '帐号状态(启用/禁用)', 'password': '登录密码', 'dept': '部门ID', 'role': '角色ID'}
 
-    @action(methods=['GET'], detail=True, permission_classes=[])
+    @action(methods=['GET'], detail=True, permission_classes=[IsAuthenticated])
     def user_info(self, request):
         """获取当前用户信息"""
         user = request.user
@@ -159,14 +160,14 @@ class UserViewSet(CustomModelViewSet):
         }
         return DetailResponse(data=result, msg="获取成功")
 
-    @action(methods=['PUT'], detail=True, permission_classes=[])
+    @action(methods=['PUT'], detail=True, permission_classes=[IsAuthenticated])
     def update_user_info(self, request):
         """修改当前用户信息"""
         user = request.user
         Users.objects.filter(id=user.id).update(**request.data)
         return DetailResponse(data=None, msg="修改成功")
 
-    @action(methods=['PUT'], detail=True, permission_classes=[])
+    @action(methods=['PUT'], detail=True, permission_classes=[IsAuthenticated])
     def change_password(self, request, *args, **kwargs):
         """密码修改"""
         instance = Users.objects.filter(id=kwargs.get('pk')).first()
@@ -183,5 +184,24 @@ class UserViewSet(CustomModelViewSet):
                 return DetailResponse(data=None, msg="修改成功")
             else:
                 return ErrorResponse(msg="旧密码不正确")
+        else:
+            return ErrorResponse(msg="未获取到用户")
+
+    @action(methods=['PUT'], detail=True)
+    def reset_password(self, request, pk):
+        """
+        密码重置
+        """
+        instance = Users.objects.filter(id=pk).first()
+        data = request.data
+        new_pwd = data.get('newPassword')
+        new_pwd2 = data.get('newPassword2')
+        if instance:
+            if new_pwd != new_pwd2:
+                return ErrorResponse(msg="两次密码不匹配")
+            else:
+                instance.password = make_password(new_pwd)
+                instance.save()
+                return DetailResponse(data=None, msg="修改成功")
         else:
             return ErrorResponse(msg="未获取到用户")

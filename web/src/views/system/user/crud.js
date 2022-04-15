@@ -2,7 +2,6 @@ import { request } from '@/api/service'
 import { BUTTON_STATUS_BOOL } from '@/config/button'
 import { urlPrefix as deptPrefix } from '../dept/api'
 import util from '@/libs/util'
-import XEUtils from 'xe-utils'
 
 const uploadUrl = util.baseURL() + 'api/system/img/'
 export const crudOptions = (vm) => {
@@ -14,8 +13,7 @@ export const crudOptions = (vm) => {
       height: '100%'
     },
     rowHandle: {
-      width: 140,
-      fixed: 'right',
+      width: 180,
       view: {
         thin: true,
         text: '',
@@ -36,7 +34,21 @@ export const crudOptions = (vm) => {
         disabled () {
           return !vm.hasPermissions('Delete')
         }
-      }
+      },
+      custom: [
+        {
+          thin: true,
+          text: '',
+          size: 'small',
+          type: 'warning',
+          icon: 'el-icon-refresh-left',
+          show () {
+            return vm.hasPermissions('ResetPwd')
+          },
+          emit: 'resetPwd'
+        }
+      ]
+
     },
     viewOptions: {
       componentType: 'form'
@@ -47,7 +59,7 @@ export const crudOptions = (vm) => {
     indexRow: { // 或者直接传true,不显示title，不居中
       title: '序号',
       align: 'center',
-      width: 80
+      width: 100
     },
     columns: [
       {
@@ -87,10 +99,7 @@ export const crudOptions = (vm) => {
         type: 'input',
         form: {
           rules: [ // 表单校验规则
-            {
-              required: true,
-              message: '账号必填项'
-            }
+            { required: true, message: '账号必填项' }
           ],
           component: {
             placeholder: '请输入账号'
@@ -110,16 +119,12 @@ export const crudOptions = (vm) => {
         title: '姓名',
         key: 'name',
         search: {
-          key: 'name__icontains',
           disabled: false
         },
         type: 'input',
         form: {
           rules: [ // 表单校验规则
-            {
-              required: true,
-              message: '姓名必填项'
-            }
+            { required: true, message: '姓名必填项' }
           ],
           component: {
             span: 12,
@@ -132,7 +137,6 @@ export const crudOptions = (vm) => {
       },
       {
         title: '部门',
-        width: 160,
         key: 'dept',
         search: {
           disabled: true
@@ -143,29 +147,18 @@ export const crudOptions = (vm) => {
           url: deptPrefix,
           value: 'id', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
-          isTree: true,
-          getData: (url, dict, {
-            _,
-            component
-          }) => {
-            return request({
-              url: url,
-              params: {
-                page: 1,
-                limit: 999,
-                status: 1
-              }
-            }).then(ret => {
+          getData: (url, dict, { form, component }) => {
+            return request({ url: url, params: { page: 1, limit: 10, status: 1 } }).then(ret => {
+              component._elProps.page = ret.data.page
+              component._elProps.limit = ret.data.limit
+              component._elProps.total = ret.data.total
               return ret.data.data
             })
           }
         },
         form: {
           rules: [ // 表单校验规则
-            {
-              required: true,
-              message: '必填项'
-            }
+            { required: true, message: '必填项' }
           ],
           itemProps: {
             class: { yxtInput: true }
@@ -174,20 +167,14 @@ export const crudOptions = (vm) => {
             span: 12,
             props: { multiple: false },
             elProps: {
-              treeConfig: {
-                transform: true,
-                rowField: 'id',
-                parentField: 'parent',
-                expandAll: true
-              },
+              pagination: true,
               columns: [
                 {
                   field: 'name',
-                  title: '部门名称',
-                  treeNode: true
+                  title: '部门名称'
                 },
                 {
-                  field: 'status',
+                  field: 'status_label',
                   title: '状态'
                 },
                 {
@@ -200,89 +187,20 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '角色',
-        key: 'role',
-        width: 160,
-        search: {
-          disabled: true
-        },
-        type: 'table-selector',
-        dict: {
-          cache: false,
-          url: '/api/system/role/',
-          value: 'id', // 数据字典中value字段的属性名
-          label: 'name', // 数据字典中label字段的属性名
-          getData: (url, dict, {
-            form,
-            component
-          }) => {
-            return request({
-              url: url,
-              params: {
-                page: 1,
-                limit: 10
-              }
-            }).then(ret => {
-              component._elProps.page = ret.data.page
-              component._elProps.limit = ret.data.limit
-              component._elProps.total = ret.data.total
-              return ret.data.data
-            })
-          }
-        },
-        form: {
-          rules: [ // 表单校验规则
-            {
-              required: true,
-              message: '必填项'
-            }
-          ],
-          itemProps: {
-            class: { yxtInput: true }
-          },
-          component: {
-            span: 12,
-            props: { multiple: true },
-            elProps: {
-              pagination: true,
-              columns: [
-                {
-                  field: 'name',
-                  title: '角色名称'
-                },
-                {
-                  field: 'key',
-                  title: '权限标识'
-                },
-                {
-                  field: 'status',
-                  title: '状态'
-                }
-              ]
-            }
-          }
-        }
-      },
-      {
         title: '手机号码',
         key: 'mobile',
-        width: 120,
         search: {
           disabled: true
         },
         type: 'input',
         form: {
           rules: [
-            {
-              max: 20,
-              message: '请输入正确的手机号码',
-              trigger: 'blur'
-            },
-            {
-              pattern: /^1[3|4|5|7|8]\d{9}$/,
-              message: '请输入正确的手机号码'
-            }
+            { max: 20, message: '请输入正确的手机号码', trigger: 'blur' },
+            { pattern: /^1[3|4|5|7|8]\d{9}$/, message: '请输入正确的手机号码' }
           ],
+          itemProps: {
+            class: { yxtInput: true }
+          },
           component: {
             placeholder: '请输入手机号码'
           }
@@ -290,14 +208,9 @@ export const crudOptions = (vm) => {
       }, {
         title: '邮箱',
         key: 'email',
-        width: 120,
         form: {
           rules: [
-            {
-              type: 'email',
-              message: '请输入正确的邮箱地址',
-              trigger: ['blur', 'change']
-            }
+            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
           ],
           component: {
             placeholder: '请输入邮箱'
@@ -307,54 +220,15 @@ export const crudOptions = (vm) => {
       {
         title: '性别',
         key: 'gender',
-        type: 'select',
+        type: 'radio',
         dict: {
-          data: [{
-            label: '男',
-            value: 1
-          }, {
-            label: '女',
-            value: 0
-          }]
+          data: [{ label: '男', value: 1 }, { label: '女', value: 0 }]
         },
         form: {
           value: 1,
-          rules: [
-            {
-              required: true,
-              message: '性别必填项'
-            }
-          ],
           component: {
             span: 12
-          },
-          itemProps: {
-            class: { yxtInput: true }
           }
-        },
-        component: { props: { color: 'auto' } } // 自动染色
-      },
-      {
-        title: '用户类型',
-        key: 'user_type',
-        type: 'select',
-        width: 120,
-        search: {
-          key: 'user_type',
-          value: 0,
-          disabled: false
-        },
-        dict: {
-          data: [{
-            label: '前台用户',
-            value: 1
-          }, {
-            label: '后台用户',
-            value: 0
-          }]
-        },
-        form: {
-          disabled: true
         },
         component: { props: { color: 'auto' } } // 自动染色
       },
@@ -380,7 +254,7 @@ export const crudOptions = (vm) => {
         title: '头像',
         key: 'avatar',
         type: 'avatar-uploader',
-        width: 80,
+        width: 100,
         align: 'left',
         form: {
           component: {
@@ -393,13 +267,10 @@ export const crudOptions = (vm) => {
                 },
                 type: 'form',
                 successHandle (ret, option) {
-                  if (ret.data == null || ret.data === '') {
+                  if (ret.data === null || ret.data === '') {
                     throw new Error('上传失败')
                   }
-                  return {
-                    url: ret.data.data.url,
-                    key: option.data.key
-                  }
+                  return { url: ret.data.data.url, key: option.data.key }
                 }
               },
               elProps: { // 与el-uploader 配置一致
@@ -432,7 +303,58 @@ export const crudOptions = (vm) => {
             }
           }
         }
+      },
+      {
+        title: '角色',
+        key: 'role',
+        search: {
+          disabled: true
+        },
+        type: 'table-selector',
+        dict: {
+          cache: false,
+          url: '/api/system/role/',
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'name', // 数据字典中label字段的属性名
+          getData: (url, dict, { form, component }) => {
+            return request({ url: url, params: { page: 1, limit: 10 } }).then(ret => {
+              component._elProps.page = ret.data.page
+              component._elProps.limit = ret.data.limit
+              component._elProps.total = ret.data.total
+              return ret.data.data
+            })
+          }
+        },
+        form: {
+          rules: [ // 表单校验规则
+            { required: true, message: '必填项' }
+          ],
+          itemProps: {
+            class: { yxtInput: true }
+          },
+          component: {
+            span: 12,
+            props: { multiple: true },
+            elProps: {
+              pagination: true,
+              columns: [
+                {
+                  field: 'name',
+                  title: '角色名称'
+                },
+                {
+                  field: 'key',
+                  title: '权限标识'
+                },
+                {
+                  field: 'status_label',
+                  title: '状态'
+                }
+              ]
+            }
+          }
+        }
       }
-    ].concat(vm.commonEndColumns({ update_datetime: { showTable: false } }))
+    ].concat(vm.commonEndColumns({ show_create_datetime: false }))
   }
 }

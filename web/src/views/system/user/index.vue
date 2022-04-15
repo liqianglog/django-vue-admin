@@ -1,11 +1,3 @@
-<!--
- * @创建文件时间: 2021-06-01 22:41:21
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-07-29 19:27:10
- * 联系Qq:1638245306
- * @文件介绍: 用户管理
--->
 <template>
   <d2-container :class="{ 'page-compact': crud.pageOptions.compact }">
     <d2-crud-x
@@ -13,6 +5,7 @@
       v-bind="_crudProps"
       v-on="_crudListeners"
       crud.options.tableType="vxe-table"
+      @resetPwd="resetPwd"
     >
       <div slot="header">
         <crud-search
@@ -26,20 +19,8 @@
             v-permission="'Create'"
             type="primary"
             @click="addRow"
-          ><i class="el-icon-plus"/> 新增
-          </el-button
+            ><i class="el-icon-plus" /> 新增</el-button
           >
-          <el-button
-            size="small"
-            type="danger"
-            @click="onExport"
-            v-permission="'Export'"
-          ><i class="el-icon-download"/> 导出
-          </el-button>
-          <importExcel
-            importApi="/api/system/user/import/"
-            v-permission="'Import'">导入
-          </importExcel>
         </el-button-group>
         <crud-toolbar
           :search.sync="crud.searchOptions.show"
@@ -50,6 +31,20 @@
         />
       </div>
     </d2-crud-x>
+    <el-dialog title="密码重置" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+      <el-form :model="resetPwdForm"  ref="resetPwdForm"  :rules="passwordRules">
+        <el-form-item label="密码" prop="pwd">
+          <el-input v-model="resetPwdForm.pwd" type="password" show-password  clearable autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="再次输入密码" prop="pwd2">
+          <el-input v-model="resetPwdForm.pwd2" type="password" show-password  clearable autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="resetPwdSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
   </d2-container>
 </template>
 
@@ -60,10 +55,42 @@ import { d2CrudPlus } from 'd2-crud-plus'
 
 export default {
   name: 'user',
-
   mixins: [d2CrudPlus.crud],
   data () {
-    return {}
+    var validatePass = (rule, value, callback) => {
+      const pwdRegex = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z]).{8,30}')
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      } else if (!pwdRegex.test(value)) {
+        callback(new Error('您的密码复杂度太低(密码中必须包含字母、数字)'))
+      } else {
+        if (this.resetPwdForm.pwd2 !== '') {
+          this.$refs.resetPwdForm.validateField('pwd2')
+        }
+        callback()
+      }
+    }
+    var validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.resetPwdForm.pwd) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
+    return {
+      dialogFormVisible: false,
+      resetPwdForm: {
+        id: null,
+        pwd: null,
+        pwd2: null
+      },
+      passwordRules: {
+        pwd: [{ required: true, message: '必填项' }, { validator: validatePass, trigger: 'blur' }],
+        pwd2: [{ required: true, message: '必填项' }, { validator: validatePass2, trigger: 'blur' }]
+      }
+    }
   },
   methods: {
     getCrudOptions () {
@@ -76,19 +103,38 @@ export default {
       return api.AddObj(row)
     },
     updateRequest (row) {
-      console.log('----', row)
       return api.UpdateObj(row)
     },
     delRequest (row) {
       return api.DelObj(row.id)
     },
-    onExport () {
-      this.$confirm('是否确认导出所有数据项?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(function () {
-        return api.exportData()
+    // 重置密码弹框
+    resetPwd ({ row }) {
+      this.dialogFormVisible = true
+      this.resetPwdForm.id = row.id
+    },
+    // 重置密码确认
+    resetPwdSubmit () {
+      const that = this
+      that.$refs.resetPwdForm.validate((valid) => {
+        if (valid) {
+          const params = {
+            id: that.resetPwdForm.id,
+            newPassword: that.$md5(that.resetPwdForm.pwd),
+            newPassword2: that.$md5(that.resetPwdForm.pwd2)
+          }
+          api.ResetPwd(params).then(res => {
+            that.dialogFormVisible = false
+            that.resetPwdForm = {
+              id: null,
+              pwd: null,
+              pwd2: null
+            }
+            that.$message.success('修改成功')
+          })
+        } else {
+          that.$message.error('表单校验失败，请检查')
+        }
       })
     }
   }
