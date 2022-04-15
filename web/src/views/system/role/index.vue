@@ -48,7 +48,7 @@
         >
         <template slot="title">
           <div>
-            当前角色<el-tag>管理员</el-tag>
+            当前角色<el-tag>{{roleObj?roleObj.name:'无'}}</el-tag>
           </div>
         </template>
         <div>
