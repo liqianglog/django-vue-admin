@@ -88,25 +88,25 @@ const frameIn = [{
     //   component: _import('system/user')
     // },
     // // 系统 按钮配置
-    {
-      path: 'button',
-      name: 'button',
-      meta: {
-        title: '按钮',
-        auth: true
-      },
-      component: _import('system/button')
-    },
-    // // 系统 菜单权限
-    {
-      path: 'menuButton/:id',
-      name: 'menuButton',
-      meta: {
-        title: '菜单按钮',
-        auth: true
-      },
-      component: _import('system/menuButton')
-    },
+    // {
+    //   path: 'button',
+    //   name: 'button',
+    //   meta: {
+    //     title: '按钮',
+    //     auth: true
+    //   },
+    //   component: _import('system/button')
+    // },
+    // // // 系统 菜单权限
+    // {
+    //   path: 'menuButton/:id',
+    //   name: 'menuButton',
+    //   meta: {
+    //     title: '菜单按钮',
+    //     auth: true
+    //   },
+    //   component: _import('system/menuButton')
+    // },
     // // 系统 角色管理
     // {
     //   path: 'role',
@@ -149,15 +149,15 @@ const frameIn = [{
     //   component: _import('system/log/operationLog')
     // },
     // 系统 前端日志
-    {
-      path: 'frontendLog',
-      name: 'frontendLog',
-      meta: {
-        title: '前端日志',
-        auth: true
-      },
-      component: _import('system/log/frontendLog')
-    },
+    // {
+    //   path: 'frontendLog',
+    //   name: 'frontendLog',
+    //   meta: {
+    //     title: '前端日志',
+    //     auth: true
+    //   },
+    //   component: _import('system/log/frontendLog')
+    // },
     // 刷新页面 必须保留
     {
       path: 'refresh',

@@ -3,7 +3,7 @@ import { BUTTON_STATUS_BOOL } from '@/config/button'
 import { urlPrefix as deptPrefix } from '../dept/api'
 import util from '@/libs/util'
 
-const uploadUrl = util.baseURL() + 'api/system/img/'
+const uploadUrl = util.baseURL() + 'api/system/file/'
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
@@ -261,7 +261,6 @@ export const crudOptions = (vm) => {
             props: {
               uploader: {
                 action: uploadUrl,
-                name: 'url',
                 headers: {
                   Authorization: 'JWT ' + util.cookies.get('token')
                 },
@@ -270,7 +269,7 @@ export const crudOptions = (vm) => {
                   if (ret.data === null || ret.data === '') {
                     throw new Error('上传失败')
                   }
-                  return { url: ret.data.data.url, key: option.data.key }
+                  return { url: util.baseURL() + ret.data.url, key: option.data.key }
                 }
               },
               elProps: { // 与el-uploader 配置一致
@@ -297,7 +296,7 @@ export const crudOptions = (vm) => {
           props: {
             buildUrl (value, item) {
               if (value && value.indexOf('http') !== 0) {
-                return '/api/upload/form/download?key=' + value
+                return util.baseURL() + value
               }
               return value
             }

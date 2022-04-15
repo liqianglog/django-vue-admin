@@ -88,6 +88,7 @@ class LoginSerializer(TokenObtainPairSerializer):
         data = super().validate(attrs)
         data['name'] = self.user.name
         data['userId'] = self.user.id
+        data['avatar'] = self.user.avatar
         return {
             "code": 2000,
             "msg": "请求成功",

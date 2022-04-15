@@ -156,7 +156,8 @@ class UserViewSet(CustomModelViewSet):
             "name": user.name,
             "mobile": user.mobile,
             "gender": user.gender,
-            "email": user.email
+            "email": user.email,
+            'avatar':user.avatar
         }
         return DetailResponse(data=result, msg="获取成功")
 

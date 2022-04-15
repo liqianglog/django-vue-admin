@@ -20,6 +20,7 @@
         注销
       </el-dropdown-item>
     </el-dropdown-menu>
+    <el-image v-if="info.avatar" :src="info.avatar" :preview-src-list="[info.avatar]" style="width: 20px;height: 20px" alt="头像"></el-image>
   </el-dropdown>
 </template>
 
