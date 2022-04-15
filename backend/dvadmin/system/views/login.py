@@ -69,7 +69,7 @@ class LoginSerializer(TokenObtainPairSerializer):
     }
 
     def validate(self, attrs):
-        captcha = getattr(attrs,'captcha',None)
+        captcha = self.initial_data.get('captcha',None)
         if settings.CAPTCHA_STATE:
             if captcha is None:
                 raise CustomValidationError("验证码不能为空")
