@@ -57,11 +57,9 @@ export default {
       return api.GetList(query)
     },
     addRequest (row) {
-      console.log('api', api)
       return api.AddObj(row)
     },
     updateRequest (row) {
-      console.log('----', row)
       return api.UpdateObj(row)
     },
     delRequest (row) {
