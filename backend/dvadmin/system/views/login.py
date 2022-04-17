@@ -25,6 +25,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from application import settings
 from dvadmin.system.models import Users
 from dvadmin.utils.json_response import SuccessResponse, ErrorResponse, DetailResponse
+from dvadmin.utils.request_util import save_login_log
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.validator import CustomValidationError
 
@@ -51,7 +52,6 @@ class CaptchaView(APIView):
         return SuccessResponse(data=json_data)
 
 
-
 class LoginSerializer(TokenObtainPairSerializer):
     """
     登录的序列化器:
@@ -69,7 +69,7 @@ class LoginSerializer(TokenObtainPairSerializer):
     }
 
     def validate(self, attrs):
-        captcha = self.initial_data.get('captcha',None)
+        captcha = self.initial_data.get('captcha', None)
         if settings.CAPTCHA_STATE:
             if captcha is None:
                 raise CustomValidationError("验证码不能为空")
@@ -89,6 +89,10 @@ class LoginSerializer(TokenObtainPairSerializer):
         data['name'] = self.user.name
         data['userId'] = self.user.id
         data['avatar'] = self.user.avatar
+        request = self.context.get('request')
+        request.user = self.user
+        # 记录登录日志
+        save_login_log(request=request)
         return {
             "code": 2000,
             "msg": "请求成功",

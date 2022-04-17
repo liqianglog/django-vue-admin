@@ -35,3 +35,4 @@ DATABASE_PASSWORD = "123456"
 DEBUG = True  # 线上环境请设置为True
 ALLOWED_HOSTS = ["*"]
 LOGIN_NO_CAPTCHA_AUTH = True  # 登录接口 /api/token/ 是否需要验证码认证，用于测试，正式环境建议取消
+ENABLE_LOGIN_ANALYSIS_LOG = True  # 启动登录详细概略获取(通过调用api获取ip详细地址)
