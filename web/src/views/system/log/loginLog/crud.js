@@ -1,5 +1,3 @@
-import { BUTTON_WHETHER_BOOL } from '@/config/button'
-
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
