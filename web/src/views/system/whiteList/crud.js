@@ -45,7 +45,10 @@ export const crudOptions = (vm) => {
           disabled: false
         },
         form: {
-          disabled: true
+          disabled: true,
+          component: {
+            placeholder: '请输入关键词'
+          }
         },
         view: { // 查看对话框组件的单独配置
           disabled: true

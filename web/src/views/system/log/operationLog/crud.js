@@ -12,14 +12,15 @@ export const crudOptions = (vm) => {
 
     },
     rowHandle: {
+      fixed: 'right',
       view: {
         thin: true,
-        text: '详情',
+        text: '',
         disabled () {
           return !vm.hasPermissions('Retrieve')
         }
       },
-      width: 160,
+      width: 70,
       edit: {
         thin: true,
         text: '',
@@ -42,7 +43,12 @@ export const crudOptions = (vm) => {
     },
     formOptions: {
       disabled: true,
-      defaultSpan: 24 // 默认的表单 span
+      defaultSpan: 12 // 默认的表单 span
+    },
+    indexRow: { // 或者直接传true,不显示title，不居中
+      title: '序号',
+      align: 'center',
+      width: 70
     },
     columns: [
       {
@@ -106,11 +112,16 @@ export const crudOptions = (vm) => {
           disabled: true
         },
         disabled: true,
-        width: 180,
-        type: 'input',
+        type: 'textarea',
         form: {
           disabled: true,
           component: {
+            props: {
+              type: 'textarea'
+            },
+            autosize: {
+              minRows: 2, maxRows: 8
+            },
             placeholder: '请输入关键词'
           }
         }
@@ -147,7 +158,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 100,
+        width: 130,
         type: 'input',
         form: {
           disabled: true,
@@ -199,6 +210,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: true
         },
+        minWidth: 240,
         type: 'input',
         form: {
           disabled: true
@@ -223,7 +235,8 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '创建时间',
+        fixed: 'right',
+        title: '操作时间',
         key: 'create_datetime',
         width: 160,
         type: 'datetime',

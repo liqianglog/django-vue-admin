@@ -78,8 +78,12 @@ export const crudOptions = (vm) => {
           disabled: false
         },
         width: 160,
-        type: 'input'
-
+        type: 'input',
+        form: {
+          component: {
+            placeholder: '请输入文件名称'
+          }
+        }
       },
       {
         title: '文件地址',

@@ -13,6 +13,7 @@ export const crudOptions = (vm) => {
       height: '100%'
     },
     rowHandle: {
+      fixed: 'right',
       width: 180,
       view: {
         thin: true,
@@ -59,7 +60,7 @@ export const crudOptions = (vm) => {
     indexRow: { // 或者直接传true,不显示title，不居中
       title: '序号',
       align: 'center',
-      width: 100
+      width: 70
     },
     columns: [
       {
@@ -95,7 +96,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 160,
+        width: 140,
         type: 'input',
         form: {
           rules: [ // 表单校验规则
@@ -141,6 +142,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: true
         },
+        minWidth: 140,
         type: 'table-selector',
         dict: {
           cache: false,
@@ -192,6 +194,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: true
         },
+        minWidth: 110,
         type: 'input',
         form: {
           rules: [
@@ -208,6 +211,7 @@ export const crudOptions = (vm) => {
       }, {
         title: '邮箱',
         key: 'email',
+        minWidth: 160,
         form: {
           rules: [
             { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
@@ -221,6 +225,7 @@ export const crudOptions = (vm) => {
         title: '性别',
         key: 'gender',
         type: 'radio',
+        width: 70,
         dict: {
           data: [{ label: '男', value: 1 }, { label: '女', value: 0 }]
         },
@@ -238,7 +243,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 90,
+        width: 70,
         type: 'radio',
         dict: {
           data: BUTTON_STATUS_BOOL
@@ -309,6 +314,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: true
         },
+        minWidth: 130,
         type: 'table-selector',
         dict: {
           cache: false,
@@ -354,6 +360,6 @@ export const crudOptions = (vm) => {
           }
         }
       }
-    ].concat(vm.commonEndColumns({ show_create_datetime: false }))
+    ].concat(vm.commonEndColumns({ update_datetime: { showForm: false, showTable: false }, create_datetime: { showForm: false, showTable: true } }))
   }
 }
