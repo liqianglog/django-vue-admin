@@ -3,11 +3,15 @@ Request工具类
 """
 import json
 
+import requests
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import AnonymousUser
 from django.urls.resolvers import ResolverMatch
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from user_agents import parse
+
+from dvadmin.system.models import LoginLog
 
 
 def get_request_user(request):
@@ -163,3 +167,50 @@ def get_verbose_name(queryset=None, view=None, model=None):
     except Exception as e:
         pass
     return model if model else ""
+
+
+def get_ip_analysis(ip):
+    """
+    获取ip详细概略
+    :param ip: ip地址
+    :return:
+    """
+    data = {
+        "continent": "",
+        "country": "",
+        "province": "",
+        "city": "",
+        "district": "",
+        "isp": "",
+        "area_code": "",
+        "country_english": "",
+        "country_code": "",
+        "longitude": "",
+        "latitude": ""
+    }
+    if ip != 'unknown' and ip:
+        if getattr(settings, 'ENABLE_LOGIN_ANALYSIS_LOG', True):
+            res = requests.post(url='https://ip.django-vue-admin.com/ip/analysis', data=json.dumps({"ip": ip}))
+            if res.status_code == 200:
+                res_data = res.json()
+                if res_data.get('code') == 0:
+                    data = res_data.get('data')
+            return data
+    return data
+
+
+def save_login_log(request):
+    """
+    保存登录日志
+    :return:
+    """
+    ip = get_request_ip(request=request)
+    analysis_data = get_ip_analysis(ip)
+    analysis_data['username'] = request.user.username
+    analysis_data['ip'] = ip
+    analysis_data['agent'] = str(parse(request.META['HTTP_USER_AGENT']))
+    analysis_data['browser'] = get_browser(request)
+    analysis_data['os'] = get_os(request)
+    analysis_data['creator_id'] = request.user.id
+    analysis_data['dept_belong_id'] = getattr(request.user, 'dept_id', '')
+    LoginLog.objects.create(**analysis_data)

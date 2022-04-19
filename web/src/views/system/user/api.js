@@ -6,7 +6,7 @@
  * 联系Qq:1638245306
  * @文件介绍: 用户接口
  */
-import { request, downloadFile } from '@/api/service'
+import { request } from '@/api/service'
 
 export const urlPrefix = '/api/system/user/'
 
@@ -43,13 +43,15 @@ export function DelObj (id) {
 }
 
 /**
- * 导出
- * @param params
+ * 重置密码
+ * @param id
+ * @returns {*}
+ * @constructor
  */
-export function exportData (params) {
-  return downloadFile({
-    url: urlPrefix + 'export/',
-    params: params,
-    method: 'post'
+export function ResetPwd (obj) {
+  return request({
+    url: urlPrefix + 'reset_password/' + obj.id + '/',
+    method: 'put',
+    data: obj
   })
 }

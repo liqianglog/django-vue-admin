@@ -18,22 +18,20 @@ export default {
     /**
          * @description 登录
          * @param {Object} context
-         * @param {Object} payload username {String} 用户账号
-         * @param {Object} payload password {String} 密码
-         * @param {Object} payload route {Object} 登录成功后定向的路由对象 任何 vue-router 支持的格式
-         */
-    async login ({ dispatch }, {
-      username = '',
-      password = '',
-      captcha = '',
-      captchaKey = ''
-    } = {}) {
-      let res = await SYS_USER_LOGIN({
-        username,
-        password,
-        captcha,
-        captchaKey
-      })
+         * @param {Object} data
+         * @param {Object} data username {String} 用户账号
+         * @param {Object} data password {String} 密码
+         * @param {Object} data route {Object} 登录成功后定向的路由对象 任何 vue-router 支持的格式
+         * @param {Object} data request function 请求方法
+     */
+    async login ({ dispatch }, data) {
+      let request = data.request
+      if (request) {
+        delete data.request
+      } else {
+        request = SYS_USER_LOGIN
+      }
+      let res = await request(data)
       // 设置 cookie 一定要存 uuid 和 token 两个 cookie
       // 整个系统依赖这两个数据进行校验和存储
       // uuid 是用户身份唯一标识 用户注册的时候确定 并且不可改变 不可重复
@@ -44,7 +42,7 @@ export default {
       util.cookies.set('token', res.access)
       util.cookies.set('refresh', res.refresh)
       // 设置 vuex 用户信息
-      await dispatch('d2admin/user/set', { name: res.name, user_id: res.userId }, { root: true })
+      await dispatch('d2admin/user/set', { name: res.name, user_id: res.userId,avatar:res.avatar }, { root: true })
       // 用户登录后从持久化数据加载一系列的设置
       await dispatch('load')
     },

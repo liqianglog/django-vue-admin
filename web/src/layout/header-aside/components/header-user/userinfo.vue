@@ -20,6 +20,21 @@
               :label-position="position"
               center
             >
+              <el-form-item prop="avatar" required label="头像">
+                <el-upload
+                  class="avatar-uploader"
+                  list-type="picture-card"
+                  :file-list="fileList"
+                  :action="action"
+                  :headers="headers"
+                  :limit="1"
+                  :disabled="fileList.length===1"
+                  :on-success="handleAvatarSuccess">
+<!--                  <el-image v-if="userInfo.avatar" :src="userInfo.avatar" :preview-src-list="[userInfo.avatar]" style="width: 100px;height: 100px" alt="头像"></el-image>-->
+<!--                  <i v-else class="el-icon-plus avatar-uploader-icon" style="width: 100px;height: 100px"></i>-->
+                  <i class="el-icon-plus"></i>
+                </el-upload>
+              </el-form-item>
               <el-form-item prop="name" required label="昵称">
                 <el-input v-model="userInfo.name" clearable></el-input>
               </el-form-item>
@@ -130,6 +145,11 @@ export default {
     return {
       position: 'left',
       activeName: 'userInfo',
+      action: util.baseURL() + 'api/system/file/',
+      headers: {
+        Authorization: 'JWT ' + util.cookies.get('token')
+      },
+      fileList:[],
       userInfo: {
         name: '',
         gender: '',
@@ -177,6 +197,7 @@ export default {
         params: {}
       }).then((res) => {
         _self.userInfo = res.data
+        _self.fileList = [{name:'avatar.png',url:res.data.avatar}]
       })
     },
     /**
@@ -251,6 +272,16 @@ export default {
           this.$message.error('表单校验失败，请检查')
         }
       })
+    },
+    /**
+     * 头像上传
+     * @param res
+     * @param file
+     */
+    handleAvatarSuccess(res, file) {
+      console.log(11,res)
+      this.fileList =[{ url: util.baseURL() + res.data.url, name:file.name }]
+      this.userInfo.avatar = util.baseURL() + res.data.url;
     }
   }
 }

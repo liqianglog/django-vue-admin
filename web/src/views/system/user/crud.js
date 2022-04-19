@@ -2,7 +2,8 @@ import { request } from '@/api/service'
 import { BUTTON_STATUS_BOOL } from '@/config/button'
 import { urlPrefix as deptPrefix } from '../dept/api'
 import util from '@/libs/util'
-const uploadUrl = util.baseURL() + 'api/system/img/'
+
+const uploadUrl = util.baseURL() + 'api/system/file/'
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
@@ -12,8 +13,8 @@ export const crudOptions = (vm) => {
       height: '100%'
     },
     rowHandle: {
-      width: 140,
       fixed: 'right',
+      width: 180,
       view: {
         thin: true,
         text: '',
@@ -34,7 +35,21 @@ export const crudOptions = (vm) => {
         disabled () {
           return !vm.hasPermissions('Delete')
         }
-      }
+      },
+      custom: [
+        {
+          thin: true,
+          text: '',
+          size: 'small',
+          type: 'warning',
+          icon: 'el-icon-refresh-left',
+          show () {
+            return vm.hasPermissions('ResetPwd')
+          },
+          emit: 'resetPwd'
+        }
+      ]
+
     },
     viewOptions: {
       componentType: 'form'
@@ -45,7 +60,7 @@ export const crudOptions = (vm) => {
     indexRow: { // 或者直接传true,不显示title，不居中
       title: '序号',
       align: 'center',
-      width: 80
+      width: 70
     },
     columns: [
       {
@@ -81,7 +96,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 160,
+        width: 140,
         type: 'input',
         form: {
           rules: [ // 表单校验规则
@@ -95,7 +110,7 @@ export const crudOptions = (vm) => {
           },
           helper: {
             render (h) {
-              return (< el-alert title="密码默认为:admin123456" type="warning" />
+              return (< el-alert title="密码默认为:admin123456" type="warning"/>
               )
             }
           }
@@ -105,7 +120,6 @@ export const crudOptions = (vm) => {
         title: '姓名',
         key: 'name',
         search: {
-          key: 'name__icontains',
           disabled: false
         },
         type: 'input',
@@ -124,18 +138,18 @@ export const crudOptions = (vm) => {
       },
       {
         title: '部门',
-        width: 160,
         key: 'dept',
         search: {
           disabled: true
         },
+        minWidth: 140,
         type: 'table-selector',
         dict: {
           cache: false,
           url: deptPrefix,
           value: 'id', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
-          getData: (url, dict, { _, component }) => {
+          getData: (url, dict, { form, component }) => {
             return request({ url: url, params: { page: 1, limit: 10, status: 1 } }).then(ret => {
               component._elProps.page = ret.data.page
               component._elProps.limit = ret.data.limit
@@ -173,13 +187,14 @@ export const crudOptions = (vm) => {
             }
           }
         }
-      }, {
+      },
+      {
         title: '手机号码',
         key: 'mobile',
-        width: 120,
         search: {
           disabled: true
         },
+        minWidth: 110,
         type: 'input',
         form: {
           rules: [
@@ -196,7 +211,7 @@ export const crudOptions = (vm) => {
       }, {
         title: '邮箱',
         key: 'email',
-        width: 120,
+        minWidth: 160,
         form: {
           rules: [
             { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
@@ -209,39 +224,16 @@ export const crudOptions = (vm) => {
       {
         title: '性别',
         key: 'gender',
-        type: 'select',
+        type: 'radio',
+        width: 70,
         dict: {
           data: [{ label: '男', value: 1 }, { label: '女', value: 0 }]
         },
         form: {
           value: 1,
-          rules: [
-            { required: true, message: '性别必填项' }
-          ],
           component: {
             span: 12
-          },
-          itemProps: {
-            class: { yxtInput: true }
           }
-        },
-        component: { props: { color: 'auto' } } // 自动染色
-      },
-      {
-        title: '用户类型',
-        key: 'user_type',
-        type: 'select',
-        width: 120,
-        search: {
-          key: 'user_type',
-          value: 0,
-          disabled: false
-        },
-        dict: {
-          data: [{ label: '前台用户', value: 1 }, { label: '后台用户', value: 0 }]
-        },
-        form: {
-          disabled: true
         },
         component: { props: { color: 'auto' } } // 自动染色
       },
@@ -251,7 +243,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 90,
+        width: 70,
         type: 'radio',
         dict: {
           data: BUTTON_STATUS_BOOL
@@ -267,23 +259,22 @@ export const crudOptions = (vm) => {
         title: '头像',
         key: 'avatar',
         type: 'avatar-uploader',
-        width: 80,
+        width: 100,
         align: 'left',
         form: {
           component: {
             props: {
               uploader: {
                 action: uploadUrl,
-                name: 'url',
                 headers: {
                   Authorization: 'JWT ' + util.cookies.get('token')
                 },
                 type: 'form',
                 successHandle (ret, option) {
-                  if (ret.data == null || ret.data === '') {
+                  if (ret.data === null || ret.data === '') {
                     throw new Error('上传失败')
                   }
-                  return { url: ret.data.data.url, key: option.data.key }
+                  return { url: util.baseURL() + ret.data.url, key: option.data.key }
                 }
               },
               elProps: { // 与el-uploader 配置一致
@@ -309,9 +300,8 @@ export const crudOptions = (vm) => {
         component: {
           props: {
             buildUrl (value, item) {
-              console.log(11, value)
               if (value && value.indexOf('http') !== 0) {
-                return '/api/upload/form/download?key=' + value
+                return util.baseURL() + value
               }
               return value
             }
@@ -321,10 +311,10 @@ export const crudOptions = (vm) => {
       {
         title: '角色',
         key: 'role',
-        width: 160,
         search: {
           disabled: true
         },
+        minWidth: 130,
         type: 'table-selector',
         dict: {
           cache: false,
@@ -370,6 +360,6 @@ export const crudOptions = (vm) => {
           }
         }
       }
-    ].concat(vm.commonEndColumns({ update_datetime: { showTable: false } }))
+    ].concat(vm.commonEndColumns({ update_datetime: { showForm: false, showTable: false }, create_datetime: { showForm: false, showTable: true } }))
   }
 }

@@ -25,6 +25,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from application import settings
 from dvadmin.system.models import Users
 from dvadmin.utils.json_response import SuccessResponse, ErrorResponse, DetailResponse
+from dvadmin.utils.request_util import save_login_log
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.validator import CustomValidationError
 
@@ -56,7 +57,7 @@ class LoginSerializer(TokenObtainPairSerializer):
     登录的序列化器:
     重写djangorestframework-simplejwt的序列化器
     """
-    captcha = serializers.CharField(max_length=6)
+    captcha = serializers.CharField(max_length=6, required=False, allow_null=True)
 
     class Meta:
         model = Users
@@ -67,24 +68,31 @@ class LoginSerializer(TokenObtainPairSerializer):
         'no_active_account': _('账号/密码不正确')
     }
 
-    def validate_captcha(self, captcha):
-        self.image_code = CaptchaStore.objects.filter(
-            id=self.initial_data['captchaKey']).first()
-        five_minute_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
-        if self.image_code and five_minute_ago > self.image_code.expiration:
-            self.image_code and self.image_code.delete()
-            raise CustomValidationError('验证码过期')
-        else:
-            if self.image_code and (self.image_code.response == captcha or self.image_code.challenge == captcha):
-                self.image_code and self.image_code.delete()
-            else:
-                self.image_code and self.image_code.delete()
-                raise CustomValidationError("图片验证码错误")
-
     def validate(self, attrs):
+        captcha = self.initial_data.get('captcha', None)
+        if settings.CAPTCHA_STATE:
+            if captcha is None:
+                raise CustomValidationError("验证码不能为空")
+            self.image_code = CaptchaStore.objects.filter(
+                id=self.initial_data['captchaKey']).first()
+            five_minute_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
+            if self.image_code and five_minute_ago > self.image_code.expiration:
+                self.image_code and self.image_code.delete()
+                raise CustomValidationError('验证码过期')
+            else:
+                if self.image_code and (self.image_code.response == captcha or self.image_code.challenge == captcha):
+                    self.image_code and self.image_code.delete()
+                else:
+                    self.image_code and self.image_code.delete()
+                    raise CustomValidationError("图片验证码错误")
         data = super().validate(attrs)
         data['name'] = self.user.name
         data['userId'] = self.user.id
+        data['avatar'] = self.user.avatar
+        request = self.context.get('request')
+        request.user = self.user
+        # 记录登录日志
+        save_login_log(request=request)
         return {
             "code": 2000,
             "msg": "请求成功",

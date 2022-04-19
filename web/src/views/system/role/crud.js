@@ -164,7 +164,7 @@ export const crudOptions = (vm) => {
         data: BUTTON_WHETHER_BOOL
       },
       form: {
-        value: 0,
+        value: false,
         component: {
           placeholder: '请选择是否管理员'
         }
@@ -183,7 +183,7 @@ export const crudOptions = (vm) => {
         data: BUTTON_STATUS_BOOL
       },
       form: {
-        value: 1,
+        value: true,
         component: {
           placeholder: '请选择状态'
         }

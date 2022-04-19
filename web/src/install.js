@@ -254,7 +254,7 @@ Vue.prototype.commonEndColumns = function (param = {}) {
       search: {
         disabled: true
       },
-      type: 'cascader',
+      type: 'table-selector',
       dict: {
         cache: true,
         url: '/api/system/dept/?limit=999&status=1',
@@ -262,9 +262,14 @@ Vue.prototype.commonEndColumns = function (param = {}) {
         value: 'id', // 数据字典中value字段的属性名
         label: 'name', // 数据字典中label字段的属性名
         children: 'children', // 数据字典中children字段的属性名
-        getData: (url, dict) => { // 配置此参数会覆盖全局的getRemoteDictFunc
-          return request({ url: url }).then(ret => {
-            return [{ id: null, name: '根节点', children: XEUtils.toArrayTree(ret.data.data, { parentKey: 'parent', strict: true }) }]
+        getData: (url, dict, {
+          _,
+          component
+        }) => {
+          return request({
+            url: url,
+          }).then(ret => {
+            return ret.data.data
           })
         }
       },
@@ -273,13 +278,27 @@ Vue.prototype.commonEndColumns = function (param = {}) {
         component: {
           props: {
             elProps: {
-              clearable: true,
-              showAllLevels: false, // 仅显示最后一级
-              props: {
-                checkStrictly: true, // 可以不需要选到最后一级
-                emitPath: false,
-                clearable: true
-              }
+              treeConfig: {
+                transform: true,
+                rowField: 'id',
+                parentField: 'parent',
+                expandAll: true
+              },
+              columns: [
+                {
+                  field: 'name',
+                  title: '部门名称',
+                  treeNode: true
+                },
+                {
+                  field: 'status',
+                  title: '状态'
+                },
+                {
+                  field: 'parent_name',
+                  title: '父级部门'
+                }
+              ]
             }
           }
         },
@@ -287,21 +306,6 @@ Vue.prototype.commonEndColumns = function (param = {}) {
           render (h) {
             return (< el-alert title="默认不填则为当前创建用户的部门ID" type="info" />
             )
-          }
-        }
-      },
-      component: {
-        dict: {
-          cache: true,
-          url: deptPrefix + '?limit=999&status=1',
-          isTree: true,
-          value: 'id', // 数据字典中value字段的属性名
-          label: 'name', // 数据字典中label字段的属性名
-          children: 'children', // 数据字典中children字段的属性名
-          getData: (url, dict) => { // 配置此参数会覆盖全局的getRemoteDictFunc
-            return request({ url: url }).then(ret => {
-              return [{ id: null, name: '根节点', children: XEUtils.toArrayTree(ret.data.data, { parentKey: 'parent', strict: true }) }]
-            })
           }
         }
       }

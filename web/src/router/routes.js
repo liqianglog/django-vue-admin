@@ -1,8 +1,8 @@
 import layoutHeaderAside from '@/layout/header-aside'
-
+import { checkPlugins } from '@/views/plugins/index.js'
 // 由于懒加载页面太多的话会造成webpack热更新太慢，所以开发环境不使用懒加载，只有生产环境使用懒加载
 const _import = require('@/libs/util.import.' + process.env.NODE_ENV)
-
+const pluginImport = require('@/libs/util.import.plugin')
 /**
  * 在主框架内显示
  */
@@ -88,25 +88,25 @@ const frameIn = [{
     //   component: _import('system/user')
     // },
     // // 系统 按钮配置
-    {
-      path: 'button',
-      name: 'button',
-      meta: {
-        title: '按钮',
-        auth: true
-      },
-      component: _import('system/button')
-    },
-    // // 系统 菜单权限
-    {
-      path: 'menuButton/:id',
-      name: 'menuButton',
-      meta: {
-        title: '菜单按钮',
-        auth: true
-      },
-      component: _import('system/menuButton')
-    },
+    // {
+    //   path: 'button',
+    //   name: 'button',
+    //   meta: {
+    //     title: '按钮',
+    //     auth: true
+    //   },
+    //   component: _import('system/button')
+    // },
+    // // // 系统 菜单权限
+    // {
+    //   path: 'menuButton/:id',
+    //   name: 'menuButton',
+    //   meta: {
+    //     title: '菜单按钮',
+    //     auth: true
+    //   },
+    //   component: _import('system/menuButton')
+    // },
     // // 系统 角色管理
     // {
     //   path: 'role',
@@ -149,15 +149,15 @@ const frameIn = [{
     //   component: _import('system/log/operationLog')
     // },
     // 系统 前端日志
-    {
-      path: 'frontendLog',
-      name: 'frontendLog',
-      meta: {
-        title: '前端日志',
-        auth: true
-      },
-      component: _import('system/log/frontendLog')
-    },
+    // {
+    //   path: 'frontendLog',
+    //   name: 'frontendLog',
+    //   meta: {
+    //     title: '前端日志',
+    //     auth: true
+    //   },
+    //   component: _import('system/log/frontendLog')
+    // },
     // 刷新页面 必须保留
     {
       path: 'refresh',
@@ -186,7 +186,17 @@ const frameOut = [
     component: _import('system/login')
   }
 ]
-
+/**
+ * 第三方登录
+ */
+const pluginsType = checkPlugins('dvadmin-oauth2-web')
+if (pluginsType) {
+  frameOut.push({
+    path: '/oauth2',
+    name: 'login',
+    component: pluginsType === 'local' ? _import('plugins/dvadmin-oauth2-web/src/login/index') : pluginImport('dvadmin-oauth2-web/src/login/index')
+  })
+}
 /**
  * 错误页面
  */

@@ -28,7 +28,10 @@ from conf.env import *
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure--z8%exyzt7e_%i@1+#1mm=%lb5=^fx_57=1@a+_y7bg5-w%)sm'
-sys.path.insert(0, os.path.join(BASE_DIR, 'plugins'))
+# 初始化plugins插件路径到环境变量中
+PLUGINS_PATH = os.path.join(BASE_DIR, 'plugins')
+[sys.path.insert(0, os.path.join(PLUGINS_PATH, ele)) for ele in os.listdir(PLUGINS_PATH) if
+ os.path.isdir(os.path.join(PLUGINS_PATH, ele)) and not ele.startswith('__')]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = locals().get('DEBUG', True)

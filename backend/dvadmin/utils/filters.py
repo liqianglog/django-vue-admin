@@ -36,7 +36,7 @@ def get_dept(dept_id: int, dept_all_list=None, dept_list=None):
     if dept_list is None:
         dept_list = [dept_id]
     for ele in dept_all_list:
-        if ele.get('parentId') == dept_id:
+        if ele.get('parent') == dept_id:
             dept_list.append(ele.get('id'))
             get_dept(ele.get('id'), dept_all_list, dept_list)
     return list(set(dept_list))
@@ -94,10 +94,15 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
                 return queryset.filter(dept_belong_id=user_dept_id)
 
             # 3. 根据所有角色 获取所有权限范围
+            # (0, "仅本人数据权限"),
+            # (1, "本部门及以下数据权限"),
+            # (2, "本部门数据权限"),
+            # (3, "全部数据权限"),
+            # (4, "自定数据权限")
             role_list = request.user.role.filter(status=1).values('admin', 'data_range')
-            dataScope_list = []
+            dataScope_list = [] # 权限范围列表
             for ele in role_list:
-                # 3.1 判断用户是否为超级管理员角色/如果有1(所有数据) 则返回所有数据
+                # 判断用户是否为超级管理员角色/如果拥有[全部数据权限]则返回所有数据
                 if 3 == ele.get('data_range') or ele.get('admin') == True:
                     return queryset
                 dataScope_list.append(ele.get('data_range'))
