@@ -3,7 +3,6 @@ import { BUTTON_STATUS_BOOL } from '@/config/button'
 import { urlPrefix as deptPrefix } from '../dept/api'
 import util from '@/libs/util'
 
-const uploadUrl = util.baseURL() + 'api/system/file/'
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
@@ -264,19 +263,6 @@ export const crudOptions = (vm) => {
         form: {
           component: {
             props: {
-              uploader: {
-                action: uploadUrl,
-                headers: {
-                  Authorization: 'JWT ' + util.cookies.get('token')
-                },
-                type: 'form',
-                successHandle (ret, option) {
-                  if (ret.data === null || ret.data === '') {
-                    throw new Error('上传失败')
-                  }
-                  return { url: util.baseURL() + ret.data.url, key: option.data.key }
-                }
-              },
               elProps: { // 与el-uploader 配置一致
                 multiple: true,
                 limit: 5 // 限制5个文件

@@ -15,7 +15,8 @@ import {
 import { request } from '@/api/service'
 import util from '@/libs/util'
 import XEUtils from 'xe-utils'
-import { urlPrefix as deptPrefix } from '@/views/system/dept/api'
+import { urlPrefix as deptPrefix } from '@/views/system/dept/'
+const uploadUrl = util.baseURL() + 'api/system/file/'
 
 /**
  // vxe0
@@ -105,7 +106,7 @@ Vue.use(D2pFullEditor, {
 Vue.use(D2pDemoExtend)
 Vue.use(D2pFileUploader)
 Vue.use(D2pUploader, {
-  defaultType: 'cos',
+  defaultType: 'form',
   cos: {
     domain: 'https://d2p-demo-1251260344.cos.ap-guangzhou.myqcloud.com',
     bucket: 'd2p-demo-1251260344',
@@ -159,8 +160,20 @@ Vue.use(D2pUploader, {
     domain: 'http://d2p.file.veryreader.com'
   },
   form: {
-    action: util.baseURL() + 'upload/form/upload',
-    name: 'file'
+    action: uploadUrl,
+    name: 'file',
+    data: {}, // 上传附加参数
+    headers: {
+      Authorization: 'JWT ' + util.cookies.get('token')
+    },
+    type: 'form',
+    successHandle (ret, option) {
+      if (ret.data === null || ret.data === '') {
+        throw new Error('上传失败')
+      }
+      return { url: ret.data.data.url, key: option.data.key }
+    },
+    withCredentials: false // 是否带cookie
   }
 })
 
@@ -257,7 +270,7 @@ Vue.prototype.commonEndColumns = function (param = {}) {
       type: 'table-selector',
       dict: {
         cache: true,
-        url: '/api/system/dept/?limit=999&status=1',
+        url: deptPrefix + '?limit=999&status=1',
         isTree: true,
         value: 'id', // 数据字典中value字段的属性名
         label: 'name', // 数据字典中label字段的属性名
@@ -267,7 +280,7 @@ Vue.prototype.commonEndColumns = function (param = {}) {
           component
         }) => {
           return request({
-            url: url,
+            url: url
           }).then(ret => {
             return ret.data.data
           })

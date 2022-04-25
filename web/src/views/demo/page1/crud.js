@@ -1,6 +1,4 @@
 import { request } from '@/api/service'
-import util from '@/libs/util'
-const uploadUrl = process.env.VUE_APP_API + '/api/system/img/'
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
@@ -85,20 +83,6 @@ export const crudOptions = (vm) => {
         form: {
           component: {
             props: {
-              uploader: {
-                action: uploadUrl,
-                name: 'file',
-                headers: {
-                  Authorization: 'JWT ' + util.cookies.get('token')
-                },
-                type: 'form',
-                successHandle (ret, option) {
-                  if (ret.data == null || ret.data === '') {
-                    throw new Error('上传失败')
-                  }
-                  return { url: ret.data.data.url, key: option.data.key }
-                }
-              },
               elProps: { // 与el-uploader 配置一致
                 multiple: false,
                 limit: 5 // 限制5个文件
@@ -139,20 +123,6 @@ export const crudOptions = (vm) => {
         form: {
           component: {
             props: {
-              uploader: {
-                action: uploadUrl,
-                name: 'file',
-                headers: {
-                  Authorization: 'JWT ' + util.cookies.get('token')
-                },
-                type: 'form',
-                successHandle (ret, option) {
-                  if (ret.data == null || ret.data === '') {
-                    throw new Error('上传失败')
-                  }
-                  return { url: ret.data.data.url, key: option.data.key }
-                }
-              },
               elProps: { // 与el-uploader 配置一致
                 multiple: false,
                 limit: 5 // 限制5个文件

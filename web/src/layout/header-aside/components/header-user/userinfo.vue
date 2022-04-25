@@ -149,7 +149,7 @@ export default {
       headers: {
         Authorization: 'JWT ' + util.cookies.get('token')
       },
-      fileList:[],
+      fileList: [],
       userInfo: {
         name: '',
         gender: '',
@@ -197,7 +197,7 @@ export default {
         params: {}
       }).then((res) => {
         _self.userInfo = res.data
-        _self.fileList = [{name:'avatar.png',url:res.data.avatar}]
+        _self.fileList = [{ name: 'avatar.png', url: res.data.avatar }]
       })
     },
     /**
@@ -278,10 +278,10 @@ export default {
      * @param res
      * @param file
      */
-    handleAvatarSuccess(res, file) {
-      console.log(11,res)
-      this.fileList =[{ url: util.baseURL() + res.data.url, name:file.name }]
-      this.userInfo.avatar = util.baseURL() + res.data.url;
+    handleAvatarSuccess (res, file) {
+      console.log(11, res)
+      this.fileList = [{ url: util.baseURL() + res.data.url, name: file.name }]
+      this.userInfo.avatar = util.baseURL() + res.data.url
     }
   }
 }
