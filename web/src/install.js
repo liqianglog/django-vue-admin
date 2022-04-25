@@ -171,7 +171,7 @@ Vue.use(D2pUploader, {
       if (ret.data === null || ret.data === '') {
         throw new Error('上传失败')
       }
-      return { url: ret.data.data.url, key: option.data.key }
+      return { url: util.baseURL() + 'media/' + ret.data.data.url, key: option.data.key }
     },
     withCredentials: false // 是否带cookie
   }
