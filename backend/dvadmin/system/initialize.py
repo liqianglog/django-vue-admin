@@ -15,7 +15,6 @@ from dvadmin.system.models import (
     MenuButton,
     Role,
     Users,
-    Dictionary,
 )
 
 from .init_data import (

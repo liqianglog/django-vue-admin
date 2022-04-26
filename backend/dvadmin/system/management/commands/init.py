@@ -36,7 +36,7 @@ class Command(BaseCommand):
             try:
                 exec(
                     f"""
-from {app}.util.initialize import main
+from {app}.initialize import main
 main(reset={reset})
                 """
                 )
