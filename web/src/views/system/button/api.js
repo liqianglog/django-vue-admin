@@ -14,7 +14,7 @@ export function GetList (query) {
   return request({
     url: urlPrefix,
     method: 'get',
-    data: query
+    params: query
   })
 }
 export function createObj (obj) {

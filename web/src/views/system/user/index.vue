@@ -94,6 +94,7 @@ export default {
   },
   methods: {
     getCrudOptions () {
+      this.crud.searchOptions.form.user_type = 0
       return crudOptions(this)
     },
     pageRequest (query) {
