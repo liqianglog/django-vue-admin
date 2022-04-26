@@ -86,14 +86,15 @@
               <span>注册用户</span>
             </p> -->
             <!-- quick login -->
-            <!-- <el-button
+            <el-button
               class="page-login--quick"
               size="default"
               type="info"
               @click="dialogVisible = true"
+              v-if="$env === 'development'"
             >
-              快速选择用户（测试功能）
-            </el-button> -->
+              快速选择用户（限dev环境）
+            </el-button>
           </div>
         </div>
         <div class="page-login--content-footer">
@@ -151,19 +152,14 @@ export default {
       dialogVisible: false,
       users: [
         {
-          name: 'Admin',
+          name: '超管',
+          username: 'superadmin',
+          password: 'admin123456'
+        },
+        {
+          name: '管理员',
           username: 'admin',
-          password: 'admin'
-        },
-        {
-          name: 'Editor',
-          username: 'editor',
-          password: 'editor'
-        },
-        {
-          name: 'User1',
-          username: 'user1',
-          password: 'user1'
+          password: 'admin123456'
         }
       ],
       // 表单
@@ -220,7 +216,8 @@ export default {
     handleUserBtnClick (user) {
       this.formLogin.username = user.username
       this.formLogin.password = user.password
-      this.submit()
+      // this.submit()
+      this.dialogVisible = false
     },
     /**
      * @description 提交表单
