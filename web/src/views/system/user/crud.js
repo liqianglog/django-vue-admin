@@ -1,9 +1,7 @@
 import { request } from '@/api/service'
 import { BUTTON_STATUS_BOOL } from '@/config/button'
 import { urlPrefix as deptPrefix } from '../dept/api'
-import util from '@/libs/util'
 
-const uploadUrl = util.baseURL() + 'api/system/file/'
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
@@ -42,7 +40,7 @@ export const crudOptions = (vm) => {
           text: '',
           size: 'small',
           type: 'warning',
-          icon: 'el-icon-refresh-left',
+          icon: 'el-icon-key',
           show () {
             return vm.hasPermissions('ResetPwd')
           },
@@ -258,54 +256,21 @@ export const crudOptions = (vm) => {
       {
         title: '头像',
         key: 'avatar',
-        type: 'avatar-uploader',
+        type: 'avatar-cropper',
         width: 100,
         align: 'left',
         form: {
           component: {
             props: {
-              uploader: {
-                action: uploadUrl,
-                headers: {
-                  Authorization: 'JWT ' + util.cookies.get('token')
-                },
-                type: 'form',
-                successHandle (ret, option) {
-                  if (ret.data === null || ret.data === '') {
-                    throw new Error('上传失败')
-                  }
-                  return { url: util.baseURL() + ret.data.url, key: option.data.key }
-                }
-              },
               elProps: { // 与el-uploader 配置一致
-                multiple: true,
-                limit: 5 // 限制5个文件
+                multiple: false,
+                limit: 1 // 限制5个文件
               },
-              sizeLimit: 100 * 1024 // 不能超过限制
+              sizeLimit: 500 * 1024 // 不能超过限制
             },
             span: 24
           },
-          helper: '限制文件大小不能超过50k'
-        },
-        valueResolve (row, col) {
-          const value = row[col.key]
-          if (value != null && value instanceof Array) {
-            if (value.length >= 0) {
-              row[col.key] = value[0]
-            } else {
-              row[col.key] = null
-            }
-          }
-        },
-        component: {
-          props: {
-            buildUrl (value, item) {
-              if (value && value.indexOf('http') !== 0) {
-                return util.baseURL() + value
-              }
-              return value
-            }
-          }
+          helper: '限制文件大小不能超过500k'
         }
       },
       {
