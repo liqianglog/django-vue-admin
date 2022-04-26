@@ -1,8 +1,19 @@
+import os
+
+from application.settings import BASE_DIR
+
 # ================================================= #
 # *************** mysql数据库 配置  *************** #
 # ================================================= #
-# 数据库地址
-DATABASE_ENGINE = "django.db.backends.mysql"
+# 数据库 ENGINE ，默认演示使用 sqlite3 数据库，正式环境建议使用 mysql 数据库
+# sqlite3 设置
+DATABASE_ENGINE = "django.db.backends.sqlite3"
+DATABASE_NAME = os.path.join(BASE_DIR, "db.sqlite3")
+
+# 使用mysql时，改为此配置
+# DATABASE_ENGINE = "django.db.backends.mysql"
+# DATABASE_NAME = 'django-vue-admin' # mysql 时使用
+
 # 数据库地址 改为自己数据库地址
 DATABASE_HOST = "127.0.0.1"
 # # 数据库端口
@@ -11,12 +22,9 @@ DATABASE_PORT = 3306
 DATABASE_USER = "root"
 # # 数据库密码
 DATABASE_PASSWORD = "123456"
-# 数据库名
-DATABASE_NAME = "database_name"
 
 # 表前缀
 TABLE_PREFIX = "sys_"
-APP_PREFIX = "app_"
 # ================================================= #
 # ******** redis配置，无redis 可不进行配置  ******** #
 # ================================================= #
@@ -41,7 +49,3 @@ ALLOWED_HOSTS = ["*"]
 
 # 默认密码
 DEFAULT_PASSWORD = "admin123456"
-
-# 初始化需要执行的列表，用来初始化后执行
-INITIALIZE_LIST = []
-INITIALIZE_RESET_LIST = []

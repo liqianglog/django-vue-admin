@@ -73,8 +73,6 @@ urlpatterns = (
         path("api/captcha/", CaptchaView.as_view()),
         path("api/captcha/status/", CaptchaStatusView.as_view()),
         path("apiLogin/", ApiLogin.as_view()),
-        # 业务路由
-        # re_path(r'^api/app_route/', include('apps.app_name.urls')),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_URL)
