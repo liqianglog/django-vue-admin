@@ -84,7 +84,6 @@ export const crudOptions = (vm) => {
       {
         title: 'ID',
         key: 'id',
-        width: 90,
         disabled: true,
         form: {
           disabled: true
@@ -96,7 +95,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 140,
+        minWidth: 100,
         type: 'input',
         form: {
           rules: [ // 表单校验规则
@@ -119,6 +118,7 @@ export const crudOptions = (vm) => {
       {
         title: '姓名',
         key: 'name',
+        minWidth: 90,
         search: {
           disabled: false
         },
@@ -167,9 +167,9 @@ export const crudOptions = (vm) => {
           },
           component: {
             span: 12,
+            pagination: true,
             props: { multiple: false },
             elProps: {
-              pagination: true,
               columns: [
                 {
                   field: 'name',
@@ -306,9 +306,9 @@ export const crudOptions = (vm) => {
           },
           component: {
             span: 12,
+            pagination: true,
             props: { multiple: true },
             elProps: {
-              pagination: true,
               columns: [
                 {
                   field: 'name',

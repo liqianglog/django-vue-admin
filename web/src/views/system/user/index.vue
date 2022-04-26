@@ -79,18 +79,18 @@ export default {
     //     callback()
     //   }
     // }
-    // return {
-    //   dialogFormVisible: false,
-    //   resetPwdForm: {
-    //     id: null,
-    //     pwd: null,
-    //     pwd2: null
-    //   },
-    //   passwordRules: {
-    //     pwd: [{ required: true, message: '必填项' }, { validator: validatePass, trigger: 'blur' }],
-    //     pwd2: [{ required: true, message: '必填项' }, { validator: validatePass2, trigger: 'blur' }]
-    //   }
-    // }
+    return {
+      // dialogFormVisible: false,
+      // resetPwdForm: {
+      //   id: null,
+      //   pwd: null,
+      //   pwd2: null
+      // },
+      // passwordRules: {
+      //   pwd: [{ required: true, message: '必填项' }, { validator: validatePass, trigger: 'blur' }],
+      //   pwd2: [{ required: true, message: '必填项' }, { validator: validatePass2, trigger: 'blur' }]
+      // }
+    }
   },
   methods: {
     getCrudOptions () {
@@ -109,7 +109,7 @@ export default {
       return api.DelObj(row.id)
     },
     resetPassword (scope) {
-      api.ResetPwd(scope.row).then(res => {
+      api.ResetPwd(scope.row).then((res) => {
         this.$message.success('密码重置成功')
       })
     }
