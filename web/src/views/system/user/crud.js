@@ -40,7 +40,7 @@ export const crudOptions = (vm) => {
           text: '',
           size: 'small',
           type: 'warning',
-          icon: 'el-icon-refresh-left',
+          icon: 'el-icon-key',
           show () {
             return vm.hasPermissions('ResetPwd')
           },
@@ -256,15 +256,15 @@ export const crudOptions = (vm) => {
       {
         title: '头像',
         key: 'avatar',
-        type: 'avatar-uploader',
+        type: 'avatar-cropper',
         width: 100,
         align: 'left',
         form: {
           component: {
             props: {
               elProps: { // 与el-uploader 配置一致
-                multiple: true,
-                limit: 5 // 限制5个文件
+                multiple: false,
+                limit: 1 // 限制5个文件
               },
               sizeLimit: 500 * 1024 // 不能超过限制
             },
