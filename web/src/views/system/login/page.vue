@@ -5,26 +5,13 @@
         <li v-for="n in 10" :key="n"></li>
       </ul>
     </div>
-    <div
-      class="page-login--layer page-login--layer-time"
-      flex="main:center cross:center"
-    >
-      {{ time }}
-    </div>
+    <div class="page-login--layer page-login--layer-time" flex="main:center cross:center">{{ time }}</div>
     <div class="page-login--layer">
-      <div
-        class="page-login--content"
-        flex="dir:top main:justify cross:stretch box:justify"
-      >
+      <div class="page-login--content" flex="dir:top main:justify cross:stretch box:justify">
         <div class="page-login--content-header">
-          <p class="page-login--content-header-motto">
-            时间是一切财富中最宝贵的财富
-          </p>
+          <p class="page-login--content-header-motto">时间是一切财富中最宝贵的财富</p>
         </div>
-        <div
-          class="page-login--content-main"
-          flex="dir:top main:center cross:center"
-        >
+        <div class="page-login--content-main" flex="dir:top main:center cross:center">
           <!-- logo -->
           <img class="page-login--logo" src="./image/dvadmin.png" />
           <!-- form -->
@@ -38,11 +25,7 @@
                 size="default"
               >
                 <el-form-item prop="username">
-                  <el-input
-                    type="text"
-                    v-model="formLogin.username"
-                    placeholder="用户名"
-                  >
+                  <el-input type="text" v-model="formLogin.username" placeholder="用户名">
                     <i slot="prepend" class="fa fa-user-circle-o"></i>
                   </el-input>
                 </el-form-item>
@@ -56,42 +39,27 @@
                     <i slot="prepend" class="fa fa-keyboard-o"></i>
                   </el-input>
                 </el-form-item>
-                <el-form-item prop="captcha">
-                  <el-input
-                    type="text"
-                    v-model="formLogin.captcha"
-                    placeholder="验证码"
-                  >
+                <el-form-item prop="captcha" v-if="captchaVisible">
+                  <el-input type="text" v-model="formLogin.captcha" placeholder="验证码">
                     <template slot="append">
-                      <img
-                        class="login-code"
-                        :src="image_base"
-                        @click="getCaptcha"
-                      />
+                      <img class="login-code" :src="image_base" @click="getCaptcha" />
                     </template>
                   </el-input>
                 </el-form-item>
-                <el-button
-                  size="default"
-                  @click="submit"
-                  type="primary"
-                  class="button-login"
-                >
-                  登录
-                </el-button>
+                <el-button size="default" @click="submit" type="primary" class="button-login">登录</el-button>
               </el-form>
             </el-card>
             <!-- <p class="page-login--options" flex="main:justify cross:center">
               <span><d2-icon name="question-circle" /> 忘记密码</span>
               <span>注册用户</span>
-            </p> -->
+            </p>-->
             <!-- quick login -->
             <el-button
               class="page-login--quick"
               size="default"
               type="info"
-              @click="dialogVisible = true"
               v-if="$env === 'development'"
+              @click="dialogVisible = true"
             >
               快速选择用户（限dev环境）
             </el-button>
@@ -109,12 +77,9 @@
           </p>
           <p class="page-login--content-footer-copyright">
             Copyright
-            <d2-icon name="copyright" />
-            Copyright © 2018-2021 pro.django-vue-admin.com All Rights Reserved.
+            <d2-icon name="copyright" />Copyright © 2018-2021 pro.django-vue-admin.com All Rights Reserved.
             |
-            <a href="https://beian.miit.gov.cn" target="_blank">
-              晋ICP备18005113号-3
-            </a>
+            <a href="https://beian.miit.gov.cn" target="_blank">晋ICP备18005113号-3</a>
           </p>
           <p class="page-login--content-footer-options">
             <a href="#">帮助</a>
@@ -150,6 +115,7 @@ export default {
       time: dayjs().format('HH:mm:ss'),
       // 快速选择用户
       dialogVisible: false,
+      captchaVisible: false,
       users: [
         {
           name: '超管',
@@ -196,6 +162,10 @@ export default {
       image_base: null
     }
   },
+  created () {
+    this.$store.dispatch('d2admin/db/databaseClear')
+    this.getCaptcha()
+  },
   mounted () {
     this.timeInterval = setInterval(() => {
       this.refreshTime()
@@ -216,8 +186,10 @@ export default {
     handleUserBtnClick (user) {
       this.formLogin.username = user.username
       this.formLogin.password = user.password
-      // this.submit()
-      this.dialogVisible = false
+      this.dialogVisible = !this.dialogVisible
+      if (!this.captchaVisible) {
+        this.submit()
+      }
     },
     /**
      * @description 提交表单
@@ -253,16 +225,19 @@ export default {
      * 获取验证码
      */
     getCaptcha () {
-      api.getCaptcha().then((ret) => {
-        this.formLogin.captcha = null
-        this.captchaKey = ret.data.data.key
-        this.image_base = ret.data.data.image_base
+      api.getCaptchaStatus().then((ret) => {
+        this.captchaVisible = ret.data.status
+        if (this.captchaVisible) {
+          api.getCaptcha().then((ret) => {
+            this.formLogin.captcha = null
+            if (ret.data) {
+              this.captchaKey = ret.data.key
+              this.image_base = ret.data.image_base
+            }
+          })
+        }
       })
     }
-  },
-  created () {
-    this.$store.dispatch('d2admin/db/databaseClear')
-    this.getCaptcha()
   }
 }
 </script>
@@ -393,7 +368,6 @@ export default {
     .page-login--content-footer-copyright {
       padding: 0px;
       margin: 0px;
-      margin-bottom: 10px;
       font-size: 12px;
       line-height: 12px;
       text-align: center;
@@ -405,6 +379,7 @@ export default {
     .page-login--content-footer-options {
       padding: 0px;
       margin: 0px;
+      margin-bottom: 10px;
       font-size: 12px;
       line-height: 12px;
       text-align: center;
