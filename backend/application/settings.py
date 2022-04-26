@@ -231,10 +231,12 @@ LOGGING = {
         "django": {
             "handlers": ["console", "error", "file"],
             "level": "INFO",
+            "propagate": False,
         },
         "scripts": {
             "handlers": ["console", "error", "file"],
             "level": "INFO",
+            "propagate": False,
         },
         # 数据库相关日志
         "django.db.backends": {
