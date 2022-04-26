@@ -98,13 +98,13 @@ export const crudOptions = (vm) => {
       type: 'cascader',
       dict: {
         cache: false,
-        url: dictionaryPrefix + '?status=1&limit=999',
+        url: dictionaryPrefix,
         isTree: true,
         value: 'id', // 数据字典中value字段的属性名
         label: 'label', // 数据字典中label字段的属性名
         children: 'children', // 数据字典中children字段的属性名
         getData: (url, dict) => { // 配置此参数会覆盖全局的getRemoteDictFunc
-          return request({ url: url }).then(ret => {
+          return request({ url: url, params: { limit: 999, status: 1 } }).then(ret => {
             return [{ id: null, label: '根节点', children: XEUtils.toArrayTree(ret.data.data, { parentKey: 'parent', strict: true }) }]
           })
         }

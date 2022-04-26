@@ -273,7 +273,7 @@ Vue.prototype.commonEndColumns = function (param = {}) {
       type: 'table-selector',
       dict: {
         cache: true,
-        url: deptPrefix + '?limit=999&status=1',
+        url: deptPrefix,
         isTree: true,
         value: 'id', // 数据字典中value字段的属性名
         label: 'name', // 数据字典中label字段的属性名
@@ -283,7 +283,8 @@ Vue.prototype.commonEndColumns = function (param = {}) {
           component
         }) => {
           return request({
-            url: url
+            url: url,
+            params: { limit: 999, status: 1 }
           }).then(ret => {
             return ret.data.data
           })

@@ -8,11 +8,13 @@ export const crudOptions = (vm) => {
       compact: true
     },
     options: {
-      height: '100%'
+      height: '100%',
+      tableType: 'vxe-table',
+      rowKey: true // 必须设置，true or false
     },
     rowHandle: {
+      width: 320,
       fixed: 'right',
-      width: 180,
       view: {
         thin: true,
         text: '',
@@ -36,18 +38,18 @@ export const crudOptions = (vm) => {
       },
       custom: [
         {
-          thin: true,
-          text: '',
-          size: 'small',
-          type: 'warning',
-          icon: 'el-icon-key',
           show () {
-            return vm.hasPermissions('ResetPwd')
+            return vm.hasPermissions('ResetPassword')
           },
-          emit: 'resetPwd'
+          disabled () {
+            return !vm.hasPermissions('ResetPassword')
+          },
+          text: '重置密码',
+          type: 'warning',
+          size: 'small',
+          emit: 'resetPassword'
         }
       ]
-
     },
     viewOptions: {
       componentType: 'form'
@@ -58,7 +60,7 @@ export const crudOptions = (vm) => {
     indexRow: { // 或者直接传true,不显示title，不居中
       title: '序号',
       align: 'center',
-      width: 70
+      width: 60
     },
     columns: [
       {
@@ -82,7 +84,6 @@ export const crudOptions = (vm) => {
       {
         title: 'ID',
         key: 'id',
-        width: 90,
         disabled: true,
         form: {
           disabled: true
@@ -94,7 +95,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 140,
+        minWidth: 100,
         type: 'input',
         form: {
           rules: [ // 表单校验规则
@@ -117,6 +118,7 @@ export const crudOptions = (vm) => {
       {
         title: '姓名',
         key: 'name',
+        minWidth: 90,
         search: {
           disabled: false
         },
@@ -165,9 +167,9 @@ export const crudOptions = (vm) => {
           },
           component: {
             span: 12,
+            pagination: true,
             props: { multiple: false },
             elProps: {
-              pagination: true,
               columns: [
                 {
                   field: 'name',
@@ -197,7 +199,7 @@ export const crudOptions = (vm) => {
         form: {
           rules: [
             { max: 20, message: '请输入正确的手机号码', trigger: 'blur' },
-            { pattern: /^1[3|4|5|7|8]\d{9}$/, message: '请输入正确的手机号码' }
+            { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码' }
           ],
           itemProps: {
             class: { yxtInput: true }
@@ -275,7 +277,7 @@ export const crudOptions = (vm) => {
         title: '头像',
         key: 'avatar',
         type: 'avatar-cropper',
-        width: 100,
+        width: 60,
         align: 'left',
         form: {
           component: {
@@ -322,9 +324,9 @@ export const crudOptions = (vm) => {
           },
           component: {
             span: 12,
+            pagination: true,
             props: { multiple: true },
             elProps: {
-              pagination: true,
               columns: [
                 {
                   field: 'name',
@@ -343,6 +345,9 @@ export const crudOptions = (vm) => {
           }
         }
       }
-    ].concat(vm.commonEndColumns({ update_datetime: { showForm: false, showTable: false }, create_datetime: { showForm: false, showTable: true } }))
+    ].concat(vm.commonEndColumns({
+      create_datetime: { showTable: false },
+      update_datetime: { showTable: false }
+    }))
   }
 }
