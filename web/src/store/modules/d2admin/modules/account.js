@@ -16,22 +16,24 @@ export default {
   namespaced: true,
   actions: {
     /**
-         * @description 登录
-         * @param {Object} context
-         * @param {Object} data
-         * @param {Object} data username {String} 用户账号
-         * @param {Object} data password {String} 密码
-         * @param {Object} data route {Object} 登录成功后定向的路由对象 任何 vue-router 支持的格式
-         * @param {Object} data request function 请求方法
+     * @description 登录
+     * @param {Object} context
+     * @param {Object} payload username {String} 用户账号
+     * @param {Object} payload password {String} 密码
+     * @param {Object} payload route {Object} 登录成功后定向的路由对象 任何 vue-router 支持的格式
      */
-    async login ({ dispatch }, data) {
-      let request = data.request
-      if (request) {
-        delete data.request
-      } else {
-        request = SYS_USER_LOGIN
-      }
-      let res = await request(data)
+    async login ({ dispatch }, {
+      username = '',
+      password = '',
+      captcha = '',
+      captchaKey = ''
+    } = {}) {
+      let res = await SYS_USER_LOGIN({
+        username,
+        password,
+        captcha,
+        captchaKey
+      })
       // 设置 cookie 一定要存 uuid 和 token 两个 cookie
       // 整个系统依赖这两个数据进行校验和存储
       // uuid 是用户身份唯一标识 用户注册的时候确定 并且不可改变 不可重复
@@ -47,14 +49,14 @@ export default {
       await dispatch('load')
     },
     /**
-         * @description 注销用户并返回登录页面
-         * @param {Object} context
-         * @param {Object} payload confirm {Boolean} 是否需要确认
-         */
+     * @description 注销用户并返回登录页面
+     * @param {Object} context
+     * @param {Object} payload confirm {Boolean} 是否需要确认
+     */
     logout ({ commit, dispatch }, { confirm = false } = {}) {
       /**
-             * @description 注销
-             */
+       * @description 注销
+       */
       async function logout () {
         await SYS_USER_LOGOUT({ refresh: util.cookies.get('refresh') }).then(() => {
           // 删除cookie

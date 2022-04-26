@@ -1,5 +1,5 @@
 import { request } from '@/api/service'
-import { BUTTON_STATUS_BOOL } from '@/config/button'
+import { BUTTON_STATUS_BOOL, USER_TYPE } from '@/config/button'
 import { urlPrefix as deptPrefix } from '../dept/api'
 
 export const crudOptions = (vm) => {
@@ -236,8 +236,26 @@ export const crudOptions = (vm) => {
           }
         },
         component: { props: { color: 'auto' } } // 自动染色
-      },
-      {
+      }, {
+        title: '用户类型',
+        key: 'user_type',
+        search: {
+          value: 0,
+          disabled: false
+        },
+        width: 140,
+        type: 'select',
+        dict: {
+          data: USER_TYPE
+        },
+        form: {
+          show: false,
+          value: 0,
+          component: {
+            span: 12
+          }
+        }
+      }, {
         title: '状态',
         key: 'is_active',
         search: {
