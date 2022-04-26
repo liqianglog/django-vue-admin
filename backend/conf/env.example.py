@@ -27,9 +27,7 @@ APP_PREFIX = "app_"
 # ****************** 功能 启停  ******************* #
 # ================================================= #
 DEBUG = False
-# 是否启用插件，不需要可以设置为False
-ENABLE_PLUGINS = False
-# 启动登录详细概略获取(通过调用api获取ip详细地址)
+# 启动登录详细概略获取(通过调用api获取ip详细地址。如果是内网，关闭即可)
 ENABLE_LOGIN_ANALYSIS_LOG = True
 # 是否启用登录验证码，不需要可以设置为False
 CAPTCHA_STATE = False
