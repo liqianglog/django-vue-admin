@@ -28,10 +28,21 @@
                   :action="action"
                   :headers="headers"
                   :limit="1"
-                  :disabled="fileList.length===1"
-                  :on-success="handleAvatarSuccess">
-<!--                  <el-image v-if="userInfo.avatar" :src="userInfo.avatar" :preview-src-list="[userInfo.avatar]" style="width: 100px;height: 100px" alt="头像"></el-image>-->
-<!--                  <i v-else class="el-icon-plus avatar-uploader-icon" style="width: 100px;height: 100px"></i>-->
+                  :disabled="fileList.length === 1"
+                  :on-success="handleAvatarSuccess"
+                >
+                  <!-- <el-image
+                    v-if="userInfo.avatar"
+                    :src="userInfo.avatar"
+                    :preview-src-list="[userInfo.avatar]"
+                    style="width: 100px; height: 100px"
+                    alt="头像"
+                  ></el-image>
+                  <i
+                    v-else
+                    class="el-icon-plus avatar-uploader-icon"
+                    style="width: 100px; height: 100px"
+                  ></i> -->
                   <i class="el-icon-plus"></i>
                 </el-upload>
               </el-form-item>
@@ -159,9 +170,7 @@ export default {
       },
       userInforules: {
         name: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
-        mobile: [
-          { pattern: /^1[3|4|5|7|8]\d{9}$/, message: '请输入正确手机号' }
-        ]
+        mobile: [{ pattern: /^1[3-9]\d{9}$/, message: '请输入正确手机号' }]
       },
       userPasswordInfo: {
         oldPassword: '',
