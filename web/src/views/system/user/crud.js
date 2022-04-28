@@ -13,7 +13,7 @@ export const crudOptions = (vm) => {
       rowKey: true // 必须设置，true or false
     },
     rowHandle: {
-      width: 320,
+      width: 230,
       fixed: 'right',
       view: {
         thin: true,
@@ -211,7 +211,7 @@ export const crudOptions = (vm) => {
       }, {
         title: '邮箱',
         key: 'email',
-        minWidth: 160,
+        minWidth: 180,
         form: {
           rules: [
             { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
