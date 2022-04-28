@@ -24,7 +24,7 @@ export default {
     // 接收时,处理数据
     valueBuilder (row, col) {
       const value = row[col.key]
-      if (value != null) {
+      if (value != null && value) {
         row[col.key] = value.split(',')
       }
     }
@@ -54,7 +54,7 @@ export default {
     // 接收时,处理数据
     valueBuilder (row, col) {
       const value = row[col.key]
-      if (value != null) {
+      if (value != null && value) {
         row[col.key] = value.split(',')
       }
     }
@@ -80,7 +80,7 @@ export default {
     // 接收时,处理数据
     valueBuilder (row, col) {
       const value = row[col.key]
-      if (value != null) {
+      if (value != null && value) {
         row[col.key] = value.split(',')
       }
     }
@@ -110,7 +110,7 @@ export default {
     // 接收时,处理数据
     valueBuilder (row, col) {
       const value = row[col.key]
-      if (value != null) {
+      if (value != null && value) {
         row[col.key] = value.split(',')
       }
     }
