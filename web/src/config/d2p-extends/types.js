@@ -14,7 +14,7 @@ export default {
           if (value instanceof Array) {
             row[col.key] = value.toString()
           } else {
-            row[col.key] = value[0]
+            row[col.key] = value
           }
         } else {
           row[col.key] = null
@@ -44,7 +44,7 @@ export default {
           if (value instanceof Array) {
             row[col.key] = value.toString()
           } else {
-            row[col.key] = value[0]
+            row[col.key] = value
           }
         } else {
           row[col.key] = null
@@ -70,7 +70,7 @@ export default {
           if (value instanceof Array) {
             row[col.key] = value.toString()
           } else {
-            row[col.key] = value[0]
+            row[col.key] = value
           }
         } else {
           row[col.key] = null
@@ -91,6 +91,21 @@ export default {
     align: 'center',
     view: {
       component: { props: { height: 100, width: 100 } }
+    },
+    // 提交时,处理数据
+    valueResolve (row, col) {
+      const value = row[col.key]
+      if (value != null) {
+        if (value.length >= 0) {
+          if (value instanceof Array) {
+            row[col.key] = value.toString()
+          } else {
+            row[col.key] = value
+          }
+        } else {
+          row[col.key] = null
+        }
+      }
     },
     // 接收时,处理数据
     valueBuilder (row, col) {
