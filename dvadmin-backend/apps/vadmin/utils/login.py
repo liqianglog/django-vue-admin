@@ -59,7 +59,7 @@ class LoginView(ObtainJSONWebToken):
                 get_captcha.delete()
                 return True
         except:
-            pass
+            raise GenException(message='验证码错误')
         else:
             if get_captcha: get_captcha.delete()
             raise GenException(message='验证码错误')
