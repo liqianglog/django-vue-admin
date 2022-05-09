@@ -7,8 +7,8 @@
 @Remark: 自定义过滤器
 """
 import operator
-from collections import OrderedDict
 import re
+from collections import OrderedDict
 from functools import reduce
 
 import six
@@ -161,7 +161,9 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
 
     def find_filter_lookups(self, orm_lookups, search_term_key):
         for lookup in orm_lookups:
-            if lookup.find(search_term_key) >= 0:
+            # if lookup.find(search_term_key) >= 0:
+            # 修复条件搜索错误 bug
+            if lookup == search_term_key:
                 return lookup
         return None
 
