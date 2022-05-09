@@ -365,5 +365,5 @@ REGISTER_PLUGINS = (
 INITIALIZE_LIST = []
 INITIALIZE_RESET_LIST = []
 # 表前缀
-TABLE_PREFIX = getattr(locals(), "TABLE_PREFIX", "dvadmin_")
-DEFAULT_PASSWORD = getattr(locals(), "DEFAULT_PASSWORD", "admin123456")
+TABLE_PREFIX = locals().get('TABLE_PREFIX', "")
+DEFAULT_PASSWORD = locals().get("DEFAULT_PASSWORD", "admin123456")
