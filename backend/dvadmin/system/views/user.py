@@ -164,14 +164,15 @@ class UserViewSet(CustomModelViewSet):
     serializer_class = UserSerializer
     create_serializer_class = UserCreateSerializer
     update_serializer_class = UserUpdateSerializer
-    filter_fields = ["name", "username", "gender", "is_active", "dept", "user_type"]
-    # filter_fields = {
-    #     'name': ['icontains'],
-    #     'username': ['icontains'],
-    #     'gender': ['icontains'],
-    #     'is_active': ['icontains'],
-    #     'dept': ['exact'],
-    # }
+    # filter_fields = ["name", "username", "gender", "is_active", "dept", "user_type"]
+    filter_fields = {
+        "name": ["icontains"],
+        "username": ["exact"],
+        "gender": ["icontains"],
+        "is_active": ["icontains"],
+        "dept": ["exact"],
+        "user_type": ["exact"],
+    }
     search_fields = ["username", "name", "gender", "dept__name", "role__name"]
     # 导出
     export_field_label = [
