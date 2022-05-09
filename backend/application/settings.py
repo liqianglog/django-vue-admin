@@ -364,3 +364,6 @@ REGISTER_PLUGINS = (
 # 初始化需要执行的列表，用来初始化后执行
 INITIALIZE_LIST = []
 INITIALIZE_RESET_LIST = []
+# 表前缀
+TABLE_PREFIX = getattr(locals(), "TABLE_PREFIX", "dvadmin_")
+DEFAULT_PASSWORD = getattr(locals(), "DEFAULT_PASSWORD", "admin123456")

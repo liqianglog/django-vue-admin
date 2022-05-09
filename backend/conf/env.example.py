@@ -24,7 +24,7 @@ DATABASE_USER = "root"
 DATABASE_PASSWORD = "123456"
 
 # 表前缀
-TABLE_PREFIX = "sys_"
+TABLE_PREFIX = "dvadmin_"
 # ================================================= #
 # ******** redis配置，无redis 可不进行配置  ******** #
 # ================================================= #
@@ -37,8 +37,8 @@ TABLE_PREFIX = "sys_"
 DEBUG = False
 # 启动登录详细概略获取(通过调用api获取ip详细地址。如果是内网，关闭即可)
 ENABLE_LOGIN_ANALYSIS_LOG = True
-# 是否启用登录验证码，不需要可以设置为False
-CAPTCHA_STATE = False
+# 是否启用登录验证码，不需要可以设置为False，线上环境建议开启
+CAPTCHA_STATE = True
 # 登录接口 /api/token/ 是否需要验证码认证，用于测试，正式环境建议取消
 LOGIN_NO_CAPTCHA_AUTH = True
 # ================================================= #
