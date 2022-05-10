@@ -121,7 +121,6 @@ export const crudOptions = (vm) => {
     {
       title: '字典编号',
       key: 'value',
-
       search: {
         disabled: true,
         component: {
@@ -130,7 +129,6 @@ export const crudOptions = (vm) => {
           }
         }
       },
-
       type: 'input',
       form: {
         rules: [ // 表单校验规则
@@ -144,6 +142,12 @@ export const crudOptions = (vm) => {
         },
         itemProps: {
           class: { yxtInput: true }
+        },
+        helper: {
+          render (h) {
+            return (< el-alert title="使用方法：vm.dictionary('字典编号')" type="warning"/>
+            )
+          }
         }
       }
     },
