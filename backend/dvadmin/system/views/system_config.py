@@ -207,11 +207,13 @@ class InitSettingsViewSet(APIView):
 
     def get(self, request):
         data = {
-            "site_name": "DVAdmin",  # 网站名称
+            "site_name": "企业级后台管理系统",  # 网站名称
             "site_logo": "",  # 网站logo地址
             "login_background": "",  # 登录页背景图
-            "login_banner": "",  # 登录页Banner图
             "copyright": "2021-2022 django-vue-admin.com 版权所有",  # 版权
-            "keep_record": "晋ICP备18005113号-3"  # 备案
+            "keep_record": "晋ICP备18005113号-3",  # 备案
+            "help_url": "https://django-vue-admin.com",  # 帮助
+            "privacy_url": "#",  # 隐私
+            "clause_url": "#",  # 条款
         }
         return DetailResponse(data=data)

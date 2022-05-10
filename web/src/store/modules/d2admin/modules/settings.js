@@ -9,9 +9,11 @@ export default {
     siteName: '', // 网站名称
     siteLogo: '', // 网站logo地址
     loginBackground: '', // 登录页背景图
-    loginBanner: '', // 登录页Banner图
     copyright: '', // 版权
-    keepRecord: '' // 备案
+    keepRecord: '', // 备案
+    helpUrl: '', // 帮助地址
+    privacyUrl: '', // 隐私
+    clauseUrl: '' // 条款
   },
   actions: {
     /**
@@ -49,9 +51,11 @@ export default {
       state.siteName = res.site_name
       state.siteLogo = res.site_logo
       state.loginBackground = res.login_background
-      state.loginBanner = res.login_banner
       state.copyright = res.copyright
       state.keepRecord = res.keep_record
+      state.helpUrl = res.help_url
+      state.privacyUrl = res.privacy_url
+      state.clauseUrl = res.clause_url
     }
   },
   mutations: {
