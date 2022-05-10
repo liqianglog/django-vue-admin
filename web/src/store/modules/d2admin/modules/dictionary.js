@@ -1,6 +1,6 @@
 import { request } from '@/api/service'
 
-export const urlPrefix = '/api/system/dictionary/'
+export const urlPrefix = '/api/init/dictionary/'
 
 // 系统配置
 export default {

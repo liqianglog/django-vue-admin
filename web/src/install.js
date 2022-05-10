@@ -15,6 +15,7 @@ import {
 import { request } from '@/api/service'
 import util from '@/libs/util'
 import XEUtils from 'xe-utils'
+import store from '@/store/index'
 import { urlPrefix as deptPrefix } from '@/views/system/dept/api'
 import types from '@/config/d2p-extends/types'
 const uploadUrl = util.baseURL() + 'api/system/file/'
@@ -183,7 +184,10 @@ d2CrudPlus.util.columnResolve.addTypes(types)
 // 修改官方字段类型
 const selectType = d2CrudPlus.util.columnResolve.getType('select')
 selectType.component.props.color = 'auto' // 修改官方的字段类型，设置为支持自动染色
-
+// 获取字典配置
+Vue.prototype.dictionary = function (name) {
+  return store.state.d2admin.dictionary.data[name]
+}
 // 默认Columns 结尾 showForm：显示在form中，showTable：显示在table中
 Vue.prototype.commonEndColumns = function (param = {}) {
   /**

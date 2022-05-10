@@ -6,11 +6,13 @@
 @Created on: 2021/6/3 003 0:30
 @Remark: 字典管理
 """
+from rest_framework import serializers
+from rest_framework.views import APIView
+
 from dvadmin.system.models import Dictionary
 from dvadmin.utils.json_response import SuccessResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
-from rest_framework import serializers
 
 
 class DictionarySerializer(CustomModelSerializer):
@@ -67,7 +69,16 @@ class DictionaryViewSet(CustomModelViewSet):
     extra_filter_backends = []
     search_fields = ['label']
 
-    def list(self, request, *args, **kwargs):
+
+class InitDictionaryViewSet(APIView):
+    """
+    获取初始化配置
+    """
+    authentication_classes = []
+    permission_classes = []
+    queryset = Dictionary.objects.all()
+
+    def get(self, request):
         dictionary_key = self.request.query_params.get('dictionary_key')
         if dictionary_key:
             if dictionary_key == 'all':
@@ -77,4 +88,4 @@ class DictionaryViewSet(CustomModelViewSet):
             else:
                 data = self.queryset.filter(parent__value=dictionary_key, status=True).values('label', 'value', 'type')
             return SuccessResponse(data=data, msg="获取成功")
-        return super().list(request, *args, **kwargs)
+        return SuccessResponse(data=[], msg="获取成功")
