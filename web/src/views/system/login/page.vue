@@ -7,7 +7,7 @@
         <!-- logo -->
         <img class="page-login--logo" :src="siteLogo" width="300"/>
         <div class="w3_info">
-          <h2>{{siteName || processTitle}}</h2>
+          <h2 style="text-align: center;">{{siteName || processTitle}}</h2>
           <el-card shadow="always" class="card">
             <el-tabs v-model="activeName">
               <el-tab-pane label="账号密码登录" name="first" stretch>
