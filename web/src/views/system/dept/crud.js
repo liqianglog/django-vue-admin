@@ -105,7 +105,7 @@ export const crudOptions = (vm) => {
         getData: (url, dict) => { // 配置此参数会覆盖全局的getRemoteDictFunc
           return request({ url: url, params: { limit: 999, status: 1 } }).then(ret => {
             const data = XEUtils.toArrayTree(ret.data.data, { parentKey: 'parent', strict: true })
-            return [{ id: '0', name: '根节点', children: data }]
+            return [{ id: null, name: '根节点', children: data }]
           })
         }
       },

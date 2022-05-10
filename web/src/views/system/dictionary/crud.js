@@ -1,8 +1,3 @@
-import { request } from '@/api/service'
-import { BUTTON_STATUS_NUMBER } from '@/config/button'
-import { urlPrefix as dictionaryPrefix } from './api'
-import XEUtils from 'xe-utils'
-
 export const crudOptions = (vm) => {
   return {
 
@@ -22,7 +17,7 @@ export const crudOptions = (vm) => {
       }
     },
     rowHandle: {
-      width: 140,
+      width: 230,
       view: {
         thin: true,
         text: '',
@@ -43,12 +38,18 @@ export const crudOptions = (vm) => {
         disabled () {
           return !vm.hasPermissions('Delete')
         }
-      }
+      },
+      custom: [{
+        text: ' 字典配置',
+        type: 'success',
+        size: 'small',
+        emit: 'dictionaryConfigure'
+      }]
     },
     indexRow: { // 或者直接传true,不显示title，不居中
       title: '序号',
       align: 'center',
-      width: 100
+      width: 80
     },
     viewOptions: {
       componentType: 'form'
@@ -89,77 +90,8 @@ export const crudOptions = (vm) => {
       }
     },
     {
-      title: '父级字典',
-      key: 'parent',
-      show: false,
-      search: {
-        disabled: true
-      },
-      type: 'cascader',
-      dict: {
-        cache: false,
-        url: dictionaryPrefix,
-        isTree: true,
-        value: 'id', // 数据字典中value字段的属性名
-        label: 'label', // 数据字典中label字段的属性名
-        children: 'children', // 数据字典中children字段的属性名
-        getData: (url, dict) => { // 配置此参数会覆盖全局的getRemoteDictFunc
-          return request({ url: url, params: { limit: 999, status: 1 } }).then(ret => {
-            return [{ id: null, label: '根节点', children: XEUtils.toArrayTree(ret.data.data, { parentKey: 'parent', strict: true }) }]
-          })
-        }
-
-      },
-      form: {
-        component: {
-          props: {
-            elProps: {
-              clearable: true,
-              showAllLevels: false, // 仅显示最后一级
-              props: {
-                checkStrictly: true, // 可以不需要选到最后一级
-                emitPath: false,
-                clearable: true
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      title: '编码',
-      key: 'code',
-      sortable: true,
-      treeNode: true,
-      search: {
-        disabled: true,
-        component: {
-          props: {
-            clearable: true
-          }
-        }
-      },
-      type: 'input',
-      form: {
-        editDisabled: true,
-        rules: [ // 表单校验规则
-          { required: true, message: '编码必填项' }
-        ],
-        component: {
-          props: {
-            clearable: true
-          },
-          placeholder: '请输入编码'
-        },
-        itemProps: {
-          class: { yxtInput: true }
-        }
-      }
-    },
-    {
-      title: '显示值',
+      title: '字典名称',
       key: 'label',
-      sortable: true,
 
       search: {
         disabled: false,
@@ -173,13 +105,13 @@ export const crudOptions = (vm) => {
       type: 'input',
       form: {
         rules: [ // 表单校验规则
-          { required: true, message: '显示值必填项' }
+          { required: true, message: '字典名称必填项' }
         ],
         component: {
           props: {
             clearable: true
           },
-          placeholder: '请输入显示值'
+          placeholder: '请输入字典名称'
         },
         itemProps: {
           class: { yxtInput: true }
@@ -187,9 +119,8 @@ export const crudOptions = (vm) => {
       }
     },
     {
-      title: '实际值',
+      title: '字典编号',
       key: 'value',
-      sortable: true,
 
       search: {
         disabled: true,
@@ -203,13 +134,13 @@ export const crudOptions = (vm) => {
       type: 'input',
       form: {
         rules: [ // 表单校验规则
-          { required: true, message: '实际值必填项' }
+          { required: true, message: '字典编号必填项' }
         ],
         component: {
           props: {
             clearable: true
           },
-          placeholder: '请输入实际值'
+          placeholder: '请输入字典编号'
         },
         itemProps: {
           class: { yxtInput: true }
@@ -220,14 +151,19 @@ export const crudOptions = (vm) => {
     {
       title: '状态',
       key: 'status',
-      sortable: true,
+      width: 90,
       search: {
         disabled: false
       },
 
       type: 'radio',
       dict: {
-        data: BUTTON_STATUS_NUMBER
+        data: vm.dictionary('status_bool')
+      },
+      component: {
+        props: {
+          options: []
+        }
       },
       form: {
         value: 1,
@@ -238,8 +174,7 @@ export const crudOptions = (vm) => {
     {
       title: '排序',
       key: 'sort',
-      sortable: true,
-
+      width: 90,
       type: 'number',
       form: {
         value: 1,
@@ -247,6 +182,11 @@ export const crudOptions = (vm) => {
         }
       }
     }
-    ].concat(vm.commonEndColumns())
+    ].concat(vm.commonEndColumns({
+      description: {
+        showForm: true,
+        showTable: true
+      }
+    }))
   }
 }

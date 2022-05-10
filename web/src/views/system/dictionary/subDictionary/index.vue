@@ -1,14 +1,5 @@
-<!--
- * @创建文件时间: 2021-06-01 22:41:21
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-08-09 20:27:09
- * 联系Qq:1638245306
- * @文件介绍: 字典管理
--->
 <template>
-  <d2-container :class="{ 'page-compact': crud.pageOptions.compact }">
-    <!--    <template slot="header">测试页面1</template>-->
+  <d2-container>
     <d2-crud-x ref="d2Crud" v-bind="_crudProps" v-on="_crudListeners" @dictionaryConfigure="dictionaryConfigure">
       <div slot="header">
         <crud-search
@@ -31,10 +22,10 @@
       </div>
     </d2-crud-x>
     <el-drawer
-      title="字典列表"
+      title="我是标题"
       :visible.sync="drawer"
-      :size="700">
-      <sub-dictionary style="margin-top: 80px;margin-left: 10px" :dictionaryRow="dictionaryRow"></sub-dictionary>
+      size="40%">
+      <span>我来啦!</span>
     </el-drawer>
   </d2-container>
 </template>
@@ -43,15 +34,19 @@
 import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
-import SubDictionary from '@/views/system/dictionary/subDictionary/index'
 export default {
-  name: 'dictionary',
-  components: { SubDictionary },
+  name: 'subDictionary',
   mixins: [d2CrudPlus.crud],
+  props: {
+    // 容器样式
+    dictionaryRow: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
-      drawer: false,
-      dictionaryRow: {}
+      drawer: false
     }
   },
   methods: {
@@ -59,15 +54,20 @@ export default {
       return crudOptions(this)
     },
     pageRequest (query) {
-      query.is_value = false
+      query.is_value = true
+      query.parent = this.dictionaryRow.id
       return api.GetList(query)
     },
     addRequest (row) {
       d2CrudPlus.util.dict.clear()
+      row.is_value = true
+      row.parent = this.dictionaryRow.id
       return api.createObj(row)
     },
     updateRequest (row) {
       d2CrudPlus.util.dict.clear()
+      row.is_value = true
+      row.parent = this.dictionaryRow.id
       return api.UpdateObj(row)
     },
     delRequest (row) {
@@ -76,13 +76,12 @@ export default {
     // 字典配置
     dictionaryConfigure (scope) {
       this.drawer = true
-      this.dictionaryRow = scope.row
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .yxtInput {
   .el-form-item__label {
     color: #49a1ff;

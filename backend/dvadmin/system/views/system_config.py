@@ -10,9 +10,9 @@ import django_filters
 from django.db.models import Q
 from django_filters.rest_framework import BooleanFilter
 from rest_framework import serializers
+from rest_framework.views import APIView
 
 from dvadmin.system.models import SystemConfig
-from dvadmin.utils.filters import DataLevelPermissionsFilter
 from dvadmin.utils.json_response import DetailResponse, SuccessResponse, ErrorResponse
 from dvadmin.utils.models import get_all_models_objects
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -31,16 +31,16 @@ class SystemConfigCreateSerializer(CustomModelSerializer):
         fields = "__all__"
         read_only_fields = ["id"]
 
-
     def validate_key(self, value):
         """
         验证key是否允许重复
         parent为空时不允许重复,反之允许
         """
-        instance = SystemConfig.objects.filter(key=value,parent__isnull=True).exists()
+        instance = SystemConfig.objects.filter(key=value, parent__isnull=True).exists()
         if instance:
             raise CustomValidationError('已存在相同变量名')
         return value
+
 
 class SystemConfigSerializer(CustomModelSerializer):
     """
@@ -112,17 +112,9 @@ class SystemConfigFilter(django_filters.rest_framework.FilterSet):
         fields = ['id', 'parent', 'status', 'parent__isnull']
 
 
-
-
-
 class SystemConfigViewSet(CustomModelViewSet):
     """
     系统配置接口
-    list:查询
-    create:新增
-    update:修改
-    retrieve:详情
-    destroy:删除
     """
     queryset = SystemConfig.objects.order_by('sort', 'create_datetime')
     serializer_class = SystemConfigChinldernSerializer
@@ -152,7 +144,7 @@ class SystemConfigViewSet(CustomModelViewSet):
         res = [ele.get('table') for ele in get_all_models_objects().values()]
         return DetailResponse(msg="获取成功", data=res)
 
-    def get_table_data(self, request,pk):
+    def get_table_data(self, request, pk):
         """
         动态获取关联表的数据
         """
@@ -162,7 +154,7 @@ class SystemConfigViewSet(CustomModelViewSet):
         setting = instance.setting
         if setting is None:
             return ErrorResponse(msg="查询出错了~")
-        table = setting.get('table') #获取model名
+        table = setting.get('table')  # 获取model名
         model = get_all_models_objects(table).get("object", {})
         # 自己判断一下不存在
         queryset = model.objects.values()
@@ -181,15 +173,14 @@ class SystemConfigViewSet(CustomModelViewSet):
             return self.get_paginated_response(queryset)
         return SuccessResponse(msg="获取成功", data=queryset, total=len(queryset))
 
-
-    def get_relation_info(self,request):
+    def get_relation_info(self, request):
         """
         查询关联的模板信息
         """
         body = request.query_params
-        var_name = body.get('varName',None)
-        table = body.get('table',None)
-        instance = SystemConfig.objects.filter(key=var_name,setting__table=table).first()
+        var_name = body.get('varName', None)
+        table = body.get('table', None)
+        instance = SystemConfig.objects.filter(key=var_name, setting__table=table).first()
         if instance is None:
             return ErrorResponse(msg="未获取到关联信息")
         relation_id = body.get('relationIds', None)
@@ -204,4 +195,23 @@ class SystemConfigViewSet(CustomModelViewSet):
         if queryset is None:
             return ErrorResponse(msg="未获取到关联信息")
         serializer = SystemConfigChinldernSerializer(queryset.parent)
-        return DetailResponse(msg="查询成功",data=serializer.data)
+        return DetailResponse(msg="查询成功", data=serializer.data)
+
+
+class InitSettingsViewSet(APIView):
+    """
+    获取初始化配置
+    """
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request):
+        data = {
+            "site_name": "DVAdmin",  # 网站名称
+            "site_logo": "",  # 网站logo地址
+            "login_background": "",  # 登录页背景图
+            "login_banner": "",  # 登录页Banner图
+            "copyright": "2021-2022 django-vue-admin.com 版权所有",  # 版权
+            "keep_record": "晋ICP备18005113号-3"  # 备案
+        }
+        return DetailResponse(data=data)

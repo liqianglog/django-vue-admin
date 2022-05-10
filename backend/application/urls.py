@@ -30,6 +30,7 @@ from dvadmin.system.views.login import (
     ApiLogin,
     LogoutView,
 )
+from dvadmin.system.views.system_config import InitSettingsViewSet
 from dvadmin.utils.swagger import CustomOpenAPISchemaGenerator
 
 schema_view = get_schema_view(
@@ -72,6 +73,7 @@ urlpatterns = (
         ),
         path("api/captcha/", CaptchaView.as_view()),
         path("api/captcha/status/", CaptchaStatusView.as_view()),
+        path("api/init/settings/", InitSettingsViewSet.as_view()),
         path("apiLogin/", ApiLogin.as_view()),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
