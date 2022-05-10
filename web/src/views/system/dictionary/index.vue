@@ -31,9 +31,12 @@
       </div>
     </d2-crud-x>
     <el-drawer
-      title="字典列表"
       :visible.sync="drawer"
       :size="700">
+        <div slot="title">
+          <span>字典列表</span>
+          <el-tag size="small" style="margin-left: 10px">{{dictionaryRow.label}}</el-tag>
+        </div>
       <sub-dictionary style="margin-top: 80px;margin-left: 10px" :dictionaryRow="dictionaryRow"></sub-dictionary>
     </el-drawer>
   </d2-container>

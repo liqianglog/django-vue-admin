@@ -83,6 +83,19 @@
   line-height: 22px;
   margin-bottom: 16px;
 }
+.el-drawer__header .el-tag{
+  background-color: #ecf5ff;
+  display: inline-block;
+  font-size: 12px;
+  color: #409eff;
+  border: 1px solid #d9ecff;
+  border-radius: 4px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  height: 24px;
+  padding: 0 8px;
+  line-height: 22px;
+}
 
 .el-drawer__close-btn{
   position: absolute;

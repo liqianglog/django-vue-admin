@@ -242,6 +242,9 @@ export const crudOptions = (vm) => {
             { required: true, message: '状态必填项' }
           ],
           component: {
+          },
+          itemProps: {
+            class: { yxtInput: true }
           }
         }
       },
@@ -253,6 +256,12 @@ export const crudOptions = (vm) => {
         form: {
           value: 1,
           component: {
+          },
+          rules: [ // 表单校验规则
+            { required: true, message: '排序必填项' }
+          ],
+          itemProps: {
+            class: { yxtInput: true }
           }
         }
       }

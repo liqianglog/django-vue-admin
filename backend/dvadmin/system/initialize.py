@@ -24,6 +24,7 @@ from .init_data import (
     menu_button_data,
     role_data,
     staff_data,
+    dictionary_data,
 )
 
 
@@ -71,6 +72,13 @@ class Initialize(CoreInitialize):
         """
         data = staff_data
         self.save(Users, data, "用户表", no_reset=False)
+
+    def init_dictionary(self):
+        """
+        初始化字典表
+        """
+        data = dictionary_data
+        self.save(Users, data, "字典表", no_reset=False)
 
     def run(self):
         self.init_dept()
