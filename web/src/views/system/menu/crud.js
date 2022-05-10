@@ -1,5 +1,5 @@
 import { request } from '@/api/service'
-import { BUTTON_STATUS_BOOL, BUTTON_WHETHER_BOOL, BUTTON_VALUE_TO_COLOR_MAPPING } from '@/config/button'
+import { BUTTON_VALUE_TO_COLOR_MAPPING } from '@/config/button'
 import { urlPrefix as menuPrefix } from './api'
 import { urlPrefix as buttonPrefix } from '../button/api'
 import XEUtils from 'xe-utils'
@@ -223,7 +223,7 @@ export const crudOptions = (vm) => {
           disabled: true
         },
         dict: {
-          data: BUTTON_WHETHER_BOOL
+          data: vm.dictionary('button_whether_bool')
         },
         form: {
           value: false,
@@ -238,7 +238,7 @@ export const crudOptions = (vm) => {
         width: 70,
         type: 'radio',
         dict: {
-          data: BUTTON_WHETHER_BOOL
+          data: vm.dictionary('button_whether_bool')
         },
         form: {
           value: false,
@@ -396,7 +396,7 @@ export const crudOptions = (vm) => {
         width: 50,
         type: 'radio',
         dict: {
-          data: BUTTON_WHETHER_BOOL
+          data: vm.dictionary('button_whether_bool')
         },
         form: {
           value: false,
@@ -424,7 +424,7 @@ export const crudOptions = (vm) => {
         width: 75,
         type: 'radio',
         dict: {
-          data: BUTTON_WHETHER_BOOL
+          data: vm.dictionary('button_whether_bool')
         },
         form: {
           value: true,
@@ -449,7 +449,7 @@ export const crudOptions = (vm) => {
         width: 70,
         type: 'radio',
         dict: {
-          data: BUTTON_STATUS_BOOL
+          data: vm.dictionary('button_status_bool')
         },
         form: {
           value: true,

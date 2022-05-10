@@ -44,6 +44,11 @@ export default {
       required: true
     }
   },
+  watch: {
+    dictionaryRow () {
+      this.doRefresh({ from: 'load' })
+    }
+  },
   data () {
     return {
       drawer: false

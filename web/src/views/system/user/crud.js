@@ -1,5 +1,4 @@
 import { request } from '@/api/service'
-import { BUTTON_STATUS_BOOL, USER_TYPE } from '@/config/button'
 import { urlPrefix as deptPrefix } from '../dept/api'
 
 export const crudOptions = (vm) => {
@@ -227,7 +226,7 @@ export const crudOptions = (vm) => {
         type: 'radio',
         width: 70,
         dict: {
-          data: [{ label: '男', value: 1 }, { label: '女', value: 0 }]
+          data: vm.dictionary('gender')
         },
         form: {
           value: 1,
@@ -246,7 +245,7 @@ export const crudOptions = (vm) => {
         width: 140,
         type: 'select',
         dict: {
-          data: USER_TYPE
+          data: vm.dictionary('user_type')
         },
         form: {
           show: false,
@@ -264,7 +263,7 @@ export const crudOptions = (vm) => {
         width: 70,
         type: 'radio',
         dict: {
-          data: BUTTON_STATUS_BOOL
+          data: vm.dictionary('button_status_bool')
         },
         form: {
           value: true,

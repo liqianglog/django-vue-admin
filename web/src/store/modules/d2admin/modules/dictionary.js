@@ -1,6 +1,27 @@
 import { request } from '@/api/service'
 
 export const urlPrefix = '/api/init/dictionary/'
+export const BUTTON_VALUE_TO_COLOR_MAPPING = {
+  1: 'success',
+  true: 'success',
+  0: 'danger',
+  false: 'danger',
+  Search: 'warning', // 查询
+  Update: 'primary', // 编辑
+  Create: 'success', // 新增
+  Retrieve: 'info', // 单例
+  Delete: 'danger' // 删除
+}
+
+export function getButtonSettings (objectSettings) {
+  return objectSettings.map(item => {
+    return {
+      label: item.label,
+      value: item.value,
+      color: BUTTON_VALUE_TO_COLOR_MAPPING[item.value]
+    }
+  })
+}
 
 // 系统配置
 export default {
@@ -26,7 +47,6 @@ export default {
         if (key === 'all') {
           res.data.data.map(data => {
             data.children.map((children, index) => {
-              console.log(children.type)
               switch (children.type) {
                 case 1:
                   children.value = Number(children.value)
@@ -36,9 +56,8 @@ export default {
                   break
               }
             })
-            newData[data.value] = data.children
+            newData[data.value] = getButtonSettings(data.children)
           })
-          console.log(11, newData)
           state.data = newData
         } else {
           state.data = res.data.data[key]
@@ -69,7 +88,6 @@ export default {
      * @param {Boolean} key active
      */
     async get (state, key) {
-      console.log(1212, state.data[key])
       return state.data[key]
     }
   }

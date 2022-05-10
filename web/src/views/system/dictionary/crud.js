@@ -155,10 +155,9 @@ export const crudOptions = (vm) => {
       search: {
         disabled: false
       },
-
       type: 'radio',
       dict: {
-        data: vm.dictionary('status_bool')
+        data: vm.dictionary('button_status_bool')
       },
       component: {
         props: {
@@ -166,8 +165,15 @@ export const crudOptions = (vm) => {
         }
       },
       form: {
-        value: 1,
+        rules: [ // 表单校验规则
+          { required: true, message: '状态必填项' }
+        ],
+        value: true,
         component: {
+          placeholder: '请选择状态'
+        },
+        itemProps: {
+          class: { yxtInput: true }
         }
       }
     },
@@ -179,6 +185,9 @@ export const crudOptions = (vm) => {
       form: {
         value: 1,
         component: {
+        },
+        itemProps: {
+          class: { yxtInput: true }
         }
       }
     }

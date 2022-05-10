@@ -19,7 +19,7 @@ export function getButtonSettings (objectSettings) {
     }
   })
 }
-
+// v2.0.2 中已弃用，改为 vm.dictionary('button_status_bool')
 // 启用 true/ 禁用 false
 export const BUTTON_STATUS_BOOL = getButtonSettings([{ label: '启用', value: true }, { label: '禁用', value: false }])
 

@@ -1,5 +1,4 @@
 import { request } from '@/api/service'
-import { BUTTON_STATUS_BOOL } from '@/config/button'
 import { urlPrefix as deptPrefix } from './api'
 import XEUtils from 'xe-utils'
 export const crudOptions = (vm) => {
@@ -226,7 +225,7 @@ export const crudOptions = (vm) => {
       width: 90,
       type: 'radio',
       dict: {
-        data: BUTTON_STATUS_BOOL
+        data: vm.dictionary('button_status_bool')
       },
       form: {
         value: true,
