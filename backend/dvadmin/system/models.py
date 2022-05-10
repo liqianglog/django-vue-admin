@@ -19,10 +19,11 @@ class Users(AbstractUser, CoreModel):
     avatar = models.CharField(max_length=255, verbose_name="头像", null=True, blank=True, help_text="头像")
     name = models.CharField(max_length=40, verbose_name="姓名", help_text="姓名")
     GENDER_CHOICES = (
-        (0, "女"),
+        (0, "未知"),
         (1, "男"),
+        (2, "女"),
     )
-    gender = models.IntegerField(choices=GENDER_CHOICES, default=1, verbose_name="性别", null=True, blank=True,
+    gender = models.IntegerField(choices=GENDER_CHOICES, default=0, verbose_name="性别", null=True, blank=True,
                                  help_text="性别")
     USER_TYPE = (
         (0, "后台用户"),
