@@ -386,12 +386,18 @@ p.continue span:after {
     .left_grid_info h3 {
         font-size: 2em;
     }
+    .page-login--logo{
+        display:none
+    }
 }
 
 @media screen and (max-width: 991px) {
-    /*.w3_info h2 {*/
-    /*    font-size: 24px;*/
-    /*}*/
+    .w3_info h2 {
+        font-size: 24px;
+    }
+    .page-login--logo{
+        display:none
+    }
 
     h1 {
         font-size: 35px;
@@ -403,27 +409,39 @@ p.continue span:after {
     .left_grid_info h4 {
         font-size: 1em;
     }
+    .page-login--logo{
+        display:none
+    }
 
 
 }
 
 @media screen and (max-width: 800px) {
-    /*.w3_info h2 {*/
-    /*    font-size: 23px;*/
-    /*}*/
+    .w3_info h2 {
+        font-size: 23px;
+    }
+    .page-login--logo{
+        display:none
+    }
 
 }
 
 @media screen and (max-width: 767px) {
-    /*.w3_info {*/
-    /*    margin-right: auto;*/
-    /*}*/
+    .w3_info {
+        margin-right: auto;
+    }
+    .page-login--logo{
+        display:none
+    }
 }
 
 @media screen and (max-width: 736px) {
-    /*.w3_info h2 {*/
-    /*    font-size: 22px;*/
-    /*}*/
+    .w3_info h2 {
+        font-size: 22px;
+    }
+    .page-login--logo{
+        display:none
+    }
 }
 
 @media screen and (max-width: 667px) {
@@ -431,11 +449,17 @@ p.continue span:after {
     .w3l-form-info {
         margin: 20px 0 30px;
     }
+    .page-login--logo{
+        display:none
+    }
 }
 
 @media screen and (max-width: 640px) {
     h1 {
         font-size: 37px;
+    }
+    .page-login--logo{
+        display:none
     }
 }
 
@@ -446,9 +470,12 @@ p.continue span:after {
     h1 {
         font-size: 34px;
     }
-    /*.w3_info {*/
-    /*    padding:0;*/
-    /*}*/
+    .page-login--logo{
+        display:none
+    }
+    .w3_info {
+        padding:0;
+    }
 }
 
 @media screen and (max-width: 415px) {
@@ -457,6 +484,9 @@ p.continue span:after {
     }
     .left_grid_info p {
         font-size: 13px;
+    }
+    .page-login--logo{
+        display:none
     }
     .w3l-signinform{
         padding: 40px 20px;
@@ -467,6 +497,9 @@ p.continue span:after {
     .w3l-signinform{
         padding: 30px 15px;
     }
+    .page-login--logo{
+        display:none
+    }
     .social-login {
         grid-auto-flow: row;
     }
@@ -476,7 +509,9 @@ p.continue span:after {
     .left_grid_info h3 {
         font-size: 1.5em;
     }
-
+    .page-login--logo{
+        display:none
+    }
     .form-row.bottom {
         flex-direction: column;
     }
@@ -490,10 +525,12 @@ p.continue span:after {
     h1 {
         font-size: 25px;
     }
-
-    /*.w3_info h2 {*/
-    /*    font-size: 18px;*/
-    /*}*/
+    .page-login--logo{
+        display:none
+    }
+    .w3_info h2 {
+        font-size: 18px;
+    }
 
     .btn-primary {
         padding: 13px 12px;
