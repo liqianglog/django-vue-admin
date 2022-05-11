@@ -1,18 +1,28 @@
 <template>
-  <div class="w3l-signinform" :style="{background: 'url('+ (loginBackground || require('./image/bg.jpg')) + ') no-repeat center'}">
+  <div
+    class="w3l-signinform"
+    :style="{
+      background:
+        'url(' +
+        (loginBackground || require('./image/bg.jpg')) +
+        ') no-repeat center'
+    }"
+  >
     <!-- container -->
     <div class="wrapper">
       <!-- main content -->
       <div class="w3l-form-info">
         <!-- logo -->
-        <img class="page-login--logo" :src="siteLogo" width="300"/>
+        <img class="page-login--logo" :src="siteLogo" width="300" />
         <div class="w3_info">
-          <h2 style="text-align: center;">{{siteName || processTitle}}</h2>
+          <h2 style="text-align: center">{{ siteName || processTitle }}</h2>
           <el-card shadow="always" class="card">
             <el-tabs v-model="activeName">
               <el-tab-pane label="账号密码登录" name="first" stretch>
-                <span slot="label"><span style="margin: 30px;">账号密码登录</span></span>
-                <br>
+                <span slot="label"
+                  ><span style="margin: 30px">账号密码登录</span></span
+                >
+                <br />
                 <el-form
                   ref="loginForm"
                   label-position="top"
@@ -58,17 +68,22 @@
                       </template>
                     </el-input>
                   </el-form-item>
-                  <button class="btn btn-primary btn-block" @click="submit">登录</button>
+                  <button class="btn btn-primary btn-block" @click="submit">
+                    登录
+                  </button>
                 </el-form>
               </el-tab-pane>
             </el-tabs>
           </el-card>
+
           <!-- footer -->
           <div class="footer">
-            <p>Copyright &copy; {{copyright}}</p>
+            <p>Copyright &copy; {{ copyright }}</p>
             <p>
-              <a href="https://beian.miit.gov.cn" target="_blank">{{keepRecord}}</a> |
-              <a :href="helpUrl || '#'" target="_blank">帮助</a> |
+              <a href="https://beian.miit.gov.cn" target="_blank">{{
+                keepRecord
+              }}</a>
+              | <a :href="helpUrl || '#'" target="_blank">帮助</a> |
               <a :href="privacyUrl || '#'" target="_blank">隐私</a> |
               <a :href="clauseUrl || '#'" target="_blank">条款</a>
             </p>
@@ -92,23 +107,20 @@ export default {
       activeName: 'first'
     }
   },
-  created () {
-  },
-  mounted () {
-  },
+  created () {},
+  mounted () {},
   methods: {}
-
 }
 </script>
 
 <style lang="scss" scoped>
-  @import './css/style.css';
+@import './css/style.css';
 
-  .copyrights {
-    text-indent: -9999px;
-    height: 0;
-    line-height: 0;
-    font-size: 0;
-    overflow: hidden;
-  }
+.copyrights {
+  text-indent: -9999px;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  overflow: hidden;
+}
 </style>

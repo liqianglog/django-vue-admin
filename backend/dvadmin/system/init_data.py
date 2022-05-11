@@ -148,8 +148,19 @@ button_data = [
         "dept_belong_id": 1,
         "update_datetime": datetime.datetime.now(),
         "create_datetime": datetime.datetime.now(),
-        "name": "重置密码",
+        "name": "重设密码",
         "value": "ResetPassword",
+        "creator_id": 1,
+    },
+    {
+        "id": 10,
+        "description": None,
+        "modifier": "1",
+        "dept_belong_id": 1,
+        "update_datetime": datetime.datetime.now(),
+        "create_datetime": datetime.datetime.now(),
+        "name": "重置密码",
+        "value": "DefaultPassword",
         "creator_id": 1,
     },
 ]
@@ -1250,7 +1261,7 @@ menu_button_data = [
         "dept_belong_id": 1,
         "update_datetime": datetime.datetime.now(),
         "create_datetime": datetime.datetime.now(),
-        "name": "重置密码",
+        "name": "重设密码",
         "value": "ResetPassword",
         "api": "/api/system/user/reset_password/{id}/",
         "method": 2,
@@ -1259,6 +1270,20 @@ menu_button_data = [
     },
     {
         "id": 54,
+        "description": None,
+        "modifier": "1",
+        "dept_belong_id": 1,
+        "update_datetime": datetime.datetime.now(),
+        "create_datetime": datetime.datetime.now(),
+        "name": "重置密码",
+        "value": "DefaultPassword",
+        "api": "/api/system/user/reset_to_default_password/{id}/",
+        "method": 2,
+        "creator_id": 1,
+        "menu_id": 3,
+    },
+    {
+        "id": 55,
         "description": None,
         "modifier": "1",
         "dept_belong_id": "1",
@@ -1272,7 +1297,7 @@ menu_button_data = [
         "menu_id": 20,
     },
     {
-        "id": 55,
+        "id": 56,
         "description": None,
         "modifier": "1",
         "dept_belong_id": "1",
@@ -1286,7 +1311,7 @@ menu_button_data = [
         "menu_id": 20,
     },
     {
-        "id": 56,
+        "id": 57,
         "description": None,
         "modifier": "1",
         "dept_belong_id": 1,
@@ -1388,7 +1413,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": None,
         "is_value": 0,
-        "type": 0
+        "type": 0,
     },
     {
         "id": 2,
@@ -1405,7 +1430,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 1,
         "is_value": 1,
-        "type": 6
+        "type": 6,
     },
     {
         "id": 5,
@@ -1422,7 +1447,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": None,
         "is_value": 0,
-        "type": 0
+        "type": 0,
     },
     {
         "id": 6,
@@ -1439,7 +1464,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 1,
         "is_value": 1,
-        "type": 6
+        "type": 6,
     },
     {
         "id": 7,
@@ -1456,7 +1481,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": None,
         "is_value": 0,
-        "type": 0
+        "type": 0,
     },
     {
         "id": 8,
@@ -1473,7 +1498,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 7,
         "is_value": 1,
-        "type": 1
+        "type": 1,
     },
     {
         "id": 9,
@@ -1490,7 +1515,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 7,
         "is_value": 1,
-        "type": 1
+        "type": 1,
     },
     {
         "id": 10,
@@ -1507,7 +1532,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": None,
         "is_value": 0,
-        "type": 0
+        "type": 0,
     },
     {
         "id": 11,
@@ -1524,7 +1549,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 5,
         "is_value": 1,
-        "type": 6
+        "type": 6,
     },
     {
         "id": 12,
@@ -1541,7 +1566,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 5,
         "is_value": 1,
-        "type": 6
+        "type": 6,
     },
     {
         "id": 13,
@@ -1558,7 +1583,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 10,
         "is_value": 1,
-        "type": 1
+        "type": 1,
     },
     {
         "id": 14,
@@ -1575,7 +1600,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 10,
         "is_value": 1,
-        "type": 1
+        "type": 1,
     },
     {
         "id": 15,
@@ -1592,7 +1617,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": None,
         "is_value": 0,
-        "type": 0
+        "type": 0,
     },
     {
         "id": 16,
@@ -1609,7 +1634,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 15,
         "is_value": 1,
-        "type": 1
+        "type": 1,
     },
     {
         "id": 17,
@@ -1626,7 +1651,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 15,
         "is_value": 1,
-        "type": 1
+        "type": 1,
     },
     {
         "id": 18,
@@ -1643,7 +1668,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": None,
         "is_value": 0,
-        "type": 0
+        "type": 0,
     },
     {
         "id": 19,
@@ -1660,7 +1685,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 18,
         "is_value": 1,
-        "type": 1
+        "type": 1,
     },
     {
         "id": 20,
@@ -1677,7 +1702,7 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 18,
         "is_value": 1,
-        "type": 1
+        "type": 1,
     },
     {
         "id": 21,
@@ -1694,6 +1719,6 @@ dictionary_data = [
         "creator_id": 1,
         "parent_id": 18,
         "is_value": 1,
-        "type": 1
-    }
+        "type": 1,
+    },
 ]

@@ -242,8 +242,8 @@ class UserViewSet(CustomModelViewSet):
             return ErrorResponse(msg="未获取到用户")
 
     @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
-    def reset_password(self, request, *args, **kwargs):
-        """重置密码"""
+    def reset_to_default_password(self, request, *args, **kwargs):
+        """恢复默认密码"""
         instance = Users.objects.filter(id=kwargs.get("pk")).first()
         if instance:
             instance.set_password(settings.DEFAULT_PASSWORD)
@@ -252,21 +252,21 @@ class UserViewSet(CustomModelViewSet):
         else:
             return ErrorResponse(msg="未获取到用户")
 
-    # @action(methods=['PUT'], detail=True)
-    # def reset_password(self, request, pk):
-    #     """
-    #     密码重置
-    #     """
-    #     instance = Users.objects.filter(id=pk).first()
-    #     data = request.data
-    #     new_pwd = data.get('newPassword')
-    #     new_pwd2 = data.get('newPassword2')
-    #     if instance:
-    #         if new_pwd != new_pwd2:
-    #             return ErrorResponse(msg="两次密码不匹配")
-    #         else:
-    #             instance.password = make_password(new_pwd)
-    #             instance.save()
-    #             return DetailResponse(data=None, msg="修改成功")
-    #     else:
-    #         return ErrorResponse(msg="未获取到用户")
+    @action(methods=["PUT"], detail=True)
+    def reset_password(self, request, pk):
+        """
+        密码重置
+        """
+        instance = Users.objects.filter(id=pk).first()
+        data = request.data
+        new_pwd = data.get("newPassword")
+        new_pwd2 = data.get("newPassword2")
+        if instance:
+            if new_pwd != new_pwd2:
+                return ErrorResponse(msg="两次密码不匹配")
+            else:
+                instance.password = make_password(new_pwd)
+                instance.save()
+                return DetailResponse(data=None, msg="修改成功")
+        else:
+            return ErrorResponse(msg="未获取到用户")
