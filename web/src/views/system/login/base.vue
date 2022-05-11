@@ -33,8 +33,8 @@ export default {
       backgroundImage: 'url(' + this.loginBackground + ')',
       // 表单
       formLogin: {
-        username: 'superadmin',
-        password: 'admin123456',
+        username: '',
+        password: '',
         captcha: ''
       },
       // 表单校验
