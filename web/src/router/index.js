@@ -64,7 +64,9 @@ router.beforeEach(async (to, from, next) => {
         // 处理路由 得到每一级的路由设置
         store.commit('d2admin/page/init', routes)
 
-        router.addRoutes(routes)
+        // router.addRoutes(routes)
+        routes.forEach(route => router.addRoute(route))
+
         const menu = handleAsideMenu(ret)
         const aside = handleAsideMenu(ret.filter(value => value.visible === true))
         store.commit('d2admin/menu/asideSet', aside) // 设置侧边栏菜单

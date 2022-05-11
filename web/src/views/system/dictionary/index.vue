@@ -9,7 +9,7 @@
 <template>
   <d2-container :class="{ 'page-compact': crud.pageOptions.compact }">
     <!--    <template slot="header">测试页面1</template>-->
-    <d2-crud-x ref="d2Crud" v-bind="_crudProps" v-on="_crudListeners">
+    <d2-crud-x ref="d2Crud" v-bind="_crudProps" v-on="_crudListeners" @dictionaryConfigure="dictionaryConfigure">
       <div slot="header">
         <crud-search
           ref="search"
@@ -30,6 +30,15 @@
         />
       </div>
     </d2-crud-x>
+    <el-drawer
+      :visible.sync="drawer"
+      :size="700">
+        <div slot="title">
+          <span>字典列表</span>
+          <el-tag size="small" style="margin-left: 10px">{{dictionaryRow.label}}</el-tag>
+        </div>
+      <sub-dictionary style="margin-top: 80px;margin-left: 10px" :dictionaryRow="dictionaryRow"></sub-dictionary>
+    </el-drawer>
   </d2-container>
 </template>
 
@@ -37,17 +46,23 @@
 import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
+import SubDictionary from '@/views/system/dictionary/subDictionary/index'
 export default {
   name: 'dictionary',
+  components: { SubDictionary },
   mixins: [d2CrudPlus.crud],
   data () {
-    return {}
+    return {
+      drawer: false,
+      dictionaryRow: {}
+    }
   },
   methods: {
     getCrudOptions () {
       return crudOptions(this)
     },
     pageRequest (query) {
+      query.is_value = false
       return api.GetList(query)
     },
     addRequest (row) {
@@ -61,13 +76,10 @@ export default {
     delRequest (row) {
       return api.DelObj(row.id)
     },
-    // 授权
-    createPermission (scope) {
-      this.$router.push({
-        name: 'menuButton',
-        params: { id: scope.row.id },
-        query: { name: scope.row.name }
-      })
+    // 字典配置
+    dictionaryConfigure (scope) {
+      this.drawer = true
+      this.dictionaryRow = scope.row
     }
   }
 }

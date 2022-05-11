@@ -1,5 +1,4 @@
 import { request } from '@/api/service'
-import { BUTTON_STATUS_BOOL } from '@/config/button'
 import { urlPrefix as deptPrefix } from './api'
 import XEUtils from 'xe-utils'
 export const crudOptions = (vm) => {
@@ -97,15 +96,15 @@ export const crudOptions = (vm) => {
       type: 'cascader',
       dict: {
         cache: false,
-        url: deptPrefix + '?limit=999&status=1',
+        url: deptPrefix,
         isTree: true,
         value: 'id', // 数据字典中value字段的属性名
         label: 'name', // 数据字典中label字段的属性名
         children: 'children', // 数据字典中children字段的属性名
         getData: (url, dict) => { // 配置此参数会覆盖全局的getRemoteDictFunc
-          return request({ url: url }).then(ret => {
+          return request({ url: url, params: { limit: 999, status: 1 } }).then(ret => {
             const data = XEUtils.toArrayTree(ret.data.data, { parentKey: 'parent', strict: true })
-            return [{ id: '0', name: '根节点', children: data }]
+            return [{ id: null, name: '根节点', children: data }]
           })
         }
       },
@@ -226,7 +225,7 @@ export const crudOptions = (vm) => {
       width: 90,
       type: 'radio',
       dict: {
-        data: BUTTON_STATUS_BOOL
+        data: vm.dictionary('button_status_bool')
       },
       form: {
         value: true,

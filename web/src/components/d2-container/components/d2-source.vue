@@ -3,8 +3,9 @@
     v-if="show"
     class="d2-source"
     :class="{ 'd2-source--active': isActive }"
-    @click="handleClick">
-    <d2-icon name="code"/> 本页源码
+    @click="handleClick"
+  >
+    <d2-icon name="code" /> 本页源码
   </div>
 </template>
 
@@ -51,11 +52,11 @@ export default {
   $paddingLR: 15px;
   $paddingTB: 7px;
   $fontSize: 12px;
-  $rightOuter: $paddingLR / 2;
+  $rightOuter: calc($paddingLR / 2);
   opacity: 0;
   position: fixed;
   z-index: 9999;
-  right: - $borderRadius - $rightOuter;
+  right: -$borderRadius - $rightOuter;
   bottom: 20px;
   font-size: $fontSize;
   line-height: $fontSize;
@@ -63,17 +64,17 @@ export default {
   border-radius: $borderRadius;
   padding: $paddingTB $paddingLR;
   padding-right: $borderRadius + $paddingLR;
-  background-color: rgba(#000, .7);
+  background-color: rgba(#000, 0.7);
   border: 1px solid #000;
-  color: #FFF;
-  transition: all .3s;
+  color: #fff;
+  transition: all 0.3s;
   @extend %unable-select;
   &.d2-source--active {
     opacity: 1;
   }
   &:hover {
-    right: - $borderRadius;
-    background-color: rgba(#000, .9);
+    right: -$borderRadius;
+    background-color: rgba(#000, 0.9);
   }
 }
 </style>

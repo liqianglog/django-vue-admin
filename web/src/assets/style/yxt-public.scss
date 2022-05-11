@@ -69,3 +69,65 @@
 *::-webkit-scrollbar-thumb:hover {
   background-color: #bbb;
 }
+.el-drawer__header{
+  border-bottom: 1px solid #e8e8e8;
+  border-radius: 4px 4px 0 0;
+  margin-bottom: 16px;
+}
+/*设置抽屉样式*/
+.el-drawer__header span{
+  margin: 0;
+  color: rgba(0,0,0,.85);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  margin-bottom: 16px;
+}
+.el-drawer__header .el-tag{
+  background-color: #ecf5ff;
+  display: inline-block;
+  font-size: 12px;
+  color: #409eff;
+  border: 1px solid #d9ecff;
+  border-radius: 4px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  height: 24px;
+  padding: 0 8px;
+  line-height: 22px;
+}
+
+.el-drawer__close-btn{
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  display: block;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  color: rgba(0,0,0,.45);
+  font-weight: 700;
+  font-size: 16px;
+  font-style: normal;
+  line-height: 56px;
+  text-align: center;
+  text-transform: none;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  transition: color .3s;
+  text-rendering: auto;
+}
+.el-dialog__close{
+  font-weight: 700;
+  font-size: 16px;
+}
+.el-drawer__body .d2-container-full {
+  border: none!important;
+  /* border-top: none; */
+  /* border-bottom: none; */
+}
+

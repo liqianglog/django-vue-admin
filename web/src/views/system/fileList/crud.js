@@ -1,5 +1,3 @@
-import util from '@/libs/util'
-
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
@@ -92,11 +90,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: true
         },
-        width: 220,
-        valueBuilder (row, key) {
-          console.log(row, key)
-          row.url = `${util.baseURL()}media/${row.url}`
-        }
+        width: 220
       },
       {
         title: '文件MD5',
@@ -107,18 +101,7 @@ export const crudOptions = (vm) => {
         },
         form: {
           disabled: false
-        },
-        valueResolve (row, col) {
-          const value = row[col.key]
-          if (value != null && value instanceof Array) {
-            if (value.length >= 0) {
-              row[col.key] = value[0]
-            } else {
-              row[col.key] = null
-            }
-          }
         }
-
       },
       {
         title: '备注',

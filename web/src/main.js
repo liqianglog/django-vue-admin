@@ -42,6 +42,11 @@ new Vue({
   store,
   i18n,
   render: h => h(App),
+  beforeCreate () {
+    // 初始化配置
+    this.$store.dispatch('d2admin/settings/load')
+    this.$store.dispatch('d2admin/dictionary/load')
+  },
   created () {
 
     // 处理路由 得到每一级的路由设置

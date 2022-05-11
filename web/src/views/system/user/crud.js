@@ -1,7 +1,5 @@
 import { request } from '@/api/service'
-import { BUTTON_STATUS_BOOL } from '@/config/button'
 import { urlPrefix as deptPrefix } from '../dept/api'
-import util from '@/libs/util'
 
 export const crudOptions = (vm) => {
   return {
@@ -9,11 +7,13 @@ export const crudOptions = (vm) => {
       compact: true
     },
     options: {
-      height: '100%'
+      height: '100%',
+      tableType: 'vxe-table',
+      rowKey: true // 必须设置，true or false
     },
     rowHandle: {
+      width: 230,
       fixed: 'right',
-      width: 180,
       view: {
         thin: true,
         text: '',
@@ -37,18 +37,18 @@ export const crudOptions = (vm) => {
       },
       custom: [
         {
-          thin: true,
-          text: '',
-          size: 'small',
-          type: 'warning',
-          icon: 'el-icon-refresh-left',
           show () {
-            return vm.hasPermissions('ResetPwd')
+            return vm.hasPermissions('ResetPassword')
           },
-          emit: 'resetPwd'
+          disabled () {
+            return !vm.hasPermissions('ResetPassword')
+          },
+          text: '重置密码',
+          type: 'warning',
+          size: 'small',
+          emit: 'resetPassword'
         }
       ]
-
     },
     viewOptions: {
       componentType: 'form'
@@ -59,7 +59,7 @@ export const crudOptions = (vm) => {
     indexRow: { // 或者直接传true,不显示title，不居中
       title: '序号',
       align: 'center',
-      width: 70
+      width: 60
     },
     columns: [
       {
@@ -83,7 +83,6 @@ export const crudOptions = (vm) => {
       {
         title: 'ID',
         key: 'id',
-        width: 90,
         disabled: true,
         form: {
           disabled: true
@@ -95,7 +94,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 140,
+        minWidth: 100,
         type: 'input',
         form: {
           rules: [ // 表单校验规则
@@ -118,6 +117,7 @@ export const crudOptions = (vm) => {
       {
         title: '姓名',
         key: 'name',
+        minWidth: 90,
         search: {
           disabled: false
         },
@@ -166,9 +166,9 @@ export const crudOptions = (vm) => {
           },
           component: {
             span: 12,
+            pagination: true,
             props: { multiple: false },
             elProps: {
-              pagination: true,
               columns: [
                 {
                   field: 'name',
@@ -198,7 +198,7 @@ export const crudOptions = (vm) => {
         form: {
           rules: [
             { max: 20, message: '请输入正确的手机号码', trigger: 'blur' },
-            { pattern: /^1[3|4|5|7|8]\d{9}$/, message: '请输入正确的手机号码' }
+            { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码' }
           ],
           itemProps: {
             class: { yxtInput: true }
@@ -210,7 +210,7 @@ export const crudOptions = (vm) => {
       }, {
         title: '邮箱',
         key: 'email',
-        minWidth: 160,
+        minWidth: 180,
         form: {
           rules: [
             { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
@@ -226,7 +226,7 @@ export const crudOptions = (vm) => {
         type: 'radio',
         width: 70,
         dict: {
-          data: [{ label: '男', value: 1 }, { label: '女', value: 0 }]
+          data: vm.dictionary('gender')
         },
         form: {
           value: 1,
@@ -235,8 +235,26 @@ export const crudOptions = (vm) => {
           }
         },
         component: { props: { color: 'auto' } } // 自动染色
-      },
-      {
+      }, {
+        title: '用户类型',
+        key: 'user_type',
+        search: {
+          value: 0,
+          disabled: false
+        },
+        width: 140,
+        type: 'select',
+        dict: {
+          data: vm.dictionary('user_type')
+        },
+        form: {
+          show: false,
+          value: 0,
+          component: {
+            span: 12
+          }
+        }
+      }, {
         title: '状态',
         key: 'is_active',
         search: {
@@ -245,7 +263,7 @@ export const crudOptions = (vm) => {
         width: 70,
         type: 'radio',
         dict: {
-          data: BUTTON_STATUS_BOOL
+          data: vm.dictionary('button_status_bool')
         },
         form: {
           value: true,
@@ -257,41 +275,21 @@ export const crudOptions = (vm) => {
       {
         title: '头像',
         key: 'avatar',
-        type: 'avatar-uploader',
-        width: 100,
+        type: 'avatar-cropper',
+        width: 60,
         align: 'left',
         form: {
           component: {
             props: {
               elProps: { // 与el-uploader 配置一致
-                multiple: true,
-                limit: 5 // 限制5个文件
+                multiple: false,
+                limit: 1 // 限制5个文件
               },
-              sizeLimit: 100 * 1024 // 不能超过限制
+              sizeLimit: 500 * 1024 // 不能超过限制
             },
             span: 24
           },
-          helper: '限制文件大小不能超过50k'
-        },
-        valueResolve (row, col) {
-          const value = row[col.key]
-          if (value != null && value instanceof Array) {
-            if (value.length >= 0) {
-              row[col.key] = value[0]
-            } else {
-              row[col.key] = null
-            }
-          }
-        },
-        component: {
-          props: {
-            buildUrl (value, item) {
-              if (value && value.indexOf('http') !== 0) {
-                return util.baseURL() + value
-              }
-              return value
-            }
-          }
+          helper: '限制文件大小不能超过500k'
         }
       },
       {
@@ -325,9 +323,9 @@ export const crudOptions = (vm) => {
           },
           component: {
             span: 12,
+            pagination: true,
             props: { multiple: true },
             elProps: {
-              pagination: true,
               columns: [
                 {
                   field: 'name',
@@ -346,6 +344,9 @@ export const crudOptions = (vm) => {
           }
         }
       }
-    ].concat(vm.commonEndColumns({ update_datetime: { showForm: false, showTable: false }, create_datetime: { showForm: false, showTable: true } }))
+    ].concat(vm.commonEndColumns({
+      create_datetime: { showTable: false },
+      update_datetime: { showTable: false }
+    }))
   }
 }

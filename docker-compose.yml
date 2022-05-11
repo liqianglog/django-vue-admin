@@ -1,7 +1,7 @@
 version: "3"
 services:
-  DVAdmin-web:
-    container_name: DVAdmin-web
+  dvadmin-web:
+    container_name: dvadmin-web
     ports:
       - "8080:8080"
     build:
@@ -15,20 +15,20 @@ services:
       - "8080"
     networks:
       network:
-        ipv4_address: 177.7.0.11
+        ipv4_address: 177.8.0.11
 
-  DVAdmin-django:
+  dvadmin-django:
     build:
       context: .
       dockerfile: ./docker_env/django/Dockerfile
-    container_name: DVAdmin-django
+    container_name: dvadmin-django
     working_dir: /backend
 # 打开mysql 时，打开此选项
 #    depends_on:
-#      - DVAdmin-mysql
+#      - dvadmin-mysql
     environment:
       PYTHONUNBUFFERED: 1
-      DATABASE_HOST: DVAdmin-mysql
+      DATABASE_HOST: dvadmin-mysql
       TZ: Asia/Shanghai
     volumes:
       - ./backend:/backend
@@ -40,11 +40,11 @@ services:
     restart: always
     networks:
       network:
-        ipv4_address: 177.7.0.12
+        ipv4_address: 177.8.0.12
 
-#  DVAdmin-mysql:
+#  dvadmin-mysql:
 #    image: mysql:5.7
-#    container_name: DVAdmin-mysql
+#    container_name: dvadmin-mysql
 #    #使用该参数，container内的root拥有真正的root权限，否则，container内的root只是外部的一个普通用户权限
 #    #设置为true，不然数据卷可能挂载不了，启动不起
 ##    privileged: true
@@ -66,22 +66,22 @@ services:
 #      - "./docker_env/mysql/logs:/logs"
 #    networks:
 #      network:
-#        ipv4_address: 177.7.0.13
+#        ipv4_address: 177.8.0.13
 
 
 # 如果使用celery 插件，请自行打开此注释
-#  DVAdmin-celery:
+#  dvadmin-celery:
 #    build:
 #      context: .
 #      dockerfile: ./docker_env/celery/Dockerfile
 #    # image: django:2.2
-#    container_name: DVAdmin-celery
+#    container_name: dvadmin-celery
 #    working_dir: /backend
 #    depends_on:
-#      - DVAdmin-mysql
+#      - dvadmin-mysql
 #    environment:
 #      PYTHONUNBUFFERED: 1
-#      DATABASE_HOST: DVAdmin-mysql
+#      DATABASE_HOST: dvadmin-mysql
 #      TZ: Asia/Shanghai
 #    volumes:
 #      - ./backend:/backend
@@ -89,12 +89,12 @@ services:
 #    restart: always
 #    networks:
 #      network:
-#        ipv4_address: 177.7.0.14
+#        ipv4_address: 177.8.0.14
 
 networks:
   network:
     ipam:
       driver: default
       config:
-        - subnet: '177.7.0.0/16'
+        - subnet: '177.8.0.0/16'
 

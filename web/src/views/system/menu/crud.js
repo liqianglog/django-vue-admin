@@ -1,5 +1,5 @@
 import { request } from '@/api/service'
-import { BUTTON_STATUS_BOOL, BUTTON_WHETHER_BOOL, BUTTON_VALUE_TO_COLOR_MAPPING } from '@/config/button'
+import { BUTTON_VALUE_TO_COLOR_MAPPING } from '@/config/button'
 import { urlPrefix as menuPrefix } from './api'
 import { urlPrefix as buttonPrefix } from '../button/api'
 import XEUtils from 'xe-utils'
@@ -27,7 +27,8 @@ export const crudOptions = (vm) => {
     options: {
       rowId: 'id',
       height: '100%', // 表格高度100%, 使用toolbar必须设置
-      highlightCurrentRow: false
+      highlightCurrentRow: false,
+      defaultExpandAll: true
     },
     rowHandle: {
       view: {
@@ -129,14 +130,14 @@ export const crudOptions = (vm) => {
         },
         type: 'cascader',
         dict: {
-          url: menuPrefix + '?limit=999&status=1&is_catalog=1',
+          url: menuPrefix,
           cache: false,
           isTree: true,
           value: 'id', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
           children: 'children', // 数据字典中children字段的属性名
           getData: (url, dict, { form, component }) => { // 配置此参数会覆盖全局的getRemoteDictFunc
-            return request({ url: url }).then(ret => {
+            return request({ url: url, params: { limit: 999, status: 1, is_catalog: 1 } }).then(ret => {
               const responseData = ret.data.data
               const result = XEUtils.toArrayTree(responseData, { parentKey: 'parent', strict: true })
               return [{ id: null, name: '根节点', children: result }]
@@ -222,7 +223,7 @@ export const crudOptions = (vm) => {
           disabled: true
         },
         dict: {
-          data: BUTTON_WHETHER_BOOL
+          data: vm.dictionary('button_whether_bool')
         },
         form: {
           value: false,
@@ -237,7 +238,7 @@ export const crudOptions = (vm) => {
         width: 70,
         type: 'radio',
         dict: {
-          data: BUTTON_WHETHER_BOOL
+          data: vm.dictionary('button_whether_bool')
         },
         form: {
           value: false,
@@ -395,7 +396,7 @@ export const crudOptions = (vm) => {
         width: 50,
         type: 'radio',
         dict: {
-          data: BUTTON_WHETHER_BOOL
+          data: vm.dictionary('button_whether_bool')
         },
         form: {
           value: false,
@@ -423,7 +424,7 @@ export const crudOptions = (vm) => {
         width: 75,
         type: 'radio',
         dict: {
-          data: BUTTON_WHETHER_BOOL
+          data: vm.dictionary('button_whether_bool')
         },
         form: {
           value: true,
@@ -448,7 +449,7 @@ export const crudOptions = (vm) => {
         width: 70,
         type: 'radio',
         dict: {
-          data: BUTTON_STATUS_BOOL
+          data: vm.dictionary('button_status_bool')
         },
         form: {
           value: true,
@@ -457,6 +458,8 @@ export const crudOptions = (vm) => {
           }
         }
       }
-    ].concat(vm.commonEndColumns({ update_datetime: { showTable: false } }))
+    ].concat(vm.commonEndColumns({
+      update_datetime: { showTable: false }
+    }))
   }
 }

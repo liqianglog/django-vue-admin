@@ -19,10 +19,11 @@ class Users(AbstractUser, CoreModel):
     avatar = models.CharField(max_length=255, verbose_name="头像", null=True, blank=True, help_text="头像")
     name = models.CharField(max_length=40, verbose_name="姓名", help_text="姓名")
     GENDER_CHOICES = (
-        (0, "女"),
+        (0, "未知"),
         (1, "男"),
+        (2, "女"),
     )
-    gender = models.IntegerField(choices=GENDER_CHOICES, default=1, verbose_name="性别", null=True, blank=True,
+    gender = models.IntegerField(choices=GENDER_CHOICES, default=0, verbose_name="性别", null=True, blank=True,
                                  help_text="性别")
     USER_TYPE = (
         (0, "后台用户"),
@@ -166,13 +167,23 @@ class MenuButton(CoreModel):
 
 
 class Dictionary(CoreModel):
-    code = models.CharField(max_length=100, blank=True, null=True, verbose_name="编码", help_text="编码")
-    label = models.CharField(max_length=100, blank=True, null=True, verbose_name="显示名称", help_text="显示名称")
-    value = models.CharField(max_length=100, blank=True, null=True, verbose_name="实际值", help_text="实际值")
+    TYPE_LIST = (
+        (0, 'text'),
+        (1, 'number'),
+        (2, 'date'),
+        (3, 'datetime'),
+        (4, 'time'),
+        (5, 'files'),
+        (6, 'boolean'),
+        (7, 'images'),
+    )
+    label = models.CharField(max_length=100, blank=True, null=True, verbose_name="字典名称", help_text="字典名称")
+    value = models.CharField(max_length=200, blank=True, null=True, verbose_name="字典编号", help_text="字典编号/实际值")
     parent = models.ForeignKey(to='self', related_name='sublist', db_constraint=False, on_delete=models.PROTECT,
-                               blank=True, null=True,
-                               verbose_name="父级", help_text="父级")
-    status = models.BooleanField(default=True, blank=True, verbose_name="状态", help_text="状态")
+                               blank=True, null=True, verbose_name="父级", help_text="父级")
+    type = models.IntegerField(choices=TYPE_LIST, default=0, verbose_name="数据值类型", help_text="数据值类型")
+    is_value = models.BooleanField(default=False, verbose_name="是否为value值", help_text="是否为value值,用来做具体值存放")
+    status = models.BooleanField(default=True, verbose_name="状态", help_text="状态")
     sort = models.IntegerField(default=1, verbose_name="显示排序", null=True, blank=True, help_text="显示排序")
     remark = models.CharField(max_length=2000, blank=True, null=True, verbose_name="备注", help_text="备注")
 

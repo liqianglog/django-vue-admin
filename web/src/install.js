@@ -15,7 +15,9 @@ import {
 import { request } from '@/api/service'
 import util from '@/libs/util'
 import XEUtils from 'xe-utils'
-import { urlPrefix as deptPrefix } from '@/views/system/dept/'
+import store from '@/store/index'
+import { urlPrefix as deptPrefix } from '@/views/system/dept/api'
+import types from '@/config/d2p-extends/types'
 const uploadUrl = util.baseURL() + 'api/system/file/'
 
 /**
@@ -163,24 +165,29 @@ Vue.use(D2pUploader, {
     action: uploadUrl,
     name: 'file',
     data: {}, // 上传附加参数
-    headers: {
-      Authorization: 'JWT ' + util.cookies.get('token')
+    headers () {
+      return {
+        Authorization: 'JWT ' + util.cookies.get('token')
+      }
     },
     type: 'form',
     successHandle (ret, option) {
       if (ret.data === null || ret.data === '') {
         throw new Error('上传失败')
       }
-      return { url: ret.data.data.url, key: option.data.key }
+      return { url: util.baseURL() + ret.data.url, key: option.data.key }
     },
     withCredentials: false // 是否带cookie
   }
 })
-
+d2CrudPlus.util.columnResolve.addTypes(types)
 // 修改官方字段类型
 const selectType = d2CrudPlus.util.columnResolve.getType('select')
 selectType.component.props.color = 'auto' // 修改官方的字段类型，设置为支持自动染色
-
+// 获取字典配置
+Vue.prototype.dictionary = function (name) {
+  return store.state.d2admin.dictionary.data[name]
+}
 // 默认Columns 结尾 showForm：显示在form中，showTable：显示在table中
 Vue.prototype.commonEndColumns = function (param = {}) {
   /**
@@ -270,7 +277,7 @@ Vue.prototype.commonEndColumns = function (param = {}) {
       type: 'table-selector',
       dict: {
         cache: true,
-        url: deptPrefix + '?limit=999&status=1',
+        url: deptPrefix,
         isTree: true,
         value: 'id', // 数据字典中value字段的属性名
         label: 'name', // 数据字典中label字段的属性名
@@ -280,7 +287,8 @@ Vue.prototype.commonEndColumns = function (param = {}) {
           component
         }) => {
           return request({
-            url: url
+            url: url,
+            params: { limit: 999, status: 1 }
           }).then(ret => {
             return ret.data.data
           })
