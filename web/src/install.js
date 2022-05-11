@@ -188,6 +188,19 @@ selectType.component.props.color = 'auto' // 修改官方的字段类型，设�
 Vue.prototype.dictionary = function (name) {
   return store.state.d2admin.dictionary.data[name]
 }
+// 获取字典label值
+Vue.prototype.getDictionaryLabel = function (name, value) {
+  const data = store.state.d2admin.dictionary.data[name]
+  if (data && data instanceof Array) {
+    for (var i = 0, len = data.length; i < len; i++) {
+      if (data[i].value === value) {
+        return data[i].label
+      }
+    }
+    return ''
+  }
+  return store.state.d2admin.dictionary.data[name]
+}
 // 默认Columns 结尾 showForm：显示在form中，showTable：显示在table中
 Vue.prototype.commonEndColumns = function (param = {}) {
   /**
