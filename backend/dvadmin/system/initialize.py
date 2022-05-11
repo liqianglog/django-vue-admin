@@ -87,6 +87,7 @@ class Initialize(CoreInitialize):
         self.init_menu_button()
         self.init_role()
         self.init_users()
+        self.init_dictionary()
 
 
 # 项目init 初始化，默认会执行 main 方法进行初始化
