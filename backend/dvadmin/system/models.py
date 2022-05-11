@@ -182,6 +182,7 @@ class Dictionary(CoreModel):
     parent = models.ForeignKey(to='self', related_name='sublist', db_constraint=False, on_delete=models.PROTECT,
                                blank=True, null=True, verbose_name="父级", help_text="父级")
     type = models.IntegerField(choices=TYPE_LIST, default=0, verbose_name="数据值类型", help_text="数据值类型")
+    color = models.CharField(max_length=20, blank=True, null=True, verbose_name="颜色", help_text="颜色")
     is_value = models.BooleanField(default=False, verbose_name="是否为value值", help_text="是否为value值,用来做具体值存放")
     status = models.BooleanField(default=True, verbose_name="状态", help_text="状态")
     sort = models.IntegerField(default=1, verbose_name="显示排序", null=True, blank=True, help_text="显示排序")

@@ -18,7 +18,7 @@ export function getButtonSettings (objectSettings) {
     return {
       label: item.label,
       value: item.value,
-      color: BUTTON_VALUE_TO_COLOR_MAPPING[item.value]
+      color: item.color || BUTTON_VALUE_TO_COLOR_MAPPING[item.value]
     }
   })
 }

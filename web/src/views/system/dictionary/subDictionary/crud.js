@@ -223,9 +223,7 @@ export const crudOptions = (vm) => {
             class: { yxtInput: true }
           }
         }
-      },
-
-      {
+      }, {
         title: '状态',
         key: 'status',
         width: 80,
@@ -260,6 +258,33 @@ export const crudOptions = (vm) => {
           rules: [ // 表单校验规则
             { required: true, message: '排序必填项' }
           ],
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        }
+      }, {
+        title: '标签颜色',
+        key: 'color',
+        width: 90,
+        search: {
+          disabled: true
+        },
+        type: 'select',
+        dict: {
+          data: [
+            { label: 'success', value: 'success', color: 'success' },
+            { label: 'primary', value: 'primary', color: 'primary' },
+            { label: 'info', value: 'info', color: 'info' },
+            { label: 'danger', value: 'danger', color: 'danger' },
+            { label: 'warning', value: 'warning', color: 'warning' }
+          ]
+        },
+        form: {
+          component: {
+            props: {
+              clearable: true
+            }
+          },
           itemProps: {
             class: { yxtInput: true }
           }
