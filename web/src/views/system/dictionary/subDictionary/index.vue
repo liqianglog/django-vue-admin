@@ -21,12 +21,6 @@
         />
       </div>
     </d2-crud-x>
-    <el-drawer
-      title="我是标题"
-      :visible.sync="drawer"
-      size="40%">
-      <span>我来啦!</span>
-    </el-drawer>
   </d2-container>
 </template>
 
@@ -51,7 +45,6 @@ export default {
   },
   data () {
     return {
-      drawer: false
     }
   },
   methods: {
@@ -77,10 +70,6 @@ export default {
     },
     delRequest (row) {
       return api.DelObj(row.id)
-    },
-    // 字典配置
-    dictionaryConfigure (scope) {
-      this.drawer = true
     }
   }
 }

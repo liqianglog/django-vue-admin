@@ -115,7 +115,7 @@ export const crudOptions = (vm) => {
         type: 'input',
         form: {
           component: {
-            placeholder: '请输入操作系统'
+            placeholder: '请输入运营商'
           }
         }
       }, {
@@ -126,7 +126,7 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true,
           component: {
-            placeholder: '请输入州'
+            placeholder: '请输入大州'
           }
         },
         component: { props: { color: 'auto' } } // 自动染色
@@ -265,7 +265,7 @@ export const crudOptions = (vm) => {
         type: 'input',
         form: {
           component: {
-            placeholder: '请输入操作系统'
+            placeholder: '请输入浏览器名'
           }
         }
       }, {
@@ -276,7 +276,7 @@ export const crudOptions = (vm) => {
         type: 'input',
         form: {
           component: {
-            placeholder: '请输入操作系统'
+            placeholder: '请输入agent信息'
           }
         }
       }, {
