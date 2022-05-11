@@ -5,6 +5,7 @@
       v-bind="_crudProps"
       v-on="_crudListeners"
       @resetPassword="resetPassword"
+      @defaultPassword="defaultPassword"
     >
       <div slot="header">
         <crud-search
@@ -131,11 +132,11 @@ export default {
     delRequest (row) {
       return api.DelObj(row.id)
     },
-    // resetPassword (scope) {
-    //   api.ResetPwd(scope.row).then((res) => {
-    //     this.$message.success('密码重置成功')
-    //   })
-    // }
+    defaultPassword (scope) {
+      api.ResetPwd2Default(scope.row).then((res) => {
+        this.$message.success('密码重置成功')
+      })
+    },
     // 重置密码弹框
     resetPassword ({ row }) {
       this.dialogFormVisible = true

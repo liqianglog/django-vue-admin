@@ -12,7 +12,7 @@ export const crudOptions = (vm) => {
       rowKey: true // 必须设置，true or false
     },
     rowHandle: {
-      width: 230,
+      width: 270,
       fixed: 'right',
       view: {
         thin: true,
@@ -37,16 +37,27 @@ export const crudOptions = (vm) => {
       },
       custom: [
         {
+          thin: true,
+          text: '',
+          size: 'small',
+          type: 'warning',
+          icon: 'el-icon-refresh-left',
           show () {
             return vm.hasPermissions('ResetPassword')
           },
+          emit: 'resetPassword'
+        },
+        {
+          show () {
+            return vm.hasPermissions('DefaultPassword')
+          },
           disabled () {
-            return !vm.hasPermissions('ResetPassword')
+            return !vm.hasPermissions('DefaultPassword')
           },
           text: '重置密码',
           type: 'warning',
           size: 'small',
-          emit: 'resetPassword'
+          emit: 'defaultPassword'
         }
       ]
     },

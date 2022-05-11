@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-
-"""
-@author: 猿小天
-@contact: QQ:1638245306
-@Created on: 2021/6/1 001 23:05
-@Remark: 系统管理的路由文件
-"""
 from django.urls import path
 from rest_framework import routers
 
@@ -42,6 +34,7 @@ urlpatterns = [
     path('menu/web_router/', MenuViewSet.as_view({'get': 'web_router'})),
     path('user/user_info/', UserViewSet.as_view({'get': 'user_info', 'put': 'update_user_info'})),
     path('user/change_password/<int:pk>/', UserViewSet.as_view({'put': 'change_password'})),
+    path('user/reset_to_default_password/<int:pk>/', UserViewSet.as_view({'put': 'reset_to_default_password'})),
     path('user/reset_password/<int:pk>/', UserViewSet.as_view({'put': 'reset_password'})),
     path('user/export/', UserViewSet.as_view({'post': 'export_data', })),
     path('user/import/', UserViewSet.as_view({'get': 'import_data', 'post': 'import_data'})),

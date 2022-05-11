@@ -55,3 +55,11 @@ export function ResetPwd (obj) {
     data: obj
   })
 }
+
+export function ResetPwd2Default (obj) {
+  return request({
+    url: urlPrefix + 'reset_to_default_password/' + obj.id + '/',
+    method: 'put',
+    data: obj
+  })
+}

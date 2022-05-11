@@ -241,16 +241,16 @@ class UserViewSet(CustomModelViewSet):
         else:
             return ErrorResponse(msg="未获取到用户")
 
-    # @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
-    # def reset_password(self, request, *args, **kwargs):
-    #     """重置密码"""
-    #     instance = Users.objects.filter(id=kwargs.get("pk")).first()
-    #     if instance:
-    #         instance.set_password(settings.DEFAULT_PASSWORD)
-    #         instance.save()
-    #         return DetailResponse(data=None, msg="密码重置成功")
-    #     else:
-    #         return ErrorResponse(msg="未获取到用户")
+    @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
+    def reset_to_default_password(self, request, *args, **kwargs):
+        """恢复默认密码"""
+        instance = Users.objects.filter(id=kwargs.get("pk")).first()
+        if instance:
+            instance.set_password(settings.DEFAULT_PASSWORD)
+            instance.save()
+            return DetailResponse(data=None, msg="密码重置成功")
+        else:
+            return ErrorResponse(msg="未获取到用户")
 
     @action(methods=["PUT"], detail=True)
     def reset_password(self, request, pk):

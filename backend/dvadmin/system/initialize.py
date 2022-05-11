@@ -15,6 +15,7 @@ from dvadmin.system.models import (
     MenuButton,
     Role,
     Users,
+    Dictionary,
 )
 
 from .init_data import (
@@ -78,7 +79,7 @@ class Initialize(CoreInitialize):
         初始化字典表
         """
         data = dictionary_data
-        self.save(Users, data, "字典表", no_reset=False)
+        self.save(Dictionary, data, "字典表", no_reset=False)
 
     def run(self):
         self.init_dept()
@@ -87,6 +88,7 @@ class Initialize(CoreInitialize):
         self.init_menu_button()
         self.init_role()
         self.init_users()
+        self.init_dictionary()
 
 
 # 项目init 初始化，默认会执行 main 方法进行初始化

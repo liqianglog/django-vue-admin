@@ -1,7 +1,5 @@
 <template>
-  <div class="page-login">
-
-  </div>
+  <div class="page-login"></div>
 </template>
 
 <script>
@@ -14,8 +12,10 @@ export default {
   computed: {
     ...mapState('d2admin', {
       siteName: (state) => state.settings.siteName, // 网站名称
-      siteLogo: (state) => state.settings.siteLogo || require('./image/dvadmin.png'), // 网站logo地址
-      loginBackground: (state) => state.settings.loginBackground || require('./image/bg.jpg'), // 登录页背景图
+      siteLogo: (state) =>
+        state.settings.siteLogo || require('./image/dvadmin.png'), // 网站logo地址
+      loginBackground: (state) =>
+        state.settings.loginBackground || require('./image/bg.jpg'), // 登录页背景图
       copyright: (state) => state.settings.copyright, // 版权
       keepRecord: (state) => state.settings.keepRecord, // 备案
       helpUrl: (state) => state.settings.helpUrl, // 帮助
@@ -33,8 +33,8 @@ export default {
       backgroundImage: 'url(' + this.loginBackground + ')',
       // 表单
       formLogin: {
-        username: '',
-        password: '',
+        username: 'superadmin',
+        password: 'admin123456',
         captcha: ''
       },
       // 表单校验
@@ -65,15 +65,13 @@ export default {
       image_base: null
     }
   },
-  mounted () {
-  },
-  beforeDestroy () {
-  },
+  mounted () {},
+  beforeDestroy () {},
   methods: {
     ...mapActions('d2admin/account', ['login']),
     /**
-       * 获取验证码
-       */
+     * 获取验证码
+     */
     getCaptcha () {
       api.getCaptcha().then((ret) => {
         this.formLogin.captcha = null
@@ -82,8 +80,8 @@ export default {
       })
     },
     /**
-       * @description 提交表单
-       */
+     * @description 提交表单
+     */
     // 提交登录信息
     submit () {
       const that = this
@@ -120,107 +118,107 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  // ----
-  .page-login {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-image: url(./image/bg.jpg);
-    background-position: center 0;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    -webkit-background-size: cover; /* 兼容Webkit内核浏览器如Chrome和Safari */
-    -o-background-size: cover; /* 兼容Opera */
-    zoom: 1;
-  }
+// ----
+.page-login {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-image: url(./image/bg.jpg);
+  background-position: center 0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  -webkit-background-size: cover; /* 兼容Webkit内核浏览器如Chrome和Safari */
+  -o-background-size: cover; /* 兼容Opera */
+  zoom: 1;
+}
 
-  ::v-deep .el-card__body {
-    height: 100%;
-    padding: 0;
-  }
+::v-deep .el-card__body {
+  height: 100%;
+  padding: 0;
+}
 
-  .card {
-    height: 100%;
-    width: 100%;
-    border-radius: 30px;
-    padding: 0;
-    margin-top: 12%;
-  }
+.card {
+  height: 100%;
+  width: 100%;
+  border-radius: 30px;
+  padding: 0;
+  margin-top: 12%;
+}
 
-  .right-card {
-    float: right;
+.right-card {
+  float: right;
+  text-align: center;
+  width: 50%;
+  height: 100%;
+}
+
+.right-card h1 {
+  color: #098dee;
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+
+.button-login {
+  width: 100%;
+  margin-top: 30px;
+}
+
+::v-deep .el-input-group__append {
+  padding: 0;
+}
+
+// footer
+.page-login--content-footer {
+  margin-top: 10%;
+  padding: 1em 0;
+
+  .page-login--content-footer-locales {
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    line-height: 12px;
     text-align: center;
-    width: 50%;
-    height: 100%;
-  }
+    color: $color-text-normal;
 
-  .right-card h1 {
-    color: #098dee;
-    margin-bottom: 40px;
-    margin-top: 40px;
-  }
-
-  .button-login {
-    width: 100%;
-    margin-top: 30px;
-  }
-
-  ::v-deep .el-input-group__append {
-    padding: 0;
-  }
-
-  // footer
-  .page-login--content-footer {
-    margin-top: 10%;
-    padding: 1em 0;
-
-    .page-login--content-footer-locales {
-      padding: 0px;
-      margin: 0px;
-      margin-bottom: 15px;
-      font-size: 12px;
-      line-height: 12px;
-      text-align: center;
+    a {
       color: $color-text-normal;
+      margin: 0 0.5em;
 
-      a {
-        color: $color-text-normal;
-        margin: 0 0.5em;
-
-        &:hover {
-          color: $color-text-main;
-        }
-      }
-    }
-
-    .page-login--content-footer-copyright {
-      padding: 0px;
-      margin: 0px;
-      margin-bottom: 10px;
-      font-size: 12px;
-      line-height: 12px;
-      text-align: center;
-      color: $color-text-normal;
-
-      a {
-        color: $color-text-normal;
-      }
-    }
-
-    .page-login--content-footer-options {
-      padding: 0px;
-      margin: 0px;
-      font-size: 12px;
-      line-height: 12px;
-      text-align: center;
-
-      a {
-        color: $color-text-normal;
-        margin: 0 1em;
+      &:hover {
+        color: $color-text-main;
       }
     }
   }
+
+  .page-login--content-footer-copyright {
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: center;
+    color: $color-text-normal;
+
+    a {
+      color: $color-text-normal;
+    }
+  }
+
+  .page-login--content-footer-options {
+    padding: 0px;
+    margin: 0px;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: center;
+
+    a {
+      color: $color-text-normal;
+      margin: 0 1em;
+    }
+  }
+}
 </style>
