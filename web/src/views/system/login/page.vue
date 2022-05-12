@@ -49,7 +49,11 @@
                     >
                     </el-input>
                   </el-form-item>
-                  <el-form-item prop="captcha">
+                  <el-form-item
+                    prop="captcha"
+                    v-if="captchaState"
+                    :rules="{required: true,message: '请输入验证码',trigger: 'blur'}"
+                  >
                     <el-input
                       type="text"
                       v-model="formLogin.captcha"
@@ -75,9 +79,27 @@
               </el-tab-pane>
             </el-tabs>
           </el-card>
-
+          <el-button
+            class="page-login--quick"
+            size="default"
+            type="success"
+            @click="selectUsersDialogVisible = true"
+            v-if="$env === 'development'"
+          >
+            快速选择用户登录（限dev环境）
+          </el-button>
           <!-- footer -->
           <div class="footer">
+            <p class="page-login--content-footer-locales">
+              <a
+                v-for="language in $languages"
+                :key="language.value"
+                @click="onChangeLocale(language.value)"
+                style="cursor:pointer;"
+              >
+                {{ language.label }}
+              </a>
+            </p>
             <p>Copyright &copy; {{ copyright }}</p>
             <p>
               <a href="https://beian.miit.gov.cn" target="_blank">{{
@@ -94,6 +116,16 @@
       <!-- //main content -->
     </div>
     <!-- //container -->
+    <el-dialog title="快速选择用户" :visible.sync="selectUsersDialogVisible" width="400px" append-to-body>
+      <el-row :gutter="10" style="margin: -20px 0px -10px 0px">
+        <el-col v-for="(user, index) in users" :key="index" :span="8">
+          <div class="page-login--quick-user" @click="handleUserBtnClick(user)">
+            <d2-icon name="user-circle-o" />
+            <span>{{ user.name }}</span>
+          </div>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -122,5 +154,32 @@ export default {
   line-height: 0;
   font-size: 0;
   overflow: hidden;
+}
+// 快速选择用户面板
+.page-login--quick{
+  margin-top: 20px;
+}
+.page-login--quick-user {
+  @extend %flex-center-col;
+  padding: 10px 0px;
+  border-radius: 4px;
+  &:hover {
+    background-color: $color-bg;
+    i {
+      color: $color-text-normal;
+    }
+    span {
+      color: $color-text-normal;
+    }
+  }
+  i {
+    font-size: 36px;
+    color: $color-text-sub;
+  }
+  span {
+    font-size: 12px;
+    margin-top: 10px;
+    color: $color-text-sub;
+  }
 }
 </style>

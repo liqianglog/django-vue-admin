@@ -12,6 +12,7 @@ from django_filters.rest_framework import BooleanFilter
 from rest_framework import serializers
 from rest_framework.views import APIView
 
+from application import settings
 from dvadmin.system.models import SystemConfig
 from dvadmin.utils.json_response import DetailResponse, SuccessResponse, ErrorResponse
 from dvadmin.utils.models import get_all_models_objects
@@ -215,5 +216,6 @@ class InitSettingsViewSet(APIView):
             "help_url": "https://django-vue-admin.com",  # 帮助
             "privacy_url": "#",  # 隐私
             "clause_url": "#",  # 条款
+            "captcha_state": settings.CAPTCHA_STATE,  # 验证码
         }
         return DetailResponse(data=data)

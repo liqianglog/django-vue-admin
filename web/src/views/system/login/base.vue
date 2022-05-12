@@ -20,7 +20,8 @@ export default {
       keepRecord: (state) => state.settings.keepRecord, // 备案
       helpUrl: (state) => state.settings.helpUrl, // 帮助
       privacyUrl: (state) => state.settings.privacyUrl, // 隐私
-      clauseUrl: (state) => state.settings.clauseUrl // 条款
+      clauseUrl: (state) => state.settings.clauseUrl, // 条款
+      captchaState: (state) => state.settings.captchaState || true// 验证码
     })
   },
   beforeCreate () {
@@ -52,17 +53,24 @@ export default {
             message: '请输入密码',
             trigger: 'blur'
           }
-        ],
-        captcha: [
-          {
-            required: true,
-            message: '请输入验证码',
-            trigger: 'blur'
-          }
         ]
       },
       captchaKey: null,
-      image_base: null
+      image_base: null,
+      // 快速登录，用于dev开发环境
+      selectUsersDialogVisible: false,
+      users: [
+        {
+          name: '超管',
+          username: 'superadmin',
+          password: 'admin123456'
+        },
+        {
+          name: '管理员',
+          username: 'admin',
+          password: 'admin123456'
+        }
+      ]
     }
   },
   mounted () {},
@@ -73,11 +81,13 @@ export default {
      * 获取验证码
      */
     getCaptcha () {
-      api.getCaptcha().then((ret) => {
-        this.formLogin.captcha = null
-        this.captchaKey = ret.data.key
-        this.image_base = ret.data.image_base
-      })
+      if (this.captchaState) {
+        api.getCaptcha().then((ret) => {
+          this.formLogin.captcha = null
+          this.captchaKey = ret.data.key
+          this.image_base = ret.data.image_base
+        })
+      }
     },
     /**
      * @description 提交表单
@@ -108,6 +118,16 @@ export default {
           this.$message.error('表单校验失败，请检查')
         }
       })
+    },
+    // 快速登录
+    handleUserBtnClick (user) {
+      this.formLogin.username = user.username
+      this.formLogin.password = user.password
+      // this.submit()
+      this.selectUsersDialogVisible = false
+      if (!this.captchaState) {
+        this.submit()
+      }
     }
   },
   created () {
