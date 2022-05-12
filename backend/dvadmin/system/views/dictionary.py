@@ -43,7 +43,8 @@ class DictionaryTreeSerializer(CustomModelSerializer):
     children = serializers.SerializerMethodField(read_only=True)
 
     def get_children(self, instance):
-        queryset = Dictionary.objects.filter(parent=instance.id).filter(status=1).values('label', 'value', 'type')
+        queryset = Dictionary.objects.filter(parent=instance.id).filter(status=1).values('label', 'value', 'type',
+                                                                                         'color')
         if queryset:
             return queryset
         else:
@@ -86,6 +87,7 @@ class InitDictionaryViewSet(APIView):
                 serializer = DictionaryTreeSerializer(queryset, many=True, request=request)
                 data = serializer.data
             else:
-                data = self.queryset.filter(parent__value=dictionary_key, status=True).values('label', 'value', 'type')
+                data = self.queryset.filter(parent__value=dictionary_key, status=True).values('label', 'value', 'type',
+                                                                                              'color')
             return SuccessResponse(data=data, msg="获取成功")
         return SuccessResponse(data=[], msg="获取成功")
