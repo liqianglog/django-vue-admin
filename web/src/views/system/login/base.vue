@@ -21,7 +21,7 @@ export default {
       helpUrl: (state) => state.settings.helpUrl, // 帮助
       privacyUrl: (state) => state.settings.privacyUrl, // 隐私
       clauseUrl: (state) => state.settings.clauseUrl, // 条款
-      captchaState: (state) => state.settings.captchaState || true// 验证码
+      captchaState: (state) => state.settings.captchaState// 验证码
     })
   },
   beforeCreate () {
@@ -81,13 +81,13 @@ export default {
      * 获取验证码
      */
     getCaptcha () {
-      if (this.captchaState) {
-        api.getCaptcha().then((ret) => {
-          this.formLogin.captcha = null
-          this.captchaKey = ret.data.key
-          this.image_base = ret.data.image_base
-        })
-      }
+      console.log(2, this.captchaState, this.captchaState !== undefined)
+      if (this.captchaState !== undefined && !this.captchaState) return
+      api.getCaptcha().then((ret) => {
+        this.formLogin.captcha = null
+        this.captchaKey = ret.data.key
+        this.image_base = ret.data.image_base
+      })
     },
     /**
      * @description 提交表单
