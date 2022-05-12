@@ -1,6 +1,6 @@
 <template>
   <d2-container>
-    <d2-crud-x ref="d2Crud" v-bind="_crudProps" v-on="_crudListeners" @dictionaryConfigure="dictionaryConfigure">
+    <d2-crud-x ref="d2Crud" v-bind="_crudProps" v-on="_crudListeners">
       <div slot="header">
         <crud-search
           ref="search"
