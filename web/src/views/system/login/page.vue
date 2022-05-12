@@ -68,10 +68,10 @@
                       </template>
                     </el-input>
                   </el-form-item>
-                  <button class="btn btn-primary btn-block" @click="submit">
-                    登录
-                  </button>
                 </el-form>
+                <button class="btn btn-primary btn-block" @click="submit">
+                  登录
+                </button>
               </el-tab-pane>
             </el-tabs>
           </el-card>
