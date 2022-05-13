@@ -7,12 +7,12 @@
 @Remark: 系统配置
 """
 import django_filters
+from django.conf import settings
 from django.db.models import Q
 from django_filters.rest_framework import BooleanFilter
 from rest_framework import serializers
 from rest_framework.views import APIView
 
-from application import settings
 from dvadmin.system.models import SystemConfig
 from dvadmin.utils.json_response import DetailResponse, SuccessResponse, ErrorResponse
 from dvadmin.utils.models import get_all_models_objects
@@ -207,15 +207,4 @@ class InitSettingsViewSet(APIView):
     permission_classes = []
 
     def get(self, request):
-        data = {
-            "site_name": "企业级后台管理系统",  # 网站名称
-            "site_logo": "",  # 网站logo地址
-            "login_background": "",  # 登录页背景图
-            "copyright": "2021-2022 django-vue-admin.com 版权所有",  # 版权
-            "keep_record": "晋ICP备18005113号-3",  # 备案
-            "help_url": "https://django-vue-admin.com",  # 帮助
-            "privacy_url": "#",  # 隐私
-            "clause_url": "#",  # 条款
-            "captcha_state": settings.CAPTCHA_STATE,  # 验证码
-        }
-        return DetailResponse(data=data)
+        return DetailResponse(data=settings.SYSTEM_CONFIG)

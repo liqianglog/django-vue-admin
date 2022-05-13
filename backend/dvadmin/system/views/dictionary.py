@@ -6,7 +6,7 @@
 @Created on: 2021/6/3 003 0:30
 @Remark: 字典管理
 """
-from rest_framework import serializers
+from django.conf import settings
 from rest_framework.views import APIView
 
 from dvadmin.system.models import Dictionary
@@ -36,26 +36,6 @@ class DictionaryCreateUpdateSerializer(CustomModelSerializer):
         fields = '__all__'
 
 
-class DictionaryTreeSerializer(CustomModelSerializer):
-    """
-    字典表的树形序列化器
-    """
-    children = serializers.SerializerMethodField(read_only=True)
-
-    def get_children(self, instance):
-        queryset = Dictionary.objects.filter(parent=instance.id).filter(status=1).values('label', 'value', 'type',
-                                                                                         'color')
-        if queryset:
-            return queryset
-        else:
-            return []
-
-    class Meta:
-        model = Dictionary
-        fields = ['id', 'value', 'children']
-        read_only_fields = ["id"]
-
-
 class DictionaryViewSet(CustomModelViewSet):
     """
     字典管理接口
@@ -83,9 +63,7 @@ class InitDictionaryViewSet(APIView):
         dictionary_key = self.request.query_params.get('dictionary_key')
         if dictionary_key:
             if dictionary_key == 'all':
-                queryset = self.queryset.filter(status=True, is_value=False)
-                serializer = DictionaryTreeSerializer(queryset, many=True, request=request)
-                data = serializer.data
+                data = [ele for ele in settings.DICTIONARY_CONFIG.values()]
             else:
                 data = self.queryset.filter(parent__value=dictionary_key, status=True).values('label', 'value', 'type',
                                                                                               'color')

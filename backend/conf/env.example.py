@@ -37,8 +37,6 @@ TABLE_PREFIX = "sys_"
 DEBUG = True
 # 启动登录详细概略获取(通过调用api获取ip详细地址。如果是内网，关闭即可)
 ENABLE_LOGIN_ANALYSIS_LOG = True
-# 是否启用登录验证码，不需要可以设置为False，线上环境建议开启
-CAPTCHA_STATE = True
 # 登录接口 /api/token/ 是否需要验证码认证，用于测试，正式环境建议取消
 LOGIN_NO_CAPTCHA_AUTH = True
 # ================================================= #
@@ -46,6 +44,3 @@ LOGIN_NO_CAPTCHA_AUTH = True
 # ================================================= #
 
 ALLOWED_HOSTS = ["*"]
-
-# 默认密码
-DEFAULT_PASSWORD = "admin123456"

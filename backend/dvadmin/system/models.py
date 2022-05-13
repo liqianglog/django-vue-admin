@@ -1,6 +1,7 @@
 import hashlib
 import os
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -194,6 +195,35 @@ class Dictionary(CoreModel):
         verbose_name_plural = verbose_name
         ordering = ('sort',)
 
+    @classmethod
+    def init_dictionary(cls):
+        queryset = cls.objects.filter(status=True, is_value=False)
+        data = []
+        for instance in queryset:
+            data.append({
+                "id": instance.id,
+                "value": instance.value,
+                "children": list(cls.objects.filter(parent=instance.id).filter(status=1).
+                                 values('label', 'value', 'type', 'color'))
+            })
+        settings.DICTIONARY_CONFIG = {ele.get("value"): ele for ele in data}
+        print("初始化字典配置完成")
+        return
+
+    @classmethod
+    def get_dictionary_label(cls, key, name):
+        """
+        获取获取字典label值
+        :param key: 字典管理中的key
+        :param name: 对应字典配置的value值
+        :return:
+        """
+        children = settings.DICTIONARY_CONFIG.get(key) or []
+        for ele in children:
+            if ele.get("value") == str(name):
+                return ele.get("label")
+        return ""
+
 
 class OperationLog(CoreModel):
     request_modular = models.CharField(max_length=64, verbose_name="请求模块", null=True, blank=True, help_text="请求模块")
@@ -286,7 +316,7 @@ class SystemConfig(CoreModel):
     key = models.CharField(max_length=20, verbose_name="键", help_text="键", db_index=True)
     value = models.JSONField(max_length=100, verbose_name="值", help_text="值", null=True, blank=True)
     sort = models.IntegerField(default=0, verbose_name="排序", help_text="排序", blank=True)
-    status = models.BooleanField(default=False, verbose_name="启用状态", help_text="启用状态")
+    status = models.BooleanField(default=True, verbose_name="启用状态", help_text="启用状态")
     data_options = models.JSONField(verbose_name="数据options", help_text="数据options", null=True, blank=True)
     FORM_ITEM_TYPE_LIST = (
         (0, 'text'),
@@ -322,6 +352,57 @@ class SystemConfig(CoreModel):
 
     def __str__(self):
         return f"{self.title}"
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        super().save(force_insert, force_update, using, update_fields)
+        self.init_system_config()
+
+    @classmethod
+    def get_system_config(cls, name):
+        """
+        1.只传父级的key，返回全部子级，{ "父级key.子级key" : "值" }
+        2."父级key.子级key"，返回子级值
+
+        :param name:
+        :return:
+        """
+        key_list = name.split('.')
+        if len(key_list) > 2:
+            return ""
+        elif len(key_list) == 2:
+            parent_key = key_list[0]
+            children_key = key_list[1]
+            instance = cls.objects.filter(parent__key=parent_key, key=children_key, status=True).first()
+            return instance.value if instance else ""
+        elif len(key_list) == 1:
+            instance = cls.objects.filter(key=key_list[0], status=True, parent_id__isnull=True).first()
+            if not instance:
+                return ""
+
+            system_config_obj = cls.objects.filter(parent_id=instance.id, status=True).values(
+                'parent__key', 'key', 'value', 'form_item_type').order_by('sort')
+            data = {}
+            for system_config in system_config_obj:
+                data[f"{system_config.get('parent__key')}.{system_config.get('key')}"] = system_config.get(
+                    'value') or ''
+            return data
+        return ""
+
+    @classmethod
+    def init_system_config(cls):
+        """
+        初始化系统配置
+        :param name:
+        :return:
+        """
+        data = {}
+        system_config_obj = SystemConfig.objects.filter(status=True, parent_id__isnull=False).values(
+            'parent__key', 'key', 'value', 'form_item_type').order_by('sort')
+        for system_config in system_config_obj:
+            data[f"{system_config.get('parent__key')}.{system_config.get('key')}"] = system_config.get('value') or ''
+        settings.SYSTEM_CONFIG = data
+        print("初始化系统配置完成")
+        return
 
 
 class LoginLog(CoreModel):
