@@ -86,12 +86,14 @@
             <el-upload
               :action="uploadUrl"
               :headers="uploadHeaders"
-              name="url"
+              name="file"
               :accept="'image/*'"
               :on-preview="handlePictureCardPreview"
               :on-success="(response, file, fileList)=>{handleUploadSuccess(response, file, fileList,item.key)}"
               :on-error="handleError"
               :on-exceed="handleExceed"
+              :before-remove="(file, fileList)=>{beforeRemove(file, fileList, item.key)}"
+              :multiple="item.form_item_type_label!=='img'"
               :limit="item.form_item_type_label==='img'?1:5"
               :ref="'imgUpload_'+item.key"
               :data-keyname="item.key"
@@ -110,15 +112,16 @@
             <el-upload
               :action="uploadUrl"
               :headers="uploadHeaders"
-              name="url"
+              name="file"
               :on-preview="handlePictureCardPreview"
               :on-success="(response, file, fileList)=>{handleUploadSuccess(response, file, fileList,item.key)}"
               :on-error="handleError"
               :on-exceed="handleExceed"
+              :before-remove="(file, fileList)=>{beforeRemove(file, fileList, item.key)}"
               :limit="item.form_item_type_label==='img'?1:5"
               :ref="'fileUpload_'+item.key"
               :data-keyname="item.key"
-              :file-list="item.value?item.value:[]"
+              :file-list="item.value"
               list-type="picture-card"
             >
               <i class="el-icon-plus"></i>
@@ -301,7 +304,6 @@ export default {
       const form = JSON.parse(JSON.stringify(this.form))
       const keys = Object.keys(form)
       const values = Object.values(form)
-      console.log(111, form)
       for (const index in this.formList) {
         const item = this.formList[index]
         // eslint-disable-next-line camelcase
@@ -349,7 +351,6 @@ export default {
       }
       that.$refs.form.clearValidate()
       that.$refs.form.validate((valid) => {
-        console.log(this.formList)
         if (valid) {
           api.saveContent(this.options.id,
             this.formList).then(res => {
@@ -408,7 +409,7 @@ export default {
         msg
       } = response
       if (code === 2000) {
-        const { url } = response.data.data
+        const { url } = response.data
         const { name } = file
         const type = that.isImage(name)
         if (!type) {
@@ -421,7 +422,7 @@ export default {
           // console.log(len)
           const dict = {
             name: name,
-            url: url
+            url: util.baseURL() + url
           }
           that.form[imgKey].push(dict)
         }
@@ -436,6 +437,14 @@ export default {
     // 上传超出限制
     handleExceed () {
       this.$message.error('超过文件上传数量')
+    },
+    // 删除时的钩子
+    beforeRemove (file, fileList, key) {
+      var index = 0
+      this.form[key].map((value, inx) => {
+        if (value.uid === file.uid) index = inx
+      })
+      this.form[key].splice(index, 1)
     }
   },
   mounted () {

@@ -77,7 +77,6 @@ export default {
        * 获取验证码
        */
     getCaptcha () {
-      console.log(2, this.captchaState, this.captchaState !== undefined)
       if (this.captchaState !== undefined && !this.captchaState) return
       api.getCaptcha().then((ret) => {
         this.formLogin.captcha = null
