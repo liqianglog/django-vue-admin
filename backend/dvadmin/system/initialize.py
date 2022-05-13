@@ -26,6 +26,7 @@ from .init_data import (
     role_data,
     staff_data,
     dictionary_data,
+    system_config_data
 )
 
 
@@ -81,6 +82,13 @@ class Initialize(CoreInitialize):
         data = dictionary_data
         self.save(Dictionary, data, "字典表", no_reset=False)
 
+    def init_system_config(self):
+        """
+        初始化系统配置表
+        """
+        data = system_config_data
+        self.save(Dictionary, data, "系统配置表", no_reset=False)
+
     def run(self):
         self.init_dept()
         self.init_button()
@@ -89,6 +97,7 @@ class Initialize(CoreInitialize):
         self.init_role()
         self.init_users()
         self.init_dictionary()
+        self.init_system_config()
 
 
 # 项目init 初始化，默认会执行 main 方法进行初始化
