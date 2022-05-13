@@ -40,9 +40,6 @@ class UserCreateSerializer(CustomModelSerializer):
     )
     password = serializers.CharField(
         required=False,
-        default=make_password(
-            hashlib.md5(settings.DEFAULT_PASSWORD.encode(encoding="UTF-8")).hexdigest()
-        ),
     )
 
     def validate_password(self, value):
@@ -255,7 +252,7 @@ class UserViewSet(CustomModelViewSet):
         """恢复默认密码"""
         instance = Users.objects.filter(id=kwargs.get("pk")).first()
         if instance:
-            instance.set_password(settings.DEFAULT_PASSWORD)
+            instance.set_password(settings.SYSTEM_CONFIG.get("base.default_password"))
             instance.save()
             return DetailResponse(data=None, msg="密码重置成功")
         else:

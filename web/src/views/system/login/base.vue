@@ -23,7 +23,7 @@ export default {
       helpUrl: this.systemConfig('login.help_url'), // 帮助
       privacyUrl: this.systemConfig('login.privacy_url'), // 隐私
       clauseUrl: this.systemConfig('login.clause_url'), // 条款
-      captchaState: this.systemConfig('login.captcha_state'), // 验证码
+      captchaState: this.systemConfig('base.captcha_state'), // 验证码
       processTitle: process.env.VUE_APP_TITLE || 'D2Admin',
       backgroundImage: 'url(' + this.loginBackground + ')',
       // 表单
@@ -68,12 +68,6 @@ export default {
     }
   },
   mounted () {
-    document.onkeydown = () => {
-      var key = window.event.keyCode
-      if (key === 13) {
-        this.submit()
-      }
-    }
   },
   beforeDestroy () {
   },

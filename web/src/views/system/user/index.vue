@@ -5,7 +5,6 @@
       v-bind="_crudProps"
       v-on="_crudListeners"
       @resetPassword="resetPassword"
-      @defaultPassword="defaultPassword"
     >
       <div slot="header">
         <crud-search
@@ -36,6 +35,7 @@
       title="密码重置"
       :visible.sync="dialogFormVisible"
       :close-on-click-modal="false"
+      width="30%"
     >
       <el-form :model="resetPwdForm" ref="resetPwdForm" :rules="passwordRules">
         <el-form-item label="密码" prop="pwd">
@@ -59,7 +59,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="resetPwdSubmit">确 定</el-button>
+        <el-button type="primary" @click="resetPwdSubmit">重 置</el-button>
       </div>
     </el-dialog>
   </d2-container>
@@ -131,11 +131,6 @@ export default {
     },
     delRequest (row) {
       return api.DelObj(row.id)
-    },
-    defaultPassword (scope) {
-      api.ResetPwd2Default(scope.row).then((res) => {
-        this.$message.success('密码重置成功')
-      })
     },
     // 重置密码弹框
     resetPassword ({ row }) {

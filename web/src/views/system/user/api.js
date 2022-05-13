@@ -44,21 +44,13 @@ export function DelObj (id) {
 
 /**
  * 重置密码
- * @param id
+ * @param obj
  * @returns {*}
  * @constructor
  */
 export function ResetPwd (obj) {
   return request({
     url: urlPrefix + 'reset_password/' + obj.id + '/',
-    method: 'put',
-    data: obj
-  })
-}
-
-export function ResetPwd2Default (obj) {
-  return request({
-    url: urlPrefix + 'reset_to_default_password/' + obj.id + '/',
     method: 'put',
     data: obj
   })

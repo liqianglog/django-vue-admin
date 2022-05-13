@@ -12,7 +12,7 @@ export const crudOptions = (vm) => {
       rowKey: true // 必须设置，true or false
     },
     rowHandle: {
-      width: 270,
+      width: 240,
       fixed: 'right',
       view: {
         thin: true,
@@ -38,7 +38,7 @@ export const crudOptions = (vm) => {
       custom: [
         {
           thin: true,
-          text: '',
+          text: '密码重置',
           size: 'small',
           type: 'warning',
           icon: 'el-icon-refresh-left',
@@ -46,18 +46,6 @@ export const crudOptions = (vm) => {
             return vm.hasPermissions('ResetPassword')
           },
           emit: 'resetPassword'
-        },
-        {
-          show () {
-            return vm.hasPermissions('DefaultPassword')
-          },
-          disabled () {
-            return !vm.hasPermissions('DefaultPassword')
-          },
-          text: '重置密码',
-          type: 'warning',
-          size: 'small',
-          emit: 'defaultPassword'
         }
       ]
     },
@@ -128,11 +116,18 @@ export const crudOptions = (vm) => {
         minWidth: 90,
         type: 'input',
         form: {
+          rules: [ // 表单校验规则
+            {
+              required: true,
+              message: '密码必填项'
+            }
+          ],
           component: {
             span: 12,
             showPassword: true,
-            placeholder: '不填则默认为:admin123456'
+            placeholder: '请输入密码'
           },
+          value: vm.systemConfig('base.default_password'),
           itemProps: {
             class: { yxtInput: true }
           }

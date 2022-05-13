@@ -81,8 +81,6 @@ urlpatterns = (
             path("api/init/dictionary/", InitDictionaryViewSet.as_view()),
             path("api/init/settings/", InitSettingsViewSet.as_view()),
             path("apiLogin/", ApiLogin.as_view()),
-            re_path(r'api/upgrade_center_backend/', include('dvadmin_upgrade_center.urls')),
-            re_path(r'api/dvadmin_upgrade_center/', include('dvadmin_upgrade_center.urls')),
         ]
         + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
         + static(settings.STATIC_URL, document_root=settings.STATIC_URL)

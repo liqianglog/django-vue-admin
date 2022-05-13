@@ -321,7 +321,6 @@ SWAGGER_SETTINGS = {
 # ================================================= #
 # **************** 验证码配置  ******************* #
 # ================================================= #
-CAPTCHA_STATE = locals().get("CAPTCHA_STATE", False)
 CAPTCHA_IMAGE_SIZE = (160, 60)  # 设置 captcha 图片大小
 CAPTCHA_LENGTH = 4  # 字符个数
 CAPTCHA_TIMEOUT = 1  # 超时(minutes)

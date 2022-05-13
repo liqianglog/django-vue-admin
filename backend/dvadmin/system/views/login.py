@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from application import settings
+from django.conf import settings
 from dvadmin.system.models import Users
 from dvadmin.utils.json_response import ErrorResponse, DetailResponse
 from dvadmin.utils.request_util import save_login_log
@@ -34,7 +34,7 @@ class CaptchaView(APIView):
     )
     def get(self, request):
         data = {}
-        if settings.CAPTCHA_STATE:
+        if settings.SYSTEM_CONFIG.get("base.captcha_state"):
             hashkey = CaptchaStore.generate_key()
             id = CaptchaStore.objects.filter(hashkey=hashkey).first().id
             imgage = captcha_image(request, hashkey)
@@ -45,15 +45,6 @@ class CaptchaView(APIView):
                 "image_base": "data:image/png;base64," + image_base.decode("utf-8"),
             }
         return DetailResponse(data=data)
-
-
-class CaptchaStatusView(APIView):
-
-    authentication_classes = []
-    permission_classes = []
-
-    def get(self, request):
-        return DetailResponse(data={"status": settings.CAPTCHA_STATE})
 
 
 class LoginSerializer(TokenObtainPairSerializer):
@@ -75,7 +66,7 @@ class LoginSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
         captcha = self.initial_data.get("captcha", None)
-        if settings.CAPTCHA_STATE:
+        if settings.SYSTEM_CONFIG.get("base.captcha_state"):
             if captcha is None:
                 raise CustomValidationError("验证码不能为空")
             self.image_code = CaptchaStore.objects.filter(
@@ -87,8 +78,8 @@ class LoginSerializer(TokenObtainPairSerializer):
                 raise CustomValidationError("验证码过期")
             else:
                 if self.image_code and (
-                    self.image_code.response == captcha
-                    or self.image_code.challenge == captcha
+                        self.image_code.response == captcha
+                        or self.image_code.challenge == captcha
                 ):
                     self.image_code and self.image_code.delete()
                 else:
