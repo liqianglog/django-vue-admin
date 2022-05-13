@@ -45,6 +45,15 @@ class UserCreateSerializer(CustomModelSerializer):
         ),
     )
 
+    def validate_password(self, value):
+        """
+        对密码进行验证
+        """
+        password = self.initial_data.get("password")
+        if password:
+            return make_password(value)
+        return value
+
     def save(self, **kwargs):
         data = super().save(**kwargs)
         data.post.set(self.initial_data.get("post", []))
