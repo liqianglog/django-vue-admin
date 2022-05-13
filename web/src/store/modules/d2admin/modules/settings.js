@@ -6,15 +6,7 @@ export const urlPrefix = '/api/init/settings/'
 export default {
   namespaced: true,
   state: {
-    siteName: '', // 网站名称
-    siteLogo: '', // 网站logo地址
-    loginBackground: '', // 登录页背景图
-    copyright: '', // 版权
-    keepRecord: '', // 备案
-    helpUrl: '', // 帮助地址
-    privacyUrl: '', // 隐私
-    clauseUrl: '', // 条款
-    captchaState: true // 是否开启验证码
+    data: {}
   },
   actions: {
     /**
@@ -42,22 +34,13 @@ export default {
      * @param {Object} context
      */
     async load ({ state, dispatch, commit }) {
-      const res = await dispatch('d2admin/db/get', {
+      // store 赋值
+      state.data = await dispatch('d2admin/db/get', {
         dbName: 'sys',
         path: 'settings.init',
         defaultValue: {},
         user: true
       }, { root: true })
-      // store 赋值
-      state.siteName = res.site_name
-      state.siteLogo = res.site_logo
-      state.loginBackground = res.login_background
-      state.copyright = res.copyright
-      state.keepRecord = res.keep_record
-      state.helpUrl = res.help_url
-      state.privacyUrl = res.privacy_url
-      state.clauseUrl = res.clause_url
-      state.captchaState = res.captcha_state
     }
   },
   mutations: {

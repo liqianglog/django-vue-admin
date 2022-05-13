@@ -5,7 +5,7 @@
       <el-col :span="12">变量值</el-col>
       <el-col :span="4" :offset="4">变量名</el-col>
     </el-row>
-    <el-form ref="form" :model="form" label-width="100px" label-position="left" style="margin-top: 20px">
+    <el-form ref="form" :model="form" label-width="140px" label-position="left" style="margin-top: 20px">
       <el-form-item :label="item.title" :prop="['array'].indexOf(item.form_item_type_label) >-1?'':item.key"
                     :key="index" :rules="item.rule"
                     v-for="(item,index) in formList"

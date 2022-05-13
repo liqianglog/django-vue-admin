@@ -201,6 +201,10 @@ Vue.prototype.getDictionaryLabel = function (name, value) {
   }
   return store.state.d2admin.dictionary.data[name]
 }
+// 获取系统配置
+Vue.prototype.systemConfig = function (name) {
+  return store.state.d2admin.settings.data[name]
+}
 // 默认Columns 结尾 showForm：显示在form中，showTable：显示在table中
 Vue.prototype.commonEndColumns = function (param = {}) {
   /**
