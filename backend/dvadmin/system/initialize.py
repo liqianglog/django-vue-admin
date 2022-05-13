@@ -15,7 +15,7 @@ from dvadmin.system.models import (
     MenuButton,
     Role,
     Users,
-    Dictionary,
+    Dictionary, SystemConfig,
 )
 
 from .init_data import (
@@ -87,7 +87,7 @@ class Initialize(CoreInitialize):
         初始化系统配置表
         """
         data = system_config_data
-        self.save(Dictionary, data, "系统配置表", no_reset=False)
+        self.save(SystemConfig, data, "系统配置表", no_reset=False)
 
     def run(self):
         self.init_dept()
