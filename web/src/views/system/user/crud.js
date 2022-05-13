@@ -109,19 +109,38 @@ export const crudOptions = (vm) => {
         type: 'input',
         form: {
           rules: [ // 表单校验规则
-            { required: true, message: '账号必填项' }
+            {
+              required: true,
+              message: '账号必填项'
+            }
           ],
           component: {
             placeholder: '请输入账号'
           },
           itemProps: {
             class: { yxtInput: true }
+          }
+        }
+      },
+      {
+        title: '密码',
+        key: 'password',
+        minWidth: 90,
+        type: 'input',
+        form: {
+          component: {
+            span: 12,
+            showPassword: true,
+            placeholder: '不填则默认为:admin123456'
           },
-          helper: {
-            render (h) {
-              return (< el-alert title="密码默认为:admin123456" type="warning"/>
-              )
-            }
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        },
+        disabled: true,
+        valueResolve (row, key) {
+          if (row.password) {
+            row.password = vm.$md5(row.password)
           }
         }
       },
@@ -135,7 +154,10 @@ export const crudOptions = (vm) => {
         type: 'input',
         form: {
           rules: [ // 表单校验规则
-            { required: true, message: '姓名必填项' }
+            {
+              required: true,
+              message: '姓名必填项'
+            }
           ],
           component: {
             span: 12,
@@ -153,24 +175,28 @@ export const crudOptions = (vm) => {
           disabled: true
         },
         minWidth: 140,
-        type: 'table-selector',
+        type: 'tree-selector',
         dict: {
           cache: false,
+          isTree: true,
           url: deptPrefix,
           value: 'id', // 数据字典中value字段的属性名
-          label: 'name', // 数据字典中label字段的属性名
-          getData: (url, dict, { form, component }) => {
-            return request({ url: url, params: { page: 1, limit: 10, status: 1 } }).then(ret => {
-              component._elProps.page = ret.data.page
-              component._elProps.limit = ret.data.limit
-              component._elProps.total = ret.data.total
-              return ret.data.data
-            })
-          }
+          label: 'name' // 数据字典中label字段的属性名
+          // getData: (url, dict, { form, component }) => {
+          //   return request({ url: url, params: { page: 1, limit: 10, status: 1 } }).then(ret => {
+          //     component._elProps.page = ret.data.page
+          //     component._elProps.limit = ret.data.limit
+          //     component._elProps.total = ret.data.total
+          //     return ret.data.data
+          //   })
+          // }
         },
         form: {
           rules: [ // 表单校验规则
-            { required: true, message: '必填项' }
+            {
+              required: true,
+              message: '必填项'
+            }
           ],
           itemProps: {
             class: { yxtInput: true }
@@ -208,8 +234,15 @@ export const crudOptions = (vm) => {
         type: 'input',
         form: {
           rules: [
-            { max: 20, message: '请输入正确的手机号码', trigger: 'blur' },
-            { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码' }
+            {
+              max: 20,
+              message: '请输入正确的手机号码',
+              trigger: 'blur'
+            },
+            {
+              pattern: /^1[3-9]\d{9}$/,
+              message: '请输入正确的手机号码'
+            }
           ],
           itemProps: {
             class: { yxtInput: true }
@@ -224,7 +257,11 @@ export const crudOptions = (vm) => {
         minWidth: 180,
         form: {
           rules: [
-            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+            {
+              type: 'email',
+              message: '请输入正确的邮箱地址',
+              trigger: ['blur', 'change']
+            }
           ],
           component: {
             placeholder: '请输入邮箱'
@@ -250,7 +287,6 @@ export const crudOptions = (vm) => {
         title: '用户类型',
         key: 'user_type',
         search: {
-          value: 0,
           disabled: false
         },
         width: 140,
@@ -316,8 +352,17 @@ export const crudOptions = (vm) => {
           url: '/api/system/role/',
           value: 'id', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
-          getData: (url, dict, { form, component }) => {
-            return request({ url: url, params: { page: 1, limit: 10 } }).then(ret => {
+          getData: (url, dict, {
+            form,
+            component
+          }) => {
+            return request({
+              url: url,
+              params: {
+                page: 1,
+                limit: 10
+              }
+            }).then(ret => {
               component._elProps.page = ret.data.page
               component._elProps.limit = ret.data.limit
               component._elProps.total = ret.data.total
@@ -327,7 +372,10 @@ export const crudOptions = (vm) => {
         },
         form: {
           rules: [ // 表单校验规则
-            { required: true, message: '必填项' }
+            {
+              required: true,
+              message: '必填项'
+            }
           ],
           itemProps: {
             class: { yxtInput: true }

@@ -170,11 +170,12 @@ class ApiLogin(APIView):
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
-        if user_obj := auth.authenticate(
+        user_obj = auth.authenticate(
             request,
             username=username,
             password=hashlib.md5(password.encode(encoding="UTF-8")).hexdigest(),
-        ):
+        )
+        if user_obj:
             login(request, user_obj)
             return redirect("/")
         else:
