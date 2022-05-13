@@ -114,7 +114,7 @@ img {
 .page-login--logo{
     margin: 0 auto;
     top: 10px;
-    left: 52em;
+    left: 52%;
     position: absolute;
 }
 /*-- //Reset-Code --*/
@@ -231,7 +231,7 @@ img {
     color: #444;
     text-transform: capitalize;
 }
-h1 {
+.w3_info h1 {
     font-size: 36px;
     font-weight: 600;
     color: #fff;

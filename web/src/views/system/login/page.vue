@@ -1,28 +1,21 @@
 <template>
   <div
     class="w3l-signinform"
-    :style="{
-      background:
-        'url(' +
-        (loginBackground || require('./image/bg.jpg')) +
-        ') no-repeat center'
-    }"
+    :style="{background:'url(' +(loginBackground || require('./image/bg.jpg')) +') no-repeat center', backgroundSize: '100% 100%' }"
   >
     <!-- container -->
     <div class="wrapper">
       <!-- main content -->
       <div class="w3l-form-info">
         <!-- logo -->
-        <img class="page-login--logo" :src="siteLogo" width="300" />
+        <img class="page-login--logo" :src="siteLogo" width="300"/>
         <div class="w3_info">
           <h2 style="text-align: center">{{ siteName || processTitle }}</h2>
           <el-card shadow="always" class="card">
             <el-tabs v-model="activeName">
               <el-tab-pane label="账号密码登录" name="first" stretch>
-                <span slot="label"
-                  ><span style="margin: 30px">账号密码登录</span></span
-                >
-                <br />
+                <span slot="label"><span style="margin: 30px">账号密码登录</span></span>
+                <br/>
                 <el-form
                   ref="loginForm"
                   label-position="top"
@@ -104,7 +97,7 @@
             <p>
               <a href="https://beian.miit.gov.cn" target="_blank">{{
                 keepRecord
-              }}</a>
+                }}</a>
               | <a :href="helpUrl || '#'" target="_blank">帮助</a> |
               <a :href="privacyUrl || '#'" target="_blank">隐私</a> |
               <a :href="clauseUrl || '#'" target="_blank">条款</a>
@@ -120,7 +113,7 @@
       <el-row :gutter="10" style="margin: -20px 0px -10px 0px">
         <el-col v-for="(user, index) in users" :key="index" :span="8">
           <div class="page-login--quick-user" @click="handleUserBtnClick(user)">
-            <d2-icon name="user-circle-o" />
+            <d2-icon name="user-circle-o"/>
             <span>{{ user.name }}</span>
           </div>
         </el-col>
@@ -139,47 +132,56 @@ export default {
       activeName: 'first'
     }
   },
-  created () {},
-  mounted () {},
+  created () {
+  },
+  mounted () {
+  },
   methods: {}
 }
 </script>
 
 <style lang="scss" scoped>
-@import './css/style.css';
+  @import './css/style.css';
 
-.copyrights {
-  text-indent: -9999px;
-  height: 0;
-  line-height: 0;
-  font-size: 0;
-  overflow: hidden;
-}
-// 快速选择用户面板
-.page-login--quick{
-  margin-top: 20px;
-}
-.page-login--quick-user {
-  @extend %flex-center-col;
-  padding: 10px 0px;
-  border-radius: 4px;
-  &:hover {
-    background-color: $color-bg;
+  .copyrights {
+    text-indent: -9999px;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    overflow: hidden;
+  }
+
+  // 快速选择用户面板
+  .page-login--quick {
+    margin-top: 20px;
+  }
+
+  .page-login--quick-user {
+    @extend %flex-center-col;
+    padding: 10px 0px;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: $color-bg;
+
+      i {
+        color: $color-text-normal;
+      }
+
+      span {
+        color: $color-text-normal;
+      }
+    }
+
     i {
-      color: $color-text-normal;
+      font-size: 36px;
+      color: $color-text-sub;
     }
+
     span {
-      color: $color-text-normal;
+      font-size: 12px;
+      margin-top: 10px;
+      color: $color-text-sub;
     }
   }
-  i {
-    font-size: 36px;
-    color: $color-text-sub;
-  }
-  span {
-    font-size: 12px;
-    margin-top: 10px;
-    color: $color-text-sub;
-  }
-}
 </style>
