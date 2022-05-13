@@ -13,7 +13,8 @@ export default {
     keepRecord: '', // 备案
     helpUrl: '', // 帮助地址
     privacyUrl: '', // 隐私
-    clauseUrl: '' // 条款
+    clauseUrl: '', // 条款
+    captchaState: true // 是否开启验证码
   },
   actions: {
     /**
@@ -56,6 +57,7 @@ export default {
       state.helpUrl = res.help_url
       state.privacyUrl = res.privacy_url
       state.clauseUrl = res.clause_url
+      state.captchaState = res.captcha_state
     }
   },
   mutations: {
