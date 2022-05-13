@@ -31,7 +31,7 @@ class CoreInitialize:
             new_data = {}
             for key, value in ele.items():
                 # 判断传的 value 为 list 的多对多进行抽离，使用set 进行更新
-                if isinstance(value, list):
+                if isinstance(value, list) and value and isinstance(value[0], int):
                     m2m_dict[key] = value
                 else:
                     new_data[key] = value
