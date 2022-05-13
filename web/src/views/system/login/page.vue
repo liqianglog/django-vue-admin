@@ -46,6 +46,7 @@
                       prefix-icon="el-icon-s-promotion"
                       show-password
                       placeholder="密码"
+                      @keyup.enter.native='submit'
                     >
                     </el-input>
                   </el-form-item>
