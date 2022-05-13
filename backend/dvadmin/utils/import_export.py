@@ -15,8 +15,7 @@ def import_to_data(file_url, field_data):
     :return:
     """
     # 读取excel 文件
-    file_path = os.path.join(settings.MEDIA_ROOT, file_url)
-    file_path_dir = os.path.join(settings.BASE_DIR, file_path)
+    file_path_dir = os.path.join(settings.BASE_DIR, file_url)
     workbook = openpyxl.load_workbook(file_path_dir)
     table = workbook[workbook.sheetnames[0]]
     # 创建一个空列表，存储Excel的数据
