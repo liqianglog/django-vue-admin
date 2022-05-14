@@ -3,7 +3,7 @@ import os
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.db import models
+from django.db import models, ProgrammingError
 
 from dvadmin.utils.models import CoreModel, table_prefix
 
@@ -197,17 +197,20 @@ class Dictionary(CoreModel):
 
     @classmethod
     def init_dictionary(cls):
-        queryset = cls.objects.filter(status=True, is_value=False)
-        data = []
-        for instance in queryset:
-            data.append({
-                "id": instance.id,
-                "value": instance.value,
-                "children": list(cls.objects.filter(parent=instance.id).filter(status=1).
-                                 values('label', 'value', 'type', 'color'))
-            })
-        settings.DICTIONARY_CONFIG = {ele.get("value"): ele for ele in data}
-        print("初始化字典配置完成")
+        try:
+            queryset = cls.objects.filter(status=True, is_value=False)
+            data = []
+            for instance in queryset:
+                data.append({
+                    "id": instance.id,
+                    "value": instance.value,
+                    "children": list(cls.objects.filter(parent=instance.id).filter(status=1).
+                                     values('label', 'value', 'type', 'color'))
+                })
+            settings.DICTIONARY_CONFIG = {ele.get("value"): ele for ele in data}
+            print("初始化字典配置完成")
+        except ProgrammingError as e:
+            print("请先进行数据库迁移!")
         return
 
     @classmethod
@@ -395,13 +398,16 @@ class SystemConfig(CoreModel):
         :param name:
         :return:
         """
-        data = {}
-        system_config_obj = SystemConfig.objects.filter(status=True, parent_id__isnull=False).values(
-            'parent__key', 'key', 'value', 'form_item_type').order_by('sort')
-        for system_config in system_config_obj:
-            data[f"{system_config.get('parent__key')}.{system_config.get('key')}"] = system_config.get('value') or ''
-        settings.SYSTEM_CONFIG = data
-        print("初始化系统配置完成")
+        try:
+            data = {}
+            system_config_obj = SystemConfig.objects.filter(status=True, parent_id__isnull=False).values(
+                'parent__key', 'key', 'value', 'form_item_type').order_by('sort')
+            for system_config in system_config_obj:
+                data[f"{system_config.get('parent__key')}.{system_config.get('key')}"] = system_config.get('value') or ''
+            settings.SYSTEM_CONFIG = data
+            print("初始化系统配置完成")
+        except ProgrammingError as e:
+            print("请先进行数据库迁移!")
         return
 
 
