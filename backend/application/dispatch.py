@@ -40,15 +40,15 @@ def _get_all_system_config():
     return data
 
 
-def init_dictionary(schema_name=None):
+def init_dictionary():
     """
     初始化字典配置
     :return:
     """
     try:
         if is_tenants_mode():
-            from django_tenants.utils import tenant_context
-            for tenant in get_tenant_model().objects.filter(schema_name=schema_name):
+            from django_tenants.utils import tenant_context, get_tenant_model
+            for tenant in get_tenant_model().objects.filter():
                 with tenant_context(tenant):
                     settings.DICTIONARY_CONFIG[connection.tenant.schema_name] = _get_all_dictionary()
         else:
@@ -68,8 +68,8 @@ def init_system_config():
     try:
 
         if is_tenants_mode():
-            from django_tenants.utils import tenant_context
-            for tenant in get_tenant_model().objects.filter(schema_name=schema_name):
+            from django_tenants.utils import tenant_context, get_tenant_model
+            for tenant in get_tenant_model().objects.filter():
                 with tenant_context(tenant):
                     settings.SYSTEM_CONFIG[connection.tenant.schema_name] = _get_all_system_config()
         else:
