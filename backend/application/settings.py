@@ -365,3 +365,17 @@ TABLE_PREFIX = locals().get('TABLE_PREFIX', "")
 SYSTEM_CONFIG = {}
 # 字典配置
 DICTIONARY_CONFIG = {}
+
+
+# ================================================= #
+# ******************** 插件配置 ******************** #
+# ================================================= #
+# 租户共享app
+TENANT_SHARED_APPS = []
+# 插件 urlpatterns
+PLUGINS_URL_PATTERNS = []
+# ********** 一键导入插件配置开始 **********
+# 例如:
+# from dvadmin_upgrade_center.settings import * # 升级中心
+# from dvadmin_celery.settings import * # celery 异步任务
+# ********** 一键导入插件配置结束 **********

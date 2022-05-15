@@ -22,8 +22,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from application import settings
 from application import dispatch
+from application import settings
 from dvadmin.system.views.dictionary import InitDictionaryViewSet
 from dvadmin.system.views.login import (
     LoginView,
@@ -84,4 +84,5 @@ urlpatterns = (
         ]
         + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
         + static(settings.STATIC_URL, document_root=settings.STATIC_URL)
+        + [re_path(ele.get('re_path'), include(ele.get('include'))) for ele in settings.PLUGINS_URL_PATTERNS]
 )
