@@ -3,9 +3,9 @@ import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'application.settings')
 
 from django.conf import settings
+from application import dispatch
 from celery import platforms
-
-if 'dvadmin_tenant' in settings.REGISTER_PLUGINS:
+if dispatch.is_tenants_mode():
     from tenant_schemas_celery.app import CeleryApp as TenantAwareCeleryApp
     app = TenantAwareCeleryApp()
 else:

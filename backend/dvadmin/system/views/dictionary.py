@@ -9,6 +9,7 @@
 from django.conf import settings
 from rest_framework.views import APIView
 
+from application import dispatch
 from dvadmin.system.models import Dictionary
 from dvadmin.utils.json_response import SuccessResponse
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -63,7 +64,7 @@ class InitDictionaryViewSet(APIView):
         dictionary_key = self.request.query_params.get('dictionary_key')
         if dictionary_key:
             if dictionary_key == 'all':
-                data = [ele for ele in settings.DICTIONARY_CONFIG.values()]
+                data = [ele for ele in dispatch.get_dictionary_config().values()]
             else:
                 data = self.queryset.filter(parent__value=dictionary_key, status=True).values('label', 'value', 'type',
                                                                                               'color')

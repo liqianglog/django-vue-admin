@@ -355,10 +355,6 @@ CELERY_TIMEZONE = "Asia/Shanghai"  # celery 时区问题
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 ALL_MODELS_OBJECTS = []  # 所有app models 对象
-# dvadmin 插件
-REGISTER_PLUGINS = (
-    # ""
-)
 
 # 初始化需要执行的列表，用来初始化后执行
 INITIALIZE_LIST = []

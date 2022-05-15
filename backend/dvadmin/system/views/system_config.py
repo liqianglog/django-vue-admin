@@ -13,6 +13,7 @@ from django_filters.rest_framework import BooleanFilter
 from rest_framework import serializers
 from rest_framework.views import APIView
 
+from application import dispatch
 from dvadmin.system.models import SystemConfig
 from dvadmin.utils.json_response import DetailResponse, SuccessResponse, ErrorResponse
 from dvadmin.utils.models import get_all_models_objects
@@ -207,4 +208,4 @@ class InitSettingsViewSet(APIView):
     permission_classes = []
 
     def get(self, request):
-        return DetailResponse(data=settings.SYSTEM_CONFIG)
+        return DetailResponse(data=dispatch.get_system_config())

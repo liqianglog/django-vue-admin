@@ -23,7 +23,7 @@ from rest_framework_simplejwt.views import (
 )
 
 from application import settings
-from dvadmin.system.models import SystemConfig, Dictionary
+from application import dispatch
 from dvadmin.system.views.dictionary import InitDictionaryViewSet
 from dvadmin.system.views.login import (
     LoginView,
@@ -35,8 +35,8 @@ from dvadmin.system.views.system_config import InitSettingsViewSet
 from dvadmin.utils.swagger import CustomOpenAPISchemaGenerator
 
 # =========== 初始化系统配置 =================
-SystemConfig.init_system_config()
-Dictionary.init_dictionary()
+dispatch.init_system_config()
+dispatch.init_dictionary()
 # =========== 初始化系统配置 =================
 
 schema_view = get_schema_view(

@@ -1,10 +1,10 @@
 import hashlib
 import os
 
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.db import models, ProgrammingError
+from django.db import models
 
+from application import dispatch
 from dvadmin.utils.models import CoreModel, table_prefix
 
 STATUS_CHOICES = (
@@ -195,37 +195,9 @@ class Dictionary(CoreModel):
         verbose_name_plural = verbose_name
         ordering = ('sort',)
 
-    @classmethod
-    def init_dictionary(cls):
-        try:
-            queryset = cls.objects.filter(status=True, is_value=False)
-            data = []
-            for instance in queryset:
-                data.append({
-                    "id": instance.id,
-                    "value": instance.value,
-                    "children": list(cls.objects.filter(parent=instance.id).filter(status=1).
-                                     values('label', 'value', 'type', 'color'))
-                })
-            settings.DICTIONARY_CONFIG = {ele.get("value"): ele for ele in data}
-            print("初始化字典配置完成")
-        except ProgrammingError as e:
-            print("请先进行数据库迁移!")
-        return
-
-    @classmethod
-    def get_dictionary_label(cls, key, name):
-        """
-        获取获取字典label值
-        :param key: 字典管理中的key
-        :param name: 对应字典配置的value值
-        :return:
-        """
-        children = settings.DICTIONARY_CONFIG.get(key) or []
-        for ele in children:
-            if ele.get("value") == str(name):
-                return ele.get("label")
-        return ""
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        super().save(force_insert, force_update, using, update_fields)
+        dispatch.refresh_dictionary() # 有更新则刷新字典配置
 
 
 class OperationLog(CoreModel):
@@ -358,57 +330,7 @@ class SystemConfig(CoreModel):
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super().save(force_insert, force_update, using, update_fields)
-        self.init_system_config()
-
-    @classmethod
-    def get_system_config(cls, name):
-        """
-        1.只传父级的key，返回全部子级，{ "父级key.子级key" : "值" }
-        2."父级key.子级key"，返回子级值
-
-        :param name:
-        :return:
-        """
-        key_list = name.split('.')
-        if len(key_list) > 2:
-            return ""
-        elif len(key_list) == 2:
-            parent_key = key_list[0]
-            children_key = key_list[1]
-            instance = cls.objects.filter(parent__key=parent_key, key=children_key, status=True).first()
-            return instance.value if instance else ""
-        elif len(key_list) == 1:
-            instance = cls.objects.filter(key=key_list[0], status=True, parent_id__isnull=True).first()
-            if not instance:
-                return ""
-
-            system_config_obj = cls.objects.filter(parent_id=instance.id, status=True).values(
-                'parent__key', 'key', 'value', 'form_item_type').order_by('sort')
-            data = {}
-            for system_config in system_config_obj:
-                data[f"{system_config.get('parent__key')}.{system_config.get('key')}"] = system_config.get(
-                    'value') or ''
-            return data
-        return ""
-
-    @classmethod
-    def init_system_config(cls):
-        """
-        初始化系统配置
-        :param name:
-        :return:
-        """
-        try:
-            data = {}
-            system_config_obj = SystemConfig.objects.filter(status=True, parent_id__isnull=False).values(
-                'parent__key', 'key', 'value', 'form_item_type').order_by('sort')
-            for system_config in system_config_obj:
-                data[f"{system_config.get('parent__key')}.{system_config.get('key')}"] = system_config.get('value') or ''
-            settings.SYSTEM_CONFIG = data
-            print("初始化系统配置完成")
-        except ProgrammingError as e:
-            print("请先进行数据库迁移!")
-        return
+        dispatch.refresh_system_config() # 有更新则刷新系统配置
 
 
 class LoginLog(CoreModel):
