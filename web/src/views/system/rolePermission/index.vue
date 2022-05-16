@@ -93,7 +93,7 @@
               :default-checked-keys="menuCheckedKeys"
               :check-on-click-node="false"
               empty-text="请先选择角色"
-              :check-strictly="true"
+              :check-strictly="false"
               @check-change="handleCheckClick"
             >
               <span class="custom-tree-node" slot-scope="{ node, data }">
@@ -104,8 +104,7 @@
                       v-for="(item, index) in data.menuPermission"
                       :key="index"
                       v-model="item.checked"
-                    >{{ item.name }}</el-checkbox
-                    >
+                    >{{ item.name }}</el-checkbox>
                   </div>
                 </div>
               </span>
@@ -288,14 +287,16 @@ export default {
      * @param data
      */
     handleCheckClick (data, checked) {
+      console.log(data,checked)
       const {
         menuPermission,
-        children
+        children,
+        parent
       } = data
       for (const item of menuPermission) {
         this.$set(item, 'checked', checked)
       }
-      if (children) {
+      if (children && parent) {
         for (const item of children) {
           this.$refs.menuTree.setChecked(item.id, checked)
         }
