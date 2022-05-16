@@ -287,7 +287,6 @@ export default {
      * @param data
      */
     handleCheckClick (data, checked) {
-      console.log(data,checked)
       const {
         menuPermission,
         children,
