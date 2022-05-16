@@ -36,7 +36,10 @@ def _get_all_system_config():
     system_config_obj = SystemConfig.objects.filter(status=True, parent_id__isnull=False).values(
         'parent__key', 'key', 'value', 'form_item_type').order_by('sort')
     for system_config in system_config_obj:
-        data[f"{system_config.get('parent__key')}.{system_config.get('key')}"] = system_config.get('value') or ''
+        value = system_config.get('value') or ''
+        if value and system_config.get('form_item_type') == 7:
+            value = value[0].get('url')
+        data[f"{system_config.get('parent__key')}.{system_config.get('key')}"] = value
     return data
 
 
