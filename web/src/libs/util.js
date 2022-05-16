@@ -34,7 +34,7 @@ util.open = function (url) {
  */
 util.baseURL = function () {
   var baseURL = process.env.VUE_APP_API
-  if (window.pluginsAll && window.pluginsAll.indexOf('dvadmin-tenant') !== -1) {
+  if (window.pluginsAll && window.pluginsAll.indexOf('dvadmin-tenant-web') !== -1) {
     // document.domain
     var host = baseURL.split('/')[2]
     var prot = host.split(':')[1] || 80

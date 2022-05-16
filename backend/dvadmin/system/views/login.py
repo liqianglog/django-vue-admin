@@ -15,6 +15,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from django.conf import settings
+
+from application import dispatch
 from dvadmin.system.models import Users
 from dvadmin.utils.json_response import ErrorResponse, DetailResponse
 from dvadmin.utils.request_util import save_login_log
@@ -34,7 +36,7 @@ class CaptchaView(APIView):
     )
     def get(self, request):
         data = {}
-        if settings.SYSTEM_CONFIG.get("base.captcha_state"):
+        if dispatch.get_system_config_values("base.captcha_state"):
             hashkey = CaptchaStore.generate_key()
             id = CaptchaStore.objects.filter(hashkey=hashkey).first().id
             imgage = captcha_image(request, hashkey)
@@ -66,7 +68,7 @@ class LoginSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
         captcha = self.initial_data.get("captcha", None)
-        if settings.SYSTEM_CONFIG.get("base.captcha_state"):
+        if dispatch.get_system_config_values("base.captcha_state"):
             if captcha is None:
                 raise CustomValidationError("验证码不能为空")
             self.image_code = CaptchaStore.objects.filter(
