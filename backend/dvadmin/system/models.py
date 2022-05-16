@@ -190,7 +190,7 @@ class Dictionary(CoreModel):
     remark = models.CharField(max_length=2000, blank=True, null=True, verbose_name="备注", help_text="备注")
 
     class Meta:
-        db_table = table_prefix + 'dictionary'
+        db_table = table_prefix + 'system_dictionary'
         verbose_name = "字典表"
         verbose_name_plural = verbose_name
         ordering = ('sort',)
@@ -240,7 +240,7 @@ class FileList(CoreModel):
         super(FileList, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = table_prefix + 'file_list'
+        db_table = table_prefix + 'system_file_list'
         verbose_name = '文件管理'
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
@@ -257,7 +257,7 @@ class Area(CoreModel):
                               db_constraint=False, null=True, blank=True, help_text="父地区编码")
 
     class Meta:
-        db_table = table_prefix + "area"
+        db_table = table_prefix + "system_area"
         verbose_name = '地区表'
         verbose_name_plural = verbose_name
         ordering = ('code',)
