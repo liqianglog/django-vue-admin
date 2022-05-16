@@ -89,6 +89,7 @@ def refresh_dictionary():
     :return:
     """
     if is_tenants_mode():
+        from django_tenants.utils import schema_context
         with schema_context(connection.tenant.schema_name):
             settings.DICTIONARY_CONFIG[connection.tenant.schema_name] = _get_all_dictionary()
     else:
@@ -101,6 +102,7 @@ def refresh_system_config():
     :return:
     """
     if is_tenants_mode():
+        from django_tenants.utils import schema_context
         with schema_context(connection.tenant.schema_name):
             settings.SYSTEM_CONFIG[connection.tenant.schema_name] = _get_all_system_config()
     else:
