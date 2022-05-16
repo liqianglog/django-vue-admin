@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 """
-@author: 猿小天
-@contact: QQ:1638245306
-@Created on: 2021/6/3 003 0:30
-@Remark: 角色管理
+@author: H0nGzA1
+@contact: QQ:2505811377
+@Remark: 部门管理
 """
 from rest_framework import serializers
 
@@ -18,10 +17,24 @@ class DeptSerializer(CustomModelSerializer):
     """
     部门-序列化器
     """
-    parent_name = serializers.CharField(read_only=True,source='parent.name')
+    parent_name = serializers.CharField(read_only=True, source='parent.name')
+
     class Meta:
         model = Dept
-        fields = "__all__"
+        fields = '__all__'
+        read_only_fields = ["id"]
+
+
+class DeptQuerySerializer(CustomModelSerializer):
+    """
+    部门-序列化器
+    """
+    parent_name = serializers.CharField(read_only=True, source='parent.name')
+    code = serializers.CharField(source='id')
+
+    class Meta:
+        model = Dept
+        fields = ['id', 'name', 'parent', 'parent_name', 'code']
         read_only_fields = ["id"]
 
 
@@ -54,6 +67,8 @@ class DeptViewSet(CustomModelViewSet):
     serializer_class = DeptSerializer
     create_serializer_class = DeptCreateUpdateSerializer
     update_serializer_class = DeptCreateUpdateSerializer
+    filter_fields = ['name']
+    search_fields = []
     # extra_filter_backends = []
 
     # def list(self, request, *args, **kwargs):
@@ -64,3 +79,9 @@ class DeptViewSet(CustomModelViewSet):
     #         return self.get_paginated_response(serializer.data)
     #     serializer = self.get_serializer(queryset, many=True, request=request)
     #     return SuccessResponse(data=serializer.data, msg="获取成功")
+
+
+class DeptQueryViewSet(CustomModelViewSet):
+    queryset = Dept.objects.all()
+    serializer_class = DeptQuerySerializer
+    filter_fields = ['name']
