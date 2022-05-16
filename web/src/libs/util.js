@@ -1,6 +1,8 @@
 import cookies from './util.cookies'
 import db from './util.db'
 import log from './util.log'
+import dayjs from 'dayjs'
+
 const util = {
   cookies,
   db,
@@ -45,6 +47,34 @@ util.baseURL = function () {
     baseURL += '/'
   }
   return baseURL
+}
+/**
+ * 自动生成ID
+ */
+util.autoCreateCode = function () {
+  return dayjs().format('YYYYMMDDHHmmssms') + Math.round(Math.random() * 80 + 20)
+}
+/**
+ * 自动生成短 ID
+ */
+util.autoShortCreateCode = function () {
+  var Num = ''
+  for (var i = 0; i < 4; i++) {
+    Num += Math.floor(Math.random() * 10)
+  }
+  return dayjs().format('YYMMDD') + Num
+}
+
+/**
+ * 生产随机字符串
+ */
+util.randomString = function (e) {
+  e = e || 32
+  var t = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'
+  var a = t.length
+  var n = ''
+  for (let i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a))
+  return n
 }
 
 export default util
