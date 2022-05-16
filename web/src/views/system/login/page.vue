@@ -57,6 +57,7 @@
                       <template slot="append">
                         <img
                           class="login-code"
+                          style="cursor: pointer;"
                           height="33px"
                           width="145px"
                           slot="suffix"
