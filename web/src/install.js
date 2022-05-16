@@ -18,6 +18,7 @@ import XEUtils from 'xe-utils'
 import store from '@/store/index'
 import { urlPrefix as deptPrefix } from '@/views/system/dept/api'
 import types from '@/config/d2p-extends/types'
+import { checkPlugins } from '@/views/plugins'
 const uploadUrl = util.baseURL() + 'api/system/file/'
 
 /**
@@ -34,7 +35,11 @@ Vue.use(d2CrudX, { name: 'd2-crud-x' })
 
 // // 官方版【此处为演示与官方版共存而引入，全新项目中可以用d2-crud-x完全替代官方版】
 // Vue.use(d2Crud)
-
+/**
+ * @description 校验插件是否安装
+ * @param {String} pluginName 插件名称
+ */
+Vue.prototype.checkPlugins = checkPlugins
 // 引入d2CrudPlus
 Vue.use(d2CrudPlus, {
   starTip: false,

@@ -7,7 +7,7 @@
     </el-row>
     <el-form ref="form" :model="form" label-width="140px" label-position="left" style="margin-top: 20px">
       <el-form-item :label="item.title" :prop="['array'].indexOf(item.form_item_type_label) >-1?'':item.key"
-                    :key="index" :rules="item.rule"
+                    :key="index" :rules="item.rule || []"
                     v-for="(item,index) in formList"
 
       >
@@ -118,7 +118,7 @@
               :on-error="handleError"
               :on-exceed="handleExceed"
               :before-remove="(file, fileList)=>{beforeRemove(file, fileList, item.key)}"
-              :limit="item.form_item_type_label==='img'?1:5"
+              :limit="5"
               :ref="'fileUpload_'+item.key"
               :data-keyname="item.key"
               :file-list="item.value"
@@ -416,7 +416,7 @@ export default {
           this.$message.error('只允许上传图片')
         } else {
           const uploadImgKey = that.form[imgKey]
-          if (!uploadImgKey) {
+          if (!uploadImgKey || uploadImgKey === '') {
             that.form[imgKey] = []
           }
           // console.log(len)

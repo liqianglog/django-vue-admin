@@ -2169,7 +2169,7 @@ system_config_data = [
         "create_datetime": datetime.datetime.now(),
         "title": "登录网站logo",
         "key": "site_logo",
-        "value": "[]",
+        "value": None,
         "sort": 2,
         "status": 1,
         "data_options": None,

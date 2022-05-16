@@ -1,6 +1,6 @@
 import hashlib
 
-from application import settings
+from application import settings, dispatch
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from rest_framework.decorators import action
@@ -252,7 +252,7 @@ class UserViewSet(CustomModelViewSet):
         """恢复默认密码"""
         instance = Users.objects.filter(id=kwargs.get("pk")).first()
         if instance:
-            instance.set_password(settings.SYSTEM_CONFIG.get("base.default_password"))
+            instance.set_password(dispatch.get_system_config_values("base.default_password"))
             instance.save()
             return DetailResponse(data=None, msg="密码重置成功")
         else:

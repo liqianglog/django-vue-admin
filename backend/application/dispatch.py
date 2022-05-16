@@ -36,7 +36,10 @@ def _get_all_system_config():
     system_config_obj = SystemConfig.objects.filter(status=True, parent_id__isnull=False).values(
         'parent__key', 'key', 'value', 'form_item_type').order_by('sort')
     for system_config in system_config_obj:
-        data[f"{system_config.get('parent__key')}.{system_config.get('key')}"] = system_config.get('value') or ''
+        value = system_config.get('value') or ''
+        if value and system_config.get('form_item_type') == 7:
+            value = value[0].get('url')
+        data[f"{system_config.get('parent__key')}.{system_config.get('key')}"] = value
     return data
 
 
@@ -86,6 +89,7 @@ def refresh_dictionary():
     :return:
     """
     if is_tenants_mode():
+        from django_tenants.utils import schema_context
         with schema_context(connection.tenant.schema_name):
             settings.DICTIONARY_CONFIG[connection.tenant.schema_name] = _get_all_dictionary()
     else:
@@ -98,6 +102,7 @@ def refresh_system_config():
     :return:
     """
     if is_tenants_mode():
+        from django_tenants.utils import schema_context
         with schema_context(connection.tenant.schema_name):
             settings.SYSTEM_CONFIG[connection.tenant.schema_name] = _get_all_system_config()
     else:
