@@ -57,7 +57,7 @@ def init_dictionary():
         else:
             settings.DICTIONARY_CONFIG = _get_all_dictionary()
         print("初始化字典配置完成")
-    except ProgrammingError as e:
+    except Exception as e:
         print("请先进行数据库迁移!")
     return
 
@@ -78,7 +78,7 @@ def init_system_config():
         else:
             settings.SYSTEM_CONFIG = _get_all_system_config()
         print("初始化系统配置完成")
-    except ProgrammingError as e:
+    except Exception as e:
         print("请先进行数据库迁移!")
     return
 
@@ -89,9 +89,10 @@ def refresh_dictionary():
     :return:
     """
     if is_tenants_mode():
-        from django_tenants.utils import schema_context
-        with schema_context(connection.tenant.schema_name):
-            settings.DICTIONARY_CONFIG[connection.tenant.schema_name] = _get_all_dictionary()
+        from django_tenants.utils import tenant_context, get_tenant_model
+        for tenant in get_tenant_model().objects.filter():
+            with tenant_context(tenant):
+                settings.DICTIONARY_CONFIG[connection.tenant.schema_name] = _get_all_dictionary()
     else:
         settings.DICTIONARY_CONFIG = _get_all_dictionary()
 
@@ -102,9 +103,10 @@ def refresh_system_config():
     :return:
     """
     if is_tenants_mode():
-        from django_tenants.utils import schema_context
-        with schema_context(connection.tenant.schema_name):
-            settings.SYSTEM_CONFIG[connection.tenant.schema_name] = _get_all_system_config()
+        from django_tenants.utils import tenant_context, get_tenant_model
+        for tenant in get_tenant_model().objects.filter():
+            with tenant_context(tenant):
+                settings.SYSTEM_CONFIG[connection.tenant.schema_name] = _get_all_system_config()
     else:
         settings.SYSTEM_CONFIG = _get_all_system_config()
 

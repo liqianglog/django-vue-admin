@@ -96,3 +96,4 @@ conf/
 db.sqlite3
 media/
 __pypackages__/
+package-lock.json
