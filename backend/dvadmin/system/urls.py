@@ -4,7 +4,7 @@ from rest_framework import routers
 from dvadmin.system.views.api_white_list import ApiWhiteListViewSet
 from dvadmin.system.views.area import AreaViewSet
 from dvadmin.system.views.button import ButtonViewSet
-from dvadmin.system.views.dept import DeptViewSet, DeptQueryViewSet
+from dvadmin.system.views.dept import DeptViewSet
 from dvadmin.system.views.dictionary import DictionaryViewSet
 from dvadmin.system.views.file_list import FileViewSet
 from dvadmin.system.views.login_log import LoginLogViewSet
@@ -21,7 +21,6 @@ system_url.register(r'button', ButtonViewSet)
 system_url.register(r'menu_button', MenuButtonViewSet)
 system_url.register(r'role', RoleViewSet)
 system_url.register(r'dept', DeptViewSet)
-system_url.register(r'dept_query', DeptQueryViewSet)
 system_url.register(r'user', UserViewSet)
 system_url.register(r'operation_log', OperationLogViewSet)
 system_url.register(r'dictionary', DictionaryViewSet)
@@ -45,5 +44,6 @@ urlpatterns = [
     path('system_config/get_relation_info/', SystemConfigViewSet.as_view({'get': 'get_relation_info'})),
     path('login_log/', LoginLogViewSet.as_view({'get': 'list'})),
     path('login_log/<int:pk>/', LoginLogViewSet.as_view({'get': 'retrieve'})),
+    path('dept_lazy_tree/', DeptViewSet.as_view({'get': 'dept_lazy_tree'})),
 ]
 urlpatterns += system_url.urls

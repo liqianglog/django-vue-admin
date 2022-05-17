@@ -65,6 +65,9 @@ class InitDictionaryViewSet(APIView):
         if dictionary_key:
             if dictionary_key == 'all':
                 data = [ele for ele in dispatch.get_dictionary_config().values()]
+                if not data:
+                    dispatch.refresh_dictionary()
+                    data = [ele for ele in dispatch.get_dictionary_config().values()]
             else:
                 data = self.queryset.filter(parent__value=dictionary_key, status=True).values('label', 'value', 'type',
                                                                                               'color')

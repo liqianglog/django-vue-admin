@@ -208,4 +208,8 @@ class InitSettingsViewSet(APIView):
     permission_classes = []
 
     def get(self, request):
-        return DetailResponse(data=dispatch.get_system_config())
+        data = dispatch.get_system_config()
+        if not data:
+            dispatch.refresh_system_config()
+            data = dispatch.get_system_config()
+        return DetailResponse(data=data)

@@ -44,6 +44,7 @@ export default {
       return crudOptions(this)
     },
     pageRequest (query) {
+      query.lazy = true
       return api.GetList(query)
     },
     addRequest (row) {

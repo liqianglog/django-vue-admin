@@ -1,4 +1,4 @@
-import * as Api from './api'
+import * as api from './api'
 export const crudOptions = (vm) => {
   return {
     // pagination: false,
@@ -13,7 +13,14 @@ export const crudOptions = (vm) => {
       highlightCurrentRow: false,
       defaultExpandAll: true,
       treeConfig: {
-        lazy: true
+        lazy: true,
+        hasChild: 'has_children',
+        loadMethod: ({ row }) => {
+          return api.GetList({ parent: row.id, lazy: true }).then(ret => {
+            return ret.data.data
+          })
+        },
+        iconLoaded: 'el-icon-loading' // 美化loading图标
       }
     },
     rowHandle: {
@@ -94,10 +101,17 @@ export const crudOptions = (vm) => {
         dict: {
           isTree: true,
           label: 'name',
-          value: 'code',
-          getNodes (values) {
+          value: 'id',
+          cache: false,
+          getData: (url, dict, { form, component }) => { // 配置此参数会覆盖全局的getRemoteDictFunc
+            return api.DeptLazy().then(ret => { return ret.data })
+          },
+          getNodes (values, data) {
             // 配置行展示远程获取nodes
-            return Api.GetNodesByValues(values)
+            return new Promise((resolve, reject) => {
+              const row = vm.getEditRow()
+              resolve(row.parent !== null ? [{ name: row.parent_name, id: row.parent }] : [])
+            })
           }
         },
         form: {
@@ -108,17 +122,11 @@ export const crudOptions = (vm) => {
               multiple: false,
               elProps: {
                 lazy: true,
+                hasChild: 'has_children',
                 load (node, resolve) {
                   // 懒加载
-                  // console.log("懒加载");
-                  if (node.level === 0) {
-                    Api.GetTreeChildrenByParentId().then((data) => {
-                      resolve(data)
-                    })
-                    return
-                  }
-                  Api.GetTreeChildrenByParentId(node.data.code).then((data) => {
-                    resolve(data)
+                  api.DeptLazy({ parent: node.data.id }).then((data) => {
+                    resolve(data.data)
                   })
                 }
               }
