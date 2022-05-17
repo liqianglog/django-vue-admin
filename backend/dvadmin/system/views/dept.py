@@ -84,7 +84,10 @@ class DeptViewSet(CustomModelViewSet):
         if lazy:
             # 如果懒加载模式，返回全部
             if not parent:
-                queryset = self.queryset.filter(parent__isnull=True)
+                if self.request.user.is_superuser:
+                    queryset = queryset.filter(parent__isnull=True)
+                else:
+                    queryset = queryset.filter(id=self.request.user.dept_id)
             serializer = self.get_serializer(queryset, many=True, request=request)
             return SuccessResponse(data=serializer.data, msg="获取成功")
 
@@ -99,6 +102,9 @@ class DeptViewSet(CustomModelViewSet):
         parent = self.request.query_params.get('parent')
         queryset = self.filter_queryset(self.get_queryset())
         if not parent:
-            queryset = queryset.filter(parent__isnull=True)
+            if self.request.user.is_superuser:
+                queryset = queryset.filter(parent__isnull=True)
+            else:
+                queryset = queryset.filter(id=self.request.user.dept_id)
         data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
         return DetailResponse(data=data, msg="获取成功")
