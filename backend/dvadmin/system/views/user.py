@@ -1,11 +1,11 @@
 import hashlib
 
-from application import settings, dispatch
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
+from application import dispatch
 from dvadmin.system.models import Users
 from dvadmin.utils.json_response import ErrorResponse, DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -24,6 +24,23 @@ class UserSerializer(CustomModelSerializer):
         exclude = ["password"]
         extra_kwargs = {
             "post": {"required": False},
+        }
+
+
+class UsersInitSerializer(CustomModelSerializer):
+    """
+    初始化获取数信息(用于生成初始化json文件)
+    """
+
+    class Meta:
+        model = Users
+        fields = ["username", "email", 'mobile', 'avatar', "name", 'gender', 'user_type', "dept", 'user_type',
+                  'first_name', 'last_name', 'email', 'is_staff', 'is_active', 'creator', 'dept_belong_id',
+                  'password', 'last_login', 'is_superuser']
+        read_only_fields = ['id']
+        extra_kwargs = {
+            'creator': {'write_only': True},
+            'dept_belong_id': {'write_only': True}
         }
 
 
@@ -53,6 +70,8 @@ class UserCreateSerializer(CustomModelSerializer):
 
     def save(self, **kwargs):
         data = super().save(**kwargs)
+        data.dept_belong_id = data.dept_id
+        data.save()
         data.post.set(self.initial_data.get("post", []))
         return data
 
@@ -76,7 +95,7 @@ class UserUpdateSerializer(CustomModelSerializer):
             CustomUniqueValidator(queryset=Users.objects.all(), message="账号必须唯一")
         ],
     )
-    password = serializers.CharField(required=False, allow_blank=True)
+    # password = serializers.CharField(required=False, allow_blank=True)
     mobile = serializers.CharField(
         max_length=50,
         validators=[
@@ -86,12 +105,14 @@ class UserUpdateSerializer(CustomModelSerializer):
 
     def save(self, **kwargs):
         data = super().save(**kwargs)
+        data.dept_belong_id = data.dept_id
+        data.save()
         data.post.set(self.initial_data.get("post", []))
         return data
 
     class Meta:
         model = Users
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "password"]
         fields = "__all__"
         extra_kwargs = {
             "post": {"required": False, "read_only": True},

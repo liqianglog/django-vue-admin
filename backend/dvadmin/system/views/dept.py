@@ -29,17 +29,46 @@ class DeptSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-class DeptQuerySerializer(CustomModelSerializer):
+class DeptInitSerializer(CustomModelSerializer):
     """
-    部门-序列化器
+    递归深度获取数信息(用于生成初始化json文件)
     """
-    parent_name = serializers.CharField(read_only=True, source='parent.name')
-    code = serializers.CharField(source='id')
+    children = serializers.SerializerMethodField()
+
+    def get_children(self, obj: Dept):
+        data = []
+        instance = Dept.objects.filter(parent_id=obj.id)
+        if instance:
+            serializer = DeptInitSerializer(instance=instance, many=True)
+            data = serializer.data
+        return data
+
+    def save(self, **kwargs):
+        instance = super().save(**kwargs)
+        children = self.initial_data.get('children')
+        if children:
+            for menu_data in children:
+                menu_data['parent'] = instance.id
+                filter_data = {
+                    "name": menu_data['name'],
+                    "parent": menu_data['parent']
+                }
+                instance_obj = Dept.objects.filter(**filter_data).first()
+                serializer = DeptInitSerializer(instance_obj, data=menu_data, request=self.request)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+
+        return instance
 
     class Meta:
         model = Dept
-        fields = ['id', 'name', 'parent', 'parent_name', 'code']
-        read_only_fields = ["id"]
+        fields = ['name', 'sort', 'owner', 'phone', 'email', 'status', 'parent', 'creator', 'dept_belong_id',
+                  'children']
+        extra_kwargs = {
+            'creator': {'write_only': True},
+            'dept_belong_id': {'write_only': True}
+        }
+        read_only_fields = ['id', 'children']
 
 
 class DeptCreateUpdateSerializer(CustomModelSerializer):

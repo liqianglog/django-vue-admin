@@ -1,0 +1,11 @@
+[
+    {
+        "name": "管理员",
+        "key": "admin",
+        "sort": 1,
+        "status": true,
+        "admin": true,
+        "data_range": 3,
+        "remark": null
+    }
+]

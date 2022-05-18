@@ -3,10 +3,11 @@ import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'application.settings')
 
 from django.conf import settings
-from application import dispatch
 from celery import platforms
-if dispatch.is_tenants_mode():
+# 租户模式
+if "django_tenants" in settings.INSTALLED_APPS:
     from tenant_schemas_celery.app import CeleryApp as TenantAwareCeleryApp
+
     app = TenantAwareCeleryApp()
 else:
     from celery import Celery

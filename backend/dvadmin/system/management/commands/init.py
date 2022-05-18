@@ -36,10 +36,19 @@ class Command(BaseCommand):
             try:
                 exec(
                     f"""
-from {app}.initialize import main
-main(reset={reset})
+from {app}.fixtures.initialize import Initialize
+Initialize(reset={reset},app={app}).run()
                 """
                 )
             except ModuleNotFoundError:
-                pass
+                # 兼容之前版本初始化
+                try:
+                    exec(
+                        f"""
+from {app}.initialize import main
+main(reset={reset})
+                """
+                    )
+                except ModuleNotFoundError:
+                    pass
         print("初始化数据完成！")

@@ -1,5 +1,12 @@
 # 初始化基类
+import json
+import os
+
+from rest_framework import request
+
 from application import settings
+from application.settings import BASE_DIR
+from dvadmin.system.models import Users
 
 
 class CoreInitialize:
@@ -8,14 +15,40 @@ class CoreInitialize:
     """
     creator_id = None
     reset = False
+    request = request
+    file_path = None
 
-    def __init__(self, reset=False, creator_id=None):
+    def __init__(self, reset=False, creator_id=None, app=None):
         """
         reset: 是否重置初始化数据
         creator_id: 创建人id
         """
         self.reset = reset or self.reset
         self.creator_id = creator_id or self.creator_id
+        self.app = app or ''
+        self.request.user = Users.objects.order_by('create_datetime').first()
+
+    def init_base(self, Serializer, unique_fields=None):
+        model = Serializer.Meta.model
+        with open(os.path.join(BASE_DIR, *self.app.split('.'), 'fixtures',
+                               f'init_{Serializer.Meta.model._meta.model_name}.json')) as f:
+            for data in json.load(f):
+                filter_data = {}
+                # 配置过滤条件,如果有唯一标识字段则使用唯一标识字段，否则使用全部字段
+                if unique_fields:
+                    for field in unique_fields:
+                        if field in data:
+                            filter_data[field] = data[field]
+                else:
+                    for key, value in data.items():
+                        if isinstance(value, list) or value == None or value == '':
+                            continue
+                        filter_data[key] = value
+                instance = model.objects.filter(**filter_data).first()
+                serializer = Serializer(instance, data=data, request=self.request)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+        print(f"[{self.app}][{model._meta.model_name}]初始化完成")
 
     def save(self, obj, data: list, name=None, no_reset=False):
         name = name or obj._meta.verbose_name
