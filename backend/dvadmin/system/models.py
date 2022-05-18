@@ -109,17 +109,6 @@ class Dept(CoreModel):
         ordering = ('sort',)
 
 
-class Button(CoreModel):
-    name = models.CharField(max_length=64, unique=True, verbose_name="权限名称", help_text="权限名称")
-    value = models.CharField(max_length=64, unique=True, verbose_name="权限值", help_text="权限值")
-
-    class Meta:
-        db_table = table_prefix + "system_button"
-        verbose_name = '权限标识表'
-        verbose_name_plural = verbose_name
-        ordering = ('-name',)
-
-
 class Menu(CoreModel):
     parent = models.ForeignKey(to='Menu', on_delete=models.CASCADE, verbose_name="上级菜单", null=True, blank=True,
                                db_constraint=False, help_text="上级菜单")

@@ -47,7 +47,13 @@ export const crudOptions = (vm) => {
       show: false,
       disabled: true,
       search: {
-        disabled: false
+        disabled: false,
+        component: {
+          props: {
+            clearable: true
+          },
+          placeholder: '请输入关键词'
+        }
       },
       form: {
         disabled: true
@@ -67,84 +73,85 @@ export const crudOptions = (vm) => {
     },
 
     {
-      title: '名称',
+      title: '权限名称',
       key: 'name',
       sortable: true,
+      width: 150,
       search: {
         disabled: false
       },
       type: 'select',
       dict: {
-        cache: false,
-        url: '/api/system/button/',
-        label: 'name',
-        value: 'name',
-        getData: (url, dict) => {
-          return request({ url: url }).then(ret => {
-            return ret.data.data
-          })
-        }
+        data: vm.dictionary('system_button')
       },
       form: {
         rules: [ // 表单校验规则
           { required: true, message: '必填项' }
         ],
         component: {
-          span: 10
+          span: 12,
+          props: {
+            clearable: true,
+            elProps: {
+              allowCreate: true,
+              filterable: true,
+              clearable: true
+            }
+          }
         },
         itemProps: {
           class: { yxtInput: true }
         },
         valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
           if (value != null) {
+            console.log('component.dictOptions', component.dictOptions)
             const obj = component.dictOptions.find(item => {
-              return item.name === value
+              console.log(item.label, value)
+              return item.value === value
             })
-            form.value = obj.value
+            if (obj && obj.value) {
+              form.value = obj.value
+            }
+          }
+        },
+        helper: {
+          render (h) {
+            return (< el-alert title="可手动输入不在列表中的新值" type="warning" description="比较常用的建议放在字典管理中"/>
+            )
           }
         }
       }
     },
     {
-      title: '',
-      key: 'createBtn',
-      type: 'button',
-      show: false,
-      search: {
-        disabled: true
-      },
-      form: {
-        slot: true,
-        component: {
-          span: 2
-        },
-        itemProps: {
-          labelWidth: '0px' // 可以隐藏表单项的label
-        }
-      }
-
-    },
-    {
       title: '权限值',
       key: 'value',
-
-      show: false,
       sortable: true,
+      width: 200,
       search: {
-        disabled: true
+        disabled: false
       },
       type: 'input',
       form: {
-        disabled: true,
-        show: false,
         rules: [ // 表单校验规则
           { required: true, message: '必填项' }
         ],
         component: {
-          span: 12
+          span: 12,
+          placeholder: '请输入权限值',
+          props: {
+            elProps: {
+              clearable: true
+            }
+          }
         },
         itemProps: {
           class: { yxtInput: true }
+        },
+        helper: {
+          render (h) {
+            return (< el-alert title="用于前端按钮权限的判断展示" type="warning" description="使用方法：vm.hasPermissions(权限值)"/>
+            )
+          }
         }
       }
     },
@@ -152,6 +159,7 @@ export const crudOptions = (vm) => {
       title: '请求方式',
       key: 'method',
       sortable: true,
+      width: 150,
       search: {
         disabled: false
       },

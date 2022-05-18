@@ -35,15 +35,6 @@
           @columns-filter-changed="handleColumnsFilterChanged"
         />
       </div>
-      <template slot="createBtnFormSlot" slot-scope="scope">
-        <el-button
-          :disabled="scope.mode === 'view'"
-          icon="el-icon-plus"
-          type="primary"
-          circle
-          @click="onLinkBtn"
-        ></el-button>
-      </template>
     </d2-crud-x>
   </d2-container>
 </template>
@@ -76,10 +67,6 @@ export default {
     },
     delRequest (row) {
       return api.DelObj(row.id)
-    },
-    // 跳转到添加按钮界面
-    onLinkBtn () {
-      router.push({ path: '/button' })
     }
   }
 }

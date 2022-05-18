@@ -1,7 +1,5 @@
 import { request } from '@/api/service'
-import { BUTTON_VALUE_TO_COLOR_MAPPING } from '@/config/button'
 import { urlPrefix as menuPrefix } from './api'
-import { urlPrefix as buttonPrefix } from '../button/api'
 import XEUtils from 'xe-utils'
 export const crudOptions = (vm) => {
   // 验证路由地址
@@ -372,18 +370,6 @@ export const crudOptions = (vm) => {
               multiple: true,
               clearable: true
             }
-          }
-        },
-        dict: {
-          url: buttonPrefix,
-          label: 'name',
-          value: 'name',
-          getData: (url, dict) => {
-            return request({ url: url }).then(ret => {
-              return ret.data.data.map(item => {
-                return Object.assign(item, { color: BUTTON_VALUE_TO_COLOR_MAPPING[item.value] || 'auto' })
-              })
-            })
           }
         }
       },

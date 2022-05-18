@@ -3,7 +3,6 @@ from rest_framework import routers
 
 from dvadmin.system.views.api_white_list import ApiWhiteListViewSet
 from dvadmin.system.views.area import AreaViewSet
-from dvadmin.system.views.button import ButtonViewSet
 from dvadmin.system.views.dept import DeptViewSet
 from dvadmin.system.views.dictionary import DictionaryViewSet
 from dvadmin.system.views.file_list import FileViewSet
@@ -17,7 +16,6 @@ from dvadmin.system.views.user import UserViewSet
 
 system_url = routers.SimpleRouter()
 system_url.register(r'menu', MenuViewSet)
-system_url.register(r'button', ButtonViewSet)
 system_url.register(r'menu_button', MenuButtonViewSet)
 system_url.register(r'role', RoleViewSet)
 system_url.register(r'dept', DeptViewSet)
