@@ -2,16 +2,13 @@
 import os
 
 import django
-from rest_framework import request
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "application.settings")
 django.setup()
 
 from dvadmin.system.views.user import UsersInitSerializer
-from application.settings import BASE_DIR
 from dvadmin.system.views.menu import MenuInitSerializer
 from dvadmin.utils.core_initialize import CoreInitialize
-from dvadmin.system.models import Users
 from dvadmin.system.views.role import RoleInitSerializer
 from dvadmin.system.views.api_white_list import ApiWhiteListInitSerializer
 from dvadmin.system.views.dept import DeptInitSerializer

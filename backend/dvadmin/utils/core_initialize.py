@@ -2,10 +2,10 @@
 import json
 import os
 
+from django.apps import apps
 from rest_framework import request
 
 from application import settings
-from application.settings import BASE_DIR
 from dvadmin.system.models import Users
 
 
@@ -30,8 +30,11 @@ class CoreInitialize:
 
     def init_base(self, Serializer, unique_fields=None):
         model = Serializer.Meta.model
-        with open(os.path.join(BASE_DIR, *self.app.split('.'), 'fixtures',
-                               f'init_{Serializer.Meta.model._meta.model_name}.json')) as f:
+        path_file = os.path.join(apps.get_app_config(self.app.split('.')[-1]).path, 'fixtures',
+                                 f'init_{Serializer.Meta.model._meta.model_name}.json')
+        if not os.path.isfile(path_file):
+            return
+        with open(path_file) as f:
             for data in json.load(f):
                 filter_data = {}
                 # 配置过滤条件,如果有唯一标识字段则使用唯一标识字段，否则使用全部字段
