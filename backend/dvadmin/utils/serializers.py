@@ -23,6 +23,10 @@ class CustomModelSerializer(DynamicFieldsMixin, ModelSerializer):
     (1)self.request能获取到rest_framework.request.Request对象
     """
 
+    # 放空treebeard.mp_tree.MP_Node的继承字段
+    path = serializers.CharField(required=False)
+    depth = serializers.IntegerField(required=False)
+
     # 修改人的审计字段名称, 默认modifier, 继承使用时可自定义覆盖
     modifier_field_id = "modifier"
     modifier_name = serializers.SerializerMethodField(read_only=True)

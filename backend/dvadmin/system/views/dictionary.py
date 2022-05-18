@@ -31,6 +31,7 @@ class DictionaryInitSerializer(CustomModelSerializer):
     """
     初始化获取数信息(用于生成初始化json文件)
     """
+
     children = serializers.SerializerMethodField()
 
     def get_children(self, obj: Dictionary):
@@ -43,29 +44,40 @@ class DictionaryInitSerializer(CustomModelSerializer):
 
     def save(self, **kwargs):
         instance = super().save(**kwargs)
-        children = self.initial_data.get('children')
+        children = self.initial_data.get("children")
         # 菜单表
         if children:
             for data in children:
-                data['parent'] = instance.id
-                filter_data = {
-                    "value": data['value'],
-                    "parent": data['parent']
-                }
+                data["parent"] = instance.id
+                filter_data = {"value": data["value"], "parent": data["parent"]}
                 instance_obj = Dictionary.objects.filter(**filter_data).first()
-                serializer = DictionaryInitSerializer(instance_obj, data=data, request=self.request)
+                serializer = DictionaryInitSerializer(
+                    instance_obj, data=data, request=self.request
+                )
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
         return instance
 
     class Meta:
         model = Dictionary
-        fields = ['label', 'value', 'parent', 'type', 'color', 'is_value', 'status', 'sort', 'remark', 'creator',
-                  'dept_belong_id', 'children']
+        fields = [
+            "label",
+            "value",
+            "parent",
+            "type",
+            "color",
+            "is_value",
+            "status",
+            "sort",
+            "remark",
+            "creator",
+            "dept_belong_id",
+            "children",
+        ]
         read_only_fields = ["id"]
         extra_kwargs = {
-            'creator': {'write_only': True},
-            'dept_belong_id': {'write_only': True}
+            "creator": {"write_only": True},
+            "dept_belong_id": {"write_only": True},
         }
 
 
@@ -76,7 +88,7 @@ class DictionaryCreateUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = Dictionary
-        fields = '__all__'
+        fields = "__all__"
 
 
 class DictionaryViewSet(CustomModelViewSet):
@@ -88,30 +100,46 @@ class DictionaryViewSet(CustomModelViewSet):
     retrieve:单例
     destroy:删除
     """
+
     queryset = Dictionary.objects.all()
     serializer_class = DictionarySerializer
     extra_filter_backends = []
-    search_fields = ['label']
+    search_fields = ["label"]
+
+    def get_queryset(self):
+        parent_id = self.request.query_params.get("parent", None)
+        if parent_id:
+            return self.queryset.get(id=parent_id).get_children()
+        return super().get_queryset()
 
 
 class InitDictionaryViewSet(APIView):
     """
     获取初始化配置
     """
+
     authentication_classes = []
     permission_classes = []
     queryset = Dictionary.objects.all()
 
     def get(self, request):
-        dictionary_key = self.request.query_params.get('dictionary_key')
+        dictionary_key = self.request.query_params.get("dictionary_key")
         if dictionary_key:
-            if dictionary_key == 'all':
+            if dictionary_key == "all":
                 data = [ele for ele in dispatch.get_dictionary_config().values()]
                 if not data:
                     dispatch.refresh_dictionary()
                     data = [ele for ele in dispatch.get_dictionary_config().values()]
             else:
-                data = self.queryset.filter(parent__value=dictionary_key, status=True).values('label', 'value', 'type',
-                                                                                              'color')
+                # data = self.queryset.filter(
+                #     parent__value=dictionary_key, status=True
+                # ).values("label", "value", "type", "color")
+                data = (
+                    Dictionary.objects.get(value=dictionary_key)
+                    .get_children()
+                    .filter(status=True)
+                    .values("label", "value", "type", "color")
+                )
+                print(data)
             return SuccessResponse(data=data, msg="获取成功")
         return SuccessResponse(data=[], msg="获取成功")

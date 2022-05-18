@@ -7,12 +7,14 @@ from rest_framework import request
 
 from application import settings
 from dvadmin.system.models import Users
+from treebeard.mp_tree import MP_Node
 
 
 class CoreInitialize:
     """
     使用方法：继承此类，重写 run方法，在 run 中调用 save 进行数据初始化
     """
+
     creator_id = None
     reset = False
     request = request
@@ -25,13 +27,16 @@ class CoreInitialize:
         """
         self.reset = reset or self.reset
         self.creator_id = creator_id or self.creator_id
-        self.app = app or ''
-        self.request.user = Users.objects.order_by('create_datetime').first()
+        self.app = app or ""
+        self.request.user = Users.objects.order_by("create_datetime").first()
 
     def init_base(self, Serializer, unique_fields=None):
         model = Serializer.Meta.model
-        path_file = os.path.join(apps.get_app_config(self.app.split('.')[-1]).path, 'fixtures',
-                                 f'init_{Serializer.Meta.model._meta.model_name}.json')
+        path_file = os.path.join(
+            apps.get_app_config(self.app.split(".")[-1]).path,
+            "fixtures",
+            f"init_{Serializer.Meta.model._meta.model_name}.json",
+        )
         if not os.path.isfile(path_file):
             return
         with open(path_file) as f:
@@ -44,7 +49,7 @@ class CoreInitialize:
                             filter_data[field] = data[field]
                 else:
                     for key, value in data.items():
-                        if isinstance(value, list) or value == None or value == '':
+                        if isinstance(value, list) or value == None or value == "":
                             continue
                         filter_data[key] = value
                 instance = model.objects.filter(**filter_data).first()
@@ -62,26 +67,33 @@ class CoreInitialize:
                 settings.INITIALIZE_RESET_LIST.append(obj)
             except Exception:
                 pass
-        for ele in data:
-            m2m_dict = {}
-            new_data = {}
-            for key, value in ele.items():
-                # 判断传的 value 为 list 的多对多进行抽离，使用set 进行更新
-                if isinstance(value, list) and value and isinstance(value[0], int):
-                    m2m_dict[key] = value
-                else:
-                    new_data[key] = value
-            object, _ = obj.objects.get_or_create(id=ele.get("id"), defaults=new_data)
-            for key, m2m in m2m_dict.items():
-                m2m = list(set(m2m))
-                if m2m and len(m2m) > 0 and m2m[0]:
-                    exec(f"""
+        if MP_Node in obj.__mro__:
+            obj.load_bulk(data, None, True)
+        else:
+            for ele in data:
+                m2m_dict = {}
+                new_data = {}
+                for key, value in ele.items():
+                    # 判断传的 value 为 list 的多对多进行抽离，使用set 进行更新
+                    if isinstance(value, list) and value and isinstance(value[0], int):
+                        m2m_dict[key] = value
+                    else:
+                        new_data[key] = value
+                object, _ = obj.objects.get_or_create(
+                    id=ele.get("id"), defaults=new_data
+                )
+                for key, m2m in m2m_dict.items():
+                    m2m = list(set(m2m))
+                    if m2m and len(m2m) > 0 and m2m[0]:
+                        exec(
+                            f"""
 if object.{key}:
     values_list = object.{key}.all().values_list('id', flat=True)
     values_list = list(set(list(values_list) + {m2m}))
     object.{key}.set(values_list)
-""")
+"""
+                        )
         print(f"初始化完成[{obj._meta.label} => {name}]")
 
     def run(self):
-        raise NotImplementedError('.run() must be overridden')
+        raise NotImplementedError(".run() must be overridden")

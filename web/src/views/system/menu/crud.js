@@ -379,7 +379,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 50,
+        width: 60,
         type: 'radio',
         dict: {
           data: vm.dictionary('button_whether_bool')
