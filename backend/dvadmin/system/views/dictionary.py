@@ -7,6 +7,7 @@
 @Remark: 字典管理
 """
 from django.conf import settings
+from rest_framework import serializers
 from rest_framework.views import APIView
 
 from application import dispatch
@@ -34,7 +35,7 @@ class DictionaryCreateUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = Dictionary
-        fields = '__all__'
+        fields = "__all__"
 
 
 class DictionaryViewSet(CustomModelViewSet):
@@ -46,30 +47,46 @@ class DictionaryViewSet(CustomModelViewSet):
     retrieve:单例
     destroy:删除
     """
+
     queryset = Dictionary.objects.all()
     serializer_class = DictionarySerializer
     extra_filter_backends = []
-    search_fields = ['label']
+    search_fields = ["label"]
+
+    def get_queryset(self):
+        parent_id = self.request.query_params.get("parent", None)
+        if parent_id:
+            return self.queryset.get(id=parent_id).get_children()
+        return super().get_queryset()
 
 
 class InitDictionaryViewSet(APIView):
     """
     获取初始化配置
     """
+
     authentication_classes = []
     permission_classes = []
     queryset = Dictionary.objects.all()
 
     def get(self, request):
-        dictionary_key = self.request.query_params.get('dictionary_key')
+        dictionary_key = self.request.query_params.get("dictionary_key")
         if dictionary_key:
-            if dictionary_key == 'all':
+            if dictionary_key == "all":
                 data = [ele for ele in dispatch.get_dictionary_config().values()]
                 if not data:
                     dispatch.refresh_dictionary()
                     data = [ele for ele in dispatch.get_dictionary_config().values()]
             else:
-                data = self.queryset.filter(parent__value=dictionary_key, status=True).values('label', 'value', 'type',
-                                                                                              'color')
+                # data = self.queryset.filter(
+                #     parent__value=dictionary_key, status=True
+                # ).values("label", "value", "type", "color")
+                data = (
+                    Dictionary.objects.get(value=dictionary_key)
+                    .get_children()
+                    .filter(status=True)
+                    .values("label", "value", "type", "color")
+                )
+                print(data)
             return SuccessResponse(data=data, msg="获取成功")
         return SuccessResponse(data=[], msg="获取成功")
