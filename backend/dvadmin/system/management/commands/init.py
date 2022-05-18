@@ -29,7 +29,6 @@ class Command(BaseCommand):
             reset = True
         if isinstance(options.get("n"), list) or isinstance(options.get("N"), list):
             reset = False
-        print(f"正在准备初始化数据，{'如有初始化数据，将会不做操作跳过' if not reset else '初始数据将会先删除后新增'}...")
 
         for app in settings.INSTALLED_APPS:
 
@@ -37,7 +36,7 @@ class Command(BaseCommand):
                 exec(
                     f"""
 from {app}.fixtures.initialize import Initialize
-Initialize(reset={reset},app={app}).run()
+Initialize(reset={reset},app="{app}").run()
                 """
                 )
             except ModuleNotFoundError:
