@@ -72,8 +72,7 @@ export default {
     createPermission (scope) {
       this.$router.push({
         name: 'menuButton',
-        params: { id: scope.row.id },
-        query: { name: scope.row.name }
+        query: { id: scope.row.id, name: scope.row.name }
       })
     },
     // 返回views目录下所有vue文件路径

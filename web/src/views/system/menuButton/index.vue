@@ -43,7 +43,6 @@
 import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
-import router from '@/router'
 export default {
   name: 'menuButton',
   mixins: [d2CrudPlus.crud],
@@ -55,11 +54,11 @@ export default {
       return crudOptions(this)
     },
     pageRequest (query) {
-      const menuId = this.$route.params.id
+      const menuId = this.$route.query.id
       return api.GetList({ ...query, menu: menuId })
     },
     addRequest (row) {
-      const menuId = this.$route.params.id
+      const menuId = this.$route.query.id
       return api.createObj(row, menuId)
     },
     updateRequest (row) {
