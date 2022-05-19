@@ -4,7 +4,6 @@ from django.conf import settings
 from django.db import ProgrammingError
 from django.db import connection
 
-
 def is_tenants_mode():
     """
     判断是否为租户模式

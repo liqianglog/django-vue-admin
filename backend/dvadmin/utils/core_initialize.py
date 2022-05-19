@@ -34,7 +34,7 @@ class CoreInitialize:
                                  f'init_{Serializer.Meta.model._meta.model_name}.json')
         if not os.path.isfile(path_file):
             return
-        with open(path_file) as f:
+        with open(path_file,encoding="utf-8") as f:
             for data in json.load(f):
                 filter_data = {}
                 # 配置过滤条件,如果有唯一标识字段则使用唯一标识字段，否则使用全部字段

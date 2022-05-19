@@ -74,7 +74,6 @@ export const crudOptions = (vm) => {
       align: 'center',
       width: 80
     },
-
     viewOptions: {
       componentType: 'form'
     },
