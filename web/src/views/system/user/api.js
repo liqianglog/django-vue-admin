@@ -44,7 +44,7 @@ export function DelObj (id) {
 
 /**
  * 重置密码
- * @param id
+ * @param obj
  * @returns {*}
  * @constructor
  */

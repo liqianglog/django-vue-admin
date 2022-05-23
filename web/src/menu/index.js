@@ -29,43 +29,7 @@ function supplementPath (menu) {
 
 export const menuHeader = supplementPath([])
 
-// export const menuHeader = supplementPath([
-//     { path: '/index', title: '控制台', icon: 'home' },
-//     {
-//         title: '页面',
-//         icon: 'folder-o',
-//         children: [
-//             { path: '/page1', title: '页面 1' },
-//             { path: '/page2', title: '页面 2' },
-//             { path: '/page3', title: '页面 3' }
-//         ]
-//     }
-// ])
-
 export const menuAside = supplementPath([])
-// export const menuAside = supplementPath([
-//     { path: '/index', title: '控制台', icon: 'home' },
-//     {
-//         title: '系统管理',
-//         icon: 'folder-o',
-//         children: [
-//             // { path: '/page1', title: '页面 1' },
-//             // { path: '/page2', title: '页面 2' },
-//             // { path: '/page3', title: '页面 3' },
-//             { path: '/menu', title: '菜单' },
-//             { path: '/user', title: '用户' },
-//             { path: '/button', title: '按钮' },
-//             { path: '/role', title: '角色' },
-//             { path: '/dept', title: '部门' },
-//             { path: '/rolePermission', title: '角色权限' },
-//             {
-//                 title: '日志管理', children: [
-//                     { path: '/operationLog', title: '操作日志' },
-//                 ]
-//             },
-//         ]
-//     }
-// ])
 
 // 请求菜单数据,用于解析路由和侧边栏菜单
 export const getMenu = function () {

@@ -15,7 +15,11 @@ import {
 import { request } from '@/api/service'
 import util from '@/libs/util'
 import XEUtils from 'xe-utils'
+import store from '@/store/index'
 import { urlPrefix as deptPrefix } from '@/views/system/dept/api'
+import types from '@/config/d2p-extends/types'
+import { checkPlugins } from '@/views/plugins'
+const uploadUrl = util.baseURL() + 'api/system/file/'
 
 /**
  // vxe0
@@ -31,7 +35,11 @@ Vue.use(d2CrudX, { name: 'd2-crud-x' })
 
 // // 官方版【此处为演示与官方版共存而引入，全新项目中可以用d2-crud-x完全替代官方版】
 // Vue.use(d2Crud)
-
+/**
+ * @description 校验插件是否安装
+ * @param {String} pluginName 插件名称
+ */
+Vue.prototype.checkPlugins = checkPlugins
 // 引入d2CrudPlus
 Vue.use(d2CrudPlus, {
   starTip: false,
@@ -105,7 +113,7 @@ Vue.use(D2pFullEditor, {
 Vue.use(D2pDemoExtend)
 Vue.use(D2pFileUploader)
 Vue.use(D2pUploader, {
-  defaultType: 'cos',
+  defaultType: 'form',
   cos: {
     domain: 'https://d2p-demo-1251260344.cos.ap-guangzhou.myqcloud.com',
     bucket: 'd2p-demo-1251260344',
@@ -159,15 +167,49 @@ Vue.use(D2pUploader, {
     domain: 'http://d2p.file.veryreader.com'
   },
   form: {
-    action: util.baseURL() + 'upload/form/upload',
-    name: 'file'
+    action: uploadUrl,
+    name: 'file',
+    data: {}, // 上传附加参数
+    headers () {
+      return {
+        Authorization: 'JWT ' + util.cookies.get('token')
+      }
+    },
+    type: 'form',
+    successHandle (ret, option) {
+      if (ret.data === null || ret.data === '') {
+        throw new Error('上传失败')
+      }
+      return { url: util.baseURL() + ret.data.url, key: option.data.key }
+    },
+    withCredentials: false // 是否带cookie
   }
 })
-
+d2CrudPlus.util.columnResolve.addTypes(types)
 // 修改官方字段类型
 const selectType = d2CrudPlus.util.columnResolve.getType('select')
 selectType.component.props.color = 'auto' // 修改官方的字段类型，设置为支持自动染色
-
+// 获取字典配置
+Vue.prototype.dictionary = function (name) {
+  return store.state.d2admin.dictionary.data[name]
+}
+// 获取字典label值
+Vue.prototype.getDictionaryLabel = function (name, value) {
+  const data = store.state.d2admin.dictionary.data[name]
+  if (data && data instanceof Array) {
+    for (var i = 0, len = data.length; i < len; i++) {
+      if (data[i].value === value) {
+        return data[i].label
+      }
+    }
+    return ''
+  }
+  return store.state.d2admin.dictionary.data[name]
+}
+// 获取系统配置
+Vue.prototype.systemConfig = function (name) {
+  return store.state.d2admin.settings.data[name]
+}
 // 默认Columns 结尾 showForm：显示在form中，showTable：显示在table中
 Vue.prototype.commonEndColumns = function (param = {}) {
   /**
@@ -257,7 +299,7 @@ Vue.prototype.commonEndColumns = function (param = {}) {
       type: 'table-selector',
       dict: {
         cache: true,
-        url: '/api/system/dept/?limit=999&status=1',
+        url: deptPrefix,
         isTree: true,
         value: 'id', // 数据字典中value字段的属性名
         label: 'name', // 数据字典中label字段的属性名
@@ -268,6 +310,7 @@ Vue.prototype.commonEndColumns = function (param = {}) {
         }) => {
           return request({
             url: url,
+            params: { limit: 999, status: 1 }
           }).then(ret => {
             return ret.data.data
           })

@@ -35,15 +35,6 @@
           @columns-filter-changed="handleColumnsFilterChanged"
         />
       </div>
-      <template slot="createBtnFormSlot" slot-scope="scope">
-        <el-button
-          :disabled="scope.mode === 'view'"
-          icon="el-icon-plus"
-          type="primary"
-          circle
-          @click="onLinkBtn"
-        ></el-button>
-      </template>
     </d2-crud-x>
   </d2-container>
 </template>
@@ -52,7 +43,6 @@
 import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
-import router from '@/router'
 export default {
   name: 'menuButton',
   mixins: [d2CrudPlus.crud],
@@ -64,11 +54,11 @@ export default {
       return crudOptions(this)
     },
     pageRequest (query) {
-      const menuId = this.$route.params.id
+      const menuId = this.$route.query.id
       return api.GetList({ ...query, menu: menuId })
     },
     addRequest (row) {
-      const menuId = this.$route.params.id
+      const menuId = this.$route.query.id
       return api.createObj(row, menuId)
     },
     updateRequest (row) {
@@ -76,10 +66,6 @@ export default {
     },
     delRequest (row) {
       return api.DelObj(row.id)
-    },
-    // 跳转到添加按钮界面
-    onLinkBtn () {
-      router.push({ path: '/button' })
     }
   }
 }

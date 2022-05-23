@@ -1,11 +1,3 @@
-/*
- * @创建文件时间: 2021-06-01 22:41:21
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-08-09 20:21:47
- * 联系Qq:1638245306
- * @文件介绍: 字典管理接口
- */
 import { request } from '@/api/service'
 import XEUtils from 'xe-utils'
 export const urlPrefix = '/api/system/dictionary/'
@@ -14,7 +6,6 @@ export const urlPrefix = '/api/system/dictionary/'
  * 列表查询
  */
 export function GetList (query) {
-  query.limit = 999
   return request({
     url: urlPrefix,
     method: 'get',

@@ -7,7 +7,9 @@
 @Remark: 字典管理
 """
 from rest_framework import serializers
+from rest_framework.views import APIView
 
+from application import dispatch
 from dvadmin.system.models import Dictionary
 from dvadmin.utils.json_response import SuccessResponse
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -25,6 +27,48 @@ class DictionarySerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
+class DictionaryInitSerializer(CustomModelSerializer):
+    """
+    初始化获取数信息(用于生成初始化json文件)
+    """
+    children = serializers.SerializerMethodField()
+
+    def get_children(self, obj: Dictionary):
+        data = []
+        instance = Dictionary.objects.filter(parent_id=obj.id)
+        if instance:
+            serializer = DictionaryInitSerializer(instance=instance, many=True)
+            data = serializer.data
+        return data
+
+    def save(self, **kwargs):
+        instance = super().save(**kwargs)
+        children = self.initial_data.get('children')
+        # 菜单表
+        if children:
+            for data in children:
+                data['parent'] = instance.id
+                filter_data = {
+                    "value": data['value'],
+                    "parent": data['parent']
+                }
+                instance_obj = Dictionary.objects.filter(**filter_data).first()
+                serializer = DictionaryInitSerializer(instance_obj, data=data, request=self.request)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+        return instance
+
+    class Meta:
+        model = Dictionary
+        fields = ['label', 'value', 'parent', 'type', 'color', 'is_value', 'status', 'sort', 'remark', 'creator',
+                  'dept_belong_id', 'children']
+        read_only_fields = ["id"]
+        extra_kwargs = {
+            'creator': {'write_only': True},
+            'dept_belong_id': {'write_only': True}
+        }
+
+
 class DictionaryCreateUpdateSerializer(CustomModelSerializer):
     """
     字典管理 创建/更新时的列化器
@@ -33,26 +77,6 @@ class DictionaryCreateUpdateSerializer(CustomModelSerializer):
     class Meta:
         model = Dictionary
         fields = '__all__'
-
-
-class DictionaryTreeSerializer(CustomModelSerializer):
-    """
-    字典表的树形序列化器
-    """
-    children = serializers.SerializerMethodField(read_only=True)
-
-    def get_children(self, instance):
-        queryset = Dictionary.objects.filter(parent=instance.id).filter(status=1)
-        if queryset:
-            serializer = DictionaryTreeSerializer(queryset, many=True)
-            return serializer.data
-        else:
-            return None
-
-    class Meta:
-        model = Dictionary
-        fields = "__all__"
-        read_only_fields = ["id"]
 
 
 class DictionaryViewSet(CustomModelViewSet):
@@ -68,3 +92,26 @@ class DictionaryViewSet(CustomModelViewSet):
     serializer_class = DictionarySerializer
     extra_filter_backends = []
     search_fields = ['label']
+
+
+class InitDictionaryViewSet(APIView):
+    """
+    获取初始化配置
+    """
+    authentication_classes = []
+    permission_classes = []
+    queryset = Dictionary.objects.all()
+
+    def get(self, request):
+        dictionary_key = self.request.query_params.get('dictionary_key')
+        if dictionary_key:
+            if dictionary_key == 'all':
+                data = [ele for ele in dispatch.get_dictionary_config().values()]
+                if not data:
+                    dispatch.refresh_dictionary()
+                    data = [ele for ele in dispatch.get_dictionary_config().values()]
+            else:
+                data = self.queryset.filter(parent__value=dictionary_key, status=True).values('label', 'value', 'type',
+                                                                                              'color')
+            return SuccessResponse(data=data, msg="获取成功")
+        return SuccessResponse(data=[], msg="获取成功")

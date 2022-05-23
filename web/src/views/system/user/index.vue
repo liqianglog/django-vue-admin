@@ -4,8 +4,7 @@
       ref="d2Crud"
       v-bind="_crudProps"
       v-on="_crudListeners"
-      crud.options.tableType="vxe-table"
-      @resetPwd="resetPwd"
+      @resetPassword="resetPassword"
     >
       <div slot="header">
         <crud-search
@@ -19,8 +18,9 @@
             v-permission="'Create'"
             type="primary"
             @click="addRow"
-            ><i class="el-icon-plus" /> 新增</el-button
           >
+            <i class="el-icon-plus" /> 新增
+          </el-button>
         </el-button-group>
         <crud-toolbar
           :search.sync="crud.searchOptions.show"
@@ -31,18 +31,35 @@
         />
       </div>
     </d2-crud-x>
-    <el-dialog title="密码重置" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
-      <el-form :model="resetPwdForm"  ref="resetPwdForm"  :rules="passwordRules">
+    <el-dialog
+      title="密码重置"
+      :visible.sync="dialogFormVisible"
+      :close-on-click-modal="false"
+      width="30%"
+    >
+      <el-form :model="resetPwdForm" ref="resetPwdForm" :rules="passwordRules">
         <el-form-item label="密码" prop="pwd">
-          <el-input v-model="resetPwdForm.pwd" type="password" show-password  clearable autocomplete="off"></el-input>
+          <el-input
+            v-model="resetPwdForm.pwd"
+            type="password"
+            show-password
+            clearable
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item label="再次输入密码" prop="pwd2">
-          <el-input v-model="resetPwdForm.pwd2" type="password" show-password  clearable autocomplete="off"></el-input>
+          <el-input
+            v-model="resetPwdForm.pwd2"
+            type="password"
+            show-password
+            clearable
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="resetPwdSubmit">确 定</el-button>
+        <el-button type="primary" @click="resetPwdSubmit">重 置</el-button>
       </div>
     </el-dialog>
   </d2-container>
@@ -87,13 +104,20 @@ export default {
         pwd2: null
       },
       passwordRules: {
-        pwd: [{ required: true, message: '必填项' }, { validator: validatePass, trigger: 'blur' }],
-        pwd2: [{ required: true, message: '必填项' }, { validator: validatePass2, trigger: 'blur' }]
+        pwd: [
+          { required: true, message: '必填项' },
+          { validator: validatePass, trigger: 'blur' }
+        ],
+        pwd2: [
+          { required: true, message: '必填项' },
+          { validator: validatePass2, trigger: 'blur' }
+        ]
       }
     }
   },
   methods: {
     getCrudOptions () {
+      this.crud.searchOptions.form.user_type = 0
       return crudOptions(this)
     },
     pageRequest (query) {
@@ -109,7 +133,7 @@ export default {
       return api.DelObj(row.id)
     },
     // 重置密码弹框
-    resetPwd ({ row }) {
+    resetPassword ({ row }) {
       this.dialogFormVisible = true
       this.resetPwdForm.id = row.id
     },
@@ -123,7 +147,7 @@ export default {
             newPassword: that.$md5(that.resetPwdForm.pwd),
             newPassword2: that.$md5(that.resetPwdForm.pwd2)
           }
-          api.ResetPwd(params).then(res => {
+          api.ResetPwd(params).then((res) => {
             that.dialogFormVisible = false
             that.resetPwdForm = {
               id: null,

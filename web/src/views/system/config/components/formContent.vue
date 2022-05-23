@@ -5,9 +5,9 @@
       <el-col :span="12">变量值</el-col>
       <el-col :span="4" :offset="4">变量名</el-col>
     </el-row>
-    <el-form ref="form" :model="form" label-width="100px" label-position="left" style="margin-top: 20px">
+    <el-form ref="form" :model="form" label-width="140px" label-position="left" style="margin-top: 20px">
       <el-form-item :label="item.title" :prop="['array'].indexOf(item.form_item_type_label) >-1?'':item.key"
-                    :key="index" :rules="item.rule"
+                    :key="index" :rules="item.rule || []"
                     v-for="(item,index) in formList"
 
       >
@@ -17,23 +17,111 @@
                     :type="item.form_item_type_label"
                     v-model="form[item.key]" :placeholder="item.placeholder" clearable></el-input>
 
-          <el-input-number :key="index" v-else-if="item.form_item_type_label==='number'" v-model="form[item.key]"
+          <el-input-number :key="index" v-else-if="item.form_item_type_label === 'number'" v-model="form[item.key]"
                            :min="0"></el-input-number>
+          <!--     datetime、date、time     -->
+          <el-date-picker
+            v-else-if="['datetime','date','time'].indexOf(item.form_item_type_label) >-1"
+            v-model="form[item.key]"
+            :key="index"
+            :type="item.form_item_type_label"
+            :placeholder="item.placeholder">
+          </el-date-picker>
+          <!--    select      -->
+          <el-select
+            :key="index"
+            v-else-if="item.form_item_type_label === 'select'"
+            v-model="form[item.key]"
+            :placeholder="item.placeholder"
+            clearable
+          >
+            <el-option
+              v-for="item in dictionary(item.setting)  || []"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <!--    checkbox      -->
+          <el-checkbox-group
+            :key="index"
+            v-else-if="item.form_item_type_label === 'checkbox'"
+            v-model="form[item.key]"
+            :placeholder="item.placeholder"
+          >
+            <el-checkbox
+              v-for="item in dictionary(item.setting)  || []"
+              :key="item.value"
+              :label="item.value"
+              :value="item.value">
+              {{ item.label }}
+            </el-checkbox>
+          </el-checkbox-group>
+          <!--    radio      -->
+          <el-radio-group
+            :key="index"
+            v-else-if="item.form_item_type_label === 'radio'"
+            v-model="form[item.key]"
+            :placeholder="item.placeholder"
+            clearable
+          >
+            <el-radio
+              v-for="item in dictionary(item.setting)  || []"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+              {{ item.label }}
+            </el-radio>
+          </el-radio-group>
+          <!--    switch      -->
+          <el-switch
+            :key="index"
+            v-else-if="item.form_item_type_label === 'switch'"
+            v-model="form[item.key]"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
           <!--     图片     -->
           <div v-else-if="['img','imgs'].indexOf(item.form_item_type_label) >-1" :key="index">
             <el-upload
-              :action="imgUploadUrl"
+              :action="uploadUrl"
               :headers="uploadHeaders"
-              name="url"
+              name="file"
               :accept="'image/*'"
               :on-preview="handlePictureCardPreview"
               :on-success="(response, file, fileList)=>{handleUploadSuccess(response, file, fileList,item.key)}"
               :on-error="handleError"
               :on-exceed="handleExceed"
+              :before-remove="(file, fileList)=>{beforeRemove(file, fileList, item.key)}"
+              :multiple="item.form_item_type_label!=='img'"
               :limit="item.form_item_type_label==='img'?1:5"
               :ref="'imgUpload_'+item.key"
               :data-keyname="item.key"
               :file-list="item.value?item.value:[]"
+              list-type="picture-card"
+            >
+              <i class="el-icon-plus"></i>
+              <div slot="tip" class="el-upload__tip">选取图片后,需手动上传到服务器,并且只能上传jpg/png文件</div>
+            </el-upload>
+            <el-dialog :visible.sync="dialogImgVisible">
+              <img width="100%" :src="dialogImageUrl" alt="">
+            </el-dialog>
+          </div>
+          <!--     文件     -->
+          <div v-else-if="['file'].indexOf(item.form_item_type_label) >-1" :key="index">
+            <el-upload
+              :action="uploadUrl"
+              :headers="uploadHeaders"
+              name="file"
+              :on-preview="handlePictureCardPreview"
+              :on-success="(response, file, fileList)=>{handleUploadSuccess(response, file, fileList,item.key)}"
+              :on-error="handleError"
+              :on-exceed="handleExceed"
+              :before-remove="(file, fileList)=>{beforeRemove(file, fileList, item.key)}"
+              :limit="5"
+              :ref="'fileUpload_'+item.key"
+              :data-keyname="item.key"
+              :file-list="item.value"
               list-type="picture-card"
             >
               <i class="el-icon-plus"></i>
@@ -56,7 +144,7 @@
                 label: item.setting.field,
             }"
             :pagination="true"
-              :multiple="item.form_item_type_label==='manytomany'?true:false"
+              :multiple="item.form_item_type_label ==='manytomany'"
             ></table-selector>
           </div>
           <!--   数组       -->
@@ -171,8 +259,7 @@ export default {
           }
         ]
       },
-      imgUploadUrl: util.baseURL() + 'api/system/img/',
-      // imgUploadUrl: 'http://public.yuanxiaotian.com:8000/api/system/img/',
+      uploadUrl: util.baseURL() + 'api/system/file/',
       uploadHeaders: {
         Authorization: 'JWT ' + util.cookies.get('token')
       },
@@ -191,7 +278,15 @@ export default {
         const form = {}
         for (const item of data) {
           const key = item.key
-          form[key] = item.value
+          if (item.value) {
+            form[key] = item.value
+          } else {
+            if ([5, 12, 14].indexOf(item.form_item_type) !== -1) {
+              form[key] = []
+            } else {
+              form[key] = undefined
+            }
+          }
           if (item.form_item_type_label === 'array') {
             that.$nextTick(() => {
               const tableName = 'xTable_' + key
@@ -237,24 +332,25 @@ export default {
           item.value = tableData
         }
         // 赋值操作
-        if (keys[index] === item.key) {
-          if (item.form_item_type_label !== 'array') {
-            item.value = values[index]
-          }
-          // 必填项的验证
-          if (['img', 'imgs'].indexOf(item.form_item_type_label) > -1) {
-            for (const arr of item.rule) {
-              if (arr.required && item.value === null) {
-                that.$message.error(item.title + '不能为空')
-                return
+        keys.map((mapKey, mapIndex) => {
+          if (mapKey === item.key) {
+            if (item.form_item_type_label !== 'array') {
+              item.value = values[mapIndex]
+            }
+            // 必填项的验证
+            if (['img', 'imgs'].indexOf(item.form_item_type_label) > -1) {
+              for (const arr of item.rule) {
+                if (arr.required && item.value === null) {
+                  that.$message.error(item.title + '不能为空')
+                  return
+                }
               }
             }
           }
-        }
+        })
       }
       that.$refs.form.clearValidate()
       that.$refs.form.validate((valid) => {
-        console.log(this.formList)
         if (valid) {
           api.saveContent(this.options.id,
             this.formList).then(res => {
@@ -272,10 +368,16 @@ export default {
       const $table = this.$refs[tableName][0]
       const { tableData } = $table.getTableData()
       const tableLength = tableData.length
-      if (tableLength !== 0) {
+      if (tableLength === 0) {
+        const { row: newRow } = $table.insert()
+        console.log(newRow)
+      } else {
         const errMap = await $table.validate().catch(errMap => errMap)
         if (errMap) {
           this.$message.error('校验不通过！')
+        } else {
+          const { row: newRow } = $table.insert()
+          console.log(newRow)
         }
       }
     },
@@ -292,13 +394,6 @@ export default {
       this.dialogImageUrl = file.url
       this.dialogImgVisible = true
     },
-    // 上传提交
-    submitUpload (key) {
-      const refName = 'imgUpload_' + key
-      const ref = this.$refs[refName][0]
-      ref.submit()
-      this.uploadImgKey = key
-    },
     // 判断是否为图片
     // 封装一个判断图片文件后缀名的方法
     isImage (fileName) {
@@ -314,20 +409,20 @@ export default {
         msg
       } = response
       if (code === 2000) {
-        const { url } = response.data.data
+        const { url } = response.data
         const { name } = file
         const type = that.isImage(name)
         if (!type) {
           this.$message.error('只允许上传图片')
         } else {
           const uploadImgKey = that.form[imgKey]
-          if (!uploadImgKey) {
+          if (!uploadImgKey || uploadImgKey === '') {
             that.form[imgKey] = []
           }
           // console.log(len)
           const dict = {
             name: name,
-            url: url
+            url: util.baseURL() + url
           }
           that.form[imgKey].push(dict)
         }
@@ -342,6 +437,14 @@ export default {
     // 上传超出限制
     handleExceed () {
       this.$message.error('超过文件上传数量')
+    },
+    // 删除时的钩子
+    beforeRemove (file, fileList, key) {
+      var index = 0
+      this.form[key].map((value, inx) => {
+        if (value.uid === file.uid) index = inx
+      })
+      this.form[key].splice(index, 1)
     }
   },
   mounted () {

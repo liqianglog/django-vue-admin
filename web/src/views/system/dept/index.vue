@@ -1,11 +1,3 @@
-<!--
- * @创建文件时间: 2021-06-01 22:41:21
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-07-31 22:35:15
- * 联系Qq:1638245306
- * @文件介绍: 部门管理
--->
 <template>
   <d2-container :class="{ 'page-compact': crud.pageOptions.compact }">
     <!--    <template slot="header">测试页面1</template>-->
@@ -52,6 +44,7 @@ export default {
       return crudOptions(this)
     },
     pageRequest (query) {
+      query.lazy = true
       return api.GetList(query)
     },
     addRequest (row) {

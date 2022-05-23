@@ -1,7 +1,5 @@
 import { request } from '@/api/service'
-import { BUTTON_STATUS_BOOL, BUTTON_WHETHER_BOOL, BUTTON_VALUE_TO_COLOR_MAPPING } from '@/config/button'
 import { urlPrefix as menuPrefix } from './api'
-import { urlPrefix as buttonPrefix } from '../button/api'
 import XEUtils from 'xe-utils'
 export const crudOptions = (vm) => {
   // 验证路由地址
@@ -27,7 +25,8 @@ export const crudOptions = (vm) => {
     options: {
       rowId: 'id',
       height: '100%', // 表格高度100%, 使用toolbar必须设置
-      highlightCurrentRow: false
+      highlightCurrentRow: false,
+      defaultExpandAll: true
     },
     rowHandle: {
       view: {
@@ -75,7 +74,6 @@ export const crudOptions = (vm) => {
       align: 'center',
       width: 80
     },
-
     viewOptions: {
       componentType: 'form'
     },
@@ -129,14 +127,14 @@ export const crudOptions = (vm) => {
         },
         type: 'cascader',
         dict: {
-          url: menuPrefix + '?limit=999&status=1&is_catalog=1',
+          url: menuPrefix,
           cache: false,
           isTree: true,
           value: 'id', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
           children: 'children', // 数据字典中children字段的属性名
           getData: (url, dict, { form, component }) => { // 配置此参数会覆盖全局的getRemoteDictFunc
-            return request({ url: url }).then(ret => {
+            return request({ url: url, params: { limit: 999, status: 1, is_catalog: 1 } }).then(ret => {
               const responseData = ret.data.data
               const result = XEUtils.toArrayTree(responseData, { parentKey: 'parent', strict: true })
               return [{ id: null, name: '根节点', children: result }]
@@ -222,12 +220,21 @@ export const crudOptions = (vm) => {
           disabled: true
         },
         dict: {
-          data: BUTTON_WHETHER_BOOL
+          data: vm.dictionary('button_whether_bool')
         },
         form: {
           value: false,
           component: {
-            placeholder: '请选择是否外链接'
+            placeholder: '请选择是否目录'
+          },
+          valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
+            if (!value) {
+              form.web_path = undefined
+              form.component = undefined
+              form.component_name = undefined
+              form.cache = false
+              form.is_link = false
+            }
           }
         }
       },
@@ -237,7 +244,7 @@ export const crudOptions = (vm) => {
         width: 70,
         type: 'radio',
         dict: {
-          data: BUTTON_WHETHER_BOOL
+          data: vm.dictionary('button_whether_bool')
         },
         form: {
           value: false,
@@ -249,7 +256,9 @@ export const crudOptions = (vm) => {
             placeholder: '请选择是否外链接'
           },
           valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
-            form.web_path = null
+            form.web_path = undefined
+            form.component = undefined
+            form.component_name = undefined
             if (value) {
               getColumn('web_path').title = '外链接地址'
               getColumn('web_path').component.placeholder = '请输入外链接地址'
@@ -372,18 +381,6 @@ export const crudOptions = (vm) => {
               clearable: true
             }
           }
-        },
-        dict: {
-          url: buttonPrefix,
-          label: 'name',
-          value: 'name',
-          getData: (url, dict) => {
-            return request({ url: url }).then(ret => {
-              return ret.data.data.map(item => {
-                return Object.assign(item, { color: BUTTON_VALUE_TO_COLOR_MAPPING[item.value] || 'auto' })
-              })
-            })
-          }
         }
       },
       {
@@ -395,7 +392,7 @@ export const crudOptions = (vm) => {
         width: 50,
         type: 'radio',
         dict: {
-          data: BUTTON_WHETHER_BOOL
+          data: vm.dictionary('button_whether_bool')
         },
         form: {
           value: false,
@@ -423,13 +420,16 @@ export const crudOptions = (vm) => {
         width: 75,
         type: 'radio',
         dict: {
-          data: BUTTON_WHETHER_BOOL
+          data: vm.dictionary('button_whether_bool')
         },
         form: {
           value: true,
           component: {
             placeholder: '请选择侧边可见'
           },
+          rules: [ // 表单校验规则
+            { required: true, message: '侧边可见必填项' }
+          ],
           helper: {
             render (h) {
               return (< el-alert title="是否显示在侧边菜单中" type="warning" />
@@ -448,15 +448,20 @@ export const crudOptions = (vm) => {
         width: 70,
         type: 'radio',
         dict: {
-          data: BUTTON_STATUS_BOOL
+          data: vm.dictionary('button_status_bool')
         },
         form: {
           value: true,
           component: {
             placeholder: '请选择状态'
-          }
+          },
+          rules: [ // 表单校验规则
+            { required: true, message: '状态必填项' }
+          ]
         }
       }
-    ].concat(vm.commonEndColumns({ update_datetime: { showTable: false } }))
+    ].concat(vm.commonEndColumns({
+      update_datetime: { showTable: false }
+    }))
   }
 }

@@ -1,20 +1,6 @@
-<!--
- * @创建文件时间: 2021-06-01 22:41:21
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-07-29 22:17:28
- * 联系Qq:1638245306
- * @文件介绍:
--->
 <template>
-  <d2-container :class="{ 'page-compact': crud.pageOptions.compact }">
-    <!--    <template slot="header">测试页面1</template>-->
-    <d2-crud-x
-      ref="d2Crud"
-      v-bind="_crudProps"
-      v-on="_crudListeners"
-      @createPermission="createPermission"
-    >
+  <d2-container>
+    <d2-crud-x ref="d2Crud" v-bind="_crudProps" v-on="_crudListeners">
       <div slot="header">
         <crud-search
           ref="search"
@@ -22,11 +8,7 @@
           @submit="handleSearch"
         />
         <el-button-group>
-          <el-button
-            size="small"
-            type="primary"
-            v-permission="'Create'"
-            @click="addRow"
+          <el-button size="small" type="primary" @click="addRow"
             ><i class="el-icon-plus" /> 新增</el-button
           >
         </el-button-group>
@@ -47,41 +29,53 @@ import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 export default {
-  name: 'buttons',
+  name: 'subDictionary',
   mixins: [d2CrudPlus.crud],
+  props: {
+    // 容器样式
+    dictionaryRow: {
+      type: Object,
+      required: true
+    }
+  },
+  watch: {
+    dictionaryRow () {
+      this.doRefresh({ from: 'load' })
+    }
+  },
   data () {
-    return {}
+    return {
+    }
   },
   methods: {
     getCrudOptions () {
       return crudOptions(this)
     },
     pageRequest (query) {
+      query.is_value = true
+      query.parent = this.dictionaryRow.id
       return api.GetList(query)
     },
     addRequest (row) {
-      console.log('api', api)
+      d2CrudPlus.util.dict.clear()
+      row.is_value = true
+      row.parent = this.dictionaryRow.id
       return api.createObj(row)
     },
     updateRequest (row) {
-      console.log('----', row)
+      d2CrudPlus.util.dict.clear()
+      row.is_value = true
+      row.parent = this.dictionaryRow.id
       return api.UpdateObj(row)
     },
     delRequest (row) {
       return api.DelObj(row.id)
-    },
-    // 授权
-    createPermission (scope) {
-      console.log('custom btn:', scope)
-      this.$message(
-        '自定义操作按钮：' + scope.row.data + ',index:' + scope.index
-      )
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .yxtInput {
   .el-form-item__label {
     color: #49a1ff;

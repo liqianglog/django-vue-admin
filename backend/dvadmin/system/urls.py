@@ -1,17 +1,8 @@
-# -*- coding: utf-8 -*-
-
-"""
-@author: 猿小天
-@contact: QQ:1638245306
-@Created on: 2021/6/1 001 23:05
-@Remark: 系统管理的路由文件
-"""
 from django.urls import path
 from rest_framework import routers
 
 from dvadmin.system.views.api_white_list import ApiWhiteListViewSet
 from dvadmin.system.views.area import AreaViewSet
-from dvadmin.system.views.button import ButtonViewSet
 from dvadmin.system.views.dept import DeptViewSet
 from dvadmin.system.views.dictionary import DictionaryViewSet
 from dvadmin.system.views.file_list import FileViewSet
@@ -25,7 +16,6 @@ from dvadmin.system.views.user import UserViewSet
 
 system_url = routers.SimpleRouter()
 system_url.register(r'menu', MenuViewSet)
-system_url.register(r'button', ButtonViewSet)
 system_url.register(r'menu_button', MenuButtonViewSet)
 system_url.register(r'role', RoleViewSet)
 system_url.register(r'dept', DeptViewSet)
@@ -42,6 +32,7 @@ urlpatterns = [
     path('menu/web_router/', MenuViewSet.as_view({'get': 'web_router'})),
     path('user/user_info/', UserViewSet.as_view({'get': 'user_info', 'put': 'update_user_info'})),
     path('user/change_password/<int:pk>/', UserViewSet.as_view({'put': 'change_password'})),
+    path('user/reset_to_default_password/<int:pk>/', UserViewSet.as_view({'put': 'reset_to_default_password'})),
     path('user/reset_password/<int:pk>/', UserViewSet.as_view({'put': 'reset_password'})),
     path('user/export/', UserViewSet.as_view({'post': 'export_data', })),
     path('user/import/', UserViewSet.as_view({'get': 'import_data', 'post': 'import_data'})),
@@ -51,5 +42,6 @@ urlpatterns = [
     path('system_config/get_relation_info/', SystemConfigViewSet.as_view({'get': 'get_relation_info'})),
     path('login_log/', LoginLogViewSet.as_view({'get': 'list'})),
     path('login_log/<int:pk>/', LoginLogViewSet.as_view({'get': 'retrieve'})),
+    path('dept_lazy_tree/', DeptViewSet.as_view({'get': 'dept_lazy_tree'})),
 ]
 urlpatterns += system_url.urls

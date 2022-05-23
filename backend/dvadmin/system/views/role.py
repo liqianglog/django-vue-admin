@@ -8,7 +8,6 @@
 """
 from rest_framework import serializers
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 
 from dvadmin.system.models import Role, Menu
 from dvadmin.system.views.dept import DeptSerializer
@@ -29,6 +28,22 @@ class RoleSerializer(CustomModelSerializer):
         model = Role
         fields = "__all__"
         read_only_fields = ["id"]
+
+
+class RoleInitSerializer(CustomModelSerializer):
+    """
+    初始化获取数信息(用于生成初始化json文件)
+    """
+
+    class Meta:
+        model = Role
+        fields = ['name', 'key', 'sort', 'status', 'admin', 'data_range', 'remark',
+                  'creator', 'dept_belong_id']
+        read_only_fields = ["id"]
+        extra_kwargs = {
+            'creator': {'write_only': True},
+            'dept_belong_id': {'write_only': True}
+        }
 
 
 class RoleCreateUpdateSerializer(CustomModelSerializer):
@@ -90,4 +105,3 @@ class RoleViewSet(CustomModelViewSet):
         queryset = Menu.objects.filter(status=1).all()
         serializer = MenuPermissonSerializer(queryset, many=True)
         return SuccessResponse(data=serializer.data)
-

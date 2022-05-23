@@ -1,5 +1,4 @@
 import { request } from '@/api/service'
-import { BUTTON_STATUS_BOOL } from '@/config/button'
 
 export const crudOptions = (vm) => {
   return {
@@ -170,7 +169,7 @@ export const crudOptions = (vm) => {
         width: 150,
         type: 'radio',
         dict: {
-          data: BUTTON_STATUS_BOOL
+          data: vm.dictionary('button_status_bool')
         },
         form: {
           value: true,

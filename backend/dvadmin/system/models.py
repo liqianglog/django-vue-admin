@@ -4,6 +4,7 @@ import os
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from application import dispatch
 from dvadmin.utils.models import CoreModel, table_prefix
 
 STATUS_CHOICES = (
@@ -19,10 +20,11 @@ class Users(AbstractUser, CoreModel):
     avatar = models.CharField(max_length=255, verbose_name="头像", null=True, blank=True, help_text="头像")
     name = models.CharField(max_length=40, verbose_name="姓名", help_text="姓名")
     GENDER_CHOICES = (
-        (0, "女"),
+        (0, "未知"),
         (1, "男"),
+        (2, "女"),
     )
-    gender = models.IntegerField(choices=GENDER_CHOICES, default=1, verbose_name="性别", null=True, blank=True,
+    gender = models.IntegerField(choices=GENDER_CHOICES, default=0, verbose_name="性别", null=True, blank=True,
                                  help_text="性别")
     USER_TYPE = (
         (0, "后台用户"),
@@ -107,17 +109,6 @@ class Dept(CoreModel):
         ordering = ('sort',)
 
 
-class Button(CoreModel):
-    name = models.CharField(max_length=64, unique=True, verbose_name="权限名称", help_text="权限名称")
-    value = models.CharField(max_length=64, unique=True, verbose_name="权限值", help_text="权限值")
-
-    class Meta:
-        db_table = table_prefix + "system_button"
-        verbose_name = '权限标识表'
-        verbose_name_plural = verbose_name
-        ordering = ('-name',)
-
-
 class Menu(CoreModel):
     parent = models.ForeignKey(to='Menu', on_delete=models.CASCADE, verbose_name="上级菜单", null=True, blank=True,
                                db_constraint=False, help_text="上级菜单")
@@ -166,21 +157,36 @@ class MenuButton(CoreModel):
 
 
 class Dictionary(CoreModel):
-    code = models.CharField(max_length=100, blank=True, null=True, verbose_name="编码", help_text="编码")
-    label = models.CharField(max_length=100, blank=True, null=True, verbose_name="显示名称", help_text="显示名称")
-    value = models.CharField(max_length=100, blank=True, null=True, verbose_name="实际值", help_text="实际值")
+    TYPE_LIST = (
+        (0, 'text'),
+        (1, 'number'),
+        (2, 'date'),
+        (3, 'datetime'),
+        (4, 'time'),
+        (5, 'files'),
+        (6, 'boolean'),
+        (7, 'images'),
+    )
+    label = models.CharField(max_length=100, blank=True, null=True, verbose_name="字典名称", help_text="字典名称")
+    value = models.CharField(max_length=200, blank=True, null=True, verbose_name="字典编号", help_text="字典编号/实际值")
     parent = models.ForeignKey(to='self', related_name='sublist', db_constraint=False, on_delete=models.PROTECT,
-                               blank=True, null=True,
-                               verbose_name="父级", help_text="父级")
-    status = models.BooleanField(default=True, blank=True, verbose_name="状态", help_text="状态")
+                               blank=True, null=True, verbose_name="父级", help_text="父级")
+    type = models.IntegerField(choices=TYPE_LIST, default=0, verbose_name="数据值类型", help_text="数据值类型")
+    color = models.CharField(max_length=20, blank=True, null=True, verbose_name="颜色", help_text="颜色")
+    is_value = models.BooleanField(default=False, verbose_name="是否为value值", help_text="是否为value值,用来做具体值存放")
+    status = models.BooleanField(default=True, verbose_name="状态", help_text="状态")
     sort = models.IntegerField(default=1, verbose_name="显示排序", null=True, blank=True, help_text="显示排序")
     remark = models.CharField(max_length=2000, blank=True, null=True, verbose_name="备注", help_text="备注")
 
     class Meta:
-        db_table = table_prefix + 'dictionary'
+        db_table = table_prefix + 'system_dictionary'
         verbose_name = "字典表"
         verbose_name_plural = verbose_name
         ordering = ('sort',)
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        super().save(force_insert, force_update, using, update_fields)
+        dispatch.refresh_dictionary() # 有更新则刷新字典配置
 
 
 class OperationLog(CoreModel):
@@ -223,7 +229,7 @@ class FileList(CoreModel):
         super(FileList, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = table_prefix + 'file_list'
+        db_table = table_prefix + 'system_file_list'
         verbose_name = '文件管理'
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
@@ -240,7 +246,7 @@ class Area(CoreModel):
                               db_constraint=False, null=True, blank=True, help_text="父地区编码")
 
     class Meta:
-        db_table = table_prefix + "area"
+        db_table = table_prefix + "system_area"
         verbose_name = '地区表'
         verbose_name_plural = verbose_name
         ordering = ('code',)
@@ -271,26 +277,29 @@ class SystemConfig(CoreModel):
     parent = models.ForeignKey(to='self', verbose_name='父级', on_delete=models.CASCADE,
                                db_constraint=False, null=True, blank=True, help_text="父级")
     title = models.CharField(max_length=50, verbose_name="标题", help_text="标题")
-    key = models.CharField(max_length=20, verbose_name="键", help_text="键")
+    key = models.CharField(max_length=20, verbose_name="键", help_text="键", db_index=True)
     value = models.JSONField(max_length=100, verbose_name="值", help_text="值", null=True, blank=True)
     sort = models.IntegerField(default=0, verbose_name="排序", help_text="排序", blank=True)
-    status = models.BooleanField(default=False, verbose_name="启用状态", help_text="启用状态")
+    status = models.BooleanField(default=True, verbose_name="启用状态", help_text="启用状态")
     data_options = models.JSONField(verbose_name="数据options", help_text="数据options", null=True, blank=True)
     FORM_ITEM_TYPE_LIST = (
         (0, 'text'),
-        (1, 'textarea'),
-        (2, 'number'),
-        (3, 'select'),
-        (4, 'radio'),
+        (1, 'datetime'),
+        (2, 'date'),
+        (3, 'textarea'),
+        (4, 'select'),
         (5, 'checkbox'),
-        (6, 'date'),
-        (7, 'datetime'),
-        (8, 'time'),
-        (9, 'imgs'),
-        (10, 'files'),
+        (6, 'radio'),
+        (7, 'img'),
+        (8, 'file'),
+        (9, 'switch'),
+        (10, 'number'),
         (11, 'array'),
-        (12, 'foreignkey'),
-        (13, 'manytomany'),
+        (12, 'imgs'),
+        (13, 'foreignkey'),
+        (14, 'manytomany'),
+        (15, 'time'),
+
     )
     form_item_type = models.IntegerField(choices=FORM_ITEM_TYPE_LIST, verbose_name="表单类型", help_text="表单类型", default=0,
                                          blank=True)
@@ -303,9 +312,14 @@ class SystemConfig(CoreModel):
         verbose_name = '系统配置表'
         verbose_name_plural = verbose_name
         ordering = ('sort',)
+        unique_together = (("key", "parent_id"),)
 
     def __str__(self):
         return f"{self.title}"
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        super().save(force_insert, force_update, using, update_fields)
+        dispatch.refresh_system_config() # 有更新则刷新系统配置
 
 
 class LoginLog(CoreModel):

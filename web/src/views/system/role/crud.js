@@ -1,5 +1,3 @@
-import { BUTTON_STATUS_BOOL, BUTTON_WHETHER_BOOL } from '@/config/button'
-
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
@@ -161,7 +159,7 @@ export const crudOptions = (vm) => {
 
       type: 'radio',
       dict: {
-        data: BUTTON_WHETHER_BOOL
+        data: vm.dictionary('button_whether_bool')
       },
       form: {
         value: false,
@@ -180,7 +178,7 @@ export const crudOptions = (vm) => {
       },
       type: 'radio',
       dict: {
-        data: BUTTON_STATUS_BOOL
+        data: vm.dictionary('button_status_bool')
       },
       form: {
         value: true,

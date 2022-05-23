@@ -1,22 +1,24 @@
-/*
- * @创建文件时间: 2021-06-01 22:41:21
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-07-04 22:39:11
- * 联系Qq:1638245306
- * @文件介绍: 权限管理接口
- */
 import { request } from '@/api/service'
+import XEUtils from 'xe-utils'
+export const urlPrefix = '/api/system/dictionary/'
 
-export const urlPrefix = '/api/system/button/'
-
+/**
+ * 列表查询
+ */
 export function GetList (query) {
   return request({
     url: urlPrefix,
     method: 'get',
-    data: query
+    params: query
+  }).then(res => {
+    // 将列表数据转换为树形数据
+    res.data.data = XEUtils.toArrayTree(res.data.data, { parentKey: 'parent' })
+    return res
   })
 }
+/**
+ * 新增
+ */
 export function createObj (obj) {
   return request({
     url: urlPrefix,
@@ -25,6 +27,9 @@ export function createObj (obj) {
   })
 }
 
+/**
+ * 修改
+ */
 export function UpdateObj (obj) {
   return request({
     url: urlPrefix + obj.id + '/',
@@ -32,6 +37,9 @@ export function UpdateObj (obj) {
     data: obj
   })
 }
+/**
+ * 删除
+ */
 export function DelObj (id) {
   return request({
     url: urlPrefix + id + '/',

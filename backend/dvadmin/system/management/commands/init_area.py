@@ -13,6 +13,8 @@ import pypinyin
 from django.core.management import BaseCommand
 from django.db import connection
 
+from application import dispatch
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'application.settings')
 django.setup()
 from application.settings import BASE_DIR
@@ -45,7 +47,7 @@ def area_list(code_list, pcode=None, depth=1):
 
 
 def main():
-    with open(os.path.join(BASE_DIR, 'dvadmin', 'system', 'util', 'pca-code.json'), 'r',encoding="utf-8") as load_f:
+    with open(os.path.join(BASE_DIR, 'dvadmin', 'system', 'util', 'pca-code.json'), 'r', encoding="utf-8") as load_f:
         code_list = json.load(load_f)
     area_list(code_list)
     if Area.objects.count() == 0:
@@ -68,9 +70,9 @@ class Command(BaseCommand):
 
         print(f"正在准备初始化省份数据...")
 
-        if hasattr(connection, 'tenant') and connection.tenant.schema_name:
+        if dispatch.is_tenants_mode():
             from django_tenants.utils import get_tenant_model
-            from django_tenants.utils import tenant_context,schema_context
+            from django_tenants.utils import tenant_context
             for tenant in get_tenant_model().objects.exclude(schema_name='public'):
                 with tenant_context(tenant):
                     print(f"租户[{connection.tenant.schema_name}]初始化数据开始...")
@@ -79,4 +81,3 @@ class Command(BaseCommand):
         else:
             main()
         print("省份数据初始化数据完成！")
-

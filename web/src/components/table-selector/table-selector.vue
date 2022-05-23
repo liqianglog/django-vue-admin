@@ -242,7 +242,7 @@ export default {
           ...defaultElProps.columns
         ]
       } else {
-        defaultElProps.radioConfig = this.elProps.radioConfig
+        defaultElProps.radioConfig = this.elProps
           ? this.elProps.radioConfig
           : {}
         defaultElProps.columns = [

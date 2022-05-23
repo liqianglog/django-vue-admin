@@ -16,8 +16,15 @@
       <el-form-item label="表单类型" prop="form_item_type">
         <el-select v-model="form.form_item_type" placeholder="请选择" clearable>
           <el-option :label="item.label" :value="item.value" :key="index"
-                     v-for="(item,index) in typeOptions"></el-option>
+                     v-for="(item,index) in dictionary('config_form_type')"></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item
+        v-if="[4,5,6].indexOf(form.form_item_type)>-1"
+        label="字典key"
+        prop="setting"
+        :rules="[{required: true,message: '不能为空'}]">
+        <el-input v-model="form.setting" placeholder="请输入dictionary中key值" clearable></el-input>
       </el-form-item>
       <div v-if="[13,14].indexOf(form.form_item_type)>-1">
         <associationTable ref="associationTable" v-model="form.setting"
@@ -81,8 +88,8 @@ export default {
             message: '请输入'
           },
           {
-            pattern: /^[A-Za-z0-9]+$/,
-            message: '只支持字母和数字的输入'
+            pattern: /^[A-Za-z0-9_]+$/,
+            message: '请输入数字、字母或下划线'
           }
         ],
         form_item_type: [
@@ -94,23 +101,6 @@ export default {
       },
       // 父级内容
       parentOptions: [],
-      // 表单类型
-      typeOptions: [
-        { value: 0, label: '短文本' },
-        { value: 1, label: '长文本' },
-        { value: 2, label: '数字框' },
-        { value: 3, label: '选择框' },
-        { value: 4, label: '单选框' },
-        { value: 5, label: '复选框' },
-        { value: 6, label: '日期' },
-        { value: 7, label: '日期时间' },
-        { value: 8, label: '时间' },
-        { value: 9, label: '图片' },
-        { value: 10, label: '文件' },
-        { value: 11, label: '数组' },
-        { value: 12, label: '关联表' },
-        { value: 13, label: '关联表(多选)' }
-      ],
       ruleOptions: [
         {
           label: '必填项',
@@ -119,6 +109,10 @@ export default {
         {
           label: '邮箱',
           value: '{ "type": "email", "message": "请输入正确的邮箱地址"}'
+        },
+        {
+          label: 'URL地址',
+          value: '{ "type": "url", "message": "请输入正确的URL地址"}'
         }
       ]
     }
@@ -162,7 +156,6 @@ export default {
       const that = this
       return new Promise(function (resolve, reject) {
         if (that.$refs.associationTable) {
-          console.log(that.$refs.associationTable.onSubmit())
           if (!that.$refs.associationTable.onSubmit()) {
             // eslint-disable-next-line prefer-promise-reject-errors
             return reject(false)
