@@ -187,6 +187,11 @@ class Dictionary(CoreModel):
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super().save(force_insert, force_update, using, update_fields)
         dispatch.refresh_dictionary() # 有更新则刷新字典配置
+    
+    def delete(self, using=None, keep_parents=False):
+        res = super().delete(using, keep_parents)
+        dispatch.refresh_dictionary()
+        return res
 
 
 class OperationLog(CoreModel):
@@ -323,7 +328,7 @@ class SystemConfig(CoreModel):
     
     def delete(self, using=None, keep_parents=False):
         res = super().delete(using, keep_parents)
-        dispatch.refresh_dictionary()
+        dispatch.refresh_system_config()
         return res
 
 
