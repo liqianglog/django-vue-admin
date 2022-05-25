@@ -18,8 +18,7 @@ import XEUtils from 'xe-utils'
 import store from '@/store/index'
 import { urlPrefix as deptPrefix } from '@/views/system/dept/api'
 import types from '@/config/d2p-extends/types'
-import { checkPlugins } from '@/views/plugins'
-const uploadUrl = util.baseURL() + 'api/system/file/'
+import { checkPlugins, plugins } from '@/views/plugins'
 
 /**
  // vxe0
@@ -32,7 +31,8 @@ const uploadUrl = util.baseURL() + 'api/system/file/'
 // 按如下重命名引入可与官方版共存，index.vue中标签用<d2-crud-x />使用加强版
 // 不传name，则d2CrudX的标签仍为<d2-crud>,不可与官方版共存
 Vue.use(d2CrudX, { name: 'd2-crud-x' })
-
+// 注册dvadmin插件
+Vue.use(plugins)
 // // 官方版【此处为演示与官方版共存而引入，全新项目中可以用d2-crud-x完全替代官方版】
 // Vue.use(d2Crud)
 /**
@@ -167,7 +167,7 @@ Vue.use(D2pUploader, {
     domain: 'http://d2p.file.veryreader.com'
   },
   form: {
-    action: uploadUrl,
+    action: util.baseURL() + 'api/system/file/',
     name: 'file',
     data: {}, // 上传附加参数
     headers () {
@@ -180,7 +180,7 @@ Vue.use(D2pUploader, {
       if (ret.data === null || ret.data === '') {
         throw new Error('上传失败')
       }
-      return { url: util.baseURL() + ret.data.url, key: option.data.key }
+      return { url: util.baseURL() + ret.data.url, key: option.data.key, id: ret.data.id }
     },
     withCredentials: false // 是否带cookie
   }
@@ -368,6 +368,20 @@ Vue.prototype.commonEndColumns = function (param = {}) {
       title: '创建时间',
       key: 'create_datetime',
       width: 160,
+      search: {
+        disabled: !showData.create_datetime.showForm,
+        width: 240,
+        component: { // 查询框组件配置，默认根据form配置生成
+          name: 'el-date-picker',
+          props: {
+            type: 'daterange',
+            'range-separator': '至',
+            'start-placeholder': '开始',
+            'end-placeholder': '结束',
+            valueFormat: 'yyyy-MM-dd'
+          }
+        }
+      },
       show: showData.create_datetime.showTable,
       type: 'datetime',
       sortable: true,
