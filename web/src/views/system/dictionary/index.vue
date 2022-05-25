@@ -1,15 +1,12 @@
-<!--
- * @创建文件时间: 2021-06-01 22:41:21
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-08-09 20:27:09
- * 联系Qq:1638245306
- * @文件介绍: 字典管理
--->
 <template>
   <d2-container :class="{ 'page-compact': crud.pageOptions.compact }">
     <!--    <template slot="header">测试页面1</template>-->
-    <d2-crud-x ref="d2Crud" v-bind="_crudProps" v-on="_crudListeners" @dictionaryConfigure="dictionaryConfigure">
+    <d2-crud-x
+      ref="d2Crud"
+      v-bind="_crudProps"
+      v-on="_crudListeners"
+      @dictionaryConfigure="dictionaryConfigure"
+    >
       <div slot="header">
         <crud-search
           ref="search"
@@ -30,14 +27,18 @@
         />
       </div>
     </d2-crud-x>
-    <el-drawer
-      :visible.sync="drawer"
-      :size="700">
-        <div slot="title">
-          <span>字典列表</span>
-          <el-tag size="small" style="margin-left: 10px">{{dictionaryRow.label}}</el-tag>
-        </div>
-      <sub-dictionary style="margin-top: 80px;margin-left: 10px" :dictionaryRow="dictionaryRow"></sub-dictionary>
+    <el-drawer :visible.sync="drawer" :size="700">
+      <div slot="title">
+        <span>字典列表</span>
+        <el-tag size="small" style="margin-left: 10px">{{
+          dictionaryRow.label
+        }}</el-tag>
+      </div>
+      <sub-dictionary
+        style="margin-top: 80px; margin-left: 10px"
+        :dictionaryRow="dictionaryRow"
+      >
+      </sub-dictionary>
     </el-drawer>
   </d2-container>
 </template>
@@ -80,6 +81,10 @@ export default {
     dictionaryConfigure (scope) {
       this.drawer = true
       this.dictionaryRow = scope.row
+    },
+    doAfterRowChange (row) {
+      this.doRefresh({ from: 'afterRowChange' })
+      this.$store.dispatch('d2admin/dictionary/load')
     }
   }
 }

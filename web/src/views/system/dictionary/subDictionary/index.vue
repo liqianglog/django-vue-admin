@@ -44,8 +44,7 @@ export default {
     }
   },
   data () {
-    return {
-    }
+    return {}
   },
   methods: {
     getCrudOptions () {
@@ -70,6 +69,10 @@ export default {
     },
     delRequest (row) {
       return api.DelObj(row.id)
+    },
+    doAfterRowChange (row) {
+      this.doRefresh({ from: 'afterRowChange' })
+      this.$store.dispatch('d2admin/dictionary/load')
     }
   }
 }

@@ -170,7 +170,7 @@ export const crudOptions = (vm) => {
             }
           }
         },
-        width: 180,
+        minWidth: 180,
         type: 'input',
         form: {
           rules: [ // 表单校验规则
@@ -389,7 +389,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 50,
+        width: 60,
         type: 'radio',
         dict: {
           data: vm.dictionary('button_whether_bool')
