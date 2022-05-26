@@ -78,7 +78,7 @@ export default {
     /** 下载模板操作 */
     importTemplate () {
       downloadFile({
-        url: process.env.VUE_APP_API + this.importApi,
+        url: util.baseURL() + this.importApi,
         params: {},
         method: 'get'
       })

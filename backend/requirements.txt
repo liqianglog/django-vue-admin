@@ -4,7 +4,7 @@ chardet==4.0.0
 coreapi==2.3.3
 coreschema==0.0.4
 Django==3.2.3
-django-comment-migrate==0.1.1
+django-comment-migrate==0.1.5
 django-cors-headers==3.10.1
 django-filter==21.1
 django-ranged-response==0.2.0
