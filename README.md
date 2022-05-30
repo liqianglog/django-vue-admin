@@ -45,12 +45,12 @@
 
 - 插件市场：[戳我](https://bbs.django-vue-admin.com/plugMarket.html)👩‍👦‍👦
 
--  django-vue-admin交流01群：812482043 [点击链接加入群聊](https://qm.qq.com/cgi-bin/qm/qr?k=aJVwjDvH-Es4MPJQuoO32N0SucK22TE5&jump_from=webapi)
+-  django-vue-admin交流01群(已满)：812482043 [点击链接加入群聊](https://qm.qq.com/cgi-bin/qm/qr?k=aJVwjDvH-Es4MPJQuoO32N0SucK22TE5&jump_from=webapi)
 -  django-vue-admin交流02群：687252418  [点击链接加入群聊](https://qm.qq.com/cgi-bin/qm/qr?k=4jJN4IjWGfxJ8YJXbb_gTsuWjR34WLdc&jump_from=webapi)
 
 - 二维码
 
-  <img src='https://gitee.com/liqianglog/django-vue-admin/raw/master/dvadmin-ui/src/assets/images/qq.jpg' width='200'>
+  <img src='https://images.gitee.com/uploads/images/2022/0530/233203_5fb11883_5074988.jpeg' width='200'>
 
 ## 源码地址
 
@@ -82,7 +82,7 @@ github地址：[https://github.com/liqianglog/django-vue-admin](https://github.c
 
 ## 准备工作
 ~~~
-Python >= 3.6.0 (推荐3.8+版本)
+Python >= 3.8.0 (推荐3.8+版本)
 nodejs >= 14.0 (推荐最新)
 Mysql >= 5.7.0 (可选，默认数据库sqlite3，推荐8.0版本)
 Redis(可选，最新版)
@@ -148,14 +148,15 @@ npm run dev
 # 先安装docker-compose (自行百度安装),执行此命令等待安装，如有使用celery插件请打开docker-compose.yml中celery 部分注释
 docker-compose up -d
 # 初始化后端数据(第一次执行即可)
-docker exec -ti DVAdmin-django bash
+docker exec -ti dvadmin-django bash
 python manage.py makemigrations 
 python manage.py migrate
-python manage.py init -y
+python manage.py init_area
+python manage.py init
 exit
 
 前端地址：http://127.0.0.1:8080
-后端地址：http://127.0.0.1:8000
+后端地址：http://127.0.0.1:8080/api
 # 在服务器上请把127.0.0.1 换成自己公网ip
 账号：superadmin 密码：admin123456
 
@@ -171,21 +172,25 @@ docker-compose up -d --build
 
 ## 演示图✅
 
-![image-01](https://gitee.com/liqianglog/pic/raw/master/master/01.png)
+![image-01](https://images.gitee.com/uploads/images/2022/0530/234137_b58c8f98_5074988.png)
 
-![image-02](https://gitee.com/liqianglog/pic/raw/master/master/02.png)
+![image-02](https://images.gitee.com/uploads/images/2022/0530/234240_39834603_5074988.png)
 
-![image-03](https://gitee.com/liqianglog/pic/raw/master/master/03.png)
+![image-03](https://images.gitee.com/uploads/images/2022/0530/234339_35e728a0_5074988.png)
 
-![image-04](https://gitee.com/liqianglog/pic/raw/master/master/04.png)
+![image-04](https://images.gitee.com/uploads/images/2022/0530/234426_957036b0_5074988.png)
 
-![image-05](https://gitee.com/liqianglog/pic/raw/master/master/05.png)
+![image-05](https://images.gitee.com/uploads/images/2022/0530/234458_898be492_5074988.png)
 
-![image-06](https://gitee.com/liqianglog/pic/raw/master/master/06.png)
+![image-06](https://images.gitee.com/uploads/images/2022/0530/234521_35b40076_5074988.png)
 
-![image-07](https://gitee.com/liqianglog/pic/raw/master/master/06.png)
+![image-07](https://images.gitee.com/uploads/images/2022/0530/234615_c2325639_5074988.png)
 
-![image-08](https://gitee.com/liqianglog/pic/raw/master/master/08.png)
+![image-08](https://images.gitee.com/uploads/images/2022/0530/234639_1ed6cc93_5074988.png)
+
+![image-09](https://images.gitee.com/uploads/images/2022/0530/234815_cea2c53f_5074988.png)
+
+![image-10](https://images.gitee.com/uploads/images/2022/0530/234840_5f3e5f53_5074988.png)
 
 
 

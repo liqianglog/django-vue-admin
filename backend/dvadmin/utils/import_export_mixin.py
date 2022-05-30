@@ -65,9 +65,7 @@ class ImportSerializerMixin:
         for ele in data:
             # 获取 unique 字段
             filter_dic = {i: ele.get(i) for i in list(set(self.import_field_dict.keys()) & set(unique_list))}
-            print(11, ele)
             instance = filter_dic and queryset.filter(**filter_dic).first()
-            print(22, instance)
             if instance and not updateSupport:
                 continue
             if not filter_dic:

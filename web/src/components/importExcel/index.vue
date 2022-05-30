@@ -59,7 +59,7 @@ export default {
           // 设置上传的请求头部
           headers: { Authorization: 'JWT ' + util.cookies.get('token') },
           // 上传的地址
-          url: process.env.VUE_APP_API + '/api/system/file/'
+          url: util.baseURL() + 'api/system/file/'
         }
       }
     },
@@ -78,7 +78,7 @@ export default {
     /** 下载模板操作 */
     importTemplate () {
       downloadFile({
-        url: process.env.VUE_APP_API + this.importApi,
+        url: util.baseURL() + this.importApi,
         params: {},
         method: 'get'
       })

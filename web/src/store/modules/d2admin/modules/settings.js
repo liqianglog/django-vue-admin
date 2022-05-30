@@ -35,12 +35,13 @@ export default {
      */
     async load ({ state, dispatch, commit }) {
       // store 赋值
-      state.data = await dispatch('d2admin/db/get', {
+      const data = await dispatch('d2admin/db/get', {
         dbName: 'sys',
         path: 'settings.init',
         defaultValue: {},
         user: true
       }, { root: true })
+      commit('set', data)
     }
   },
   mutations: {
@@ -52,6 +53,16 @@ export default {
      */
     async get (state, key, value) {
       return state[key]
+    },
+    /**
+     * @description 赋值系统配置
+     * @param {Object} state state
+     * @param {Object} value active
+     */
+    async set (state, value) {
+      state.data = value
+      state.keepRecord = value['login.keep_record']
+      return state.data
     }
   }
 }

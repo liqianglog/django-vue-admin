@@ -76,7 +76,7 @@ export const handleRouter = function (menuData) {
         meta: {
           title: item.name,
           auth: true,
-          cache: item.cache === 1
+          cache: item.cache
         }
       }
       result.push(obj)
