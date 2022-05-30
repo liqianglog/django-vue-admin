@@ -165,8 +165,9 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
     def find_filter_lookups(self, orm_lookups, search_term_key):
         for lookup in orm_lookups:
             # if lookup.find(search_term_key) >= 0:
+            new_lookup = lookup.split("__")[0]
             # 修复条件搜索错误 bug
-            if lookup == search_term_key:
+            if new_lookup == search_term_key:
                 return lookup
         return None
 
