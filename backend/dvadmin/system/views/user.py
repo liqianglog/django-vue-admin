@@ -101,6 +101,7 @@ class UserUpdateSerializer(CustomModelSerializer):
         validators=[
             CustomUniqueValidator(queryset=Users.objects.all(), message="手机号必须唯一")
         ],
+        allow_blank=True
     )
 
     def save(self, **kwargs):
