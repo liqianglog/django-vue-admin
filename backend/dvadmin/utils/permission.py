@@ -79,7 +79,7 @@ class CustomPermission(BasePermission):
         else:
             api = request.path  # 当前请求接口
             method = request.method  # 当前请求方法
-            methodList = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+            methodList = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH']
             method = methodList.index(method)
             # ***接口白名单***
             api_white_list = ApiWhiteList.objects.values(permission__api=F('url'), permission__method=F('method'))
