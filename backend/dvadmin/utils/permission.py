@@ -69,11 +69,11 @@ class CustomPermission(BasePermission):
         # 当权限为空时,则可以访问
         is_head = getattr(view, 'head', None)
         if is_head:
-            head_kwargs = getattr(view.head, 'kwargs', None)
-            if head_kwargs:
-                _permission_classes = getattr(head_kwargs, 'permission_classes', None)
-                if _permission_classes is None:
-                    return True
+            head_kwargs = getattr(view.head, 'kwargs', {})
+            _permission_classes = getattr(head_kwargs, 'permission_classes', None)
+            _permission_classes = head_kwargs.get('permission_classes', None)
+            if _permission_classes == []:
+                return True
         # 判断是否是超级管理员
         if request.user.is_superuser:
             return True
@@ -85,17 +85,16 @@ class CustomPermission(BasePermission):
             # ***接口白名单***
             api_white_list = ApiWhiteList.objects.values(permission__api=F('url'), permission__method=F('method'))
             api_white_list = [
-                str(item.get('permission__api').replace('{id}', '.*?')) + ":" + str(item.get('permission__method')) for
-                item in api_white_list if item.get('permission__api')]
+                str(item.get('permission__api').replace('{id}', '([a-zA-Z0-9-]+)')) + ":" + str(
+                    item.get('permission__method')) + '$' for item in api_white_list if item.get('permission__api')]
             # ********#
             if not hasattr(request.user, "role"):
                 return False
             userApiList = request.user.role.values('permission__api', 'permission__method')  # 获取当前用户的角色拥有的所有接口
             ApiList = [
-                str(item.get('permission__api').replace('{id}', '.*?')) + ":" + str(item.get('permission__method')) for
-                item in
-                       userApiList if item.get('permission__api')]
-            new_api_ist =  api_white_list + ApiList
+                str(item.get('permission__api').replace('{id}', '([a-zA-Z0-9-]+)')) + ":" + str(
+                    item.get('permission__method')) + '$' for item in userApiList if item.get('permission__api')]
+            new_api_ist = api_white_list + ApiList
             new_api = api + ":" + str(method)
             for item in new_api_ist:
                 matchObj = re.match(item, new_api, re.M | re.I)
