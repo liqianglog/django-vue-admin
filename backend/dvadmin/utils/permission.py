@@ -70,7 +70,6 @@ class CustomPermission(BasePermission):
         is_head = getattr(view, 'head', None)
         if is_head:
             head_kwargs = getattr(view.head, 'kwargs', {})
-            _permission_classes = getattr(head_kwargs, 'permission_classes', None)
             _permission_classes = head_kwargs.get('permission_classes', None)
             if _permission_classes == []:
                 return True
