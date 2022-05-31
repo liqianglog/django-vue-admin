@@ -218,7 +218,7 @@ export default {
       _self.$refs.userInfoForm.validate((valid) => {
         if (valid) {
           request({
-            url: '/api/system/user/user_info/',
+            url: '/api/system/user/update_user_info/',
             method: 'put',
             data: _self.userInfo
           }).then((res) => {
@@ -266,7 +266,7 @@ export default {
             params.newPassword = _self.$md5(params.newPassword)
             params.newPassword2 = _self.$md5(params.newPassword2)
             request({
-              url: '/api/system/user/change_password/' + userId + '/',
+              url: '/api/system/user/' + userId + '/change_password/',
               method: 'put',
               data: params
             }).then((res) => {
