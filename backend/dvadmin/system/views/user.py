@@ -101,6 +101,7 @@ class UserUpdateSerializer(CustomModelSerializer):
         validators=[
             CustomUniqueValidator(queryset=Users.objects.all(), message="手机号必须唯一")
         ],
+        allow_blank=True
     )
 
     def save(self, **kwargs):
@@ -228,7 +229,7 @@ class UserViewSet(CustomModelViewSet):
         "role": "角色ID",
     }
 
-    @action(methods=["GET"], detail=True, permission_classes=[IsAuthenticated])
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
     def user_info(self, request):
         """获取当前用户信息"""
         user = request.user
@@ -241,7 +242,7 @@ class UserViewSet(CustomModelViewSet):
         }
         return DetailResponse(data=result, msg="获取成功")
 
-    @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
+    @action(methods=["PUT"], detail=False, permission_classes=[IsAuthenticated])
     def update_user_info(self, request):
         """修改当前用户信息"""
         user = request.user

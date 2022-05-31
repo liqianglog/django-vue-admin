@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import localeMixin from '@/locales/mixin.js'
 import * as api from '@/views/system/login/api'
 
@@ -15,15 +15,6 @@ export default {
   },
   data () {
     return {
-      siteName: this.systemConfig('login.site_name'), // 网站名称
-      siteLogo: this.systemConfig('login.site_logo') || require('./image/dvadmin.png'), // 网站logo地址
-      loginBackground: this.systemConfig('login.login_background') || require('./image/bg.jpg'), // 登录页背景图
-      copyright: this.systemConfig('login.copyright'), // 版权
-      keepRecord: this.systemConfig('login.keep_record'), // 备案
-      helpUrl: this.systemConfig('login.help_url'), // 帮助
-      privacyUrl: this.systemConfig('login.privacy_url'), // 隐私
-      clauseUrl: this.systemConfig('login.clause_url'), // 条款
-      captchaState: this.systemConfig('base.captcha_state') || true, // 验证码
       processTitle: process.env.VUE_APP_TITLE || 'D2Admin',
       backgroundImage: 'url(' + this.loginBackground + ')',
       // 表单
@@ -66,6 +57,19 @@ export default {
         }
       ]
     }
+  },
+  computed: {
+    ...mapState('d2admin', {
+      siteLogo: state => state.settings.data['login.site_logo'] || require('./image/dvadmin.png'), // 网站logo地址
+      keepRecord: state => state.settings.data['login.keep_record'],
+      siteName: state => state.settings.data['login.site_name'], // 网站名称
+      copyright: state => state.settings.data['login.copyright'],
+      loginBackground: state => state.settings.data['login.login_background'] || require('./image/bg.jpg'), // 登录页背景图
+      helpUrl: state => state.settings.data['login.help_url'], // 帮助
+      privacyUrl: state => state.settings.data['login.privacy_url'], // 隐私
+      clauseUrl: state => state.settings.data['login.clause_url'], // 条款
+      captchaState: state => state.settings.data['base.captcha_state'] !== undefined ? state.settings.data['base.captcha_state'] : true // 验证码
+    })
   },
   mounted () {
   },

@@ -157,7 +157,7 @@ class MenuViewSet(CustomModelViewSet):
     filter_fields = ['parent', 'name', 'status', 'is_link', 'visible', 'cache', 'is_catalog']
     extra_filter_backends = []
 
-    @action(methods=['GET'], detail=True, permission_classes=[])
+    @action(methods=['GET'], detail=False, permission_classes=[])
     def web_router(self, request):
         """用于前端获取当前角色的路由"""
         user = request.user

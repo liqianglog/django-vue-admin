@@ -1,3 +1,4 @@
+import util from '@/libs/util.js'
 export default {
   'image-uploader': {
     form: { component: { name: 'd2p-file-uploader', props: { elProps: { listType: 'picture-card', accept: '.png,.jpeg,.jpg,.ico,.bmp,.gif' } } } },
@@ -26,6 +27,14 @@ export default {
       const value = row[col.key]
       if (value != null && value) {
         row[col.key] = value.split(',')
+        // 进行组装地址，纠正地址
+        row[col.key].map((val, index) => {
+          if (val.startsWith('/')) {
+            row[col.key][index] = util.baseURL() + val.slice(1)
+          } else {
+            row[col.key][index] = !val.startsWith('http') ? util.baseURL() + val : val
+          }
+        })
       }
     }
   },
@@ -56,6 +65,14 @@ export default {
       const value = row[col.key]
       if (value != null && value) {
         row[col.key] = value.split(',')
+        // 进行组装地址，纠正地址
+        row[col.key].map((val, index) => {
+          if (val.startsWith('/')) {
+            row[col.key][index] = util.baseURL() + val.slice(1)
+          } else {
+            row[col.key][index] = !val.startsWith('http') ? util.baseURL() + val : val
+          }
+        })
       }
     }
   },
@@ -82,6 +99,14 @@ export default {
       const value = row[col.key]
       if (value != null && value) {
         row[col.key] = value.split(',')
+        // 进行组装地址，纠正地址
+        row[col.key].map((val, index) => {
+          if (val.startsWith('/')) {
+            row[col.key][index] = util.baseURL() + val.slice(1)
+          } else {
+            row[col.key][index] = !val.startsWith('http') ? util.baseURL() + val : val
+          }
+        })
       }
     }
   },
@@ -112,6 +137,14 @@ export default {
       const value = row[col.key]
       if (value != null && value) {
         row[col.key] = value.split(',')
+        // 进行组装地址，纠正地址
+        row[col.key].map((val, index) => {
+          if (val.startsWith('/')) {
+            row[col.key][index] = util.baseURL() + val.slice(1)
+          } else {
+            row[col.key][index] = !val.startsWith('http') ? util.baseURL() + val : val
+          }
+        })
       }
     }
   }

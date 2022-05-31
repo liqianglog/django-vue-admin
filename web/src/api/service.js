@@ -42,7 +42,7 @@ export function getErrorMessage (msg) {
 function createService () {
   // 创建一个 axios 实例
   const service = axios.create({
-    baseURL: process.env.VUE_APP_API_URL,
+    baseURL: util.baseURL(),
     timeout: 20000,
     paramsSerializer: (params) => qs.stringify(params, { indices: false })
   })

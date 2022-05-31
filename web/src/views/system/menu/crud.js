@@ -170,7 +170,7 @@ export const crudOptions = (vm) => {
             }
           }
         },
-        width: 180,
+        minWidth: 180,
         type: 'input',
         form: {
           rules: [ // 表单校验规则
@@ -225,7 +225,16 @@ export const crudOptions = (vm) => {
         form: {
           value: false,
           component: {
-            placeholder: '请选择是否外链接'
+            placeholder: '请选择是否目录'
+          },
+          valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
+            if (!value) {
+              form.web_path = undefined
+              form.component = undefined
+              form.component_name = undefined
+              form.cache = false
+              form.is_link = false
+            }
           }
         }
       },
@@ -247,7 +256,9 @@ export const crudOptions = (vm) => {
             placeholder: '请选择是否外链接'
           },
           valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
-            form.web_path = null
+            form.web_path = undefined
+            form.component = undefined
+            form.component_name = undefined
             if (value) {
               getColumn('web_path').title = '外链接地址'
               getColumn('web_path').component.placeholder = '请输入外链接地址'
@@ -378,7 +389,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 50,
+        width: 60,
         type: 'radio',
         dict: {
           data: vm.dictionary('button_whether_bool')
@@ -416,6 +427,9 @@ export const crudOptions = (vm) => {
           component: {
             placeholder: '请选择侧边可见'
           },
+          rules: [ // 表单校验规则
+            { required: true, message: '侧边可见必填项' }
+          ],
           helper: {
             render (h) {
               return (< el-alert title="是否显示在侧边菜单中" type="warning" />
@@ -440,7 +454,10 @@ export const crudOptions = (vm) => {
           value: true,
           component: {
             placeholder: '请选择状态'
-          }
+          },
+          rules: [ // 表单校验规则
+            { required: true, message: '状态必填项' }
+          ]
         }
       }
     ].concat(vm.commonEndColumns({

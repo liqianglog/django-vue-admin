@@ -255,13 +255,13 @@
                     {
                         "name": "重设密码",
                         "value": "ResetPassword",
-                        "api": "/api/system/user/reset_password/{id}/",
+                        "api": "/api/system/user/{id}/reset_password/",
                         "method": 2
                     },
                     {
                         "name": "重置密码",
                         "value": "DefaultPassword",
-                        "api": "/api/system/user/reset_to_default_password/{id}/",
+                        "api": "/api/system/user/{id}/reset_to_default_password/",
                         "method": 2
                     },
                     {
