@@ -50,7 +50,7 @@ export function DelObj (id) {
  */
 export function ResetPwd (obj) {
   return request({
-    url: urlPrefix + 'reset_password/' + obj.id + '/',
+    url: urlPrefix + obj.id + '/reset_password/',
     method: 'put',
     data: obj
   })
