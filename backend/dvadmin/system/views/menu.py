@@ -23,7 +23,7 @@ class MenuSerializer(CustomModelSerializer):
     menuPermission = serializers.SerializerMethodField(read_only=True)
 
     def get_menuPermission(self, instance):
-        queryset = MenuButton.objects.filter(menu=instance.id).order_by('-name').values_list('name', flat=True)
+        queryset = instance.menuPermission.order_by('-name').values_list('name', flat=True)
         if queryset:
             return queryset
         else:
@@ -65,7 +65,7 @@ class MenuInitSerializer(CustomModelSerializer):
 
     def get_menu_button(self, obj: Menu):
         data = []
-        instance = MenuButton.objects.filter(menu_id=obj.id).order_by('method')
+        instance = obj.menuPermission.order_by('method')
         if instance:
             data = list(instance.values('name', 'value', 'api', 'method'))
         return data
@@ -124,11 +124,11 @@ class WebRouterSerializer(CustomModelSerializer):
     def get_menuPermission(self, instance):
         # 判断是否是超级管理员
         if self.request.user.is_superuser:
-            return MenuButton.objects.values_list('value', flat=True)
+            return instance.menuPermission.values_list('value', flat=True)
         else:
             # 根据当前角色获取权限按钮id集合
             permissionIds = self.request.user.role.values_list('permission', flat=True)
-            queryset = MenuButton.objects.filter(id__in=permissionIds, menu=instance.id).values_list('value', flat=True)
+            queryset = instance.menuPermission.filter(id__in=permissionIds, menu=instance.id).values_list('value', flat=True)
             if queryset:
                 return queryset
             else:
