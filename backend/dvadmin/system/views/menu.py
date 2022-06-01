@@ -136,7 +136,8 @@ class WebRouterSerializer(CustomModelSerializer):
 
     class Meta:
         model = Menu
-        fields = "__all__"
+        fields = ('id', 'parent', 'icon', 'sort', 'path', 'name', 'title', 'is_link', 'is_catalog', 'web_path', 'component',
+        'component_name', 'cache', 'visible', 'menuPermission')
         read_only_fields = ["id"]
 
 
