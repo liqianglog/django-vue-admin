@@ -34,3 +34,4 @@ class FileViewSet(CustomModelViewSet):
     serializer_class = FileSerializer
     filter_fields = ['name', ]
     permission_classes = []
+    extra_filter_backends = []
