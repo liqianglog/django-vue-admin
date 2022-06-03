@@ -1,0 +1,28 @@
+{
+  "name": "luban-h5",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vue-cli-service serve",
+    "serve": "vue-cli-service serve",
+    "build": "npm run build:editor && npm run build:engine",
+    "lint": "vue-cli-service lint --fix",
+    "deploy": "rm -rf dist && npm run build:editor && npm run build:engine && ./deploy.sh",
+    "test:e2e": "vue-cli-service test:e2e",
+    "test:unit": "vue-cli-service test:unit",
+    "build:editor": "cross-env PAGE=EDITOR vue-cli-service build",
+    "build:engine": "cross-env PAGE=ENGINE vue-cli-service build --target lib --name engine ./src/engine-entry.js",
+    "build:core_editor": "cross-env PAGE=CORE_EDITOR vue-cli-service build --target lib --name core-editor ./src/components/core/index.js"
+  },
+  "dependencies": {
+    "@luban-h5/lbc-button": "^0.0.3",
+    "@luban-h5/lbp-slide": "^0.0.7",
+    "@luban-h5/lbs-text-align": "^0.0.5",
+    "@luban-h5/plugin-common-props": "0.2.8",
+    "@luban-h5/core-editor": "^0.0.4",
+    "@tinymce/tinymce-vue": "^3",
+    "x-data-spreadsheet": "^1.1.4"
+  },
+  "devDependencies": {
+  }
+}
