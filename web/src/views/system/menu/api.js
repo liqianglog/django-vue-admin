@@ -7,7 +7,6 @@
  * @文件介绍: 菜单管理接口
  */
 import { request } from '@/api/service'
-import XEUtils from 'xe-utils'
 
 export const urlPrefix = '/api/system/menu/'
 
