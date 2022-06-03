@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <router-view />
+<!--  用来兼容乾坤前端微服务  -->
+    <div id="qiankun"></div>
   </div>
 </template>
 

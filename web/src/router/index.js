@@ -75,6 +75,15 @@ router.beforeEach(async (to, from, next) => {
       })
     } else {
       next()
+      const childrenPath = window.qiankunActiveRule || []
+      if (to.name) {
+        // 有 name 属性，说明是主应用的路由
+        next()
+      } else if (childrenPath.some((item) => to.path.includes(item))) {
+        next()
+      } else {
+        next({ name: '404' })
+      }
     }
   } else {
     // 没有登录的时候跳转到登录界面
