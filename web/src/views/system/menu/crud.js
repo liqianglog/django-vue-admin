@@ -23,10 +23,19 @@ export const crudOptions = (vm) => {
       compact: true
     },
     options: {
+      tableType: 'vxe-table',
+      rowKey: true,
       rowId: 'id',
       height: '100%', // 表格高度100%, 使用toolbar必须设置
       highlightCurrentRow: false,
-      defaultExpandAll: true
+      // defaultExpandAll: true,
+      // expandAll: true,
+      treeConfig: {
+        transform: true,
+        rowField: 'id',
+        parentField: 'parent',
+        expandAll: true
+      }
     },
     rowHandle: {
       view: {

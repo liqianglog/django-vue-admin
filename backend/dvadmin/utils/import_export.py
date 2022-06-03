@@ -21,15 +21,17 @@ def import_to_data(file_url, field_data):
     # 创建一个空列表，存储Excel的数据
     tables = []
     for i, row in enumerate(range(table.max_row)):
-        if i == 0: continue
+        if i == 0:
+            continue
         array = {}
         for index, ele in enumerate(field_data.keys()):
             cell_value = table.cell(row=row + 1, column=index + 2).value
+            print(cell_value)
             # 由于excel导入数字类型后，会出现数字加 .0 的，进行处理
-            if type(cell_value) is float and str(cell_value).split('.')[1] == '0':
-                cell_value = int(str(cell_value).split('.')[0])
+            if type(cell_value) is float and str(cell_value).split(".")[1] == "0":
+                cell_value = int(str(cell_value).split(".")[0])
             if type(cell_value) is str:
-                cell_value = cell_value.strip(' \t\n\r')
+                cell_value = cell_value.strip(" \t\n\r")
             array[ele] = cell_value
         tables.append(array)
     return tables
