@@ -23,7 +23,7 @@ class MenuSerializer(CustomModelSerializer):
     menuPermission = serializers.SerializerMethodField(read_only=True)
 
     def get_menuPermission(self, instance):
-        queryset = MenuButton.objects.filter(menu=instance.id).order_by('-name').values_list('name', flat=True)
+        queryset = instance.menuPermission.order_by('-name').values_list('name', flat=True)
         if queryset:
             return queryset
         else:
@@ -65,7 +65,7 @@ class MenuInitSerializer(CustomModelSerializer):
 
     def get_menu_button(self, obj: Menu):
         data = []
-        instance = MenuButton.objects.filter(menu_id=obj.id).order_by('method')
+        instance = obj.menuPermission.order_by('method')
         if instance:
             data = list(instance.values('name', 'value', 'api', 'method'))
         return data
@@ -124,11 +124,11 @@ class WebRouterSerializer(CustomModelSerializer):
     def get_menuPermission(self, instance):
         # 判断是否是超级管理员
         if self.request.user.is_superuser:
-            return MenuButton.objects.values_list('value', flat=True)
+            return instance.menuPermission.values_list('value', flat=True)
         else:
             # 根据当前角色获取权限按钮id集合
             permissionIds = self.request.user.role.values_list('permission', flat=True)
-            queryset = MenuButton.objects.filter(id__in=permissionIds, menu=instance.id).values_list('value', flat=True)
+            queryset = instance.menuPermission.filter(id__in=permissionIds, menu=instance.id).values_list('value', flat=True)
             if queryset:
                 return queryset
             else:
@@ -136,7 +136,8 @@ class WebRouterSerializer(CustomModelSerializer):
 
     class Meta:
         model = Menu
-        fields = "__all__"
+        fields = ('id', 'parent', 'icon', 'sort', 'path', 'name', 'title', 'is_link', 'is_catalog', 'web_path', 'component',
+        'component_name', 'cache', 'visible', 'menuPermission')
         read_only_fields = ["id"]
 
 
@@ -155,9 +156,9 @@ class MenuViewSet(CustomModelViewSet):
     update_serializer_class = MenuCreateSerializer
     search_fields = ['name', 'status']
     filter_fields = ['parent', 'name', 'status', 'is_link', 'visible', 'cache', 'is_catalog']
-    extra_filter_backends = []
+    # extra_filter_backends = []
 
-    @action(methods=['GET'], detail=True, permission_classes=[])
+    @action(methods=['GET'], detail=False, permission_classes=[])
     def web_router(self, request):
         """用于前端获取当前角色的路由"""
         user = request.user

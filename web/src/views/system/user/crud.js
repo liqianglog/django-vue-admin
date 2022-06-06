@@ -177,14 +177,6 @@ export const crudOptions = (vm) => {
           url: deptPrefix,
           value: 'id', // 数据字典中value字段的属性名
           label: 'name' // 数据字典中label字段的属性名
-          // getData: (url, dict, { form, component }) => {
-          //   return request({ url: url, params: { page: 1, limit: 10, status: 1 } }).then(ret => {
-          //     component._elProps.page = ret.data.page
-          //     component._elProps.limit = ret.data.limit
-          //     component._elProps.total = ret.data.total
-          //     return ret.data.data
-          //   })
-          // }
         },
         form: {
           rules: [ // 表单校验规则
@@ -199,23 +191,7 @@ export const crudOptions = (vm) => {
           component: {
             span: 12,
             pagination: true,
-            props: { multiple: false },
-            elProps: {
-              columns: [
-                {
-                  field: 'name',
-                  title: '部门名称'
-                },
-                {
-                  field: 'status_label',
-                  title: '状态'
-                },
-                {
-                  field: 'parent_name',
-                  title: '父级部门'
-                }
-              ]
-            }
+            props: { multiple: false }
           }
         }
       },
@@ -284,7 +260,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 140,
+        width: 145,
         type: 'select',
         dict: {
           data: vm.dictionary('user_type')
@@ -388,10 +364,6 @@ export const crudOptions = (vm) => {
                 {
                   field: 'key',
                   title: '权限标识'
-                },
-                {
-                  field: 'status_label',
-                  title: '状态'
                 }
               ]
             }

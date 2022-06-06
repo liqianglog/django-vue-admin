@@ -1,13 +1,4 @@
-/*
- * @创建文件时间: 2021-06-01 22:41:21
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-06-06 10:14:14
- * 联系Qq:1638245306
- * @文件介绍: 用户接口
- */
-import { request } from '@/api/service'
-
+import { request, downloadFile } from '@/api/service'
 export const urlPrefix = '/api/system/user/'
 
 export function GetList (query) {
@@ -50,8 +41,20 @@ export function DelObj (id) {
  */
 export function ResetPwd (obj) {
   return request({
-    url: urlPrefix + 'reset_password/' + obj.id + '/',
+    url: urlPrefix + obj.id + '/reset_password/',
     method: 'put',
     data: obj
+  })
+}
+
+/**
+ * 导出
+ * @param params
+ */
+export function exportData (params) {
+  return downloadFile({
+    url: urlPrefix + 'export/',
+    params: params,
+    method: 'post'
   })
 }

@@ -7,7 +7,6 @@
  * @文件介绍: 菜单管理接口
  */
 import { request } from '@/api/service'
-import XEUtils from 'xe-utils'
 
 export const urlPrefix = '/api/system/menu/'
 
@@ -22,7 +21,7 @@ export function GetList (query) {
     params: { ...query, limit: 999 }
   }).then(res => {
     // 将列表数据转换为树形数据
-    res.data.data = XEUtils.toArrayTree(res.data.data, { parentKey: 'parent', strict: false })
+    // res.data.data = XEUtils.toArrayTree(res.data.data, { parentKey: 'parent', strict: false })
     return res
   })
 }
