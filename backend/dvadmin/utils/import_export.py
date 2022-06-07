@@ -26,7 +26,6 @@ def import_to_data(file_url, field_data):
         array = {}
         for index, ele in enumerate(field_data.keys()):
             cell_value = table.cell(row=row + 1, column=index + 2).value
-            print(cell_value)
             # 由于excel导入数字类型后，会出现数字加 .0 的，进行处理
             if type(cell_value) is float and str(cell_value).split(".")[1] == "0":
                 cell_value = int(str(cell_value).split(".")[0])
