@@ -87,8 +87,6 @@ def init_system_config():
                     settings.SYSTEM_CONFIG[connection.tenant.schema_name] = _get_all_system_config()
         else:
             settings.SYSTEM_CONFIG = _get_all_system_config()
-        if settings.SYSTEM_CONFIG:
-            print("初始化系统配置完成")
     except Exception as e:
         print("请先进行数据库迁移!")
     return
