@@ -1,12 +1,14 @@
 import hashlib
 
 from django.contrib.auth.hashers import make_password
+from django_restql.fields import DynamicSerializerMethodField
 from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 from application import dispatch
 from dvadmin.system.models import Users
+from dvadmin.system.views.role import RoleSerializer
 from dvadmin.utils.json_response import ErrorResponse, DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.validator import CustomUniqueValidator
@@ -17,6 +19,8 @@ class UserSerializer(CustomModelSerializer):
     """
     用户管理-序列化器
     """
+    dept_name = serializers.CharField(source='dept.name',read_only=True)
+    role_info = DynamicSerializerMethodField()
 
     class Meta:
         model = Users
@@ -25,6 +29,19 @@ class UserSerializer(CustomModelSerializer):
         extra_kwargs = {
             "post": {"required": False},
         }
+
+    def get_role_info(self, instance,parsed_query):
+        roles = instance.role.all()
+
+        # You can do what ever you want in here
+
+        # `parsed_query` param is passed to BookSerializer to allow further querying
+        serializer = RoleSerializer(
+            roles,
+            many=True,
+            parsed_query=parsed_query
+        )
+        return serializer.data
 
 
 class UsersInitSerializer(CustomModelSerializer):

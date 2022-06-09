@@ -128,6 +128,7 @@ export const crudOptions = (vm) => {
             placeholder: '请输入密码'
           },
           value: vm.systemConfig('base.default_password'),
+          editDisabled: true,
           itemProps: {
             class: { yxtInput: true }
           }
@@ -193,6 +194,10 @@ export const crudOptions = (vm) => {
             pagination: true,
             props: { multiple: false }
           }
+        },
+        component: {
+          name: 'foreignKey',
+          valueBinding: 'dept_name'
         }
       },
       {
@@ -368,6 +373,11 @@ export const crudOptions = (vm) => {
               ]
             }
           }
+        },
+        component: {
+          name: 'manyToMany',
+          valueBinding: 'role_info',
+          children: 'name'
         }
       }
     ].concat(vm.commonEndColumns({
