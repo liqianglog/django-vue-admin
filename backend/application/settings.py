@@ -378,4 +378,5 @@ PLUGINS_URL_PATTERNS = []
 # from dvadmin_upgrade_center.settings import *    # 升级中心
 # from dvadmin_celery.settings import *            # celery 异步任务
 # ...
+from dvadmin_drag_h5.settings import *
 # ********** 一键导入插件配置结束 **********

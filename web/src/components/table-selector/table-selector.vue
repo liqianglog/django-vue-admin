@@ -201,6 +201,7 @@ export default {
     //   this.dict = d2CrudPlus.util.dict.mergeDefault(this.dict, true)
     // }
     // this.initData()
+    console.log(this)
   },
   computed: {
     _elProps () {
@@ -327,32 +328,23 @@ export default {
       this.$emit('current-change', event)
     },
     openDialog () {
-      if (this.disabled) {
+      const that = this
+      if (that.disabled) {
         return
       }
-      this.dialogVisible = true
-      setTimeout(() => {
-        if (this.selected != null) {
-          const ids = this.selected.map(
-            (item) => item[this._elProps.props.value]
-          )
-          ids.forEach((id) => {
-            const current = this.$refs.elTree.store.nodesMap[id]
-            if (current != null) {
-              this.doExpandParent(current)
-            }
-          })
-          this.$nextTick(() => {
-            if (this.multiple) {
-              // this.$refs.elTree.setCheckedKeys(ids, this.leafOnly);
-              this.$refs.elTree.setCheckboxRow(ids)
-            } else if (ids.length > 0) {
-              // this.$refs.elTree.setCurrentKey(ids[0]);
-              this.$refs.elTree.setRadioRow(ids[0])
-            }
-          })
-        }
-      }, 1)
+      that.dialogVisible = true
+      if (that.value != null) {
+        that.$nextTick(() => {
+          const refs = Object.assign({}, that.$refs)
+          const { elTree } = refs
+          console.log(elTree)
+          if (that.multiple) {
+            elTree.setCheckboxRow(that.selected, true)
+          } else {
+            elTree.setRadioRow(that.selected[0])
+          }
+        })
+      }
     },
     doExpandParent (node) {
       if (node.parent != null) {
@@ -412,20 +404,6 @@ export default {
     // 获取选中的行数据
     refreshSelected () {
       let nodes = null
-      // if (this.multiple) {
-      //   nodes = this.$refs.elTree.getCheckedNodes(
-      //     this.leafOnly,
-      //     this.includeHalfChecked
-      //   );
-      // } else {
-      //   const node = this.$refs.elTree.getCurrentNode();
-      //   if (node == null) {
-      //     nodes = [];
-      //   } else {
-      //     nodes = [node];
-      //   }
-      // }
-
       if (this.multiple) {
         nodes = this.$refs.elTree.getCheckboxRecords()
       } else {
