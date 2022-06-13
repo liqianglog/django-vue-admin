@@ -91,6 +91,21 @@ class ExportSerializerMixin:
     export_field_label = []
     # 导出序列化器
     export_serializer_class = None
+    # 表格表头最大宽度，默认50个字符
+    export_column_width = 50
+
+    def get_string_len(self, string):
+        """
+        获取字符串最大长度
+        :param string:
+        :return:
+        """
+        length = 4
+        if string is None:
+            return length
+        for char in string:
+            length += 2.1 if ord(char) > 256 else 1
+        return round(length, 1) if length <= self.export_column_width else self.export_column_width
 
     def export_data(self, request: Request, *args, **kwargs):
         """
@@ -109,13 +124,31 @@ class ExportSerializerMixin:
         response["Content-Disposition"] = f'attachment;filename={quote(str(f"导出{get_verbose_name(queryset)}.xlsx"))}'
         wb = Workbook()
         ws = wb.active
+        header_data = ["序号", *self.export_field_label]
+        df_len_max = [self.get_string_len(ele) for ele in header_data]
         row = get_column_letter(len(self.export_field_label) + 1)
         column = 1
-        ws.append(["序号", *self.export_field_label])
+        ws.append(header_data)
         for index, results in enumerate(data):
-            ws.append([index + 1, *list(results.values())])
+            results_list = []
+            for inx, result in enumerate(results.values()):
+                # 布尔值进行更新
+                if result is True:
+                    result = "是"
+                elif result is False:
+                    result = "否"
+                # 计算最大列宽度
+                result_column_width = self.get_string_len(result)
+                if result_column_width > df_len_max[inx + 1]:
+                    df_len_max[inx + 1] = result_column_width
+
+                results_list.append(result)
+            ws.append([index + 1, *results_list])
             column += 1
-        tab = Table(displayName="Table2", ref=f"A1:{row}{column}")  # 名称管理器
+        # 　更新列宽
+        for index, width in enumerate(df_len_max):
+            ws.column_dimensions[get_column_letter(index + 1)].width = width
+        tab = Table(displayName="Table", ref=f"A1:{row}{column}")  # 名称管理器
         style = TableStyleInfo(
             name="TableStyleLight11",
             showFirstColumn=True,
