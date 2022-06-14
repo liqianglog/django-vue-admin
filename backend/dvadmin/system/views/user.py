@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 from application import dispatch
-from dvadmin.system.models import Users
+from dvadmin.system.models import Users, Role, Dept
 from dvadmin.system.views.role import RoleSerializer
 from dvadmin.utils.json_response import ErrorResponse, DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -19,7 +19,7 @@ class UserSerializer(CustomModelSerializer):
     """
     用户管理-序列化器
     """
-    dept_name = serializers.CharField(source='dept.name',read_only=True)
+    dept_name = serializers.CharField(source='dept.name', read_only=True)
     role_info = DynamicSerializerMethodField()
 
     class Meta:
@@ -30,7 +30,7 @@ class UserSerializer(CustomModelSerializer):
             "post": {"required": False},
         }
 
-    def get_role_info(self, instance,parsed_query):
+    def get_role_info(self, instance, parsed_query):
         roles = instance.role.all()
 
         # You can do what ever you want in here
@@ -239,11 +239,33 @@ class UserViewSet(CustomModelViewSet):
         "name": "用户名称",
         "email": "用户邮箱",
         "mobile": "手机号码",
-        "gender": "用户性别(男/女/未知)",
-        "is_active": "帐号状态(启用/禁用)",
+        "gender": {
+            "title": "用户性别",
+            "choices": {
+                "data": [{"未知": 2}, {"男": 1}, {"女": 0}],
+            }
+        },
+        "is_active": {
+            "title": "帐号状态",
+            "choices": {
+                "data": [{"启用": True}, {"禁用": False}],
+            }
+        },
         "password": "登录密码",
-        "dept": "部门ID",
-        "role": "角色ID",
+        "dept": {
+            "title": "部门",
+            "choices": {
+                "queryset": Dept.objects.filter(status=True),
+                "values_list": "name"
+            }
+        },
+        "role": {
+            "title": "角色",
+            "choices": {
+                "queryset": Role.objects.filter(status=True),
+                "values_list": "name"
+            }
+        },
     }
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
