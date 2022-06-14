@@ -73,11 +73,10 @@ class ImportSerializerMixin:
                     choices = ele.get('choices', {})
                     if choices.get('data'):
                         data_list = []
-                        for data in choices.get('data'):
-                            data_list.extend(data.keys())
+                        data_list.extend(choices.get('data').keys())
                         validation_data_dict[ele.get('title')] = data_list
-                    elif choices.get('queryset') and choices.get('values_list'):
-                        data_list = choices.get('queryset').values_list(choices.get('values_list'), flat=True)
+                    elif choices.get('queryset') and choices.get('values_name'):
+                        data_list = choices.get('queryset').values_list(choices.get('values_name'), flat=True)
                         validation_data_dict[ele.get('title')] = list(data_list)
                     else:
                         continue
@@ -115,8 +114,13 @@ class ImportSerializerMixin:
 
         updateSupport = request.data.get("updateSupport")
         # 从excel中组织对应的数据结构，然后使用序列化器保存
-        data = import_to_data(request.data.get("url"), self.import_field_dict)
         queryset = self.filter_queryset(self.get_queryset())
+        # 获取多对多字段
+        m2m_fields = [
+            ele.attname for ele in queryset.model._meta.get_fields() if
+            hasattr(ele, "many_to_many") and ele.many_to_many == True
+        ]
+        data = import_to_data(request.data.get("url"), self.import_field_dict, m2m_fields)
         unique_list = [
             ele.attname for ele in queryset.model._meta.get_fields() if hasattr(ele, "unique") and ele.unique == True
         ]
