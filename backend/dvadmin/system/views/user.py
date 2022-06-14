@@ -145,9 +145,13 @@ class ExportUserProfileSerializer(CustomModelSerializer):
     last_login = serializers.DateTimeField(
         format="%Y-%m-%d %H:%M:%S", required=False, read_only=True
     )
-    dept__deptName = serializers.CharField(source="dept.deptName", default="")
-    dept__owner = serializers.CharField(source="dept.owner", default="")
+    is_active = serializers.SerializerMethodField(read_only=True)
+    dept_name = serializers.CharField(source="dept.name", default="")
+    dept_owner = serializers.CharField(source="dept.owner", default="")
     gender = serializers.CharField(source="get_gender_display", read_only=True)
+
+    def get_is_active(self, instance):
+        return "启用" if instance.is_active else "停用"
 
     class Meta:
         model = Users
@@ -159,8 +163,8 @@ class ExportUserProfileSerializer(CustomModelSerializer):
             "gender",
             "is_active",
             "last_login",
-            "dept__deptName",
-            "dept__owner",
+            "dept_name",
+            "dept_owner",
         )
 
 
