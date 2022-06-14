@@ -133,8 +133,11 @@ export default {
       return crudOptions(this)
     },
     pageRequest (query) {
-      const columnKeys = util.filterParams(this,['dept_name','role_info{name}'])
-      const params = { query: columnKeys,...query }
+      const columnKeys = util.filterParams(this, [
+        'dept_name',
+        'role_info{name}'
+      ])
+      const params = { query: columnKeys, ...query }
       return api.GetList(params)
     },
     addRequest (row) {

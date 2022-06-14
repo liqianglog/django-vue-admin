@@ -19,7 +19,8 @@ class UserSerializer(CustomModelSerializer):
     """
     用户管理-序列化器
     """
-    dept_name = serializers.CharField(source='dept.name', read_only=True)
+
+    dept_name = serializers.CharField(source="dept.name", read_only=True)
     role_info = DynamicSerializerMethodField()
 
     class Meta:
@@ -36,11 +37,7 @@ class UserSerializer(CustomModelSerializer):
         # You can do what ever you want in here
 
         # `parsed_query` param is passed to BookSerializer to allow further querying
-        serializer = RoleSerializer(
-            roles,
-            many=True,
-            parsed_query=parsed_query
-        )
+        serializer = RoleSerializer(roles, many=True, parsed_query=parsed_query)
         return serializer.data
 
 
@@ -51,14 +48,29 @@ class UsersInitSerializer(CustomModelSerializer):
 
     class Meta:
         model = Users
-        fields = ["username", "email", 'mobile', 'avatar', "name", 'gender', 'user_type', "dept", 'user_type',
-                  'first_name', 'last_name', 'email', 'is_staff', 'is_active', 'creator', 'dept_belong_id',
-                  'password', 'last_login', 'is_superuser']
-        read_only_fields = ['id']
-        extra_kwargs = {
-            'creator': {'write_only': True},
-            'dept_belong_id': {'write_only': True}
-        }
+        fields = [
+            "username",
+            "email",
+            "mobile",
+            "avatar",
+            "name",
+            "gender",
+            "user_type",
+            "dept",
+            "user_type",
+            "first_name",
+            "last_name",
+            "email",
+            "is_staff",
+            "is_active",
+            "creator",
+            "dept_belong_id",
+            "password",
+            "last_login",
+            "is_superuser",
+        ]
+        read_only_fields = ["id"]
+        extra_kwargs = {"creator": {"write_only": True}, "dept_belong_id": {"write_only": True}}
 
 
 class UserCreateSerializer(CustomModelSerializer):
@@ -68,9 +80,7 @@ class UserCreateSerializer(CustomModelSerializer):
 
     username = serializers.CharField(
         max_length=50,
-        validators=[
-            CustomUniqueValidator(queryset=Users.objects.all(), message="账号必须唯一")
-        ],
+        validators=[CustomUniqueValidator(queryset=Users.objects.all(), message="账号必须唯一")],
     )
     password = serializers.CharField(
         required=False,
@@ -108,17 +118,13 @@ class UserUpdateSerializer(CustomModelSerializer):
 
     username = serializers.CharField(
         max_length=50,
-        validators=[
-            CustomUniqueValidator(queryset=Users.objects.all(), message="账号必须唯一")
-        ],
+        validators=[CustomUniqueValidator(queryset=Users.objects.all(), message="账号必须唯一")],
     )
     # password = serializers.CharField(required=False, allow_blank=True)
     mobile = serializers.CharField(
         max_length=50,
-        validators=[
-            CustomUniqueValidator(queryset=Users.objects.all(), message="手机号必须唯一")
-        ],
-        allow_blank=True
+        validators=[CustomUniqueValidator(queryset=Users.objects.all(), message="手机号必须唯一")],
+        allow_blank=True,
     )
 
     def save(self, **kwargs):
@@ -142,12 +148,14 @@ class ExportUserProfileSerializer(CustomModelSerializer):
     用户导出 序列化器
     """
 
-    last_login = serializers.DateTimeField(
-        format="%Y-%m-%d %H:%M:%S", required=False, read_only=True
-    )
-    dept__deptName = serializers.CharField(source="dept.deptName", default="")
+    last_login = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
+    is_active = serializers.SerializerMethodField(read_only=True)
+    dept__deptName = serializers.CharField(source="dept.name", default="")
     dept__owner = serializers.CharField(source="dept.owner", default="")
     gender = serializers.CharField(source="get_gender_display", read_only=True)
+
+    def get_is_active(self, instance):
+        return "启用" if instance.is_active else "停用"
 
     class Meta:
         model = Users
@@ -167,9 +175,7 @@ class ExportUserProfileSerializer(CustomModelSerializer):
 class UserProfileImportSerializer(CustomModelSerializer):
     def save(self, **kwargs):
         data = super().save(**kwargs)
-        password = hashlib.new(
-            "md5", str(self.initial_data.get("password", "")).encode(encoding="UTF-8")
-        ).hexdigest()
+        password = hashlib.new("md5", str(self.initial_data.get("password", "")).encode(encoding="UTF-8")).hexdigest()
         data.set_password(password)
         data.save()
         return data
@@ -243,29 +249,17 @@ class UserViewSet(CustomModelViewSet):
             "title": "用户性别",
             "choices": {
                 "data": [{"未知": 2}, {"男": 1}, {"女": 0}],
-            }
+            },
         },
         "is_active": {
             "title": "帐号状态",
             "choices": {
                 "data": [{"启用": True}, {"禁用": False}],
-            }
+            },
         },
         "password": "登录密码",
-        "dept": {
-            "title": "部门",
-            "choices": {
-                "queryset": Dept.objects.filter(status=True),
-                "values_list": "name"
-            }
-        },
-        "role": {
-            "title": "角色",
-            "choices": {
-                "queryset": Role.objects.filter(status=True),
-                "values_list": "name"
-            }
-        },
+        "dept": {"title": "部门", "choices": {"queryset": Dept.objects.filter(status=True), "values_list": "name"}},
+        "role": {"title": "角色", "choices": {"queryset": Role.objects.filter(status=True), "values_list": "name"}},
     }
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
