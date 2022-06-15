@@ -47,6 +47,8 @@ def import_to_data(file_url, field_data, m2m_fields=None):
                 cell_value = int(str(cell_value).split(".")[0])
             if type(cell_value) is str:
                 cell_value = cell_value.strip(" \t\n\r")
+            if cell_value is None:
+                continue
             if key in validation_data_dict:
                 array[key] = validation_data_dict.get(key, {}).get(cell_value, None)
                 if key in m2m_fields:
