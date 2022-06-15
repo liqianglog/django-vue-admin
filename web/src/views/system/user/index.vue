@@ -21,9 +21,12 @@
           >
             <i class="el-icon-plus" /> 新增
           </el-button>
+          <el-button size="small" type="danger" @click="batchDelete">
+            <i class="el-icon-delete"></i> 批量删除
+          </el-button>
           <el-button
             size="small"
-            type="danger"
+            type="warning"
             @click="onExport"
             v-permission="'Export'"
             ><i class="el-icon-download" /> 导出
@@ -42,6 +45,16 @@
           @columns-filter-changed="handleColumnsFilterChanged"
         />
       </div>
+      <span slot="PaginationPrefixSlot" class="prefix">
+        <el-button
+          class="square"
+          size="mini"
+          title="批量删除"
+          @click="batchDelete"
+          icon="el-icon-delete"
+          :disabled="!multipleSelection || multipleSelection.length == 0"
+        />
+      </span>
     </d2-crud-x>
     <el-dialog
       title="密码重置"
@@ -148,6 +161,9 @@ export default {
     },
     delRequest (row) {
       return api.DelObj(row.id)
+    },
+    batchDelRequest (ids) {
+      return api.BatchDel(ids)
     },
     onExport () {
       this.$confirm('是否确认导出所有数据项?', '警告', {

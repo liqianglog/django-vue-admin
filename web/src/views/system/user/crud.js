@@ -9,7 +9,12 @@ export const crudOptions = (vm) => {
     options: {
       height: '100%',
       tableType: 'vxe-table',
-      rowKey: true // 必须设置，true or false
+      rowKey: true,
+      rowId: 'id'
+    },
+    selectionRow: {
+      align: 'center',
+      width: 46
     },
     rowHandle: {
       width: 240,

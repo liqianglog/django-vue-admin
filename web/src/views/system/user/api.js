@@ -33,6 +33,14 @@ export function DelObj (id) {
   })
 }
 
+export function BatchDel (keys) {
+  return request({
+    url: urlPrefix + 'multiple_delete/',
+    method: 'delete',
+    data: { keys }
+  })
+}
+
 /**
  * 重置密码
  * @param obj
