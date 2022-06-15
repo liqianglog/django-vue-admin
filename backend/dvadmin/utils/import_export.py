@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 
 import openpyxl
 from django.conf import settings
@@ -21,15 +22,15 @@ def import_to_data(file_url, field_data, m2m_fields=None):
     validation_data_dict = {}
     for key, value in field_data.items():
         if isinstance(value, dict):
-            choices = value.get('choices', {})
+            choices = value.get("choices", {})
             data_dict = {}
-            if choices.get('data'):
-                for k, v in choices.get('data').items():
+            if choices.get("data"):
+                for k, v in choices.get("data").items():
                     data_dict[k] = v
-            elif choices.get('queryset') and choices.get('values_name'):
-                data_list = choices.get('queryset').values(choices.get('values_name'), 'id')
+            elif choices.get("queryset") and choices.get("values_name"):
+                data_list = choices.get("queryset").values(choices.get("values_name"), "id")
                 for ele in data_list:
-                    data_dict[ele.get(choices.get('values_name'))] = ele.get('id')
+                    data_dict[ele.get(choices.get("values_name"))] = ele.get("id")
             else:
                 continue
             validation_data_dict[key] = data_dict
@@ -49,7 +50,15 @@ def import_to_data(file_url, field_data, m2m_fields=None):
             if key in validation_data_dict:
                 array[key] = validation_data_dict.get(key, {}).get(cell_value, None)
                 if key in m2m_fields:
-                    array[key] = [array[key]]
+                    array[key] = list(
+                        filter(
+                            lambda x: x,
+                            [
+                                validation_data_dict.get(key, {}).get(value, None)
+                                for value in re.split(r"[，；：|.,;:\s]\s*", cell_value)
+                            ],
+                        )
+                    )
             else:
                 array[key] = cell_value
         tables.append(array)
