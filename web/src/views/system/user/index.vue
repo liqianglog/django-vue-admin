@@ -166,12 +166,14 @@ export default {
       return api.BatchDel(ids)
     },
     onExport () {
+      const that = this
       this.$confirm('是否确认导出所有数据项?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function () {
-        return api.exportData()
+        const query = that.getSearch().getForm()
+        return api.exportData({ ...query })
       })
     },
     // 重置密码弹框
