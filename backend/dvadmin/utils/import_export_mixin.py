@@ -61,29 +61,33 @@ class ImportSerializerMixin:
             ] = f'attachment;filename={quote(str(f"导入{get_verbose_name(queryset)}模板.xlsx"))}'
             wb = Workbook()
             ws1 = wb.create_sheet("data", 1)
-            ws1.sheet_state = 'hidden'
+            ws1.sheet_state = "hidden"
             ws = wb.active
             row = get_column_letter(len(self.import_field_dict) + 1)
             column = 10
-            header_data = ["序号", ]
+            header_data = [
+                "序号",
+            ]
             validation_data_dict = {}
             for index, ele in enumerate(self.import_field_dict.values()):
                 if isinstance(ele, dict):
-                    header_data.append(ele.get('title'))
-                    choices = ele.get('choices', {})
-                    if choices.get('data'):
+                    header_data.append(ele.get("title"))
+                    choices = ele.get("choices", {})
+                    if choices.get("data"):
                         data_list = []
-                        data_list.extend(choices.get('data').keys())
-                        validation_data_dict[ele.get('title')] = data_list
-                    elif choices.get('queryset') and choices.get('values_name'):
-                        data_list = choices.get('queryset').values_list(choices.get('values_name'), flat=True)
-                        validation_data_dict[ele.get('title')] = list(data_list)
+                        data_list.extend(choices.get("data").keys())
+                        validation_data_dict[ele.get("title")] = data_list
+                    elif choices.get("queryset") and choices.get("values_name"):
+                        data_list = choices.get("queryset").values_list(choices.get("values_name"), flat=True)
+                        validation_data_dict[ele.get("title")] = list(data_list)
                     else:
                         continue
                     column_letter = get_column_letter(len(validation_data_dict))
-                    dv = DataValidation(type="list",
-                                        formula1=f"{quote_sheetname('data')}!${column_letter}$2:${column_letter}${len(validation_data_dict[ele.get('title')]) + 1}",
-                                        allow_blank=True)
+                    dv = DataValidation(
+                        type="list",
+                        formula1=f"{quote_sheetname('data')}!${column_letter}$2:${column_letter}${len(validation_data_dict[ele.get('title')]) + 1}",
+                        allow_blank=True,
+                    )
                     ws.add_data_validation(dv)
                     dv.add(f"{get_column_letter(index + 2)}2:{get_column_letter(index + 2)}1048576")
                 else:
@@ -117,8 +121,9 @@ class ImportSerializerMixin:
         queryset = self.filter_queryset(self.get_queryset())
         # 获取多对多字段
         m2m_fields = [
-            ele.attname for ele in queryset.model._meta.get_fields() if
-            hasattr(ele, "many_to_many") and ele.many_to_many == True
+            ele.attname
+            for ele in queryset.model._meta.get_fields()
+            if hasattr(ele, "many_to_many") and ele.many_to_many == True
         ]
         data = import_to_data(request.data.get("url"), self.import_field_dict, m2m_fields)
         unique_list = [
@@ -193,6 +198,8 @@ class ExportSerializerMixin:
                     result = "是"
                 elif result is False:
                     result = "否"
+                if isinstance(result, int):
+                    result = str(result)
                 # 计算最大列宽度
                 result_column_width = self.get_string_len(result)
                 if result_column_width > df_len_max[inx + 1]:
