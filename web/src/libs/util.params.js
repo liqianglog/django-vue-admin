@@ -8,7 +8,8 @@ const filterParams = function (that, array) {
   const columnKeys = arr.map(item => {
     return item.key
   })
-  const newArray = [...columnKeys, array, 'id']
+  let newArray = [...columnKeys, array, 'id']
+  newArray = [...new Set(newArray)]
   return '{' + newArray.toString() + '}'
 }
 
