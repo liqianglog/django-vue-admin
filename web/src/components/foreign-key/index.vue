@@ -9,11 +9,22 @@ export default {
   props: {
     color: {
       require: false
+    },
+    value: {
+      type: String,
+      required: false
     }
   },
   data () {
     return {
       currentValue: ''
+    }
+  },
+  watch:{
+    value(nv,ov){
+      const { row } = this.$parent.scope
+      const valueBinding = this.$parent.valueBinding
+      this.setValue(row[valueBinding])
     }
   },
   created () {

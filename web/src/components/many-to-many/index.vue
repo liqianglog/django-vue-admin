@@ -1,6 +1,9 @@
 <template>
   <div>
-    <el-tag style="margin-right: 10px" :type="color" v-for="(item,index) in currentValue" :key="index">{{ item[key] }}</el-tag>
+    <el-tag style="margin-right: 10px" :type="color" v-for="(item,index) in currentValue" :key="index">{{
+        item[key]
+      }}
+    </el-tag>
   </div>
 </template>
 <script>
@@ -23,8 +26,8 @@ export default {
       key: 'name'
     }
   },
-  watch:{
-    value(nv,ov){
+  watch: {
+    value (nv, ov) {
       const { row } = this.$parent.scope
       const { children } = this.$parent
       if (children) {
