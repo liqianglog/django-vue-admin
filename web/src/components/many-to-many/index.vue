@@ -11,12 +11,29 @@ export default {
   props: {
     color: {
       require: false
+    },
+    value: {
+      type: String,
+      required: false
     }
   },
   data () {
     return {
       currentValue: [],
       key: 'name'
+    }
+  },
+  watch:{
+    value(nv,ov){
+      const { row } = this.$parent.scope
+      const { children } = this.$parent
+      if (children) {
+        const valueBinding = this.$parent.valueBinding
+        this.setValue(row[valueBinding])
+        this.key = children
+      } else {
+        this.setValue([])
+      }
     }
   },
   created () {
