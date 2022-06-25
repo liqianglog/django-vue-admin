@@ -94,7 +94,6 @@
 import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
-import util from '@/libs/util'
 export default {
   name: 'user',
   mixins: [d2CrudPlus.crud],
@@ -146,12 +145,7 @@ export default {
       return crudOptions(this)
     },
     pageRequest (query) {
-      const columnKeys = util.filterParams(this, [
-        'dept_name',
-        'role_info{name}'
-      ])
-      const params = { query: columnKeys, ...query }
-      return api.GetList(params)
+      return api.GetList(query)
     },
     addRequest (row) {
       return api.AddObj(row)

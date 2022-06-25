@@ -1,7 +1,9 @@
 import { request } from '@/api/service'
 import { urlPrefix as deptPrefix } from '../dept/api'
+import util from '@/libs/util'
 
 export const crudOptions = (vm) => {
+  util.filterParams(vm, ['dept_name','role_info{name}'])
   return {
     pageOptions: {
       compact: true

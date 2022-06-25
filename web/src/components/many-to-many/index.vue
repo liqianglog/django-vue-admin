@@ -16,7 +16,7 @@ export default {
       require: false
     },
     value: {
-      type: [String, Number],
+      type: Array,
       required: false
     }
   },
