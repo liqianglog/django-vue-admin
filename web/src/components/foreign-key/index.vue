@@ -11,7 +11,7 @@ export default {
       require: false
     },
     value: {
-      type: String,
+      type: [String, Number],
       required: false
     }
   },
