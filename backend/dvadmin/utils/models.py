@@ -30,6 +30,7 @@ class CoreModel(models.Model):
     update_datetime = models.DateTimeField(auto_now=True, null=True, blank=True, help_text="修改时间", verbose_name="修改时间")
     create_datetime = models.DateTimeField(auto_now_add=True, null=True, blank=True, help_text="创建时间",
                                            verbose_name="创建时间")
+    is_deleted = models.BooleanField(verbose_name="是否软删除",help_text='是否软删除', default=False, db_index=True)
 
     class Meta:
         abstract = True

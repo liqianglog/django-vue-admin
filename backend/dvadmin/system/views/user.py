@@ -32,9 +32,7 @@ class UserSerializer(CustomModelSerializer):
 
     def get_role_info(self, instance, parsed_query):
         roles = instance.role.all()
-
         # You can do what ever you want in here
-
         # `parsed_query` param is passed to BookSerializer to allow further querying
         serializer = RoleSerializer(
             roles,
