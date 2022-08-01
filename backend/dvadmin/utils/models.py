@@ -10,10 +10,31 @@ import uuid
 
 from django.apps import apps
 from django.db import models
-
+from django.db.models import QuerySet
 from application import settings
-
 table_prefix = settings.TABLE_PREFIX  # 数据库表名前缀
+
+
+class SoftDeleteQuerySet(QuerySet):
+    def delete(self,soft_delete=True):
+        """
+       重写删除方法
+       当soft_delete为True时表示软删除，则修改删除时间为当前时间，否则直接删除
+       :param soft: Boolean 是否软删除，默认是
+       :return: Tuple eg.(3, {'lqModel.Test': 3})
+       """
+        if soft_delete:
+            return self.update(is_deleted=True)
+        else:
+            return super(SoftDeleteQuerySet, self).delete()
+
+
+
+class SoftDeleteManager(models.Manager):
+    """支持软删除"""
+
+    def get_queryset(self):
+        return SoftDeleteQuerySet(self.model).filter(is_deleted=False)
 
 
 class CoreModel(models.Model):
@@ -31,11 +52,15 @@ class CoreModel(models.Model):
     create_datetime = models.DateTimeField(auto_now_add=True, null=True, blank=True, help_text="创建时间",
                                            verbose_name="创建时间")
     is_deleted = models.BooleanField(verbose_name="是否软删除",help_text='是否软删除', default=False, db_index=True)
+    objects = SoftDeleteManager()
+
 
     class Meta:
         abstract = True
         verbose_name = '核心模型'
         verbose_name_plural = verbose_name
+
+
 
 
 def get_all_models_objects(model_name=None):

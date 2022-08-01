@@ -19,9 +19,16 @@ class DeptSerializer(CustomModelSerializer):
     """
     parent_name = serializers.CharField(read_only=True, source='parent.name')
     has_children = serializers.SerializerMethodField()
+    status_label = serializers.SerializerMethodField()
 
     def get_has_children(self, obj: Dept):
         return Dept.objects.filter(parent_id=obj.id).count()
+
+    def get_status_label(self, instance):
+        status = instance.status
+        if status:
+            return "启用"
+        return "禁用"
 
     class Meta:
         model = Dept

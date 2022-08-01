@@ -13,7 +13,7 @@ STATUS_CHOICES = (
 )
 
 
-class Users(AbstractUser, CoreModel):
+class Users(CoreModel,AbstractUser):
     username = models.CharField(max_length=150, unique=True, db_index=True, verbose_name="用户账号", help_text="用户账号")
     email = models.EmailField(max_length=255, verbose_name="邮箱", null=True, blank=True, help_text="邮箱")
     mobile = models.CharField(max_length=255, verbose_name="电话", null=True, blank=True, help_text="电话")

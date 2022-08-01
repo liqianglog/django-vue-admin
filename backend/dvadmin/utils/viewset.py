@@ -43,11 +43,7 @@ class CustomModelViewSet(ModelViewSet,ImportSerializerMixin,ExportSerializerMixi
     def filter_queryset(self, queryset):
         for backend in set(set(self.filter_backends) | set(self.extra_filter_backends or [])):
             queryset = backend().filter_queryset(self.request, queryset, self)
-        request_query =self.request.query_params
-        is_deleted = request_query.get('is_deleted',None)
-        if is_deleted:
-            return queryset
-        return queryset.exclude(is_deleted=True)
+        return queryset
 
     def get_queryset(self):
         if getattr(self, 'values_queryset', None):
@@ -97,9 +93,9 @@ class CustomModelViewSet(ModelViewSet,ImportSerializerMixin,ExportSerializerMixi
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         request_data = request.data
-        soft_delete = request_data.get('softDelete',None)
+        soft_delete = request_data.get('soft_delete',True)
         if soft_delete:
-            instance.is_deleted=True
+            instance.is_deleted = True
             instance.save()
         else:
             self.perform_destroy(instance)
