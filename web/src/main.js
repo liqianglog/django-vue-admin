@@ -32,10 +32,14 @@ import 'vxe-table/lib/style.css'
 // md5加密
 import md5 from 'js-md5'
 
+//websocket
+import websocket from '@/api/websocket'
+
 // 核心插件
 Vue.use(d2Admin)
 Vue.use(VXETable)
 Vue.prototype.$md5 = md5
+Vue.prototype.$websocket = websocket
 
 new Vue({
   router,

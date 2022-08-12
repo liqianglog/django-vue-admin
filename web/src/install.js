@@ -405,9 +405,9 @@ Vue.prototype.commonEndColumns = function (param = {}) {
       dict:{
         data:[{label:"是",value:true},{label:"否",value:false}]
       },
-      sortable: true,
       form: {
-        disabled: !showData.is_deleted.showForm
+        disabled: !showData.is_deleted.showForm,
+
       }
     }
   ]

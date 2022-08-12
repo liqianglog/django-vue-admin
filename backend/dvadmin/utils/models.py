@@ -11,6 +11,7 @@ import uuid
 from django.apps import apps
 from django.db import models
 from django.db.models import QuerySet
+
 from application import settings
 table_prefix = settings.TABLE_PREFIX  # 数据库表名前缀
 
@@ -33,8 +34,23 @@ class SoftDeleteQuerySet(QuerySet):
 class SoftDeleteManager(models.Manager):
     """支持软删除"""
 
+    def __init__(self, *args, **kwargs):
+        self.__add_is_del_filter = False
+        super(SoftDeleteManager, self).__init__(*args, **kwargs)
+
+    def filter(self, *args, **kwargs):
+        # 考虑是否主动传入is_deleted
+        if not kwargs.get('is_deleted') is None:
+            self.__add_is_del_filter = True
+        return super(SoftDeleteManager, self).filter(*args, **kwargs)
+
     def get_queryset(self):
-        return SoftDeleteQuerySet(self.model).filter(is_deleted=False)
+        if self.__add_is_del_filter:
+            return SoftDeleteQuerySet(self.model, using=self._db).exclude(is_deleted=False)
+        return SoftDeleteQuerySet(self.model).exclude(is_deleted=True)
+
+    def get_by_natural_key(self,name):
+        return SoftDeleteQuerySet(self.model).get(username=name)
 
 
 class CoreModel(models.Model):

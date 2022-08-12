@@ -29,7 +29,7 @@ export function DelObj (id) {
   return request({
     url: urlPrefix + id + '/',
     method: 'delete',
-    data: { softDelete: true }
+    data: { soft_delete: true }
   })
 }
 
