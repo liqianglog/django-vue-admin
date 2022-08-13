@@ -10,7 +10,6 @@ import logging
 import traceback
 
 from django.db.models import ProtectedError
-from rest_framework import exceptions
 from rest_framework.exceptions import APIException as DRFAPIException, AuthenticationFailed
 from rest_framework.views import set_rollback
 
@@ -35,9 +34,6 @@ def CustomExceptionHandler(ex, context):
         code = 401
         msg = ex.detail
     elif isinstance(ex, DRFAPIException):
-        set_rollback()
-        msg = ex.detail
-    elif isinstance(ex, exceptions.APIException):
         set_rollback()
         msg = ex.detail
     elif isinstance(ex, ProtectedError):
