@@ -1,7 +1,9 @@
 import { request } from '@/api/service'
 import { urlPrefix as deptPrefix } from '../dept/api'
+import util from '@/libs/util'
 
 export const crudOptions = (vm) => {
+  util.filterParams(vm, ['dept_name','role_info{name}'])
   return {
     pageOptions: {
       compact: true
@@ -9,7 +11,12 @@ export const crudOptions = (vm) => {
     options: {
       height: '100%',
       tableType: 'vxe-table',
-      rowKey: true // 必须设置，true or false
+      rowKey: true,
+      rowId: 'id'
+    },
+    selectionRow: {
+      align: 'center',
+      width: 46
     },
     rowHandle: {
       width: 240,
@@ -128,6 +135,7 @@ export const crudOptions = (vm) => {
             placeholder: '请输入密码'
           },
           value: vm.systemConfig('base.default_password'),
+          editDisabled: true,
           itemProps: {
             class: { yxtInput: true }
           }
@@ -193,6 +201,10 @@ export const crudOptions = (vm) => {
             pagination: true,
             props: { multiple: false }
           }
+        },
+        component: {
+          name: 'foreignKey',
+          valueBinding: 'dept_name'
         }
       },
       {
@@ -368,6 +380,11 @@ export const crudOptions = (vm) => {
               ]
             }
           }
+        },
+        component: {
+          name: 'manyToMany',
+          valueBinding: 'role_info',
+          children: 'name'
         }
       }
     ].concat(vm.commonEndColumns({

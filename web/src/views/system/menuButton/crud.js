@@ -104,12 +104,13 @@ export const crudOptions = (vm) => {
         },
         valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
           if (value != null) {
-            console.log('component.dictOptions', component.dictOptions)
+            // console.log('component.dictOptions', component.dictOptions)
             const obj = component.dictOptions.find(item => {
-              console.log(item.label, value)
+              // console.log(item.label, value)
               return item.value === value
             })
             if (obj && obj.value) {
+              form.name = obj.label
               form.value = obj.value
             }
           }

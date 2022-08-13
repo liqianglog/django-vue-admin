@@ -92,7 +92,13 @@ class CustomModelViewSet(ModelViewSet,ImportSerializerMixin,ExportSerializerMixi
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        self.perform_destroy(instance)
+        request_data = request.data
+        soft_delete = request_data.get('soft_delete',True)
+        if soft_delete:
+            instance.is_deleted = True
+            instance.save()
+        else:
+            self.perform_destroy(instance)
         return DetailResponse(data=[], msg="删除成功")
 
 

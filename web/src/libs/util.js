@@ -2,11 +2,13 @@ import cookies from './util.cookies'
 import db from './util.db'
 import log from './util.log'
 import dayjs from 'dayjs'
+import filterParams from './util.params'
 
 const util = {
   cookies,
   db,
-  log
+  log,
+  filterParams
 }
 
 /**

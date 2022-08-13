@@ -256,6 +256,10 @@ Vue.prototype.commonEndColumns = function (param = {}) {
     create_datetime: {
       showForm: (param.create_datetime && param.create_datetime.showForm) !== undefined ? param.create_datetime.showForm : false,
       showTable: (param.create_datetime && param.create_datetime.showTable) !== undefined ? param.create_datetime.showTable : true
+    },
+    is_deleted: {
+      showForm: (param.is_deleted && param.is_deleted.showForm) !== undefined ? param.is_deleted.showForm : false,
+      showTable: (param.is_deleted && param.is_deleted.showTable) !== undefined ? param.is_deleted.showTable : false
     }
   }
   return [
@@ -387,6 +391,23 @@ Vue.prototype.commonEndColumns = function (param = {}) {
       sortable: true,
       form: {
         disabled: !showData.create_datetime.showForm
+      }
+    },
+    {
+      title: '是否软删除',
+      key: 'is_deleted',
+      width: 160,
+      search: {
+        disabled: !showData.is_deleted.showForm,
+      },
+      show: showData.is_deleted.showTable,
+      type: 'radio',
+      dict:{
+        data:[{label:"是",value:true},{label:"否",value:false}]
+      },
+      form: {
+        disabled: !showData.is_deleted.showForm,
+
       }
     }
   ]

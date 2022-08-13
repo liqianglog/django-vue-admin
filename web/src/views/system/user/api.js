@@ -5,7 +5,7 @@ export function GetList (query) {
   return request({
     url: urlPrefix,
     method: 'get',
-    params: query
+    params: { ...query }
   })
 }
 
@@ -29,7 +29,15 @@ export function DelObj (id) {
   return request({
     url: urlPrefix + id + '/',
     method: 'delete',
-    data: { id }
+    data: { soft_delete: true }
+  })
+}
+
+export function BatchDel (keys) {
+  return request({
+    url: urlPrefix + 'multiple_delete/',
+    method: 'delete',
+    data: { keys }
   })
 }
 

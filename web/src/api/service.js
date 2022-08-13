@@ -213,13 +213,14 @@ const refreshTken = function () {
  * 下载文件
  * @param url
  * @param params
+ * @param method
  * @param filename
  */
-export const downloadFile = function ({ url, data, method, filename }) {
+export const downloadFile = function ({ url, params, method, filename }) {
   request({
     url: url,
     method: method,
-    data: data,
+    params: params,
     responseType: 'blob'
     // headers: {Accept: 'application/vnd.openxmlformats-officedocument'}
   }).then(res => {

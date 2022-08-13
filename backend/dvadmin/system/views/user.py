@@ -1,12 +1,14 @@
 import hashlib
 
 from django.contrib.auth.hashers import make_password
+from django_restql.fields import DynamicSerializerMethodField
 from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 from application import dispatch
-from dvadmin.system.models import Users
+from dvadmin.system.models import Users, Role, Dept
+from dvadmin.system.views.role import RoleSerializer
 from dvadmin.utils.json_response import ErrorResponse, DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.validator import CustomUniqueValidator
@@ -17,6 +19,8 @@ class UserSerializer(CustomModelSerializer):
     """
     用户管理-序列化器
     """
+    dept_name = serializers.CharField(source='dept.name', read_only=True)
+    role_info = DynamicSerializerMethodField()
 
     class Meta:
         model = Users
@@ -25,6 +29,17 @@ class UserSerializer(CustomModelSerializer):
         extra_kwargs = {
             "post": {"required": False},
         }
+
+    def get_role_info(self, instance, parsed_query):
+        roles = instance.role.all()
+        # You can do what ever you want in here
+        # `parsed_query` param is passed to BookSerializer to allow further querying
+        serializer = RoleSerializer(
+            roles,
+            many=True,
+            parsed_query=parsed_query
+        )
+        return serializer.data
 
 
 class UsersInitSerializer(CustomModelSerializer):
@@ -128,9 +143,13 @@ class ExportUserProfileSerializer(CustomModelSerializer):
     last_login = serializers.DateTimeField(
         format="%Y-%m-%d %H:%M:%S", required=False, read_only=True
     )
-    dept__deptName = serializers.CharField(source="dept.deptName", default="")
-    dept__owner = serializers.CharField(source="dept.owner", default="")
+    is_active = serializers.SerializerMethodField(read_only=True)
+    dept_name = serializers.CharField(source="dept.name", default="")
+    dept_owner = serializers.CharField(source="dept.owner", default="")
     gender = serializers.CharField(source="get_gender_display", read_only=True)
+
+    def get_is_active(self, instance):
+        return "启用" if instance.is_active else "停用"
 
     class Meta:
         model = Users
@@ -142,8 +161,8 @@ class ExportUserProfileSerializer(CustomModelSerializer):
             "gender",
             "is_active",
             "last_login",
-            "dept__deptName",
-            "dept__owner",
+            "dept_name",
+            "dept_owner",
         )
 
 
@@ -156,15 +175,6 @@ class UserProfileImportSerializer(CustomModelSerializer):
         data.set_password(password)
         data.save()
         return data
-
-    def run_validation(self, data={}):
-        # 把excel 数据进行格式转换
-        if type(data) is dict:
-            data["role"] = str(data["role"]).split(",")
-            data["dept_id"] = str(data["dept"]).split(",")
-            data["gender"] = {"男": "1", "女": "0", "未知": "2"}.get(data["gender"])
-            data["is_active"] = {"启用": True, "禁用": False}.get(data["is_active"])
-        return super().run_validation(data)
 
     class Meta:
         model = Users
@@ -222,11 +232,21 @@ class UserViewSet(CustomModelViewSet):
         "name": "用户名称",
         "email": "用户邮箱",
         "mobile": "手机号码",
-        "gender": "用户性别(男/女/未知)",
-        "is_active": "帐号状态(启用/禁用)",
+        "gender": {
+            "title": "用户性别",
+            "choices": {
+                "data": {"未知": 2, "男": 1, "女": 0},
+            }
+        },
+        "is_active": {
+            "title": "帐号状态",
+            "choices": {
+                "data": {"启用": True, "禁用": False},
+            }
+        },
         "password": "登录密码",
-        "dept": "部门ID",
-        "role": "角色ID",
+        "dept": {"title": "部门", "choices": {"queryset": Dept.objects.filter(status=True), "values_name": "name"}},
+        "role": {"title": "角色", "choices": {"queryset": Role.objects.filter(status=True), "values_name": "name"}},
     }
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])

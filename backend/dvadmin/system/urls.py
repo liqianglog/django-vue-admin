@@ -9,6 +9,7 @@ from dvadmin.system.views.file_list import FileViewSet
 from dvadmin.system.views.login_log import LoginLogViewSet
 from dvadmin.system.views.menu import MenuViewSet
 from dvadmin.system.views.menu_button import MenuButtonViewSet
+from dvadmin.system.views.message_center import MessageCenterViewSet
 from dvadmin.system.views.operation_log import OperationLogViewSet
 from dvadmin.system.views.role import RoleViewSet
 from dvadmin.system.views.system_config import SystemConfigViewSet
@@ -26,6 +27,7 @@ system_url.register(r'area', AreaViewSet)
 system_url.register(r'file', FileViewSet)
 system_url.register(r'api_white_list', ApiWhiteListViewSet)
 system_url.register(r'system_config', SystemConfigViewSet)
+system_url.register(r'message_center',MessageCenterViewSet)
 
 urlpatterns = [
     path('user/export/', UserViewSet.as_view({'post': 'export_data', })),
