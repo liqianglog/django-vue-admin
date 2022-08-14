@@ -34,8 +34,8 @@ class Users(CoreModel,AbstractUser):
     user_type = models.IntegerField(
         choices=USER_TYPE, default=0, verbose_name="用户类型", null=True, blank=True, help_text="用户类型"
     )
-    post = models.ManyToManyField(to="Post", verbose_name="关联岗位", db_constraint=False, help_text="关联岗位")
-    role = models.ManyToManyField(to="Role", verbose_name="关联角色", db_constraint=False, help_text="关联角色")
+    post = models.ManyToManyField(to="Post",blank=True, verbose_name="关联岗位", db_constraint=False, help_text="关联岗位")
+    role = models.ManyToManyField(to="Role", blank=True,verbose_name="关联角色", db_constraint=False, help_text="关联角色")
     dept = models.ForeignKey(
         to="Dept",
         verbose_name="所属部门",
