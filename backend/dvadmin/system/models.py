@@ -34,8 +34,8 @@ class Users(CoreModel,AbstractUser):
     user_type = models.IntegerField(
         choices=USER_TYPE, default=0, verbose_name="用户类型", null=True, blank=True, help_text="用户类型"
     )
-    post = models.ManyToManyField(to="Post", verbose_name="关联岗位", db_constraint=False, help_text="关联岗位")
-    role = models.ManyToManyField(to="Role", verbose_name="关联角色", db_constraint=False, help_text="关联角色")
+    post = models.ManyToManyField(to="Post",blank=True, verbose_name="关联岗位", db_constraint=False, help_text="关联岗位")
+    role = models.ManyToManyField(to="Role", blank=True,verbose_name="关联角色", db_constraint=False, help_text="关联角色")
     dept = models.ForeignKey(
         to="Dept",
         verbose_name="所属部门",
@@ -416,10 +416,10 @@ class MessageCenter(CoreModel):
     title = models.CharField(max_length=100,verbose_name="标题",help_text="标题")
     content = models.TextField(verbose_name="内容",help_text="内容")
     target_type=models.IntegerField(default=0,verbose_name="目标类型",help_text="目标类型")
-    target_user = models.ForeignKey(to=Users,related_name="target_user",null=True,blank=True,db_constraint=False,on_delete=models.CASCADE,verbose_name="目标用户",help_text="目标用户")
-    target_dept = models.ForeignKey(to=Dept, null=True, blank=True, db_constraint=False, on_delete=models.CASCADE,
+    target_user = models.ManyToManyField(to=Users,related_name="target_user",blank=True,db_constraint=False,verbose_name="目标用户",help_text="目标用户")
+    target_dept = models.ManyToManyField(to=Dept, null=True, blank=True, db_constraint=False,
                                     verbose_name="目标部门", help_text="目标部门")
-    target_role = models.ForeignKey(to=Role, null=True, blank=True, db_constraint=False, on_delete=models.CASCADE,
+    target_role = models.ManyToManyField(to=Role,  blank=True, db_constraint=False,
                                     verbose_name="目标角色", help_text="目标角色")
     is_read=models.BooleanField(default=False,blank=True,verbose_name="是否已读",help_text="是否已读")
 
@@ -428,4 +428,3 @@ class MessageCenter(CoreModel):
         verbose_name = "消息中心"
         verbose_name_plural = verbose_name
         ordering = ("-create_datetime",)
-

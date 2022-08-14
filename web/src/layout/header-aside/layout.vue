@@ -191,6 +191,13 @@ export default {
         this.showView = true // DOM更新后再通过v-if添加router-view节点
       })
     }
+  },
+  mounted () {
+    this.$websocket.initWebSocket()
+  },
+  destroyed () {
+    // 离开路由之后断开websocket连接
+    this.$websocket.close()
   }
 }
 </script>
