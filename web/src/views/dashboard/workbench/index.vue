@@ -217,7 +217,7 @@ export default {
     gotoRoute (route) {
       this.$router.push(route)
     }
-  },
+  }
 }
 </script>
 

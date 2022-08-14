@@ -22,8 +22,6 @@ export function GetSelfReceive (query) {
   })
 }
 
-
-
 export function GetObj (obj) {
   return request({
     url: urlPrefix + obj.id + '/',

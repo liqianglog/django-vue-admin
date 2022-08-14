@@ -65,5 +65,5 @@ function webSocketSend (message) {
   this.socket.send(JSON.stringify(message))
 }
 export default {
-  initWebSocket, close,webSocketSend
+  initWebSocket, close, webSocketSend
 }

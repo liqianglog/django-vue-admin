@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { AddObj, GetObj, GetList, UpdateObj, DelObj,GetSelfReceive } from './api'
+import { AddObj, GetObj, GetList, UpdateObj, DelObj, GetSelfReceive } from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 export default {
@@ -35,7 +35,7 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
-      tabActivted:"send"
+      tabActivted: 'send'
     }
   },
   created () {
@@ -86,7 +86,7 @@ export default {
     handleFormComponentReady (event, key, form) {
       // console.log('form component ready:', event, key, form)
     },
-    onTabClick(obj){
+    onTabClick (obj) {
       this.doRefresh()
     }
   }
