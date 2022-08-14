@@ -417,7 +417,7 @@ class MessageCenter(CoreModel):
     content = models.TextField(verbose_name="内容",help_text="内容")
     target_type=models.IntegerField(default=0,verbose_name="目标类型",help_text="目标类型")
     target_user = models.ManyToManyField(to=Users,related_name="target_user",blank=True,db_constraint=False,verbose_name="目标用户",help_text="目标用户")
-    target_dept = models.ManyToManyField(to=Dept, null=True, blank=True, db_constraint=False,
+    target_dept = models.ManyToManyField(to=Dept,  blank=True, db_constraint=False,
                                     verbose_name="目标部门", help_text="目标部门")
     target_role = models.ManyToManyField(to=Role,  blank=True, db_constraint=False,
                                     verbose_name="目标角色", help_text="目标角色")
