@@ -48,6 +48,7 @@ class CoreInitialize:
                             continue
                         filter_data[key] = value
                 instance = model.objects.filter(**filter_data).first()
+                data["reset"] = self.reset
                 serializer = Serializer(instance, data=data, request=self.request)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()

@@ -61,6 +61,8 @@ class DeptInitSerializer(CustomModelSerializer):
                     "parent": menu_data['parent']
                 }
                 instance_obj = Dept.objects.filter(**filter_data).first()
+                if instance_obj and not self.initial_data.get('reset'):
+                    continue
                 serializer = DeptInitSerializer(instance_obj, data=menu_data, request=self.request)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
