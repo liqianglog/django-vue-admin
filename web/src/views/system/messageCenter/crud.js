@@ -15,7 +15,6 @@ export const crudOptions = (vm) => {
       {
         title: 'id',
         key: 'id',
-        sortable: true,
         width: 100,
         form: { disabled: true }
       },
