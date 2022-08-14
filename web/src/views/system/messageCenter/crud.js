@@ -42,9 +42,6 @@ export const crudOptions = (vm) => {
         type: 'radio',
         dict: { data: [{ value: 0, label: '按用户' }, { value: 1, label: '按角色' }, { value: 2, label: '按部门' }] },
         form: {
-          itemProps: {
-            class: { yxtInput: true }
-          },
           rules: [
             {
               required: true,
