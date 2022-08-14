@@ -32,7 +32,7 @@ import 'vxe-table/lib/style.css'
 // md5加密
 import md5 from 'js-md5'
 
-//websocket
+// websocket
 import websocket from '@/api/websocket'
 
 // 核心插件
