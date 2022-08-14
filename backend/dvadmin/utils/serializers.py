@@ -80,6 +80,9 @@ class CustomModelSerializer(DynamicFieldsMixin, ModelSerializer):
 
     def update(self, instance, validated_data):
         if self.request:
+            if str(self.request.user) != "AnonymousUser":
+                if self.modifier_field_id in self.fields.fields:
+                    validated_data[self.modifier_field_id] = self.get_request_user_id()
             if hasattr(self.instance, self.modifier_field_id):
                 setattr(
                     self.instance, self.modifier_field_id, self.get_request_user_id()
