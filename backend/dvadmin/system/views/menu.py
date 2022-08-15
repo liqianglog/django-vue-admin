@@ -85,6 +85,8 @@ class MenuInitSerializer(CustomModelSerializer):
                     "component_name": menu_data['component_name'],
                 }
                 instance_obj = Menu.objects.filter(**filter_data).first()
+                if instance_obj and not self.initial_data.get('reset'):
+                    continue
                 serializer = MenuInitSerializer(instance_obj, data=menu_data, request=self.request)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()

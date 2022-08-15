@@ -15,7 +15,6 @@ export const crudOptions = (vm) => {
       {
         title: 'id',
         key: 'id',
-        sortable: true,
         width: 100,
         form: { disabled: true }
       },
@@ -33,7 +32,7 @@ export const crudOptions = (vm) => {
               message: '必填项'
             }
           ],
-          component: { span: 24 }
+          component: { span: 24, placeholder: '请输入标题' }
         }
       },
       {

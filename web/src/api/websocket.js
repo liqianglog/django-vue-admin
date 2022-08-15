@@ -16,7 +16,8 @@ function webSocketOnError (e) {
     title: '',
     message: 'WebSocket连接发生错误' + JSON.stringify(e),
     type: 'error',
-    duration: 0
+    position: 'bottom-right',
+    duration: 3000
   })
 }
 function webSocketOnMessage (e) {

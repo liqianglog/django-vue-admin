@@ -398,15 +398,15 @@ Vue.prototype.commonEndColumns = function (param = {}) {
       key: 'is_deleted',
       width: 160,
       search: {
-        disabled: !showData.is_deleted.showForm,
+        disabled: !showData.is_deleted.showForm
       },
       show: showData.is_deleted.showTable,
       type: 'radio',
-      dict:{
-        data:[{label:"是",value:true},{label:"否",value:false}]
+      dict: {
+        data: [{ label: '是', value: true }, { label: '否', value: false }]
       },
       form: {
-        disabled: !showData.is_deleted.showForm,
+        disabled: !showData.is_deleted.showForm
 
       }
     }

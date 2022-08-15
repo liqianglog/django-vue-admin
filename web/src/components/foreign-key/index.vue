@@ -20,8 +20,8 @@ export default {
       currentValue: ''
     }
   },
-  watch:{
-    value(nv,ov){
+  watch: {
+    value (nv, ov) {
       const { row } = this.$parent.scope
       const valueBinding = this.$parent.valueBinding
       this.setValue(row[valueBinding])

@@ -53,6 +53,8 @@ class DictionaryInitSerializer(CustomModelSerializer):
                     "parent": data['parent']
                 }
                 instance_obj = Dictionary.objects.filter(**filter_data).first()
+                if instance_obj and not self.initial_data.get('reset'):
+                    continue
                 serializer = DictionaryInitSerializer(instance_obj, data=data, request=self.request)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
