@@ -2,16 +2,22 @@
   <div>
     <el-row :gutter="10">
       <el-col :span="4">变量标题</el-col>
-      <el-col :span="12">变量值</el-col>
-      <el-col :span="4" :offset="4">变量名</el-col>
+      <el-col :span="8">变量值</el-col>
+      <el-col :span="4" >变量名</el-col>
+      <el-col :span="4" >状态</el-col>
+      <el-col :span="4" >操作</el-col>
     </el-row>
-    <el-form ref="form" :model="form" label-width="140px" label-position="left" style="margin-top: 20px">
+    <el-form ref="form" :model="form" label-width="240px" label-position="left" style="margin-top: 20px">
       <el-form-item :label="item.title" :prop="['array'].indexOf(item.form_item_type_label) >-1?'':item.key"
                     :key="index" :rules="item.rule || []"
                     v-for="(item,index) in formList"
 
       >
-        <el-col :span="12" :offset="2">
+        <template slot="label">
+          <el-input v-if="item.edit" v-model="item.title" style="display: inline-block;width: 200px;" placeholder="请输入标题"></el-input>
+          <span v-else>{{item.title}}</span>
+        </template>
+        <el-col :span="6" >
           <!--    文本      -->
           <el-input :key="index" v-if="['text','textarea'].indexOf(item.form_item_type_label) >-1"
                     :type="item.form_item_type_label"
@@ -183,7 +189,7 @@
                     <p>删除后无法恢复,确定删除吗？</p>
                     <div style="text-align: right; margin: 0">
                       <el-button size="mini" type="text" @click="childRemoveVisible = false">取消</el-button>
-                      <el-button type="primary" size="mini" @click="onRemoveChild(row,index)">确定</el-button>
+                      <el-button type="primary" size="mini" @click="onRemoveChild(row,index,item.key)">确定</el-button>
                     </div>
                     <el-button type="text" slot="reference">删除</el-button>
                   </el-popover>
@@ -195,7 +201,34 @@
             </div>
           </div>
         </el-col>
-        <el-col :span="4" :offset="6">{{ editableTabsItem.key }}.{{ item.key }}</el-col>
+        <el-col :span="6" :offset="2">
+          <el-input v-if="item.edit" v-model="item.new_key" style="width: 200px;" placeholder="请输入变量key">
+            <template slot="prepend">
+              <span style="padding: 0px 5px">{{ editableTabsItem.key }}</span>
+              </template>
+          </el-input>
+          <span v-else>{{ editableTabsItem.key }}.{{ item.key }}</span>
+          </el-col>
+        <el-col :span="4" >
+          <el-switch
+          v-model="item.status"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+          active-text="启用"
+          inactive-text="禁用">
+        </el-switch>
+        </el-col>
+        <el-col :span="4" :offset="1">
+          <el-button v-if="item.edit" size="mini" type="primary"  icon="el-icon-success" @click="onEditSave(item)"></el-button>
+          <el-button v-else size="mini" type="primary"  icon="el-icon-edit" @click="onEdit(index)"></el-button>
+           <el-popconfirm
+              title="确定删除该条数据吗？"
+              @confirm="onDelRow(item)"
+            >
+              <el-button size="mini" type="danger" icon="el-icon-delete" slot="reference"></el-button>
+            </el-popconfirm>
+
+        </el-col>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">确定</el-button>
@@ -382,11 +415,17 @@ export default {
       }
     },
     // 子表删除
-    onRemoveChild (row, index) {
+    onRemoveChild (row, index, refName) {
+      console.log(row, index)
       if (row.id) {
-        console.log(1, 'ok')
+        api.DelObj(row.id).then(res => {
+          this.refreshView()
+        })
       } else {
         this.childTableData.splice(index, 1)
+        const tableName = 'xTable_' + refName
+        const tableData = this.$refs[tableName][0].remove(row)
+        console.log(tableData)
       }
     },
     // 图片预览
@@ -445,6 +484,25 @@ export default {
         if (value.uid === file.uid) index = inx
       })
       this.form[key].splice(index, 1)
+    },
+    // 配置的行删除
+    onDelRow (obj) {
+      api.DelObj(obj.id).then(res => {
+        this.refreshView()
+      })
+    },
+    // 行编辑
+    onEdit (index) {
+      const that = this
+      that.$set(that.formList[index], 'new_key', that.formList[index].key)
+      that.$set(that.formList[index], 'edit', true)
+    },
+    // 行编辑保存
+    onEditSave (obj) {
+      obj.key = JSON.parse(JSON.stringify(obj.new_key))
+      api.UpdateObj(obj).then(res => {
+        this.refreshView()
+      })
     }
   },
   mounted () {
