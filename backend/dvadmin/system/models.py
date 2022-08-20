@@ -259,7 +259,7 @@ def media_file_name(instance, filename):
 
 
 class FileList(CoreModel):
-    name = models.CharField(max_length=50, null=True, blank=True, verbose_name="名称", help_text="名称")
+    name = models.CharField(max_length=200, null=True, blank=True, verbose_name="名称", help_text="名称")
     url = models.FileField(upload_to=media_file_name)
     md5sum = models.CharField(max_length=36, blank=True, verbose_name="文件md5", help_text="文件md5")
 
