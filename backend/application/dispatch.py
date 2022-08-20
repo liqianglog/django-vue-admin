@@ -131,6 +131,8 @@ def get_dictionary_config(schema_name=None):
     :param schema_name: 对应字典配置的租户schema_name值
     :return:
     """
+    if not settings.DICTIONARY_CONFIG:
+        refresh_dictionary()
     if is_tenants_mode():
         dictionary_config = settings.DICTIONARY_CONFIG[schema_name or connection.tenant.schema_name]
     else:
@@ -175,6 +177,8 @@ def get_system_config(schema_name=None):
     :param schema_name: 对应字典配置的租户schema_name值
     :return:
     """
+    if not settings.SYSTEM_CONFIG:
+        refresh_system_config()
     if is_tenants_mode():
         dictionary_config = settings.SYSTEM_CONFIG[schema_name or connection.tenant.schema_name]
     else:
