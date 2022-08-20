@@ -250,9 +250,26 @@ class InitSettingsViewSet(APIView):
     authentication_classes = []
     permission_classes = []
 
+    def filter_system_config_values(self, data: dict):
+        """
+        过滤系统初始化配置
+        :param data:
+        :return:
+        """
+        for key in self.request.query_params.get('key', '').split('|'):
+            if key:
+                data = dict(filter(lambda x: x[0].startswith(key), data.items()))
+        return data
+
     def get(self, request):
         data = dispatch.get_system_config()
         if not data:
             dispatch.refresh_system_config()
             data = dispatch.get_system_config()
+        # 不返回后端专用配置
+        backend_config = [f"{ele.get('parent__key')}.{ele.get('key')}" for ele in
+                          SystemConfig.objects.filter(status=False, parent_id__isnull=False).values('parent__key',
+                                                                                                    'key')]
+        data = dict(filter(lambda x: x[0] not in backend_config, data.items()))
+        data = self.filter_system_config_values(data=data)
         return DetailResponse(data=data)

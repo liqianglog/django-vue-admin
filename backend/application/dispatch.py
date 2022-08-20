@@ -40,7 +40,7 @@ def _get_all_system_config():
     from dvadmin.system.models import SystemConfig
 
     system_config_obj = (
-        SystemConfig.objects.filter(status=True, parent_id__isnull=False)
+        SystemConfig.objects.filter(parent_id__isnull=False)
         .values("parent__key", "key", "value", "form_item_type")
         .order_by("sort")
     )
