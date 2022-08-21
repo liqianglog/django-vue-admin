@@ -256,10 +256,11 @@ class InitSettingsViewSet(APIView):
         :param data:
         :return:
         """
+        new_data = {}
         for key in self.request.query_params.get('key', '').split('|'):
             if key:
-                data = dict(filter(lambda x: x[0].startswith(key), data.items()))
-        return data
+                new_data.update(**dict(filter(lambda x: x[0].startswith(key), data.items())))
+        return new_data
 
     def get(self, request):
         data = dispatch.get_system_config()
