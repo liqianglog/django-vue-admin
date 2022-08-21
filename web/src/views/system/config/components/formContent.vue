@@ -303,7 +303,7 @@ export default {
     // 获取数据
     getInit () {
       const that = this
-      api.GetList({ parent: this.options.id }).then(res => {
+      api.GetList({ parent: this.options.id, limit: 999 }).then(res => {
         const { data } = res.data
         this.formList = data
         const form = {}
