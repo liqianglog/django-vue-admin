@@ -256,6 +256,8 @@ class InitSettingsViewSet(APIView):
         :param data:
         :return:
         """
+        if not self.request.query_params.get('key', ''):
+            return data
         new_data = {}
         for key in self.request.query_params.get('key', '').split('|'):
             if key:

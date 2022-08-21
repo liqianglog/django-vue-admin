@@ -74,7 +74,7 @@
             <el-radio
               v-for="item in dictionary(item.setting)  || []"
               :key="item.value"
-              :label="item.label"
+              :label="item.value"
               :value="item.value">
               {{ item.label }}
             </el-radio>
