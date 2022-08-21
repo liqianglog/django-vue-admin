@@ -276,9 +276,14 @@ class UserViewSet(CustomModelViewSet):
         old_pwd = data.get("oldPassword")
         new_pwd = data.get("newPassword")
         new_pwd2 = data.get("newPassword2")
+        if old_pwd or new_pwd or new_pwd2:
+            return ErrorResponse(msg="参数不能为空")
         if new_pwd != new_pwd2:
             return ErrorResponse(msg="两次密码不匹配")
-        elif request.user.check_password(old_pwd):
+        check_password = request.user.check_password(old_pwd)
+        if not check_password:
+            check_password = request.user.check_password(hashlib.md5(old_pwd.encode(encoding='UTF-8')).hexdigest())
+        if check_password:
             request.user.password = make_password(new_pwd)
             request.user.save()
             return DetailResponse(data=None, msg="修改成功")
