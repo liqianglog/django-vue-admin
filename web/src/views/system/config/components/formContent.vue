@@ -2,10 +2,10 @@
   <div>
     <el-row :gutter="10">
       <el-col :span="4">变量标题</el-col>
-      <el-col :span="8">变量值</el-col>
+      <el-col :span="10">变量值</el-col>
       <el-col :span="4" >变量名</el-col>
-      <el-col :span="4" >状态</el-col>
-      <el-col :span="4" >操作</el-col>
+      <el-col :span="2">是否前端配置</el-col>
+      <el-col :span="3" :offset="1">操作</el-col>
     </el-row>
     <el-form ref="form" :model="form" label-width="240px" label-position="left" style="margin-top: 20px">
       <el-form-item :label="item.title" :prop="['array'].indexOf(item.form_item_type_label) >-1?'':item.key"
@@ -17,7 +17,7 @@
           <el-input v-if="item.edit" v-model="item.title" style="display: inline-block;width: 200px;" placeholder="请输入标题"></el-input>
           <span v-else>{{item.title}}</span>
         </template>
-        <el-col :span="6" >
+        <el-col :span="11" >
           <!--    文本      -->
           <el-input :key="index" v-if="['text','textarea'].indexOf(item.form_item_type_label) >-1"
                     :type="item.form_item_type_label"
@@ -74,7 +74,7 @@
             <el-radio
               v-for="item in dictionary(item.setting)  || []"
               :key="item.value"
-              :label="item.label"
+              :label="item.value"
               :value="item.value">
               {{ item.label }}
             </el-radio>
@@ -201,7 +201,7 @@
             </div>
           </div>
         </el-col>
-        <el-col :span="6" :offset="2">
+        <el-col :span="4" :offset="1">
           <el-input v-if="item.edit" v-model="item.new_key" style="width: 200px;" placeholder="请输入变量key">
             <template slot="prepend">
               <span style="padding: 0px 5px">{{ editableTabsItem.key }}</span>
@@ -209,16 +209,14 @@
           </el-input>
           <span v-else>{{ editableTabsItem.key }}.{{ item.key }}</span>
           </el-col>
-        <el-col :span="4" >
+        <el-col :span="3" :offset="1">
           <el-switch
           v-model="item.status"
           active-color="#13ce66"
-          inactive-color="#ff4949"
-          active-text="启用"
-          inactive-text="禁用">
+          inactive-color="#ff4949">
         </el-switch>
         </el-col>
-        <el-col :span="4" :offset="1">
+        <el-col :span="2">
           <el-button v-if="item.edit" size="mini" type="primary"  icon="el-icon-success" @click="onEditSave(item)"></el-button>
           <el-button v-else size="mini" type="primary"  icon="el-icon-edit" @click="onEdit(index)"></el-button>
            <el-popconfirm
@@ -305,7 +303,7 @@ export default {
     // 获取数据
     getInit () {
       const that = this
-      api.GetList({ parent: this.options.id }).then(res => {
+      api.GetList({ parent: this.options.id, limit: 999 }).then(res => {
         const { data } = res.data
         this.formList = data
         const form = {}
