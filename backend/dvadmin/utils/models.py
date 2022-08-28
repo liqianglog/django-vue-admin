@@ -76,6 +76,16 @@ class CoreModel(models.Model):
         verbose_name = '核心模型'
         verbose_name_plural = verbose_name
 
+    def delete(self, using=None, soft_delete=True, *args, **kwargs):
+        """
+        Soft delete object (set its ``is_deleted`` field to True).
+        Actually delete object if setting ``soft`` to False.
+        """
+        if soft_delete:
+            self.is_deleted = True
+            self.save(using=using)
+        else:
+            return super(CoreModel, self).delete(using=using, *args, **kwargs)
 
 
 
