@@ -3,7 +3,7 @@ import util from '@/libs/util'
 function initWebSocket (e) {
   const token = util.cookies.get('token')
   if (token) {
-    const wsUri = 'ws://127.0.0.1:8000/?auth=' + token
+    const wsUri = 'ws://127.0.0.1:8000/ws/' + token + '/?room=message_center'
     this.socket = new WebSocket(wsUri)// 这里面的this都指向vue
     this.socket.onerror = webSocketOnError
     this.socket.onmessage = webSocketOnMessage
@@ -56,11 +56,11 @@ function closeWebsocket () {
   close()
 }
 function close () {
-  this.socket.close() // 关闭 websocket
-  this.socket.onclose = function (e) {
-    console.log(e)// 监听关闭事件
-    console.log('关闭')
-  }
+  // this.socket.close() // 关闭 websocket
+  // this.socket.onclose = function (e) {
+  //   console.log(e)// 监听关闭事件
+  //   console.log('关闭')
+  // }
 }
 function webSocketSend (message) {
   this.socket.send(JSON.stringify(message))
