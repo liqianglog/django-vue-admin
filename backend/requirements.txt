@@ -1,4 +1,4 @@
-asgiref==3.3.4
+asgiref==3.5.2
 certifi==2021.5.30
 chardet==4.0.0
 coreapi==2.3.3
