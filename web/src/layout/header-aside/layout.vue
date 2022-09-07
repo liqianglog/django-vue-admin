@@ -197,7 +197,7 @@ export default {
   },
   destroyed () {
     // 离开路由之后断开websocket连接
-    this.$websocket.close()
+    this.$websocket.closeWebsocket()
   }
 }
 </script>
