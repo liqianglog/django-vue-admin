@@ -58,7 +58,8 @@ class DeptInitSerializer(CustomModelSerializer):
                 menu_data['parent'] = instance.id
                 filter_data = {
                     "name": menu_data['name'],
-                    "parent": menu_data['parent']
+                    "parent": menu_data['parent'],
+                    "key":menu_data['key']
                 }
                 instance_obj = Dept.objects.filter(**filter_data).first()
                 if instance_obj and not self.initial_data.get('reset'):
@@ -72,7 +73,7 @@ class DeptInitSerializer(CustomModelSerializer):
     class Meta:
         model = Dept
         fields = ['name', 'sort', 'owner', 'phone', 'email', 'status', 'parent', 'creator', 'dept_belong_id',
-                  'children']
+                  'children','key']
         extra_kwargs = {
             'creator': {'write_only': True},
             'dept_belong_id': {'write_only': True}

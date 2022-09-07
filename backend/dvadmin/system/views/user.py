@@ -46,6 +46,16 @@ class UsersInitSerializer(CustomModelSerializer):
     """
     初始化获取数信息(用于生成初始化json文件)
     """
+    def save(self, **kwargs):
+        instance = super().save(**kwargs)
+        role_key = self.initial_data.get('role_key',[])
+        role_ids = Role.objects.filter(key__in=role_key).values_list('id',flat=True)
+        instance.role.set(role_ids)
+        dept_key = self.initial_data.get('dept_key',None)
+        dept_id = Dept.objects.filter(key=dept_key).first()
+        instance.dept = dept_id
+        instance.save()
+        return instance
 
     class Meta:
         model = Users

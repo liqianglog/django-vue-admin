@@ -103,6 +103,7 @@ class Role(CoreModel):
 
 class Dept(CoreModel):
     name = models.CharField(max_length=64, verbose_name="部门名称", help_text="部门名称")
+    key = models.CharField(max_length=64, unique=True,null=True,blank=True, verbose_name="关联字符", help_text="关联字符")
     sort = models.IntegerField(default=1, verbose_name="显示排序", help_text="显示排序")
     owner = models.CharField(max_length=32, verbose_name="负责人", null=True, blank=True, help_text="负责人")
     phone = models.CharField(max_length=32, verbose_name="联系电话", null=True, blank=True, help_text="联系电话")

@@ -7,5 +7,14 @@
         "admin": true,
         "data_range": 3,
         "remark": null
+    },
+    {
+        "name": "用户",
+        "key": "public",
+        "sort": 2,
+        "status": true,
+        "admin": true,
+        "data_range": 3,
+        "remark": null
     }
 ]
