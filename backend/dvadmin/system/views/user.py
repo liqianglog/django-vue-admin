@@ -223,17 +223,17 @@ class UserViewSet(CustomModelViewSet):
     }
     search_fields = ["username", "name", "gender", "dept__name", "role__name"]
     # 导出
-    export_field_label = [
-        "用户账号",
-        "用户名称",
-        "用户邮箱",
-        "手机号码",
-        "用户性别",
-        "帐号状态",
-        "最后登录时间",
-        "部门名称",
-        "部门负责人",
-    ]
+    export_field_label = {
+        "username":"用户账号",
+        "name":"用户名称",
+        "email":"用户邮箱",
+        "mobile":"手机号码",
+        "gender":"用户性别",
+        "is_active":"帐号状态",
+        "last_login":"最后登录时间",
+        "dept_name":"部门名称",
+        "dept_owner":"部门负责人",
+    }
     export_serializer_class = ExportUserProfileSerializer
     # 导入
     import_serializer_class = UserProfileImportSerializer

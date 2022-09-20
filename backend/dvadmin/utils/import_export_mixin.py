@@ -26,6 +26,21 @@ class ImportSerializerMixin:
     # 表格表头最大宽度，默认50个字符
     export_column_width = 50
 
+    def is_number(self,num):
+        try:
+            float(num)
+            return True
+        except ValueError:
+            pass
+
+        try:
+            import unicodedata
+            unicodedata.numeric(num)
+            return True
+        except (TypeError, ValueError):
+            pass
+        return False
+
     def get_string_len(self, string):
         """
         获取字符串最大长度
@@ -34,6 +49,8 @@ class ImportSerializerMixin:
         """
         length = 4
         if string is None:
+            return length
+        if self.is_number(string):
             return length
         for char in string:
             length += 2.1 if ord(char) > 256 else 1
@@ -155,6 +172,21 @@ class ExportSerializerMixin:
     # 表格表头最大宽度，默认50个字符
     export_column_width = 50
 
+    def is_number(self,num):
+        try:
+            float(num)
+            return True
+        except ValueError:
+            pass
+
+        try:
+            import unicodedata
+            unicodedata.numeric(num)
+            return True
+        except (TypeError, ValueError):
+            pass
+        return False
+
     def get_string_len(self, string):
         """
         获取字符串最大长度
@@ -163,6 +195,8 @@ class ExportSerializerMixin:
         """
         length = 4
         if string is None:
+            return length
+        if self.is_number(string):
             return length
         for char in string:
             length += 2.1 if ord(char) > 256 else 1
@@ -176,36 +210,35 @@ class ExportSerializerMixin:
         :param kwargs:
         :return:
         """
-        assert self.export_field_label, "'%s' 请配置对应的导出模板字段。" % self.__class__.__name__
         queryset = self.filter_queryset(self.get_queryset())
+        assert self.export_field_label, "'%s' 请配置对应的导出模板字段。" % self.__class__.__name__
+        assert self.export_serializer_class, "'%s' 请配置对应的导出序列化器。" % self.__class__.__name__
         data = self.export_serializer_class(queryset, many=True).data
         # 导出excel 表
         response = HttpResponse(content_type="application/msexcel")
         response["Access-Control-Expose-Headers"] = f"Content-Disposition"
-        response["Content-Disposition"] = f'attachment;filename={quote(str(f"导出{get_verbose_name(queryset)}.xlsx"))}'
+        response["content-disposition"] = f'attachment;filename={quote(str(f"导出{get_verbose_name(queryset)}.xlsx"))}'
         wb = Workbook()
         ws = wb.active
-        header_data = ["序号", *self.export_field_label]
+        header_data = ["序号", *self.export_field_label.values()]
+        hidden_header = ["#", *self.export_field_label.keys()]
         df_len_max = [self.get_string_len(ele) for ele in header_data]
         row = get_column_letter(len(self.export_field_label) + 1)
         column = 1
         ws.append(header_data)
         for index, results in enumerate(data):
             results_list = []
-            for inx, result in enumerate(results.values()):
-                # 布尔值进行更新
-                if result is True:
-                    result = "是"
-                elif result is False:
-                    result = "否"
-                if isinstance(result, int):
-                    result = str(result)
-                # 计算最大列宽度
-                result_column_width = self.get_string_len(result)
-                if result_column_width > df_len_max[inx + 1]:
-                    df_len_max[inx + 1] = result_column_width
-
-                results_list.append(result)
+            for h_index, h_item in enumerate(hidden_header):
+                for key,val in results.items():
+                    if key == h_item:
+                        if val is None or val=="":
+                            results_list.append("")
+                        else:
+                            results_list.append(val)
+                        # 计算最大列宽度
+                        result_column_width = self.get_string_len(val)
+                        if h_index !=0 and result_column_width > df_len_max[h_index]:
+                            df_len_max[h_index] = result_column_width
             ws.append([index + 1, *results_list])
             column += 1
         # 　更新列宽
