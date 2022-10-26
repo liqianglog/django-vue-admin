@@ -79,4 +79,30 @@ util.randomString = function (e) {
   return n
 }
 
+util.ArrayToTree = function (rootList, parentValue, parentName, list) {
+  for (const item of rootList) {
+    if (item.parent === parentValue) {
+      if (parentName) {
+        item.name = parentName + '/' + item.name
+      }
+      list.push(item)
+    }
+  }
+
+  for (const i of list) {
+    // 如果子元素里面存在children就直接递归，不存在就生成一个children
+    if (i.children) {
+      util.ArrayToTree(rootList, i.id, i.name, i.children)
+    } else {
+      i.children = []
+      util.ArrayToTree(rootList, i.id, i.name, i.children)
+    }
+
+    if (i.children.length === 0) {
+      delete i.children
+    }
+  }
+  return list
+}
+
 export default util

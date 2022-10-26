@@ -16,7 +16,6 @@ import { request } from '@/api/service'
 import util from '@/libs/util'
 import XEUtils from 'xe-utils'
 import store from '@/store/index'
-import { urlPrefix as deptPrefix } from '@/views/system/dept/api'
 import types from '@/config/d2p-extends/types'
 import { checkPlugins, plugins } from '@/views/plugins'
 
@@ -243,7 +242,8 @@ Vue.prototype.commonEndColumns = function (param = {}) {
     },
     dept_belong_id: {
       showForm: (param.dept_belong_id && param.dept_belong_id.showForm) !== undefined ? param.dept_belong_id.showForm : false,
-      showTable: (param.dept_belong_id && param.dept_belong_id.showTable) !== undefined ? param.dept_belong_id.showTable : false
+      showTable: (param.dept_belong_id && param.dept_belong_id.showTable) !== undefined ? param.dept_belong_id.showTable : false,
+      showSearch: (param.dept_belong_id && param.dept_belong_id.showSearch) !== undefined ? param.dept_belong_id.showSearch : false
     },
     modifier_name: {
       showForm: (param.modifier_name && param.modifier_name.showForm) !== undefined ? param.modifier_name.showForm : false,
@@ -293,67 +293,53 @@ Vue.prototype.commonEndColumns = function (param = {}) {
       }
     },
     {
-      title: '数据归属部门',
+      title: '所属部门',
       key: 'dept_belong_id',
       show: showData.dept_belong_id.showTable,
       width: 150,
       search: {
-        disabled: true
+        disabled: !showData.dept_belong_id.showSearch
       },
-      type: 'table-selector',
+      type: 'tree-selector',
       dict: {
-        cache: true,
-        url: deptPrefix,
-        isTree: true,
+        cache: false,
+        url: '/api/system/dept/all_dept/',
+        // isTree: true,
+        // dept: true,
         value: 'id', // 数据字典中value字段的属性名
         label: 'name', // 数据字典中label字段的属性名
-        children: 'children', // 数据字典中children字段的属性名
-        getData: (url, dict, {
-          _,
-          component
-        }) => {
-          return request({
-            url: url,
-            params: { limit: 999, status: 1 }
-          }).then(ret => {
-            return ret.data.data
-          })
-        }
+        children: 'children' // 数据字典中children字段的属性名
+        // getData: (url, dict, {
+        //   _,
+        //   component
+        // }) => {
+        //   return request({
+        //     url: url
+        //   }).then(ret => {
+        //     return XEUtils.toArrayTree(ret.data, { parentKey: 'parent', strict: false })
+        //   })
+        // }
+      },
+      component: {
+        name: 'dept-format',
+        props: { multiple: false, clearable: true }
       },
       form: {
         disabled: !showData.dept_belong_id.showForm,
         component: {
-          props: {
-            elProps: {
-              treeConfig: {
-                transform: true,
-                rowField: 'id',
-                parentField: 'parent',
-                expandAll: true
-              },
-              columns: [
-                {
-                  field: 'name',
-                  title: '部门名称',
-                  treeNode: true
-                },
-                {
-                  field: 'status',
-                  title: '状态'
-                },
-                {
-                  field: 'parent_name',
-                  title: '父级部门'
-                }
-              ]
-            }
-          }
+          props: { multiple: false, clearable: true }
         },
         helper: {
           render (h) {
             return (< el-alert title="默认不填则为当前创建用户的部门ID" type="info" />
             )
           }
+        }
+      },
+      // 接收时,处理数据
+      valueBuilder (row, col) {
+        if (row[col.key]) {
+          row[col.key] = Number(row[col.key])
         }
       }
     },

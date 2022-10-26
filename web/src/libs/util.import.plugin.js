@@ -1,1 +1,9 @@
-module.exports = file => () => import('@great-dream/' + file)
+module.exports = file => {
+  var result
+  try {
+    result = require('@great-dream/' + file).default
+  } catch (error) {
+    result = require('@/views/plugins/' + file).default
+  }
+  return result
+}

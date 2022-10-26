@@ -3,7 +3,7 @@ import hashlib
 from django.contrib.auth.hashers import make_password
 from django_restql.fields import DynamicSerializerMethodField
 from rest_framework import serializers
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from application import dispatch
@@ -21,6 +21,7 @@ class UserSerializer(CustomModelSerializer):
     """
     dept_name = serializers.CharField(source='dept.name', read_only=True)
     role_info = DynamicSerializerMethodField()
+    factory_name = serializers.CharField(source='factory_info.name', read_only=True, help_text="工厂名称")
 
     class Meta:
         model = Users
@@ -46,16 +47,6 @@ class UsersInitSerializer(CustomModelSerializer):
     """
     初始化获取数信息(用于生成初始化json文件)
     """
-    def save(self, **kwargs):
-        instance = super().save(**kwargs)
-        role_key = self.initial_data.get('role_key',[])
-        role_ids = Role.objects.filter(key__in=role_key).values_list('id',flat=True)
-        instance.role.set(role_ids)
-        dept_key = self.initial_data.get('dept_key',None)
-        dept_id = Dept.objects.filter(key=dept_key).first()
-        instance.dept = dept_id
-        instance.save()
-        return instance
 
     class Meta:
         model = Users
@@ -223,17 +214,17 @@ class UserViewSet(CustomModelViewSet):
     }
     search_fields = ["username", "name", "gender", "dept__name", "role__name"]
     # 导出
-    export_field_label = {
-        "username":"用户账号",
-        "name":"用户名称",
-        "email":"用户邮箱",
-        "mobile":"手机号码",
-        "gender":"用户性别",
-        "is_active":"帐号状态",
-        "last_login":"最后登录时间",
-        "dept_name":"部门名称",
-        "dept_owner":"部门负责人",
-    }
+    export_field_label = [
+        "用户账号",
+        "用户名称",
+        "用户邮箱",
+        "手机号码",
+        "用户性别",
+        "帐号状态",
+        "最后登录时间",
+        "部门名称",
+        "部门负责人",
+    ]
     export_serializer_class = ExportUserProfileSerializer
     # 导入
     import_serializer_class = UserProfileImportSerializer
@@ -262,14 +253,31 @@ class UserViewSet(CustomModelViewSet):
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
     def user_info(self, request):
         """获取当前用户信息"""
-        user = request.user
+        user = self.request.user
         result = {
+            "id": user.id,
             "name": user.name,
             "mobile": user.mobile,
+            "user_type": user.user_type,
             "gender": user.gender,
             "email": user.email,
             "avatar": user.avatar,
+            "dept": user.dept.id,
+            "is_superuser": user.is_superuser,
+            "role": user.role.values_list('id', flat=True),
         }
+        if user.user_type == 3:
+            result["distributor_info"] = user.distributor_info_user.all().values_list('name', flat=True)
+        dept = getattr(user, 'dept', None)
+        if dept:
+            result['dept_info'] = {
+                'dept_id': dept.id,
+                'dept_name': dept.name
+            }
+        role = getattr(user, 'role', None)
+        if role:
+            result['role_info'] = role.values('id', 'name', 'key')
+
         return DetailResponse(data=result, msg="获取成功")
 
     @action(methods=["PUT"], detail=False, permission_classes=[IsAuthenticated])
@@ -286,7 +294,7 @@ class UserViewSet(CustomModelViewSet):
         old_pwd = data.get("oldPassword")
         new_pwd = data.get("newPassword")
         new_pwd2 = data.get("newPassword2")
-        if old_pwd or new_pwd or new_pwd2:
+        if old_pwd is None or new_pwd is None or new_pwd2 is None:
             return ErrorResponse(msg="参数不能为空")
         if new_pwd != new_pwd2:
             return ErrorResponse(msg="两次密码不匹配")
