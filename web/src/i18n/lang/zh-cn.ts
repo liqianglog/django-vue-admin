@@ -8,6 +8,7 @@ export default {
 		systemUser: '用户管理',
 		systemDept: '部门管理',
 		systemDic: '字典管理',
+		systemApiWhiteList: '接口白名单',
 		limits: '权限管理',
 		limitsFrontEnd: '前端控制',
 		limitsFrontEndPage: '页面权限',
@@ -72,7 +73,7 @@ export default {
 		tools: '工具类集合',
 		layoutLinkView: '外链',
 		layoutIfameView: '内嵌 iframe',
-		demo1:'demo1'
+		demo1: 'demo1',
 	},
 	staticRoutes: {
 		signIn: '登录',

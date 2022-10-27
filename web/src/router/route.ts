@@ -137,6 +137,21 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 							icon: 'ele-SetUp',
 						},
 					},
+					{
+						path: '/system/apiWhiteList',
+						name: 'apiWhiteList',
+						component: () => import('/@/views/system/apiWhiteList/index.vue'),
+						meta: {
+							title: 'message.router.systemApiWhiteList',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin'],
+							icon: 'ele-SetUp',
+						},
+					},
 				],
 			},
 			{
@@ -1142,7 +1157,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 					roles: ['admin'],
 					icon: 'iconfont icon-neiqianshujuchucun',
 				},
-			}
+			},
 		],
 	},
 ];
