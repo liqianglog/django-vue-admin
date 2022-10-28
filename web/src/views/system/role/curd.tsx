@@ -73,7 +73,18 @@ export const createCrudOptions = function ({crudExpose}: {crudExpose: CrudExpose
 				delRequest,
 			},
 			rowHandle: {
-				buttons: {},
+				width: 330,
+				buttons: {
+					edit: {
+						size: 'default'
+					},
+					view: {
+						size: 'default'
+					},
+					remove: {
+						size: 'default'
+					}
+				},
 			},
 			form: {
 				col: { span: 24 },
@@ -144,7 +155,9 @@ export const createCrudOptions = function ({crudExpose}: {crudExpose: CrudExpose
 					},
 					form: {
 						rules: [{ required: true, message: '权限标识必填' }],
-						placeholder: '输入权限标识',
+						component: {
+							placeholder: '输入权限标识',
+						}
 					},
 				},
 				sort: {
