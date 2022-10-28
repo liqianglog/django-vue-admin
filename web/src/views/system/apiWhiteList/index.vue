@@ -95,6 +95,10 @@ const createCrudOptions = function (prop?: CrudOptions): CreateCrudOptionsTypes 
 			},
 			form: {
 				labelWidth: '120px',
+				wrapper: {
+					is: 'el-dialog',
+					width: '600px',
+				},
 			},
 			columns: {
 				_index: {
@@ -116,8 +120,6 @@ const createCrudOptions = function (prop?: CrudOptions): CreateCrudOptionsTypes 
 				search: {
 					title: '关键词',
 					column: { show: false },
-					show: false,
-					disabled: true,
 					type: 'text',
 					search: { show: true },
 					form: {
@@ -177,7 +179,11 @@ const createCrudOptions = function (prop?: CrudOptions): CreateCrudOptionsTypes 
 					search: { show: false },
 					form: {
 						col: { span: 24 },
-						helper: '请正确填写，以免请求时被拦截。匹配单例使用正则,例如:/api/xx/.*?/',
+						helper: {
+							render() {
+								return [`<div>请正确填写，以免请求时被拦截。匹配单例使用正则,例如:/api/xx/.*?/</div>`];
+							},
+						},
 						component: {
 							maxlength: 20,
 						},

@@ -1,25 +1,12 @@
-<template>
-	<fs-page>
-		<fs-crud ref="crudRef" v-bind="crudBinding">
-			<template #cell_url="scope">
-				<el-tag size="small">{{ scope.row.url }}</el-tag>
-			</template>
-		</fs-crud>
-	</fs-page>
-</template>
-
-<script lang="ts" setup>
-import { ref, onMounted } from 'vue';
-import { useExpose, useCrud, CrudOptions, AddReq, DelReq, EditReq, dict } from '@fast-crud/fast-crud';
+import {CrudOptions, AddReq, DelReq, EditReq, dict } from '@fast-crud/fast-crud';
 import _ from 'lodash-es';
-import { createCrudOptions } from './curd';
 
-/* interface CreateCrudOptionsTypes {
+interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
 
 //此处为crudOptions配置
-const createCrudOptions = function (prop?: CrudOptions): CreateCrudOptionsTypes {
+export const createCrudOptions = function (prop?: CrudOptions): CreateCrudOptionsTypes {
 	//本地模拟后台crud接口方法 ----开始
 	const records = [
 		{
@@ -269,23 +256,4 @@ const createCrudOptions = function (prop?: CrudOptions): CreateCrudOptionsTypes 
 			},
 		},
 	};
-}; */
-
-// crud组件的ref
-const crudRef = ref();
-// crud 配置的ref
-const crudBinding = ref();
-// 暴露的方法
-const { crudExpose } = useExpose({ crudRef, crudBinding });
-// 你的crud配置
-const { crudOptions } = createCrudOptions({ crudExpose });
-// 初始化crud配置
-const { resetCrudOptions } = useCrud({ crudExpose, crudOptions });
-// 你可以调用此方法，重新初始化crud配置
-// resetCrudOptions(options)
-
-// 页面打开后获取列表数据
-onMounted(() => {
-	crudExpose.doRefresh();
-});
-</script>
+};
