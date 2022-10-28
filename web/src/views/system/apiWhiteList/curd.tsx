@@ -1,6 +1,7 @@
 import { CrudExpose, CrudOptions, AddReq, DelReq, EditReq, dict } from '@fast-crud/fast-crud';
 import _ from 'lodash-es';
-
+import {h} from 'vue';
+import {tabBarProps} from "element-plus";
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
@@ -169,7 +170,7 @@ export const createCrudOptions = function ({crudExpose}: {crudExpose: CrudExpose
 						col: { span: 24 },
 						helper: {
 							render() {
-								return ('<div>请正确填写，以免请求时被拦截。匹配单例使用正则,例如:/api/xx/.*?/</div>');
+								return <el-tag>请正确填写，以免请求时被拦截。匹配单例使用正则,例如:/api/xx/.*?/</el-tag>
 							},
 						},
 						component: {

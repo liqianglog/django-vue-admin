@@ -58,6 +58,7 @@ const { themeConfig } = storeToRefs(stores);
 // https://vue-i18n.intlify.dev/guide/essentials/fallback.html#explicit-fallback-with-one-locale
 export const i18n = createI18n({
 	legacy: false,
+	globalInjection: true,
 	silentTranslationWarn: true,
 	missingWarn: false,
 	silentFallbackWarn: true,
