@@ -1,4 +1,4 @@
-import {CrudOptions, AddReq, DelReq, EditReq, dict,CrudExpose } from '@fast-crud/fast-crud';
+import { CrudExpose, CrudOptions, AddReq, DelReq, EditReq, dict } from '@fast-crud/fast-crud';
 import _ from 'lodash-es';
 
 interface CreateCrudOptionsTypes {
@@ -13,25 +13,29 @@ export const createCrudOptions = function ({crudExpose}: {crudExpose: CrudExpose
 			id: 1,
 			modifier_name: '超级管理员',
 			creator_name: '超级管理员',
-			create_datetime: '2022-04-08 11:02:22',
-			update_datetime: '2022-05-31 02:09:00',
-			description: null,
+			create_datetime: '2022-05-24 13:43:21',
+			update_datetime: '2022-05-31 02:09:01',
+			description: 'null1111111',
 			modifier: '1',
 			dept_belong_id: '1',
-			name: '管理员',
-			key: 'admin',
-			sort: 1,
-			status: true,
-			admin: true,
-			data_range: 3,
-			remark: null,
+			url: '/api/system/dept_lazy_tree/',
+			method: 0,
+			enable_datasource: true,
 			creator: 1,
-			dept: [],
-			menu: [1, 2, 10, 20, 7, 8, 11, 16, 17, 5, 13, 15, 4, 18, 19, 3, 9],
-			permission: [
-				53, 4, 8, 13, 18, 32, 37, 42, 45, 49, 55, 2, 6, 11, 16, 21, 26, 30, 35, 40, 52, 1, 7, 12, 17, 22, 27, 31, 36, 41, 46, 50, 54, 3, 9, 14, 19,
-				23, 25, 33, 38, 43, 47, 48, 5, 10, 15, 20, 24, 28, 34, 39, 44, 51, 29,
-			],
+		},
+		{
+			id: 2,
+			modifier_name: '超级管理员',
+			creator_name: '超级管理员',
+			create_datetime: '2022-05-24 13:43:21',
+			update_datetime: '2022-05-31 02:09:01',
+			description: 'null22222',
+			modifier: '1',
+			dept_belong_id: '1',
+			url: '/api/system/dept_lazy_tree/',
+			method: 3,
+			enable_datasource: false,
+			creator: 1,
 		},
 	];
 	const pageRequest = async (query: any) => {
@@ -73,11 +77,12 @@ export const createCrudOptions = function ({crudExpose}: {crudExpose: CrudExpose
 				delRequest,
 			},
 			rowHandle: {
-				buttons: {},
+				buttons: {
+					view: { show: false },
+				},
 			},
 			form: {
-				col: { span: 24 },
-				labelWidth: '100px',
+				labelWidth: '120px',
 				wrapper: {
 					is: 'el-dialog',
 					width: '600px',
@@ -119,74 +124,64 @@ export const createCrudOptions = function ({crudExpose}: {crudExpose: CrudExpose
 					search: { show: false },
 					form: { show: false },
 				},
-				name: {
-					title: '角色名称',
-					type: 'text',
+				method: {
+					title: '请求方式',
+					type: 'dict-select',
 					search: { show: true },
-					column: {
-						minWidth: 120,
-						sortable: true,
-					},
-					form: {
-						rules: [{ required: true, message: '角色名称必填' }],
-						component: {
-							placeholder: '输入角色名称搜索',
-						},
-					},
-				},
-				key: {
-					title: '权限标识',
-					type: 'text',
-					search: { show: false },
-					column: {
-						width: 120,
-						sortable: true,
-					},
-					form: {
-						rules: [{ required: true, message: '权限标识必填' }],
-						placeholder: '输入权限标识',
-					},
-				},
-				sort: {
-					title: '排序',
-					search: { show: false },
-					type: 'number',
-					column: {
-						width: 90,
-						sortable: true,
-					},
-					form: {
-						value: 1,
-					},
-				},
-				admin: {
-					title: '是否管理员',
-					search: { show: false },
-					type: 'dict-radio',
 					dict: dict({
 						data: [
 							{
-								label: '是',
-								value: true,
-								color: 'success',
+								label: 'GET',
+								value: 0,
+								color: null,
 							},
 							{
-								label: '否',
-								value: false,
-								color: 'danger',
+								label: 'POST',
+								value: 1,
+								color: null,
+							},
+							{
+								label: 'PUT',
+								value: 2,
+								color: null,
+							},
+							{
+								label: 'DELETE',
+								value: 3,
+								color: null,
 							},
 						],
 					}),
+					form: {
+						component: {
+							maxlength: 20,
+						},
+					},
 					column: {
-						width: 130,
 						sortable: true,
 					},
+				},
+				url: {
+					title: '接口地址',
+					type: 'text',
+					search: { show: false },
 					form: {
-						value: false,
+						col: { span: 24 },
+						helper: {
+							render() {
+								return ('<div>请正确填写，以免请求时被拦截。匹配单例使用正则,例如:/api/xx/.*?/</div>');
+							},
+						},
+						component: {
+							maxlength: 20,
+						},
+					},
+					column: {
+						sortable: true,
 					},
 				},
-				status: {
-					title: '状态',
+				enable_datasource: {
+					title: '数据权限认证',
 					search: { show: true },
 					type: 'dict-radio',
 					dict: dict({
@@ -203,53 +198,20 @@ export const createCrudOptions = function ({crudExpose}: {crudExpose: CrudExpose
 							},
 						],
 					}),
-					column: {
-						width: 90,
-						sortable: true,
-					},
 					form: {
-						value: true,
-					},
-				},
-				update_datetime: {
-					title: '更新时间',
-					type: 'text',
-					search: { show: false },
-					column: {
-						width: 170,
-						sortable: true,
-					},
-					form: {
-						show: false,
 						component: {
-							placeholder: '输入关键词搜索',
+							maxlength: 20,
 						},
 					},
 				},
-				create_datetime: {
-					title: '创建时间',
-					type: 'text',
-					search: { show: false },
-					column: {
-						sortable: true,
-						width: 170,
-					},
-					form: {
-						show: false,
-						component: {
-							placeholder: '输入关键词搜索',
-						},
-					},
-				},
-
 				description: {
 					title: '备注',
 					type: 'textarea',
 					search: { show: false },
 					form: {
+						col: { span: 24 },
 						component: {
 							maxlength: 200,
-							placeholder: '输入备注',
 						},
 					},
 				},
