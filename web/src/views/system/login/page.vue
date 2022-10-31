@@ -68,9 +68,10 @@
                     </el-input>
                   </el-form-item>
                 </el-form>
-                <button class="btn btn-primary btn-block" @click="submit">
+                <button class="btn btn-primary btn-block" style="padding: 10px 10px;" @click="submit">
                   登录
                 </button>
+                <component v-if="componentTag" :is="componentTag"></component>
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -125,16 +126,25 @@
 </template>
 <script>
 import base from './base.vue'
-
+const pluginImport = require('@/libs/util.import.plugin')
 export default {
   extends: base,
   name: 'page',
   data () {
     return {
-      activeName: 'first'
+      activeName: 'first',
+      componentTag: ''
     }
   },
   created () {
+    // 注册第三方登录插件
+    var componentTag = ''
+    try {
+      componentTag = pluginImport('dvadmin-third-web/src/login/index')
+    } catch (error) {
+      componentTag = ''
+    }
+    this.componentTag = componentTag
   },
   mounted () {
   },
