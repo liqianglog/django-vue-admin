@@ -38,12 +38,24 @@ util.open = function (url) {
  */
 util.baseURL = function () {
   var baseURL = process.env.VUE_APP_API
-  if (window.pluginsAll && window.pluginsAll.indexOf('dvadmin-tenant-web') !== -1) {
+  var param = baseURL.split('/')[3] || ''
+  if (window.pluginsAll && window.pluginsAll.indexOf('dvadmin-tenant-web') !== -1 && (!param || baseURL.startsWith('/'))) {
+    // 1.把127.0.0.1 替换成和前端一样域名
+    // 2.把 ip 地址替换成和前端一样域名
+    // 3.把 /api 或其他类似的替换成和前端一样域名
     // document.domain
     var host = baseURL.split('/')[2]
-    var prot = host.split(':')[1] || 80
-    host = document.domain + ':' + prot
-    baseURL = baseURL.split('/')[0] + '//' + baseURL.split('/')[1] + host + '/' + (baseURL.split('/')[3] || '')
+    if (host) {
+      var prot = baseURL.split(':')[2] || 80
+      if (prot === 80 || prot === 443) {
+        host = document.domain
+      } else {
+        host = document.domain + ':' + prot
+      }
+      baseURL = baseURL.split('/')[0] + '//' + baseURL.split('/')[1] + host + '/' + param
+    } else {
+      baseURL = location.protocol + '//' + location.hostname + ':' + location.port + baseURL
+    }
   }
   if (!baseURL.endsWith('/')) {
     baseURL += '/'
