@@ -54,7 +54,7 @@ util.baseURL = function () {
       }
       baseURL = baseURL.split('/')[0] + '//' + baseURL.split('/')[1] + host + '/' + param
     } else {
-      baseURL = location.protocol + '//' + location.hostname + ':' + location.port + baseURL
+      baseURL = location.protocol + '//' + location.hostname + (location.port ? ':' : '') + location.port + baseURL
     }
   }
   if (!baseURL.endsWith('/')) {
