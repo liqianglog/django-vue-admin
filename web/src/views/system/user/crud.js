@@ -182,7 +182,7 @@ export const crudOptions = (vm) => {
         dict: {
           cache: false,
           isTree: true,
-          url: deptPrefix,
+          url: '/api/system/dept/all_dept/',
           value: 'id', // 数据字典中value字段的属性名
           label: 'name' // 数据字典中label字段的属性名
         },
