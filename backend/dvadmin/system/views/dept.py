@@ -6,9 +6,11 @@
 @Remark: 部门管理
 """
 from rest_framework import serializers
+from rest_framework.decorators import action
 
 from dvadmin.system.models import Dept
 from dvadmin.utils.json_response import DetailResponse, SuccessResponse
+from dvadmin.utils.permission import AnonymousUserPermission
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 
@@ -18,17 +20,16 @@ class DeptSerializer(CustomModelSerializer):
     部门-序列化器
     """
     parent_name = serializers.CharField(read_only=True, source='parent.name')
-    has_children = serializers.SerializerMethodField()
     status_label = serializers.SerializerMethodField()
+    has_children = serializers.SerializerMethodField()
+
+    def get_status_label(self, obj: Dept):
+        if obj.status:
+            return "启用"
+        return "禁用"
 
     def get_has_children(self, obj: Dept):
         return Dept.objects.filter(parent_id=obj.id).count()
-
-    def get_status_label(self, instance):
-        status = instance.status
-        if status:
-            return "启用"
-        return "禁用"
 
     class Meta:
         model = Dept
@@ -59,7 +60,7 @@ class DeptInitSerializer(CustomModelSerializer):
                 filter_data = {
                     "name": menu_data['name'],
                     "parent": menu_data['parent'],
-                    "key":menu_data['key']
+                    "key": menu_data['key']
                 }
                 instance_obj = Dept.objects.filter(**filter_data).first()
                 if instance_obj and not self.initial_data.get('reset'):
@@ -73,7 +74,7 @@ class DeptInitSerializer(CustomModelSerializer):
     class Meta:
         model = Dept
         fields = ['name', 'sort', 'owner', 'phone', 'email', 'status', 'parent', 'creator', 'dept_belong_id',
-                  'children','key']
+                  'children', 'key']
         extra_kwargs = {
             'creator': {'write_only': True},
             'dept_belong_id': {'write_only': True}
@@ -123,7 +124,13 @@ class DeptViewSet(CustomModelViewSet):
         if lazy:
             # 如果懒加载模式，返回全部
             if not parent:
-                if self.request.user.is_superuser:
+                role_list = request.user.role.filter(status=1).values("admin", "data_range")
+                is_admin = False
+                for ele in role_list:
+                    if 3 == ele.get("data_range") or ele.get("admin") == True:
+                        is_admin = True
+                        break
+                if self.request.user.is_superuser or is_admin:
                     queryset = queryset.filter(parent__isnull=True)
                 else:
                     queryset = queryset.filter(id=self.request.user.dept_id)
@@ -145,5 +152,12 @@ class DeptViewSet(CustomModelViewSet):
                 queryset = queryset.filter(parent__isnull=True)
             else:
                 queryset = queryset.filter(id=self.request.user.dept_id)
+        data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
+        return DetailResponse(data=data, msg="获取成功")
+
+    @action(methods=["GET"], detail=False, permission_classes=[AnonymousUserPermission])
+    def all_dept(self, request, *args, **kwargs):
+        self.extra_filter_backends = []
+        queryset = self.filter_queryset(self.get_queryset())
         data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
         return DetailResponse(data=data, msg="获取成功")

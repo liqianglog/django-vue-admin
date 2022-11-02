@@ -3,7 +3,7 @@ import hashlib
 from django.contrib.auth.hashers import make_password
 from django_restql.fields import DynamicSerializerMethodField
 from rest_framework import serializers
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from application import dispatch
@@ -281,12 +281,26 @@ class UserViewSet(CustomModelViewSet):
         """获取当前用户信息"""
         user = request.user
         result = {
+            "id": user.id,
             "name": user.name,
             "mobile": user.mobile,
+            "user_type": user.user_type,
             "gender": user.gender,
             "email": user.email,
             "avatar": user.avatar,
+            "dept": user.dept.id,
+            "is_superuser": user.is_superuser,
+            "role": user.role.values_list('id', flat=True),
         }
+        dept = getattr(user, 'dept', None)
+        if dept:
+            result['dept_info'] = {
+                'dept_id': dept.id,
+                'dept_name': dept.name
+            }
+        role = getattr(user, 'role', None)
+        if role:
+            result['role_info'] = role.values('id', 'name', 'key')
         return DetailResponse(data=result, msg="获取成功")
 
     @action(methods=["PUT"], detail=False, permission_classes=[IsAuthenticated])
@@ -303,7 +317,7 @@ class UserViewSet(CustomModelViewSet):
         old_pwd = data.get("oldPassword")
         new_pwd = data.get("newPassword")
         new_pwd2 = data.get("newPassword2")
-        if old_pwd or new_pwd or new_pwd2:
+        if old_pwd is None or new_pwd is None or new_pwd2 is None:
             return ErrorResponse(msg="参数不能为空")
         if new_pwd != new_pwd2:
             return ErrorResponse(msg="两次密码不匹配")

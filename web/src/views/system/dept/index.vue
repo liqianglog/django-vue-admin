@@ -49,13 +49,17 @@ export default {
     },
     addRequest (row) {
       d2CrudPlus.util.dict.clear()
+      this.$store.dispatch('d2admin/dept/load')
       return api.createObj(row)
     },
     updateRequest (row) {
       d2CrudPlus.util.dict.clear()
+      this.$store.dispatch('d2admin/dept/load')
       return api.UpdateObj(row)
     },
     delRequest (row) {
+      d2CrudPlus.util.dict.clear()
+      this.$store.dispatch('d2admin/dept/load')
       return api.DelObj(row.id)
     },
     // 授权

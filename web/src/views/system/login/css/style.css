@@ -121,7 +121,7 @@ img {
 
 /*-- form styling --*/
 .w3l-form-info {
-    padding-top: 6em;
+    padding-top: 2em;
 }
 .w3l-signinform{
     padding: 40px 40px;
@@ -241,8 +241,10 @@ img {
 .w3_info {
     padding: 1em 1em;
     background: transparent;
-    max-width: 450px;
+    width: 450px;
     display: grid;
+    position: fixed;
+    right: 12vw;
     margin-left: auto;
 }
 
@@ -317,7 +319,7 @@ h5 {
     color: #000;
 }
 .footer {
-    padding-top: 3em;
+    padding-top: 1em;
 }
 .footer p {
     text-align: center;
