@@ -15,12 +15,24 @@ from dvadmin.utils.validator import CustomUniqueValidator
 from dvadmin.utils.viewset import CustomModelViewSet
 
 
+def recursion(instance,parent,result):
+    new_instance = getattr(instance,parent,None)
+    res = []
+    data = getattr(instance, result, None)
+    if data:
+        res.append(data)
+    if new_instance:
+        array = recursion(new_instance,parent,result)
+        res+=(array)
+    return res
+
 class UserSerializer(CustomModelSerializer):
     """
     用户管理-序列化器
     """
     dept_name = serializers.CharField(source='dept.name', read_only=True)
     role_info = DynamicSerializerMethodField()
+    dept_name_all = serializers.SerializerMethodField()
 
     class Meta:
         model = Users
@@ -29,6 +41,11 @@ class UserSerializer(CustomModelSerializer):
         extra_kwargs = {
             "post": {"required": False},
         }
+
+    def get_dept_name_all(self, instance):
+        dept_name_all = recursion(instance.dept, "parent", "name")
+        dept_name_all.reverse()
+        return "/".join(dept_name_all)
 
     def get_role_info(self, instance, parsed_query):
         roles = instance.role.all()
