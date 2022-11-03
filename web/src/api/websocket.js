@@ -56,13 +56,7 @@ function closeWebsocket () {
   // close()
   this.socket.close()
 }
-function close () {
-  // this.socket.close() // 关闭 websocket
-  // this.socket.onclose = function (e) {
-  //   console.log(e)// 监听关闭事件
-  //   console.log('关闭')
-  // }
-}
+
 function webSocketSend (message) {
   this.socket.send(JSON.stringify(message))
 }
