@@ -224,7 +224,7 @@ export const downloadFile = function ({ url, params, method, filename }) {
     responseType: 'blob'
     // headers: {Accept: 'application/vnd.openxmlformats-officedocument'}
   }).then(res => {
-    const fileName = window.decodeURI(filename + '.xls' || res.headers['content-disposition'].split('=')[1]) ||  '文件导出.xls'
+    const fileName = window.decodeURI(filename + '.xls' || res.headers['content-disposition'].split('=')[1]) || '文件导出.xls'
     if (res) {
       const blob = new Blob([res.data], { type: 'charset=utf-8' })
       const elink = document.createElement('a')
