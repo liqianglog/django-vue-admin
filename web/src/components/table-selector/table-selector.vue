@@ -201,7 +201,7 @@ export default {
     //   this.dict = d2CrudPlus.util.dict.mergeDefault(this.dict, true)
     // }
     // this.initData()
-    console.log(this)
+    this.searchTableData()
   },
   computed: {
     _elProps () {

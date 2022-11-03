@@ -91,6 +91,16 @@ class LoginSerializer(TokenObtainPairSerializer):
         data["name"] = self.user.name
         data["userId"] = self.user.id
         data["avatar"] = self.user.avatar
+        dept = getattr(self.user, 'dept', None)
+        if dept:
+            data['dept_info'] = {
+                'dept_id': dept.id,
+                'dept_name': dept.name,
+                'dept_key': dept.key
+            }
+        role = getattr(self.user, 'role', None)
+        if role:
+            data['role_info'] = role.values('id', 'name', 'key')
         request = self.context.get("request")
         request.user = self.user
         # 记录登录日志

@@ -1,9 +1,8 @@
 import { request } from '@/api/service'
-import { urlPrefix as deptPrefix } from '../dept/api'
 import util from '@/libs/util'
 
 export const crudOptions = (vm) => {
-  util.filterParams(vm, ['dept_name', 'role_info{name}'])
+  util.filterParams(vm, ['dept_name', 'role_info{name}', 'dept_name_all'])
   return {
     pageOptions: {
       compact: true
@@ -182,7 +181,7 @@ export const crudOptions = (vm) => {
         dict: {
           cache: false,
           isTree: true,
-          url: deptPrefix,
+          url: '/api/system/dept/all_dept/',
           value: 'id', // 数据字典中value字段的属性名
           label: 'name' // 数据字典中label字段的属性名
         },

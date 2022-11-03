@@ -135,46 +135,6 @@ export const crudOptions = (vm) => {
           }
         }
       },
-      // {
-      //   title: '上级部门',
-      //   key: 'parent',
-      //   show: false,
-      //   search: {
-      //     disabled: true
-      //   },
-      //   type: 'cascader',
-      //   dict: {
-      //     cache: false,
-      //     url: deptPrefix,
-      //     isTree: true,
-      //     value: 'id', // 数据字典中value字段的属性名
-      //     label: 'name', // 数据字典中label字段的属性名
-      //     children: 'children', // 数据字典中children字段的属性名
-      //     getData: (url, dict) => { // 配置此参数会覆盖全局的getRemoteDictFunc
-      //       return request({ url: url, params: { limit: 999, status: 1 } }).then(ret => {
-      //         const data = XEUtils.toArrayTree(ret.data.data, { parentKey: 'parent', strict: true })
-      //         return [{ id: null, name: '根节点', children: data }]
-      //       })
-      //     }
-      //   },
-      //   form: {
-      //     component: {
-      //       span: 12,
-
-      //       props: {
-      //         elProps: {
-      //           clearable: true,
-      //           showAllLevels: false, // 仅显示最后一级
-      //           props: {
-      //             checkStrictly: true, // 可以不需要选到最后一级
-      //             emitPath: false,
-      //             clearable: true
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }
-      // },
       {
         title: '部门名称',
         key: 'name',
@@ -201,6 +161,22 @@ export const crudOptions = (vm) => {
               clearable: true
             },
             placeholder: '请输入部门名称'
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        }
+      },
+      {
+        title: '部门标识',
+        key: 'key',
+        sortable: true,
+        form: {
+          component: {
+            props: {
+              clearable: true
+            },
+            placeholder: '请输入标识字符'
           },
           itemProps: {
             class: { yxtInput: true }

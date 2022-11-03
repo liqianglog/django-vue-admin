@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "dvadmin.system",
     "drf_yasg",
     "captcha",
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -163,6 +164,19 @@ MEDIA_URL = "/media/"  # 跟STATIC_URL类似，指定用户可以通过这个url
 CORS_ORIGIN_ALLOW_ALL = True
 # 允许cookie
 CORS_ALLOW_CREDENTIALS = True  # 指明在跨域访问中，后端是否支持对cookie的操作
+
+# ================================================= #
+# ********************* channels配置 ******************* #
+# ================================================= #
+ASGI_APPLICATION = 'application.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)], #需修改
+        },
+    },
+}
 
 # ================================================= #
 # ********************* 日志配置 ******************* #

@@ -1,6 +1,6 @@
 {
   "name": "django-vue-admin",
-  "version": "2.0.4",
+  "version": "2.0.6",
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "start": "npm run serve",
@@ -37,6 +37,7 @@
     "lowdb": "^1.0.0",
     "nprogress": "^0.2.0",
     "qiankun": "^2.7.2",
+    "qrcodejs2": "^0.0.2",
     "screenfull": "^5.0.2",
     "sortablejs": "^1.10.1",
     "ua-parser-js": "^0.7.20",

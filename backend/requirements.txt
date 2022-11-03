@@ -1,4 +1,4 @@
-asgiref==3.3.4
+asgiref==3.5.2
 certifi==2021.5.30
 chardet==4.0.0
 coreapi==2.3.3
@@ -41,3 +41,5 @@ urllib3==1.26.6
 user-agents==2.2.0
 whitenoise==5.3.0
 openpyxl==3.0.9
+channels==3.0.5
+channels-redis==3.4.1
