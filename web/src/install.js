@@ -8,7 +8,6 @@ import {
   D2pFileUploader,
   D2pFullEditor,
   D2pIconSelector,
-  D2pTreeSelector,
   D2pUploader
 } from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
 // http请求
@@ -51,9 +50,9 @@ Vue.use(d2CrudPlus, {
       method: 'get'
     }).then(ret => {
       if (dict.isTree) {
-        return XEUtils.toArrayTree(ret.data.data, { parentKey: 'parent', strict: true })
+        return XEUtils.toArrayTree(ret.data.data || ret.data, { parentKey: 'parent', strict: false })
       } else {
-        return ret.data.data
+        return ret.data.data || ret.data
       }
     })
   },
@@ -101,7 +100,7 @@ Vue.use(d2CrudPlus, {
 })
 
 // 安装扩展插件
-Vue.use(D2pTreeSelector)
+// Vue.use(D2pTreeSelector)
 Vue.use(D2pAreaSelector)
 Vue.use(D2pIconSelector)
 Vue.use(D2pFullEditor, {

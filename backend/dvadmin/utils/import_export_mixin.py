@@ -138,17 +138,20 @@ class ImportSerializerMixin:
         queryset = self.filter_queryset(self.get_queryset())
         # 获取多对多字段
         m2m_fields = [
-            ele.attname
+            ele.name
             for ele in queryset.model._meta.get_fields()
             if hasattr(ele, "many_to_many") and ele.many_to_many == True
         ]
         data = import_to_data(request.data.get("url"), self.import_field_dict, m2m_fields)
         unique_list = [
-            ele.attname for ele in queryset.model._meta.get_fields() if hasattr(ele, "unique") and ele.unique == True
+            ele.name for ele in queryset.model._meta.get_fields() if hasattr(ele, "unique") and ele.unique == True
         ]
         for ele in data:
             # 获取 unique 字段
-            filter_dic = {i: ele.get(i) for i in list(set(self.import_field_dict.keys()) & set(unique_list))}
+            if queryset.model._meta.unique_together:  # 判断是否存在联合主键
+                filter_dic = {i: ele.get(i) for i in list(queryset.model._meta.unique_together[0])}
+            else:
+                filter_dic = {i: ele.get(i) for i in list(set(self.import_field_dict.keys()) & set(unique_list))}
             instance = filter_dic and queryset.filter(**filter_dic).first()
             if instance and not updateSupport:
                 continue
