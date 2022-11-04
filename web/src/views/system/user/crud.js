@@ -179,7 +179,7 @@ export const crudOptions = (vm) => {
         minWidth: 140,
         type: 'tree-selector',
         dict: {
-          cache: false,
+          cache: true,
           isTree: true,
           url: '/api/system/dept/all_dept/',
           value: 'id', // 数据字典中value字段的属性名
