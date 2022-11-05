@@ -94,11 +94,7 @@ class CustomModelViewSet(ModelViewSet,ImportSerializerMixin,ExportSerializerMixi
         instance = self.get_object()
         request_data = request.data
         soft_delete = request_data.get('soft_delete',True)
-        if soft_delete:
-            instance.is_deleted = True
-            instance.save()
-        else:
-            self.perform_destroy(instance)
+        instance.delete(soft_delete=soft_delete)
         return DetailResponse(data=[], msg="删除成功")
 
 

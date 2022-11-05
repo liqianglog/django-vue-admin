@@ -25,7 +25,7 @@ class SoftDeleteQuerySet(QuerySet):
        :return: Tuple eg.(3, {'lqModel.Test': 3})
        """
         if soft_delete:
-            return self.update(is_deleted=True)
+            return super(SoftDeleteQuerySet, self).update(is_deleted=True)
         else:
             return super(SoftDeleteQuerySet, self).delete()
 
