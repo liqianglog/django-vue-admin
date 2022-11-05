@@ -17,17 +17,8 @@ table_prefix = settings.TABLE_PREFIX  # 数据库表名前缀
 
 
 class SoftDeleteQuerySet(QuerySet):
-    def delete(self,soft_delete=True):
-        """
-       重写删除方法
-       当soft_delete为True时表示软删除，则修改删除时间为当前时间，否则直接删除
-       :param soft: Boolean 是否软删除，默认是
-       :return: Tuple eg.(3, {'lqModel.Test': 3})
-       """
-        if soft_delete:
-            return super(SoftDeleteQuerySet, self).update(is_deleted=True)
-        else:
-            return super(SoftDeleteQuerySet, self).delete()
+    pass
+
 
 
 
@@ -78,8 +69,7 @@ class CoreModel(models.Model):
 
     def delete(self, using=None, soft_delete=True, *args, **kwargs):
         """
-        Soft delete object (set its ``is_deleted`` field to True).
-        Actually delete object if setting ``soft`` to False.
+        软删除,根据delete(soft_delete=T/F)来判断
         """
         if soft_delete:
             self.is_deleted = True
