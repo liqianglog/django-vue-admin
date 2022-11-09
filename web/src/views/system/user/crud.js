@@ -210,7 +210,7 @@ export const crudOptions = (vm) => {
         title: '手机号码',
         key: 'mobile',
         search: {
-          disabled: true
+          disabled: false
         },
         minWidth: 110,
         type: 'input',

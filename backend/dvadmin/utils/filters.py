@@ -292,11 +292,6 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
                     )
                 else:
                     orm_lookups.append(search_field)
-            orm_lookups = (
-                orm_lookups
-                if isinstance(filterset.__class__._meta.fields, (list, tuple))
-                else filterset.filters.keys()
-            )
             conditions = []
             queries = []
             for search_term_key in filterset.data.keys():
