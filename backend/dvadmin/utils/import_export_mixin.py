@@ -157,7 +157,7 @@ class ImportSerializerMixin:
                 continue
             if not filter_dic:
                 instance = None
-            serializer = self.import_serializer_class(instance, data=ele)
+            serializer = self.import_serializer_class(instance, data=ele, request=request)
             serializer.is_valid(raise_exception=True)
             serializer.save()
         return DetailResponse(msg=f"导入成功！")
@@ -216,7 +216,7 @@ class ExportSerializerMixin:
         queryset = self.filter_queryset(self.get_queryset())
         assert self.export_field_label, "'%s' 请配置对应的导出模板字段。" % self.__class__.__name__
         assert self.export_serializer_class, "'%s' 请配置对应的导出序列化器。" % self.__class__.__name__
-        data = self.export_serializer_class(queryset, many=True).data
+        data = self.export_serializer_class(queryset, many=True, request=request).data
         # 导出excel 表
         response = HttpResponse(content_type="application/msexcel")
         response["Access-Control-Expose-Headers"] = f"Content-Disposition"
