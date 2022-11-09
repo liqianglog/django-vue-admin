@@ -231,7 +231,8 @@ class UserViewSet(CustomModelViewSet):
     update_serializer_class = UserUpdateSerializer
     # filter_fields = ["name", "username", "gender", "is_active", "dept", "user_type"]
     filter_fields = {
-        "name": ["icontains"],
+        "name": ["exact"],
+        "mobile": ["exact"],
         "username": ["exact"],
         "gender": ["icontains"],
         "is_active": ["icontains"],

@@ -154,7 +154,7 @@ def get_verbose_name(queryset=None, view=None, model=None):
     :return:
     """
     try:
-        if queryset and hasattr(queryset, 'model'):
+        if queryset is not None and hasattr(queryset, 'model'):
             model = queryset.model
         elif view and hasattr(view.get_queryset(), 'model'):
             model = view.get_queryset().model

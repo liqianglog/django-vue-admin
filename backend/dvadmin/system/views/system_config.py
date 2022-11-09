@@ -108,10 +108,8 @@ class SystemConfigChinldernSerializer(CustomModelSerializer):
 
     def get_chinldern(self, instance):
         queryset = SystemConfig.objects.filter(parent=instance)
-        if queryset:
-            serializer = SystemConfigSerializer(queryset, many=True)
-            return serializer.data
-        return None
+        serializer = SystemConfigSerializer(queryset, many=True)
+        return serializer.data
 
     class Meta:
         model = SystemConfig
