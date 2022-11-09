@@ -71,24 +71,6 @@ export const crudOptions = (vm) => {
     },
     columns: [
       {
-        title: '关键词',
-        key: 'search',
-        show: false,
-        disabled: true,
-        search: {
-          disabled: false
-        },
-        form: {
-          disabled: true,
-          component: {
-            placeholder: '请输入关键词'
-          }
-        },
-        view: {
-          disabled: true
-        }
-      },
-      {
         title: 'ID',
         key: 'id',
         width: 90,

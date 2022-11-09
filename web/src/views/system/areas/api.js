@@ -3,8 +3,9 @@ import { request } from '@/api/service'
 export const urlPrefix = '/api/system/area/'
 
 export function GetList (query) {
-  if (query.pcode === undefined || query.pcode === null || query.pcode.length === 0) {
+  if ((!query.pcode || query.pcode.length === 0) && !query.name && !query.code) {
     query.level = 1
+    delete query.pcode
   }
   return request({
     url: urlPrefix,
