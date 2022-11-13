@@ -52,3 +52,16 @@ export function DelObj (id) {
     data: { id }
   })
 }
+
+/**
+ * 我的接收-查看
+ * @param obj
+ * @returns {*}
+ */
+export function receiveView (obj) {
+  return request({
+    url: urlPrefix + obj.id + '/receive_view/',
+    method: 'get',
+    params: {}
+  })
+}

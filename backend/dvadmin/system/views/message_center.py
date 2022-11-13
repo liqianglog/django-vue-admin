@@ -2,13 +2,15 @@
 from itertools import chain
 
 from django_restql.fields import DynamicSerializerMethodField
+from rest_framework import serializers
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from dvadmin.system.models import MessageCenter, Users
+from dvadmin.system.models import MessageCenter, Users, MessageCenterTargetUser
+from dvadmin.system.views.dept import DeptSerializer
 from dvadmin.system.views.role import RoleSerializer
 from dvadmin.system.views.user import UserSerializer
-from dvadmin.utils.json_response import SuccessResponse
+from dvadmin.utils.json_response import SuccessResponse, DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 
@@ -19,6 +21,8 @@ class MessageCenterSerializer(CustomModelSerializer):
     """
     role_info = DynamicSerializerMethodField()
     user_info = DynamicSerializerMethodField()
+    dept_info = DynamicSerializerMethodField()
+    is_read = serializers.BooleanField(read_only=True,source='target_user__is_read')
     def get_role_info(self, instance, parsed_query):
         roles =instance.target_role.all()
         # You can do what ever you want in here
@@ -41,10 +45,47 @@ class MessageCenterSerializer(CustomModelSerializer):
         )
         return serializer.data
 
+    def get_dept_info(self, instance, parsed_query):
+        dept = instance.target_dept.all()
+        # You can do what ever you want in here
+        # `parsed_query` param is passed to BookSerializer to allow further querying
+        serializer = DeptSerializer(
+            dept,
+            many=True,
+            parsed_query=parsed_query
+        )
+        return serializer.data
     class Meta:
         model = MessageCenter
         fields = "__all__"
         read_only_fields = ["id"]
+
+
+class MessageCenterTargetUserSerializer(CustomModelSerializer):
+    """
+    目标用户序列化器-序列化器
+    """
+    class Meta:
+        model = MessageCenterTargetUser
+        fields = "__all__"
+        read_only_fields = ["id"]
+
+class MessageCenterTargetUserListSerializer(CustomModelSerializer):
+    """
+    目标用户序列化器-序列化器
+    """
+    class Meta:
+        model = MessageCenterTargetUser
+        fields = "__all__"
+        read_only_fields = ["id"]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['title'] = instance.messagecenter.title
+        data['content'] = instance.messagecenter.content
+        data['target_type'] = instance.messagecenter.target_type
+        data['id'] = instance.messagecenter.id
+        return data
 
 
 class MessageCenterCreateSerializer(CustomModelSerializer):
@@ -58,14 +99,21 @@ class MessageCenterCreateSerializer(CustomModelSerializer):
         target_type = initial_data.get('target_type')
         # 在保存之前,根据目标类型,把目标用户查询出来并保存
         users = initial_data.get('target_user',[])
-        if target_type in [1]:
+        if target_type in [1]: #按角色
             target_role = initial_data.get('target_role')
             users = Users.objects.exclude(is_deleted=True).filter(role__id__in=target_role).values_list('id',flat=True)
-        if target_type in [2]:
+        if target_type in [2]: #按部门
             target_dept = initial_data.get('target_dept')
             users = Users.objects.exclude(is_deleted=True).filter(dept__id__in=target_dept).values_list('id',flat=True)
-        data.save()
-        data.target_user.set(users)
+        if target_type in [3]: #系统通知
+            users = Users.objects.exclude(is_deleted=True).values_list('id',flat=True)
+        targetuser_data = [{
+            "messagecenter": data.id,
+            "users": user
+        } for user in users]
+        targetuser_instance = MessageCenterTargetUserSerializer(data=targetuser_data, many=True, request=self.request)
+        targetuser_instance.is_valid(raise_exception=True)
+        targetuser_instance.save()
         return data
 
     class Meta:
@@ -90,16 +138,44 @@ class MessageCenterViewSet(CustomModelViewSet):
     create_serializer_class = MessageCenterCreateSerializer
     extra_filter_backends = []
 
+    def get_queryset(self):
+        if self.action=='list':
+            return MessageCenter.objects.filter(creator=self.request.user.id).all()
+        return MessageCenter.objects.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        user_id = self.request.user.id
+        queryset = MessageCenterTargetUser.objects.filter(users__id=user_id,messagecenter__id=pk).first()
+        if queryset:
+            queryset.is_read = True
+            queryset.save()
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return DetailResponse(data=serializer.data, msg="获取成功")
+
+    @action(methods=['get'],detail=True,permission_classes=[IsAuthenticated])
+    def receive_view(self, request, pk):
+        """
+        我的接收-查看
+        """
+        instance = MessageCenterTargetUser.objects.filter(id=pk).first()
+        instance.is_read = True
+        instance.save()
+        serializer = MessageCenterTargetUserListSerializer(instance)
+        return DetailResponse(data=serializer.data, msg="获取成功")
+
     @action(methods=['GET'],detail=False,permission_classes=[IsAuthenticated])
     def get_self_receive(self,request):
         """
         获取接收到的消息
         """
         self_user_id = self.request.user.id
-        queryset = MessageCenter.objects.filter(target_user__id=self_user_id)
+        queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).exclude(messagecenter__is_deleted=True)
+        queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True, request=request)
+            serializer = MessageCenterTargetUserListSerializer(page, many=True, request=request)
             return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(queryset, many=True, request=request)
+        serializer = MessageCenterTargetUserListSerializer(queryset, many=True, request=request)
         return SuccessResponse(data=serializer.data, msg="获取成功")

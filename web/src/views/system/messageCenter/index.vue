@@ -5,7 +5,7 @@
       ref="d2Crud"
       v-bind="_crudProps"
       v-on="_crudListeners"
-      @form-component-ready="handleFormComponentReady"
+      @onView="onView"
     >
       <div slot="header">
         <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
@@ -26,9 +26,10 @@
 </template>
 
 <script>
-import { AddObj, GetObj, GetList, UpdateObj, DelObj, GetSelfReceive } from './api'
+import { AddObj, GetObj, GetList, UpdateObj, DelObj, GetSelfReceive,receiveView } from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
+import viewTemplate from './viewTemplate.js'
 export default {
   name: 'messageCenter',
   components: {},
@@ -83,10 +84,18 @@ export default {
         return res.data
       })
     },
-    handleFormComponentReady (event, key, form) {
-      // console.log('form component ready:', event, key, form)
+    onView ({ row, index }) {
+      this.getD2Crud().showDialog({
+        mode: 'view',
+        rowIndex: index,
+        template: viewTemplate
+      })
+      this.infoRequest(row)
+      this.doRefresh()
     },
-    onTabClick (obj) {
+    onTabClick (tab) {
+      const { name } = tab
+      this.tabActivted = name
       this.doRefresh()
     }
   }
