@@ -133,7 +133,7 @@ class MessageCenterViewSet(CustomModelViewSet):
     retrieve:单例
     destroy:删除
     """
-    queryset = MessageCenter.objects.all()
+    queryset = MessageCenter.objects.order_by('create_datetime')
     serializer_class = MessageCenterSerializer
     create_serializer_class = MessageCenterCreateSerializer
     extra_filter_backends = []
@@ -144,6 +144,9 @@ class MessageCenterViewSet(CustomModelViewSet):
         return MessageCenter.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
+        """
+        重写查看
+        """
         pk = kwargs.get('pk')
         user_id = self.request.user.id
         queryset = MessageCenterTargetUser.objects.filter(users__id=user_id,messagecenter__id=pk).first()
@@ -154,16 +157,6 @@ class MessageCenterViewSet(CustomModelViewSet):
         serializer = self.get_serializer(instance)
         return DetailResponse(data=serializer.data, msg="获取成功")
 
-    @action(methods=['get'],detail=True,permission_classes=[IsAuthenticated])
-    def receive_view(self, request, pk):
-        """
-        我的接收-查看
-        """
-        instance = MessageCenterTargetUser.objects.filter(id=pk).first()
-        instance.is_read = True
-        instance.save()
-        serializer = MessageCenterTargetUserListSerializer(instance)
-        return DetailResponse(data=serializer.data, msg="获取成功")
 
     @action(methods=['GET'],detail=False,permission_classes=[IsAuthenticated])
     def get_self_receive(self,request):
@@ -171,11 +164,26 @@ class MessageCenterViewSet(CustomModelViewSet):
         获取接收到的消息
         """
         self_user_id = self.request.user.id
-        queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).exclude(messagecenter__is_deleted=True)
-        queryset = self.filter_queryset(queryset)
+        queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).exclude(messagecenter__is_deleted=True).order_by('-create_datetime')
+        # queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = MessageCenterTargetUserListSerializer(page, many=True, request=request)
             return self.get_paginated_response(serializer.data)
         serializer = MessageCenterTargetUserListSerializer(queryset, many=True, request=request)
         return SuccessResponse(data=serializer.data, msg="获取成功")
+
+    @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
+    def get_newest_msg(self,request):
+        """
+        获取最新的一条消息
+        """
+        self_user_id = self.request.user.id
+        queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).exclude(
+            messagecenter__is_deleted=True).order_by('create_datetime').last()
+        print(queryset)
+        data = None
+        if queryset:
+            serializer = MessageCenterTargetUserListSerializer(queryset, many=False, request=request)
+            data = serializer.data
+        return DetailResponse(data=data, msg="获取成功")

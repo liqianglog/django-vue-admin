@@ -62,7 +62,7 @@ export default {
       return AddObj(row).then(res => {
         const message = {
           message_id: res.data.id,
-          contentType: 'TEXT',
+          contentType: 'INFO',
           content: '您有新的消息,请到消息中心查看~'
         }
         this.$websocket.webSocketSend(message)

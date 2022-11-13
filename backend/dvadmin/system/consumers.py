@@ -62,7 +62,7 @@ class DvadminWebSocket(AsyncJsonWebsocketConsumer):
                     else:
                         send_dict.setdefault(self.chat_group_name,{})
                 await self.accept()
-                await self.send_json(message('system', 'INFO', '连接成功'))
+                await self.send_json(message('system', 'SYSTEM', '连接成功'))
         except InvalidSignatureError:
             await self.disconnect(None)
 
@@ -75,6 +75,11 @@ class DvadminWebSocket(AsyncJsonWebsocketConsumer):
         print("连接关闭")
         await self.close(close_code)
 
+
+class MegCenter(DvadminWebSocket):
+    """
+    消息中心
+    """
     async def receive(self, text_data=None, byte_text_data=None):
         print(text_data)
         try:
@@ -83,7 +88,6 @@ class DvadminWebSocket(AsyncJsonWebsocketConsumer):
             print('数据无法被json格式化', e)
             await self.disconnect(400)
         else:
-            print(123,text_data_json)
             # 获取将要推送信息的目标身份标识，调用保存在 send_dict中的信息发送函数
             message_id = text_data_json.get('message_id', None)
             user_list = await _get_message_center_instance(message_id)

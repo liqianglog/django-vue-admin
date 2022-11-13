@@ -89,7 +89,7 @@ async def websocket_application(scope, receive, send):
 
         # 其他情况,正常的WebSocket消息
         elif event['type'] == 'websocket.receive':
-            print(11,event)
+
             if event['text'] == 'ping':
                 await send(message('system', 'text', 'pong!'))
             else:

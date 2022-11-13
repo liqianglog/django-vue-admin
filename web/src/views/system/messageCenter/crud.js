@@ -3,7 +3,7 @@ import { request } from '@/api/service'
 export const crudOptions = (vm) => {
   return {
     indexRow: { // 或者直接传true,不显示title，不居中
-      width:60,
+      width: 60,
       title: '序号',
       align: 'center'
     },
@@ -125,9 +125,7 @@ export const crudOptions = (vm) => {
         },
         width: 130,
         type: 'table-selector',
-        show () {
-          return vm.tabActivted === 'send'
-        },
+        disabled: true,
         dict: {
           cache: false,
           url: '/api/system/user/',
@@ -194,9 +192,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: true
         },
-        show () {
-          return vm.tabActivted === 'send'
-        },
+        disabled: true,
         width: 130,
         type: 'table-selector',
         dict: {
@@ -266,9 +262,6 @@ export const crudOptions = (vm) => {
           disabled: true
         },
         width: 130,
-        show () {
-          return vm.tabActivted === 'send'
-        },
         type: 'table-selector',
         dict: {
           cache: false,
@@ -288,6 +281,7 @@ export const crudOptions = (vm) => {
             })
           }
         },
+        disabled: true,
         form: {
           rules: [ // 表单校验规则
             {

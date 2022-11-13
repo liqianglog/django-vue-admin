@@ -22,7 +22,7 @@ function webSocketOnError (e) {
 }
 function webSocketOnMessage (e) {
   const data = JSON.parse(e.data)
-  if (data.contentType === 'INFO') {
+  if (data.contentType === 'SYSTEM') {
     ElementUI.Notification({
       title: 'websocket',
       message: data.content,
@@ -38,7 +38,7 @@ function webSocketOnMessage (e) {
       position: 'bottom-right',
       duration: 0
     })
-  } else if (data.contentType === 'TEXT') {
+  } else if (data.contentType === 'INFO') {
     ElementUI.Notification({
       title: '温馨提示',
       message: data.content,
@@ -48,6 +48,7 @@ function webSocketOnMessage (e) {
     })
   } else {
     console.log(data.content)
+    return data
   }
 }
 // 关闭websiocket
