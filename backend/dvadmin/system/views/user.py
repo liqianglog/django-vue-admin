@@ -289,7 +289,7 @@ class UserViewSet(CustomModelViewSet):
             "gender": user.gender,
             "email": user.email,
             "avatar": user.avatar,
-            "dept": user.dept.id,
+            "dept": user.dept_id,
             "is_superuser": user.is_superuser,
             "role": user.role.values_list('id', flat=True),
         }
