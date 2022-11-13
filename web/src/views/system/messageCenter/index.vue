@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { AddObj, GetObj, GetList, UpdateObj, DelObj, GetSelfReceive,receiveView } from './api'
+import { AddObj, GetObj, GetList, UpdateObj, DelObj, GetSelfReceive } from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import viewTemplate from './viewTemplate.js'
@@ -39,10 +39,7 @@ export default {
       tabActivted: 'send'
     }
   },
-  created () {
-    // 配置编辑前获取详情
-    this.crud.options.fetchDetail = this.fetchDetail
-  },
+
   computed: {
   },
   methods: {
@@ -73,16 +70,6 @@ export default {
     },
     delRequest (row) {
       return DelObj(row.id)
-    },
-    // 编辑对话框打开前获取详情
-    fetchDetail (index, row) {
-      if (index == null) {
-        // 添加
-        return {}
-      }
-      return GetObj(row).then(res => {
-        return res.data
-      })
     },
     onView ({ row, index }) {
       this.getD2Crud().showDialog({
