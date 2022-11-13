@@ -240,7 +240,7 @@ export const crudOptions = (vm) => {
           disabled: false
         },
         dict: {
-          data: [{ label: '普通登录', value: 1 }]
+          data: [{ label: '普通登录', value: 1 }, { label: '微信扫码登录', value: 2 }]
         },
         form: {
           component: {
