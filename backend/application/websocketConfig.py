@@ -1,15 +1,36 @@
 # -*- coding: utf-8 -*-
-import django
-
-django.setup()
-import json
 import urllib
 
-#处理websocket传参
+from asgiref.sync import sync_to_async, async_to_sync
+from channels.db import database_sync_to_async
+from channels.generic.websocket import AsyncJsonWebsocketConsumer, AsyncWebsocketConsumer
+import json
+
+from channels.layers import get_channel_layer
 from jwt import InvalidSignatureError
 
 from application import settings
 from dvadmin.system.models import MessageCenter
+
+send_dict = {}
+
+# 发送消息结构体
+def message(sender, msg_type, msg):
+    text = {
+        'sender': sender,
+        'contentType': msg_type,
+        'content': msg,
+    }
+    return text
+
+#异步获取消息中心的目标用户
+@database_sync_to_async
+def _get_message_center_instance(message_id):
+    _MessageCenter = MessageCenter.objects.filter(id=message_id).values_list('target_user',flat=True)
+    if _MessageCenter:
+        return _MessageCenter
+    else:
+        return []
 
 
 def request_data(scope):
@@ -17,98 +38,63 @@ def request_data(scope):
     qs = urllib.parse.parse_qs(query_string)
     return qs
 
+class DvadminWebSocket(AsyncJsonWebsocketConsumer):
+    async def connect(self):
+        try:
+            import jwt
+            self.service_uid = self.scope["url_route"]["kwargs"]["service_uid"]
+            decoded_result = jwt.decode(self.service_uid, settings.SECRET_KEY, algorithms=["HS256"])
+            if decoded_result:
+                self.user_id = decoded_result.get('user_id')
+                self.chat_group_name = "user_"+str(self.user_id)
+                #收到连接时候处理，
+                await self.channel_layer.group_add(
+                    self.chat_group_name,
+                    self.channel_name
+                )
+                await self.accept()
+                await self.send_json(message('system', 'SYSTEM', '连接成功'))
+        except InvalidSignatureError:
+            await self.disconnect(None)
 
-# 全部的websocket sender
-CONNECTIONS = {}
+
+    async def disconnect(self, close_code):
+        # Leave room group
+        await self.channel_layer.group_discard(self.chat_group_name, self.channel_name)
+        print("连接关闭")
+        await self.close(close_code)
 
 
-# 判断用户是否已经连接
-def check_connection(key):
-    return key in CONNECTIONS
+class MegCenter(DvadminWebSocket):
+    """
+    消息中心
+    """
+
+    async def receive(self, text_data):
+        # 接受客户端的信息，你处理的函数
+        text_data_json = json.loads(text_data)
+        message_id = text_data_json.get('message_id', None)
+        user_list = await _get_message_center_instance(message_id)
+        for send_user in user_list:
+            await self.channel_layer.group_send(
+                "user_" + str(send_user),
+                {'type': 'push.message', 'message': text_data_json}
+            )
+
+    async def push_message(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps(message))
 
 
-# 发送消息结构体
-def message(sender, msg_type, msg):
-    text = json.dumps({
-        'sender': sender,
-        'contentType': msg_type,
-        'content': msg,
-    })
-    return {
-        'type': 'websocket.send',
-        'text': text
+def push(username, event):
+    """
+    主动推送消息
+    """
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+    username,
+    {
+      "type": "push.message",
+      "event": event
     }
-
-
-async def websocket_application(scope, receive, send):
-    while True:
-        event = await receive()
-        # print('[event] ', event)
-        qs = request_data(scope)
-        print(1,qs)
-        auth = qs.get('auth', [''])[0]
-        user_id = None
-        # 收到建立WebSocket连接的消息
-        if event['type'] == 'websocket.connect':
-            # 昵称验证
-            if not auth:
-                break
-            else:
-                try:
-                    import jwt
-                    decoded_result = jwt.decode(auth, settings.SECRET_KEY, algorithms=["HS256"])
-                    if decoded_result:
-                        user_id = decoded_result.get('user_id')
-                        # 记录
-                        CONNECTIONS[user_id] = send
-                except InvalidSignatureError:
-                    break
-            if auth in CONNECTIONS:
-                break
-
-            await send({'type': 'websocket.accept'})
-            await send(message('system', 'INFO', '连接成功'))
-            # # 发送好友列表
-            # friends_list = list(CONNECTIONS.keys())
-            # await send(message('system', 'INFO', friends_list))
-            #
-            # # 向其他人群发消息, 有人登录了
-            # for other in CONNECTIONS.values():
-            #     await other(message('system', 'addFriend', auth))
-
-
-        # 收到中断WebSocket连接的消息
-        elif event['type'] == 'websocket.disconnect':
-            # 移除记录
-            if user_id in CONNECTIONS:
-                CONNECTIONS.pop(user_id)
-
-            # # 向其他人群发消息, 有人离线了
-            # for other in CONNECTIONS.values():
-            #     await other(message('system', 'removeFriend', user_id))
-
-        # 其他情况,正常的WebSocket消息
-        elif event['type'] == 'websocket.receive':
-
-            if event['text'] == 'ping':
-                await send(message('system', 'text', 'pong!'))
-            else:
-                receive_msg = json.loads(event['text'])
-                message_id = receive_msg.get('message_id', None)
-                _MessageCenter = MessageCenter.objects.filter(id=message_id).first()
-                if _MessageCenter:
-                    user_list = _MessageCenter.target_user.values_list('id',flat=True)
-                    for send_user in user_list:
-                        if send_user in CONNECTIONS:
-                            content_type = receive_msg.get('contentType', 'TEXT')
-                            content = receive_msg.get('content', '')
-                            msg = message(user_id, content_type, content)
-                            await CONNECTIONS[send_user](msg)
-                        else:
-                            msg = message('system', 'text', '对方已下线或不存在')
-                            await send(msg)
-        else:
-            print('a1a1a1')
-            pass
-
-    print('[disconnect]')
+    )

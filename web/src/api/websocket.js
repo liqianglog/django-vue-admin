@@ -3,7 +3,7 @@ import util from '@/libs/util'
 function initWebSocket (e) {
   const token = util.cookies.get('token')
   if (token) {
-    const wsUri = process.env.VUE_APP_WEBSOCKET + '/ws/' + token + '/?room=message_center'
+    const wsUri = process.env.VUE_APP_WEBSOCKET + '/ws/' + token + '/'
     this.socket = new WebSocket(wsUri)// 这里面的this都指向vue
     this.socket.onerror = webSocketOnError
     this.socket.onmessage = webSocketOnMessage
@@ -20,6 +20,12 @@ function webSocketOnError (e) {
     duration: 3000
   })
 }
+
+/**
+ * 接收消息
+ * @param e
+ * @returns {any}
+ */
 function webSocketOnMessage (e) {
   const data = JSON.parse(e.data)
   if (data.contentType === 'SYSTEM') {
@@ -58,9 +64,13 @@ function closeWebsocket () {
   this.socket.close()
 }
 
+/**
+ * 发送消息
+ * @param message
+ */
 function webSocketSend (message) {
   this.socket.send(JSON.stringify(message))
 }
 export default {
-  initWebSocket, closeWebsocket, webSocketSend
+  initWebSocket, closeWebsocket, webSocketSend,webSocketOnMessage
 }

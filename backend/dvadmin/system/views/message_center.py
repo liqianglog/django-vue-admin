@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from itertools import chain
-
+import json
 from django_restql.fields import DynamicSerializerMethodField
 from rest_framework import serializers
 from rest_framework.decorators import action, permission_classes
@@ -181,7 +180,6 @@ class MessageCenterViewSet(CustomModelViewSet):
         self_user_id = self.request.user.id
         queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).exclude(
             messagecenter__is_deleted=True).order_by('create_datetime').last()
-        print(queryset)
         data = None
         if queryset:
             serializer = MessageCenterTargetUserListSerializer(queryset, many=False, request=request)

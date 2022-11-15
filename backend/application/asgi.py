@@ -18,10 +18,10 @@ from application.websocketConfig import websocket_application
 
 http_application = get_asgi_application()
 
-async def application(scope,receive,send):
-    if scope['type'] == 'http':
-        await http_application(scope, receive, send)
-    elif scope['type'] == 'websocket':
-        await websocket_application(scope, receive, send)
-    else:
-        raise Exception("未知的scope类型,"+ scope['type'])
+# async def application(scope,receive,send):
+#     if scope['type'] == 'http':
+#         await http_application(scope, receive, send)
+#     elif scope['type'] == 'websocket':
+#         await websocket_application(scope, receive, send)
+#     else:
+#         raise Exception("未知的scope类型,"+ scope['type'])
