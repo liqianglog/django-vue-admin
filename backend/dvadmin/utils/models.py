@@ -44,6 +44,27 @@ class SoftDeleteManager(models.Manager):
         return SoftDeleteQuerySet(self.model).get(username=name)
 
 
+class SoftDeleteModel(models.Model):
+    """
+    软删除模型
+    一旦继承,就将开启软删除
+    """
+    is_deleted = models.BooleanField(verbose_name="是否软删除", help_text='是否软删除', default=False, db_index=True)
+    objects = SoftDeleteManager()
+
+    class Meta:
+        abstract = True
+        verbose_name = '软删除模型'
+        verbose_name_plural = verbose_name
+
+    def delete(self, using=None, soft_delete=True, *args, **kwargs):
+        """
+        重写删除方法,直接开启软删除
+        """
+        self.is_deleted = True
+        self.save(using=using)
+
+
 class CoreModel(models.Model):
     """
     核心标准抽象模型模型,可直接继承使用
@@ -58,24 +79,12 @@ class CoreModel(models.Model):
     update_datetime = models.DateTimeField(auto_now=True, null=True, blank=True, help_text="修改时间", verbose_name="修改时间")
     create_datetime = models.DateTimeField(auto_now_add=True, null=True, blank=True, help_text="创建时间",
                                            verbose_name="创建时间")
-    is_deleted = models.BooleanField(verbose_name="是否软删除",help_text='是否软删除', default=False, db_index=True)
-    objects = SoftDeleteManager()
-
 
     class Meta:
         abstract = True
         verbose_name = '核心模型'
         verbose_name_plural = verbose_name
 
-    def delete(self, using=None, soft_delete=True, *args, **kwargs):
-        """
-        软删除,根据delete(soft_delete=T/F)来判断
-        """
-        if soft_delete:
-            self.is_deleted = True
-            self.save(using=using)
-        else:
-            return super(CoreModel, self).delete(using=using, *args, **kwargs)
 
 
 
