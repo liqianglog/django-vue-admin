@@ -29,7 +29,9 @@ export default {
         row[col.key] = value.split(',')
         // 进行组装地址，纠正地址
         row[col.key].map((val, index) => {
-          if (val.startsWith('/')) {
+          if (val.startsWith('/api')) {
+            row[col.key][index] = val
+          } else if (val.startsWith('/')) {
             row[col.key][index] = util.baseURL() + val.slice(1)
           } else {
             row[col.key][index] = !val.startsWith('http') ? util.baseURL() + val : val
@@ -67,7 +69,9 @@ export default {
         row[col.key] = value.split(',')
         // 进行组装地址，纠正地址
         row[col.key].map((val, index) => {
-          if (val.startsWith('/')) {
+          if (val.startsWith('/api')) {
+            row[col.key][index] = val
+          } else if (val.startsWith('/')) {
             row[col.key][index] = util.baseURL() + val.slice(1)
           } else {
             row[col.key][index] = !val.startsWith('http') ? util.baseURL() + val : val
@@ -101,7 +105,9 @@ export default {
         row[col.key] = value.split(',')
         // 进行组装地址，纠正地址
         row[col.key].map((val, index) => {
-          if (val.startsWith('/')) {
+          if (val.startsWith('/api')) {
+            row[col.key][index] = val
+          } else if (val.startsWith('/')) {
             row[col.key][index] = util.baseURL() + val.slice(1)
           } else {
             row[col.key][index] = !val.startsWith('http') ? util.baseURL() + val : val
@@ -139,7 +145,9 @@ export default {
         row[col.key] = value.split(',')
         // 进行组装地址，纠正地址
         row[col.key].map((val, index) => {
-          if (val.startsWith('/')) {
+          if (val.startsWith('/api')) {
+            row[col.key][index] = val
+          } else if (val.startsWith('/')) {
             row[col.key][index] = util.baseURL() + val.slice(1)
           } else {
             row[col.key][index] = !val.startsWith('http') ? util.baseURL() + val : val
