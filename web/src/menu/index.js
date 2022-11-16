@@ -53,7 +53,7 @@ export const checkRouter = function (menuData) {
   for (const item of menuData) {
     try {
       if (item.path !== '' && item.component) {
-        (item.component && item.component.indexOf('@great-dream/') !== -1) ? pluginImport(item.component.replace('@great-dream/', '')) : _import(item.component)
+        (item.component && item.component.substr(0, 8) === 'plugins/') ? pluginImport(item.component.replace('plugins/', '')) : _import(item.component)
       }
       result.push(item)
     } catch (err) {
@@ -72,7 +72,7 @@ export const handleRouter = function (menuData) {
       const obj = {
         path: item.path,
         name: item.component_name,
-        component: (item.component && item.component.indexOf('@great-dream/') !== -1) ? pluginImport(item.component.replace('@great-dream/', '')) : _import(item.component),
+        component: (item.component && item.component.substr(0, 8) === 'plugins/') ? pluginImport(item.component.replace('plugins/', '')) : _import(item.component),
         meta: {
           title: item.name,
           auth: true,
