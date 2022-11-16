@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
+from application.websocketConfig import websocket_push
 from dvadmin.system.models import MessageCenter, Users, MessageCenterTargetUser
 from dvadmin.system.views.dept import DeptSerializer
 from dvadmin.system.views.role import RoleSerializer
@@ -21,9 +22,10 @@ class MessageCenterSerializer(CustomModelSerializer):
     role_info = DynamicSerializerMethodField()
     user_info = DynamicSerializerMethodField()
     dept_info = DynamicSerializerMethodField()
-    is_read = serializers.BooleanField(read_only=True,source='target_user__is_read')
+    is_read = serializers.BooleanField(read_only=True, source='target_user__is_read')
+
     def get_role_info(self, instance, parsed_query):
-        roles =instance.target_role.all()
+        roles = instance.target_role.all()
         # You can do what ever you want in here
         # `parsed_query` param is passed to BookSerializer to allow further querying
         serializer = RoleSerializer(
@@ -54,6 +56,7 @@ class MessageCenterSerializer(CustomModelSerializer):
             parsed_query=parsed_query
         )
         return serializer.data
+
     class Meta:
         model = MessageCenter
         fields = "__all__"
@@ -64,15 +67,18 @@ class MessageCenterTargetUserSerializer(CustomModelSerializer):
     """
     目标用户序列化器-序列化器
     """
+
     class Meta:
         model = MessageCenterTargetUser
         fields = "__all__"
         read_only_fields = ["id"]
 
+
 class MessageCenterTargetUserListSerializer(CustomModelSerializer):
     """
     目标用户序列化器-序列化器
     """
+
     class Meta:
         model = MessageCenterTargetUser
         fields = "__all__"
@@ -97,30 +103,34 @@ class MessageCenterCreateSerializer(CustomModelSerializer):
         initial_data = self.initial_data
         target_type = initial_data.get('target_type')
         # 在保存之前,根据目标类型,把目标用户查询出来并保存
-        users = initial_data.get('target_user',[])
-        if target_type in [1]: #按角色
+        users = initial_data.get('target_user', [])
+        if target_type in [1]:  # 按角色
             target_role = initial_data.get('target_role')
-            users = Users.objects.exclude(is_deleted=True).filter(role__id__in=target_role).values_list('id',flat=True)
-        if target_type in [2]: #按部门
+            users = Users.objects.exclude(is_deleted=True).filter(role__id__in=target_role).values_list('id', flat=True)
+        if target_type in [2]:  # 按部门
             target_dept = initial_data.get('target_dept')
-            users = Users.objects.exclude(is_deleted=True).filter(dept__id__in=target_dept).values_list('id',flat=True)
-        if target_type in [3]: #系统通知
-            users = Users.objects.exclude(is_deleted=True).values_list('id',flat=True)
-        targetuser_data = [{
-            "messagecenter": data.id,
-            "users": user
-        } for user in users]
+            users = Users.objects.exclude(is_deleted=True).filter(dept__id__in=target_dept).values_list('id', flat=True)
+        if target_type in [3]:  # 系统通知
+            users = Users.objects.exclude(is_deleted=True).values_list('id', flat=True)
+        targetuser_data = []
+        for user in users:
+            targetuser_data.append({
+                "messagecenter": data.id,
+                "users": user
+            })
         targetuser_instance = MessageCenterTargetUserSerializer(data=targetuser_data, many=True, request=self.request)
         targetuser_instance.is_valid(raise_exception=True)
         targetuser_instance.save()
+        for user in users:
+            unread_count = MessageCenterTargetUser.objects.filter(users__id=user, is_read=False).count()
+            websocket_push(user, {"sender": 'system', "contentType": 'TEXT',
+                                  "content": {"model": 'message_center', "unread": unread_count}})
         return data
 
     class Meta:
         model = MessageCenter
         fields = "__all__"
         read_only_fields = ["id"]
-
-
 
 
 class MessageCenterViewSet(CustomModelViewSet):
@@ -138,7 +148,7 @@ class MessageCenterViewSet(CustomModelViewSet):
     extra_filter_backends = []
 
     def get_queryset(self):
-        if self.action=='list':
+        if self.action == 'list':
             return MessageCenter.objects.filter(creator=self.request.user.id).all()
         return MessageCenter.objects.all()
 
@@ -148,22 +158,26 @@ class MessageCenterViewSet(CustomModelViewSet):
         """
         pk = kwargs.get('pk')
         user_id = self.request.user.id
-        queryset = MessageCenterTargetUser.objects.filter(users__id=user_id,messagecenter__id=pk).first()
+        queryset = MessageCenterTargetUser.objects.filter(users__id=user_id, messagecenter__id=pk).first()
         if queryset:
             queryset.is_read = True
             queryset.save()
         instance = self.get_object()
         serializer = self.get_serializer(instance)
+        # 主动推送消息
+        unread_count = MessageCenterTargetUser.objects.filter(users__id=user_id, is_read=False).count()
+        websocket_push(user_id, {"sender": 'system', "contentType": 'TEXT',
+                                 "content": {"model": 'message_center', "unread": unread_count}})
         return DetailResponse(data=serializer.data, msg="获取成功")
 
-
-    @action(methods=['GET'],detail=False,permission_classes=[IsAuthenticated])
-    def get_self_receive(self,request):
+    @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
+    def get_self_receive(self, request):
         """
         获取接收到的消息
         """
         self_user_id = self.request.user.id
-        queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).exclude(messagecenter__is_deleted=True).order_by('-create_datetime')
+        queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).exclude(
+            messagecenter__is_deleted=True).order_by('-create_datetime')
         # queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -173,7 +187,7 @@ class MessageCenterViewSet(CustomModelViewSet):
         return SuccessResponse(data=serializer.data, msg="获取成功")
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
-    def get_newest_msg(self,request):
+    def get_newest_msg(self, request):
         """
         获取最新的一条消息
         """

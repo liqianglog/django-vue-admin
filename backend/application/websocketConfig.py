@@ -10,12 +10,12 @@ from channels.layers import get_channel_layer
 from jwt import InvalidSignatureError
 
 from application import settings
-from dvadmin.system.models import MessageCenter
+from dvadmin.system.models import MessageCenter, MessageCenterTargetUser
 
 send_dict = {}
 
 # 发送消息结构体
-def message(sender, msg_type, msg):
+def set_message(sender, msg_type, msg):
     text = {
         'sender': sender,
         'contentType': msg_type,
@@ -31,6 +31,11 @@ def _get_message_center_instance(message_id):
         return _MessageCenter
     else:
         return []
+
+@database_sync_to_async
+def _get_message_unread(user_id):
+    count = MessageCenterTargetUser.objects.filter(users=user_id,is_read=False).count()
+    return count or 0
 
 
 def request_data(scope):
@@ -53,7 +58,11 @@ class DvadminWebSocket(AsyncJsonWebsocketConsumer):
                     self.channel_name
                 )
                 await self.accept()
-                await self.send_json(message('system', 'SYSTEM', '连接成功'))
+                # 发送连接成功
+                await self.send_json(set_message('system', 'SYSTEM', '连接成功'))
+                # 主动推送消息
+                unread_count = await _get_message_unread(self.user_id)
+                await self.send_json(set_message('system', 'TEXT', {"model":'message_center',"unread":unread_count}))
         except InvalidSignatureError:
             await self.disconnect(None)
 
@@ -78,23 +87,25 @@ class MegCenter(DvadminWebSocket):
         for send_user in user_list:
             await self.channel_layer.group_send(
                 "user_" + str(send_user),
-                {'type': 'push.message', 'message': text_data_json}
+                {'type': 'push.message', 'json': text_data_json}
             )
 
     async def push_message(self, event):
-        message = event['message']
+        message = event['json']
         await self.send(text_data=json.dumps(message))
 
 
-def push(username, event):
+def websocket_push(user_id, message):
     """
     主动推送消息
     """
+    username = "user_"+str(user_id)
+    print(103,message)
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
     username,
     {
       "type": "push.message",
-      "event": event
+      "json": message
     }
     )

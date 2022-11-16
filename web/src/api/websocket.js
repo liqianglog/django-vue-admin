@@ -1,5 +1,6 @@
 import ElementUI from 'element-ui'
 import util from '@/libs/util'
+import store from '@/store'
 function initWebSocket (e) {
   const token = util.cookies.get('token')
   if (token) {
@@ -53,15 +54,23 @@ function webSocketOnMessage (e) {
       duration: 0
     })
   } else {
-    console.log(data.content)
-    return data
+    const { content } = data
+    if (content.model === 'message_center') {
+      const unread = content.unread
+      store.dispatch('d2admin/messagecenter/setUnread',unread)
+    }
   }
 }
 // 关闭websiocket
 function closeWebsocket () {
   console.log('连接已关闭...')
-  // close()
-  this.socket.close()
+  ElementUI.Notification({
+    title: 'websocket',
+    message: '连接已关闭...',
+    type: 'danger',
+    position: 'bottom-right',
+    duration: 3000
+  })
 }
 
 /**
@@ -72,5 +81,5 @@ function webSocketSend (message) {
   this.socket.send(JSON.stringify(message))
 }
 export default {
-  initWebSocket, closeWebsocket, webSocketSend,webSocketOnMessage
+  initWebSocket, closeWebsocket, webSocketSend
 }
