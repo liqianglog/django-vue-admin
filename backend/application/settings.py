@@ -93,6 +93,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "application.wsgi.application"
 
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -168,7 +169,7 @@ CORS_ALLOW_CREDENTIALS = True  # 指明在跨域访问中，后端是否支持�
 # ================================================= #
 # ********************* channels配置 ******************* #
 # ================================================= #
-ASGI_APPLICATION = 'application.routing.application'
+ASGI_APPLICATION = 'application.asgi.application'
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
