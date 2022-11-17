@@ -10,7 +10,6 @@ from channels.layers import get_channel_layer
 from jwt import InvalidSignatureError
 
 from application import settings
-from dvadmin.system.models import MessageCenter, MessageCenterTargetUser
 
 send_dict = {}
 
@@ -26,6 +25,7 @@ def set_message(sender, msg_type, msg):
 #异步获取消息中心的目标用户
 @database_sync_to_async
 def _get_message_center_instance(message_id):
+    from dvadmin.system.models import MessageCenter
     _MessageCenter = MessageCenter.objects.filter(id=message_id).values_list('target_user',flat=True)
     if _MessageCenter:
         return _MessageCenter
@@ -34,6 +34,7 @@ def _get_message_center_instance(message_id):
 
 @database_sync_to_async
 def _get_message_unread(user_id):
+    from dvadmin.system.models import MessageCenterTargetUser
     count = MessageCenterTargetUser.objects.filter(users=user_id,is_read=False).count()
     return count or 0
 
