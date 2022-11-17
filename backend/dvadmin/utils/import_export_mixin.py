@@ -155,9 +155,6 @@ class ImportSerializerMixin:
             else:
                 filter_dic = {i: ele.get(i) for i in list(set(unique_list)) if ele.get(i) is not None}
             instance = filter_dic and queryset.filter(**filter_dic).first()
-            print(unique_list)
-            print(filter_dic)
-            print(instance)
             if instance and not updateSupport:
                 continue
             if not filter_dic:

@@ -37,6 +37,17 @@ class DeptSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
+class DeptImportSerializer(CustomModelSerializer):
+    """
+    部门-导入-序列化器
+    """
+
+    class Meta:
+        model = Dept
+        fields = '__all__'
+        read_only_fields = ["id"]
+
+
 class DeptInitSerializer(CustomModelSerializer):
     """
     递归深度获取数信息(用于生成初始化json文件)
@@ -113,8 +124,12 @@ class DeptViewSet(CustomModelViewSet):
     update_serializer_class = DeptCreateUpdateSerializer
     filter_fields = ['name', 'id', 'parent']
     search_fields = []
-
     # extra_filter_backends = []
+    import_serializer_class = DeptImportSerializer
+    import_field_dict = {
+        "name": "部门名称",
+        "key": "部门标识",
+    }
 
     def list(self, request, *args, **kwargs):
         # 如果懒加载，则只返回父级
