@@ -1,42 +1,8 @@
 <template>
-  <div class="d2p-tree-selector">
-    <div
-      class="el-cascader el-cascader--default"
-      :class="{ 'is-disabled': disabled }"
-      @click="openDialog"
-    >
-      <div
-        class="el-input el-input--default el-input--suffix"
-        :class="{ 'is-disabled': disabled }"
-      >
-        <el-input
-          ref="reference"
-          :disabled="disabled"
-          :placeholder="selected.length === 0 ? placeholder : ''"
-        />
-        <span class="el-input__suffix">
-          <span class="el-input__suffix-inner">
-            <i class="el-input__icon el-icon-arrow-down" @click="openDialog"/>
-          </span>
-        </span>
-      </div>
-      <div class="el-cascader__tags" ref="tags">
-        <transition-group @after-leave="resetInputHeight">
-          <el-tag
-            v-for="item in selected"
-            :key="getValueKey(item)"
-            :closable="clearable"
-            :size="collapseTagSize"
-            :hit="false"
-            type="info"
-            @close="itemClosed(item)"
-            disable-transitions
-          >
-            <span class="el-select__tags-text">{{ getValueLabel(item) }}</span>
-          </el-tag>
-        </transition-group>
-      </div>
-    </div>
+  <div>
+    <el-button-group>
+      <el-button size="mini" type="success" round @click="openDialog">添加</el-button>
+    </el-button-group>
     <el-dialog
       custom-class="d2p-tree-selector-dialog"
       :title="dialogTitle"
@@ -44,7 +10,7 @@
       width="50%"
       append-to-body
     >
-      <div class="tree-wrapper">
+      <div>
         <div v-if="treeFilter" class="filter-bar" style="padding-bottom: 20px">
           <el-input
             prefix-icon="el-icon-search"
@@ -54,21 +20,19 @@
           >
           </el-input>
         </div>
-
-        <div class="tree-body">
-          <vxe-grid
-            v-bind="_elProps"
-            :data="_options"
-            ref="elTree"
-            :auto-resize="true"
-            @radio-change="radioChange"
-            @checkbox-change="checkboxChange"
-          >
-            <template #pager>
-              <vxe-pager
-                v-if="pagination"
-                style="margin-top: 10px"
-                :layouts="[
+        <vxe-grid
+          v-bind="_elProps"
+          :data="_options"
+          ref="elTree"
+          :auto-resize="true"
+          @radio-change="radioChange"
+          @checkbox-change="checkboxChange"
+        >
+          <template #pager>
+            <vxe-pager
+              v-if="pagination"
+              style="margin-top: 10px"
+              :layouts="[
                   'Sizes',
                   'PrevJump',
                   'PrevPage',
@@ -78,17 +42,15 @@
                   'FullJump',
                   'Total',
                 ]"
-                :current-page.sync="_elProps.page"
-                :page-size.sync="_elProps.limit"
-                :total="_elProps.total"
-                @page-change="handlePageChange"
-              >
-              </vxe-pager>
-            </template>
-          </vxe-grid>
-        </div>
+              :current-page.sync="_elProps.page"
+              :page-size.sync="_elProps.limit"
+              :total.sync="_elProps.total"
+              @page-change="handlePageChange"
+            >
+            </vxe-pager>
+          </template>
+        </vxe-grid>
       </div>
-
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">{{ cancelText }}</el-button>
         <el-button type="primary" @click="selectSubmit">{{
@@ -96,6 +58,61 @@
           }}</el-button>
       </span>
     </el-dialog>
+    <el-table
+      :data="tableData"
+      style="width: 100%"
+      height="280"
+      align="center"
+      size="small">
+      <el-table-column
+        type="index"
+        width="40"
+        label="#">
+      </el-table-column>
+      <template v-for="(item,index) in gridOptions.columns">
+        <el-table-column
+          v-if="item.types && item.types=='img'"
+          :key="index"
+          :label="item.title"
+          width="120">
+          <template slot-scope="scope">
+            <img :src="scope.row.images" style='width: 30px' />
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-else-if="item.types && item.types=='dict'"
+          :key="index"
+          :label="item.title"
+          width="120">
+          <template slot-scope="scope">
+            <span v-for="(data,index) in item.dictData" :key="index">
+              <span v-if="data.value===scope.row[item.field]">{{data.label}}</span>
+              <span v-else></span>
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-else
+          :key="index"
+          :prop="item.field"
+          :label="item.title"
+          width="120">
+        </el-table-column>
+      </template>
+      <el-table-column
+        label="操作"
+        fixed="right"
+        v-show="colButtons.show"
+        :width="colButtons.width">
+        <template slot-scope="scopes">
+          <el-button style="padding: 0" :disabled="item.disabled?item.disabled({...scopes,tableData}):false" type="text"
+                     size="small" :circle="item.circle?item.circle:false" v-for="(item,index) in colButtons.btns"
+                     :icon="item.icon?item.icon:''" :key="index" @click="item.click({...scopes,tableData})">
+            {{ item.text }}
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -103,9 +120,10 @@
 import lodash from 'lodash'
 import { d2CrudPlus } from 'd2-crud-plus'
 import { request } from '@/api/service'
+import XEUtils from 'xe-utils'
 // 表格选择组件
 export default {
-  name: 'table-selector-input',
+  name: 'table-list-selector-input',
   mixins: [d2CrudPlus.input, d2CrudPlus.inputDict],
   props: {
     // 值
@@ -164,9 +182,20 @@ export default {
       type: Boolean,
       default: false
     },
-    // el-tree的属性配置
+    // 弹框表的配置
     elProps: {
       type: Object
+    },
+    // 显示表的操作按钮配置
+    colButtons: {
+      type: Object,
+      default () {
+        return {
+          width: 150,
+          show: true,
+          btn: []
+        }
+      }
     },
     /**
      * 是否可以清除
@@ -193,7 +222,9 @@ export default {
       selected: [],
       dialogVisible: false,
       filterText: undefined,
-      requestUrl: null
+      requestUrl: null,
+      gridOptions: undefined,
+      tableData: []
     }
   },
   created () {
@@ -201,8 +232,6 @@ export default {
     //   this.dict = d2CrudPlus.util.dict.mergeDefault(this.dict, true)
     // }
     // this.initData()
-    // console.log(this)
-    this.searchTableData()
   },
   computed: {
     _elProps () {
@@ -214,6 +243,7 @@ export default {
         border: true,
         resizable: true
       }
+
       if (this.dict != null) {
         if (this.dict.label != null) {
           defaultElProps.props.label = this.dict.label
@@ -231,6 +261,12 @@ export default {
       }
       defaultElProps.nodeKey = defaultElProps.props.value
       lodash.merge(defaultElProps, this.elProps)
+
+      // 对显示列表增加操作列
+      const gridProps = JSON.parse(JSON.stringify(defaultElProps))
+      // gridProps.columns = [...gridProps.columns,{ title: '操作', width: this.colButtons.width, slots: { default: 'operate' } }]
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.gridOptions = gridProps
 
       if (this.multiple) {
         defaultElProps.checkboxConfig = this.elProps.checkboxConfig
@@ -277,7 +313,8 @@ export default {
     // },
     onDictLoaded () {
       // log.danger("onDictLoaded", this.dict, this.value);
-      this.setValue(this.value)
+      // this.setValue(this.value)
+      this.tableData = this.value
     },
     setValue (value) {
       // log.danger("setValue:", this.currentValue, this.value, this._options);
@@ -328,23 +365,38 @@ export default {
     handleCurrentChange (event) {
       this.$emit('current-change', event)
     },
+    // 打开选择框
     openDialog () {
       const that = this
-      if (that.disabled) {
+      if (this.disabled) {
         return
       }
-      that.dialogVisible = true
-      if (that.value != null) {
-        that.$nextTick(() => {
-          const refs = Object.assign({}, that.$refs)
-          const { elTree } = refs
-          if (that.multiple) {
-            elTree.setCheckboxRow(that.selected, true)
-          } else {
-            elTree.setRadioRow(that.selected[0])
-          }
-        })
-      }
+      this.dialogVisible = true
+      setTimeout(() => {
+        if (that._options.length > 0) {
+          that._options.map(
+            (item) => item[that._elProps.props.value]
+          )
+          // ids.forEach((id) => {
+          //   console.log(111, id)
+          //   const current = that.$refs.elTree.store.nodesMap[id]
+          //   console.log(22, current)
+          //   if (current != null) {
+          //     this.doExpandParent(current)
+          //   }
+          // })
+
+          // this.$nextTick(() => {
+          //   if (that.multiple) {
+          //     // this.$refs.elTree.setCheckedKeys(ids, this.leafOnly);
+          //     that.$refs.elTree.setCheckboxRow(that.tableData, true)
+          //   } else if (ids.length > 0) {
+          //     // this.$refs.elTree.setCurrentKey(ids[0]);
+          //     that.$refs.elTree.setRadioRow(that.tableData[0], true)
+          //   }
+          // })
+        }
+      }, 1)
     },
     doExpandParent (node) {
       if (node.parent != null) {
@@ -378,13 +430,21 @@ export default {
     },
     // 确定按钮事件
     selectSubmit () {
+      const that = this
       const nodes = this.refreshSelected()
-      this.dialogVisible = false
-      this.doValueInputChanged(nodes)
+      if (that.tableData === undefined) {
+        that.tableData = nodes
+      } else {
+        that.tableData = this.tableData.concat(nodes) // 为显示表格赋值
+      }
+      this.tableData = XEUtils.uniq(this.tableData) // 将数组去重
+      that.dialogVisible = false
+      that.doValueInputChanged(this.tableData)
     },
     // 将值传出去
     doValueInputChanged (nodes) {
-      let values = this.formatValue(nodes)
+      // let values = this.formatValue(nodes)
+      let values = nodes
       this.resetInputHeight()
       if (!this.multiple) {
         values = values && values.length > 0 ? values[0] : undefined
@@ -526,10 +586,11 @@ export default {
         url: url,
         params: params
       }).then((ret) => {
-        that._elProps.page = ret.data.page
-        that._elProps.limit = ret.data.limit
-        that._elProps.total = ret.data.total
-        that.$set(that, 'dictOptions', ret.data.data)
+        const { data } = ret
+        that._elProps.page = data.page
+        that._elProps.limit = data.limit
+        that._elProps.total = data.total
+        that.$set(that, 'dictOptions', data.data)
       })
     },
     /**
