@@ -34,7 +34,10 @@ export const crudOptions = (vm) => {
         transform: true,
         rowField: 'id',
         parentField: 'parent',
-        expandAll: true
+        expandAll: true,
+        hasChild: 'hasChild',
+        lazy: true,
+        loadMethod: vm.loadContentMethod
       }
     },
     rowHandle: {

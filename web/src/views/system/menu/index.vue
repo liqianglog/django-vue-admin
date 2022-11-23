@@ -86,6 +86,18 @@ export default {
         })
       })
       return result
+    },
+    /**
+     * 懒加载
+     * @param row
+     * @returns {Promise<unknown>}
+     */
+    loadContentMethod ({ row }) {
+      return new Promise(resolve => {
+        api.GetList({ parent: row.id }).then(res => {
+          resolve(res.data.data)
+        })
+      })
     }
   }
 }
