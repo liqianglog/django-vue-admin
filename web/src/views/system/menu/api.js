@@ -14,14 +14,12 @@ export const urlPrefix = '/api/system/menu/'
  * 列表查询
  */
 export function GetList (query) {
-  query.limit = 999
   return request({
     url: urlPrefix,
     method: 'get',
-    params: { ...query, limit: 999 }
+    params: { ...query }
   }).then(res => {
     // 将列表数据转换为树形数据
-    // res.data.data = XEUtils.toArrayTree(res.data.data, { parentKey: 'parent', strict: false })
     return res
   })
 }
