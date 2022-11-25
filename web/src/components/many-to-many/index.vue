@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-tag style="margin-right: 10px" :type="color" v-for="(item,index) in currentValue" :key="index">{{
+    <el-tag  style="margin-right: 10px" :type="color" v-for="(item,index) in currentValue" :key="index">{{
         item[key]
       }}
     </el-tag>

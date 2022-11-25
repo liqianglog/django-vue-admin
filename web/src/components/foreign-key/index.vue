@@ -1,5 +1,8 @@
 <template>
-  <el-tag :type="color">{{ currentValue }}</el-tag>
+  <div>
+    <el-tag v-if="currentValue" :type="color">{{ currentValue }}</el-tag>
+    <span v-else></span>
+  </div>
 </template>
 <script>
 // 行展示组件进阶版

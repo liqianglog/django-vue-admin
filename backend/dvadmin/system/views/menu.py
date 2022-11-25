@@ -21,6 +21,7 @@ class MenuSerializer(CustomModelSerializer):
     菜单表的简单序列化器
     """
     menuPermission = serializers.SerializerMethodField(read_only=True)
+    hasChild = serializers.SerializerMethodField()
 
     def get_menuPermission(self, instance):
         queryset = instance.menuPermission.order_by('-name').values_list('name', flat=True)
@@ -28,6 +29,12 @@ class MenuSerializer(CustomModelSerializer):
             return queryset
         else:
             return None
+
+    def get_hasChild(self, instance):
+        hasChild = Menu.objects.filter(parent=instance.id)
+        if hasChild:
+            return True
+        return False
 
     class Meta:
         model = Menu
@@ -171,3 +178,21 @@ class MenuViewSet(CustomModelViewSet):
         serializer = WebRouterSerializer(queryset, many=True, request=request)
         data = serializer.data
         return SuccessResponse(data=data, total=len(data), msg="获取成功")
+
+    def list(self,request):
+        """
+        懒加载
+        """
+        params = request.query_params
+        parent = params.get('parent', None)
+        if params:
+            if parent:
+                queryset = self.queryset.filter(status=1, parent=parent)
+            else:
+                queryset = self.queryset.filter(status=1)
+        else:
+            queryset = self.queryset.filter(status=1, parent__isnull=True)
+        queryset = self.filter_queryset(queryset)
+        serializer = MenuSerializer(queryset, many=True, request=request)
+        data = serializer.data
+        return SuccessResponse(data=data)

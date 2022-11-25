@@ -16,6 +16,11 @@
             @click="addRow"
             ><i class="el-icon-plus" /> 新增</el-button
           >
+          <importExcel
+            importApi="api/system/dept/import_data/"
+            v-permission="'Import'"
+          >导入
+          </importExcel>
         </el-button-group>
         <crud-toolbar
           :search.sync="crud.searchOptions.show"

@@ -8,6 +8,7 @@
 """
 import uuid
 
+from django.db import transaction
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
@@ -50,12 +51,23 @@ class CustomModelViewSet(ModelViewSet,ImportSerializerMixin,ExportSerializerMixi
             return self.values_queryset
         return super().get_queryset()
 
+
     def get_serializer_class(self):
         action_serializer_name = f"{self.action}_serializer_class"
         action_serializer_class = getattr(self, action_serializer_name, None)
         if action_serializer_class:
             return action_serializer_class
         return super().get_serializer_class()
+
+    # 通过many=True直接改造原有的API，使其可以批量创建
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        kwargs.setdefault('context', self.get_serializer_context())
+        if isinstance(self.request.data, list):
+            with transaction.atomic():
+                return serializer_class(many=True, *args, **kwargs)
+        else:
+            return serializer_class(*args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, request=request)
@@ -92,13 +104,7 @@ class CustomModelViewSet(ModelViewSet,ImportSerializerMixin,ExportSerializerMixi
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        request_data = request.data
-        soft_delete = request_data.get('soft_delete',True)
-        if soft_delete:
-            instance.is_deleted = True
-            instance.save()
-        else:
-            self.perform_destroy(instance)
+        instance.delete()
         return DetailResponse(data=[], msg="删除成功")
 
 

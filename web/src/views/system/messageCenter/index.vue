@@ -5,7 +5,7 @@
       ref="d2Crud"
       v-bind="_crudProps"
       v-on="_crudListeners"
-      @form-component-ready="handleFormComponentReady"
+      @onView="onView"
     >
       <div slot="header">
         <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
@@ -29,6 +29,7 @@
 import { AddObj, GetObj, GetList, UpdateObj, DelObj, GetSelfReceive } from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
+import viewTemplate from './viewTemplate.js'
 export default {
   name: 'messageCenter',
   components: {},
@@ -38,10 +39,7 @@ export default {
       tabActivted: 'send'
     }
   },
-  created () {
-    // 配置编辑前获取详情
-    this.crud.options.fetchDetail = this.fetchDetail
-  },
+
   computed: {
   },
   methods: {
@@ -61,7 +59,7 @@ export default {
       return AddObj(row).then(res => {
         const message = {
           message_id: res.data.id,
-          contentType: 'TEXT',
+          contentType: 'INFO',
           content: '您有新的消息,请到消息中心查看~'
         }
         this.$websocket.webSocketSend(message)
@@ -73,20 +71,18 @@ export default {
     delRequest (row) {
       return DelObj(row.id)
     },
-    // 编辑对话框打开前获取详情
-    fetchDetail (index, row) {
-      if (index == null) {
-        // 添加
-        return {}
-      }
-      return GetObj(row).then(res => {
-        return res.data
+    onView ({ row, index }) {
+      this.getD2Crud().showDialog({
+        mode: 'view',
+        rowIndex: index,
+        template: viewTemplate
       })
+      this.infoRequest(row)
+      this.doRefresh()
     },
-    handleFormComponentReady (event, key, form) {
-      // console.log('form component ready:', event, key, form)
-    },
-    onTabClick (obj) {
+    onTabClick (tab) {
+      const { name } = tab
+      this.tabActivted = name
       this.doRefresh()
     }
   }

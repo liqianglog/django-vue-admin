@@ -163,7 +163,7 @@ export default {
         },
         {
           value: 4,
-          label: '自定数据权限'
+          label: '自定义数据权限'
         }
       ],
       dataAuthorizationTips: '授权用户可操作的数据范围',
@@ -212,8 +212,8 @@ export default {
     },
     // 获取部门数据
     getDeptData () {
-      deptApi.GetList({ status: 1 }).then(ret => {
-        this.deptOptions = ret.data.data
+      deptApi.GetListAll().then(ret => {
+        this.deptOptions = XEUtils.toArrayTree(ret.data, { parentKey: 'parent', strict: false })
       })
     },
     // 获取菜单数据

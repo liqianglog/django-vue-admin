@@ -207,10 +207,75 @@ export const crudOptions = (vm) => {
         }
       },
       {
+        title: '角色',
+        key: 'role',
+        search: {
+          disabled: true
+        },
+        minWidth: 130,
+        type: 'table-selector',
+        dict: {
+          cache: false,
+          url: '/api/system/role/',
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'name', // 数据字典中label字段的属性名
+          getData: (url, dict, {
+            form,
+            component
+          }) => {
+            return request({
+              url: url,
+              params: {
+                page: 1,
+                limit: 10
+              }
+            }).then(ret => {
+              component._elProps.page = ret.data.page
+              component._elProps.limit = ret.data.limit
+              component._elProps.total = ret.data.total
+              return ret.data.data
+            })
+          }
+        },
+        form: {
+          rules: [ // 表单校验规则
+            {
+              required: true,
+              message: '必填项'
+            }
+          ],
+          itemProps: {
+            class: { yxtInput: true }
+          },
+          component: {
+            span: 12,
+            pagination: true,
+            props: { multiple: true },
+            elProps: {
+              columns: [
+                {
+                  field: 'name',
+                  title: '角色名称'
+                },
+                {
+                  field: 'key',
+                  title: '权限标识'
+                }
+              ]
+            }
+          }
+        },
+        component: {
+          name: 'manyToMany',
+          valueBinding: 'role_info',
+          children: 'name'
+        }
+      },
+      {
         title: '手机号码',
         key: 'mobile',
         search: {
-          disabled: true
+          disabled: false
         },
         minWidth: 110,
         type: 'input',
@@ -319,71 +384,6 @@ export const crudOptions = (vm) => {
             span: 24
           },
           helper: '限制文件大小不能超过500k'
-        }
-      },
-      {
-        title: '角色',
-        key: 'role',
-        search: {
-          disabled: true
-        },
-        minWidth: 130,
-        type: 'table-selector',
-        dict: {
-          cache: false,
-          url: '/api/system/role/',
-          value: 'id', // 数据字典中value字段的属性名
-          label: 'name', // 数据字典中label字段的属性名
-          getData: (url, dict, {
-            form,
-            component
-          }) => {
-            return request({
-              url: url,
-              params: {
-                page: 1,
-                limit: 10
-              }
-            }).then(ret => {
-              component._elProps.page = ret.data.page
-              component._elProps.limit = ret.data.limit
-              component._elProps.total = ret.data.total
-              return ret.data.data
-            })
-          }
-        },
-        form: {
-          rules: [ // 表单校验规则
-            {
-              required: true,
-              message: '必填项'
-            }
-          ],
-          itemProps: {
-            class: { yxtInput: true }
-          },
-          component: {
-            span: 12,
-            pagination: true,
-            props: { multiple: true },
-            elProps: {
-              columns: [
-                {
-                  field: 'name',
-                  title: '角色名称'
-                },
-                {
-                  field: 'key',
-                  title: '权限标识'
-                }
-              ]
-            }
-          }
-        },
-        component: {
-          name: 'manyToMany',
-          valueBinding: 'role_info',
-          children: 'name'
         }
       }
     ].concat(vm.commonEndColumns({

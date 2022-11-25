@@ -13,6 +13,14 @@ export function GetList (query) {
   })
 }
 
+export function GetListAll (query) {
+  return request({
+    url: urlPrefix + 'all_dept/',
+    method: 'get',
+    params: query
+  })
+}
+
 /**
  * 新增
  */

@@ -52,3 +52,5 @@ export function DelObj (id) {
     data: { id }
   })
 }
+
+

@@ -252,6 +252,10 @@ Vue.prototype.commonEndColumns = function (param = {}) {
       showForm: (param.update_datetime && param.update_datetime.showForm) !== undefined ? param.update_datetime.showForm : false,
       showTable: (param.update_datetime && param.update_datetime.showTable) !== undefined ? param.update_datetime.showTable : true
     },
+    creator_name: {
+      showForm: (param.creator_name && param.creator_name.showForm) !== undefined ? param.creator_name.showForm : false,
+      showTable: (param.creator_name && param.creator_name.showTable) !== undefined ? param.creator_name.showTable : false
+    },
     create_datetime: {
       showForm: (param.create_datetime && param.create_datetime.showForm) !== undefined ? param.create_datetime.showForm : false,
       showTable: (param.create_datetime && param.create_datetime.showTable) !== undefined ? param.create_datetime.showTable : true

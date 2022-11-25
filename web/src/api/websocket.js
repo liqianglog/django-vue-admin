@@ -1,9 +1,10 @@
 import ElementUI from 'element-ui'
 import util from '@/libs/util'
+import store from '@/store'
 function initWebSocket (e) {
   const token = util.cookies.get('token')
   if (token) {
-    const wsUri = process.env.VUE_APP_WEBSOCKET + '/ws/' + token + '/?room=message_center'
+    const wsUri = util.wsBaseURL() + 'ws/' + token + '/'
     this.socket = new WebSocket(wsUri)// 这里面的this都指向vue
     this.socket.onerror = webSocketOnError
     this.socket.onmessage = webSocketOnMessage
@@ -20,9 +21,15 @@ function webSocketOnError (e) {
     duration: 3000
   })
 }
+
+/**
+ * 接收消息
+ * @param e
+ * @returns {any}
+ */
 function webSocketOnMessage (e) {
   const data = JSON.parse(e.data)
-  if (data.contentType === 'INFO') {
+  if (data.contentType === 'SYSTEM') {
     ElementUI.Notification({
       title: 'websocket',
       message: data.content,
@@ -38,7 +45,7 @@ function webSocketOnMessage (e) {
       position: 'bottom-right',
       duration: 0
     })
-  } else if (data.contentType === 'TEXT') {
+  } else if (data.contentType === 'INFO') {
     ElementUI.Notification({
       title: '温馨提示',
       message: data.content,
@@ -47,16 +54,29 @@ function webSocketOnMessage (e) {
       duration: 0
     })
   } else {
-    console.log(data.content)
+    const { content } = data
+    if (content.model === 'message_center') {
+      const unread = content.unread
+      store.dispatch('d2admin/messagecenter/setUnread', unread)
+    }
   }
 }
 // 关闭websiocket
 function closeWebsocket () {
   console.log('连接已关闭...')
-  // close()
-  this.socket.close()
+  ElementUI.Notification({
+    title: 'websocket',
+    message: '连接已关闭...',
+    type: 'danger',
+    position: 'bottom-right',
+    duration: 3000
+  })
 }
 
+/**
+ * 发送消息
+ * @param message
+ */
 function webSocketSend (message) {
   this.socket.send(JSON.stringify(message))
 }

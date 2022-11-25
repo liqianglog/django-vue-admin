@@ -7,6 +7,7 @@ from openpyxl import Workbook
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.utils import get_column_letter, quote_sheetname
 from openpyxl.worksheet.table import Table, TableStyleInfo
+from rest_framework.decorators import action
 from rest_framework.request import Request
 
 from dvadmin.utils.import_export import import_to_data
@@ -56,6 +57,7 @@ class ImportSerializerMixin:
             length += 2.1 if ord(char) > 256 else 1
         return round(length, 1) if length <= self.export_column_width else self.export_column_width
 
+    @action(methods=['get','post'],detail=False)
     @transaction.atomic  # Django 事务,防止出错
     def import_data(self, request: Request, *args, **kwargs):
         """
@@ -151,13 +153,13 @@ class ImportSerializerMixin:
             if queryset.model._meta.unique_together:  # 判断是否存在联合主键
                 filter_dic = {i: ele.get(i) for i in list(queryset.model._meta.unique_together[0])}
             else:
-                filter_dic = {i: ele.get(i) for i in list(set(self.import_field_dict.keys()) & set(unique_list))}
+                filter_dic = {i: ele.get(i) for i in list(set(unique_list)) if ele.get(i) is not None}
             instance = filter_dic and queryset.filter(**filter_dic).first()
             if instance and not updateSupport:
                 continue
             if not filter_dic:
                 instance = None
-            serializer = self.import_serializer_class(instance, data=ele)
+            serializer = self.import_serializer_class(instance, data=ele, request=request)
             serializer.is_valid(raise_exception=True)
             serializer.save()
         return DetailResponse(msg=f"导入成功！")
@@ -216,7 +218,7 @@ class ExportSerializerMixin:
         queryset = self.filter_queryset(self.get_queryset())
         assert self.export_field_label, "'%s' 请配置对应的导出模板字段。" % self.__class__.__name__
         assert self.export_serializer_class, "'%s' 请配置对应的导出序列化器。" % self.__class__.__name__
-        data = self.export_serializer_class(queryset, many=True).data
+        data = self.export_serializer_class(queryset, many=True, request=request).data
         # 导出excel 表
         response = HttpResponse(content_type="application/msexcel")
         response["Access-Control-Expose-Headers"] = f"Content-Disposition"

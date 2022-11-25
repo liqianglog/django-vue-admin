@@ -17,17 +17,8 @@ table_prefix = settings.TABLE_PREFIX  # 数据库表名前缀
 
 
 class SoftDeleteQuerySet(QuerySet):
-    def delete(self,soft_delete=True):
-        """
-       重写删除方法
-       当soft_delete为True时表示软删除，则修改删除时间为当前时间，否则直接删除
-       :param soft: Boolean 是否软删除，默认是
-       :return: Tuple eg.(3, {'lqModel.Test': 3})
-       """
-        if soft_delete:
-            return self.update(is_deleted=True)
-        else:
-            return super(SoftDeleteQuerySet, self).delete()
+    pass
+
 
 
 
@@ -53,6 +44,27 @@ class SoftDeleteManager(models.Manager):
         return SoftDeleteQuerySet(self.model).get(username=name)
 
 
+class SoftDeleteModel(models.Model):
+    """
+    软删除模型
+    一旦继承,就将开启软删除
+    """
+    is_deleted = models.BooleanField(verbose_name="是否软删除", help_text='是否软删除', default=False, db_index=True)
+    objects = SoftDeleteManager()
+
+    class Meta:
+        abstract = True
+        verbose_name = '软删除模型'
+        verbose_name_plural = verbose_name
+
+    def delete(self, using=None, soft_delete=True, *args, **kwargs):
+        """
+        重写删除方法,直接开启软删除
+        """
+        self.is_deleted = True
+        self.save(using=using)
+
+
 class CoreModel(models.Model):
     """
     核心标准抽象模型模型,可直接继承使用
@@ -67,25 +79,12 @@ class CoreModel(models.Model):
     update_datetime = models.DateTimeField(auto_now=True, null=True, blank=True, help_text="修改时间", verbose_name="修改时间")
     create_datetime = models.DateTimeField(auto_now_add=True, null=True, blank=True, help_text="创建时间",
                                            verbose_name="创建时间")
-    is_deleted = models.BooleanField(verbose_name="是否软删除",help_text='是否软删除', default=False, db_index=True)
-    objects = SoftDeleteManager()
-
 
     class Meta:
         abstract = True
         verbose_name = '核心模型'
         verbose_name_plural = verbose_name
 
-    def delete(self, using=None, soft_delete=True, *args, **kwargs):
-        """
-        Soft delete object (set its ``is_deleted`` field to True).
-        Actually delete object if setting ``soft`` to False.
-        """
-        if soft_delete:
-            self.is_deleted = True
-            self.save(using=using)
-        else:
-            return super(CoreModel, self).delete(using=using, *args, **kwargs)
 
 
 

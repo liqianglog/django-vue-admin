@@ -3,13 +3,52 @@ import { request } from '@/api/service'
 export const crudOptions = (vm) => {
   return {
     indexRow: { // 或者直接传true,不显示title，不居中
+      width: 60,
       title: '序号',
       align: 'center'
     },
     options: {
+      tableType: 'vxe-table',
+      rowKey: true, // 必须设置，true or false
       height: '100%' // 表格高度100%, 使用toolbar必须设置
     },
-    viewOptions: {
+    rowHandle: {
+      width: 160,
+      fixed: 'right',
+      view: false,
+      edit: {
+        thin: true,
+        text: '',
+        show () {
+          return vm.tabActivted !== 'receive'
+        },
+        disabled () {
+          return !vm.hasPermissions('Update')
+        }
+      },
+      remove: {
+        thin: true,
+        text: '',
+        show () {
+          return vm.tabActivted !== 'receive'
+        },
+        disabled () {
+          return !vm.hasPermissions('Delete')
+        }
+      },
+      custom: [
+        {
+          thin: true,
+          text: null,
+          icon: 'el-icon-view',
+          size: 'small',
+          disabled () {
+            return !vm.hasPermissions('Retrieve')
+          },
+          order: 1,
+          emit: 'onView'
+        }
+      ]
     },
     columns: [
       {
@@ -24,7 +63,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 400,
+        width: 200,
         form: {
           rules: [ // 表单校验规则
             {
@@ -36,11 +75,39 @@ export const crudOptions = (vm) => {
         }
       },
       {
+        title: '是否已读',
+        key: 'is_read',
+        type: 'select',
+        width: 100,
+        show () {
+          return vm.tabActivted === 'receive'
+        },
+        dict: {
+          data: [
+            { label: '已读', value: true, color: 'success' },
+            { label: '未读', value: false, color: 'danger' }
+          ]
+        },
+        form: {
+          disabled: true
+        }
+      },
+      {
         title: '目标类型',
         key: 'target_type',
         type: 'radio',
-        dict: { data: [{ value: 0, label: '按用户' }, { value: 1, label: '按角色' }, { value: 2, label: '按部门' }] },
+        width: 120,
+        show () {
+          return vm.tabActivted === 'send'
+        },
+        dict: { data: [{ value: 0, label: '按用户' }, { value: 1, label: '按角色' }, { value: 2, label: '按部门' }, { value: 3, label: '通知公告' }] },
         form: {
+          component: {
+            span: 24,
+            props: {
+              type: 'el-radio-button'
+            }
+          },
           rules: [
             {
               required: true,
@@ -56,8 +123,9 @@ export const crudOptions = (vm) => {
         search: {
           disabled: true
         },
-        minWidth: 130,
+        width: 130,
         type: 'table-selector',
+        disabled: true,
         dict: {
           cache: false,
           url: '/api/system/user/',
@@ -124,8 +192,8 @@ export const crudOptions = (vm) => {
         search: {
           disabled: true
         },
-
-        minWidth: 130,
+        disabled: true,
+        width: 130,
         type: 'table-selector',
         dict: {
           cache: false,
@@ -193,11 +261,11 @@ export const crudOptions = (vm) => {
         search: {
           disabled: true
         },
-        minWidth: 130,
+        width: 130,
         type: 'table-selector',
         dict: {
           cache: false,
-          url: '/api/system/dept/',
+          url: '/api/system/dept/all_dept/',
           isTree: true,
           value: 'id', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
@@ -207,16 +275,13 @@ export const crudOptions = (vm) => {
             component
           }) => {
             return request({
-              url: url,
-              params: {
-                page: 1,
-                limit: 999
-              }
+              url: url
             }).then(ret => {
               return ret.data.data
             })
           }
         },
+        disabled: true,
         form: {
           rules: [ // 表单校验规则
             {
@@ -269,7 +334,7 @@ export const crudOptions = (vm) => {
       {
         title: '内容',
         key: 'content',
-        width: 300,
+        minWidth: 300,
         type: 'editor-quill', // 富文本图片上传依赖file-uploader，请先配置好file-uploader
         form: {
           rules: [ // 表单校验规则
@@ -295,6 +360,9 @@ export const crudOptions = (vm) => {
           }
         }
       }
-    ]
+    ].concat(vm.commonEndColumns({
+      create_datetime: { showTable: true },
+      update_datetime: { showTable: false }
+    }))
   }
 }
