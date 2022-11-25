@@ -62,6 +62,40 @@ util.baseURL = function () {
   }
   return baseURL
 }
+
+util.wsBaseURL = function () {
+  var baseURL = process.env.VUE_APP_API
+  var param = baseURL.split('/')[3] || ''
+  if (window.pluginsAll && window.pluginsAll.indexOf('dvadmin-tenant-web') !== -1 && (!param || baseURL.startsWith('/'))) {
+    // 1.把127.0.0.1 替换成和前端一样域名
+    // 2.把 ip 地址替换成和前端一样域名
+    // 3.把 /api 或其他类似的替换成和前端一样域名
+    // document.domain
+    var host = baseURL.split('/')[2]
+    if (host) {
+      var prot = baseURL.split(':')[2] || 80
+      if (prot === 80 || prot === 443) {
+        host = document.domain
+      } else {
+        host = document.domain + ':' + prot
+      }
+      baseURL = baseURL.split('/')[0] + '//' + baseURL.split('/')[1] + host + '/' + param
+    } else {
+      baseURL = location.protocol + '//' + location.hostname + (location.port ? ':' : '') + location.port + baseURL
+    }
+  } else if (param !== '' || baseURL.startsWith('/')) {
+    baseURL = (location.protocol === 'https' ? 'wss://' : 'ws://') + location.hostname + (location.port ? ':' : '') + location.port + baseURL
+  }
+  if (!baseURL.endsWith('/')) {
+    baseURL += '/'
+  }
+  if (baseURL.startsWith('http')) {
+    baseURL = baseURL.replace('http', 'ws')
+  } else if (baseURL.startsWith('https')) {
+    baseURL = baseURL.replace('https', 'wss')
+  }
+  return baseURL
+}
 /**
  * 自动生成ID
  */

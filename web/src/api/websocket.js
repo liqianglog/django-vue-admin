@@ -4,7 +4,7 @@ import store from '@/store'
 function initWebSocket (e) {
   const token = util.cookies.get('token')
   if (token) {
-    const wsUri = process.env.VUE_APP_WEBSOCKET + '/ws/' + token + '/'
+    const wsUri = util.wsBaseURL() + 'ws/' + token + '/'
     this.socket = new WebSocket(wsUri)// 这里面的this都指向vue
     this.socket.onerror = webSocketOnError
     this.socket.onmessage = webSocketOnMessage
@@ -57,7 +57,7 @@ function webSocketOnMessage (e) {
     const { content } = data
     if (content.model === 'message_center') {
       const unread = content.unread
-      store.dispatch('d2admin/messagecenter/setUnread',unread)
+      store.dispatch('d2admin/messagecenter/setUnread', unread)
     }
   }
 }
