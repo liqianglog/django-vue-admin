@@ -176,8 +176,7 @@ class MessageCenterViewSet(CustomModelViewSet):
         获取接收到的消息
         """
         self_user_id = self.request.user.id
-        queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).exclude(
-            messagecenter__is_deleted=True).order_by('-create_datetime')
+        queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).order_by('-create_datetime')
         # queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -192,8 +191,7 @@ class MessageCenterViewSet(CustomModelViewSet):
         获取最新的一条消息
         """
         self_user_id = self.request.user.id
-        queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).exclude(
-            messagecenter__is_deleted=True).order_by('create_datetime').last()
+        queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).order_by('create_datetime').last()
         data = None
         if queryset:
             serializer = MessageCenterTargetUserListSerializer(queryset, many=False, request=request)
