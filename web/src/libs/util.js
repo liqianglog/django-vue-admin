@@ -84,15 +84,13 @@ util.wsBaseURL = function () {
       baseURL = location.protocol + '//' + location.hostname + (location.port ? ':' : '') + location.port + baseURL
     }
   } else if (param !== '' || baseURL.startsWith('/')) {
-    baseURL = (location.protocol === 'https' ? 'wss://' : 'ws://') + location.hostname + (location.port ? ':' : '') + location.port + baseURL
+    baseURL = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.hostname + (location.port ? ':' : '') + location.port + baseURL
   }
   if (!baseURL.endsWith('/')) {
     baseURL += '/'
   }
-  if (baseURL.startsWith('http')) {
+  if (baseURL.startsWith('http')) { // https 也默认会被替换成 wss
     baseURL = baseURL.replace('http', 'ws')
-  } else if (baseURL.startsWith('https')) {
-    baseURL = baseURL.replace('https', 'wss')
   }
   return baseURL
 }
