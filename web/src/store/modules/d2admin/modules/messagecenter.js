@@ -18,8 +18,8 @@ export default {
      * @param {String} param type {String} 类型
      * @param {Object} payload meta {Object} 附带的信息
      */
-    async setUnread ({ state,commit },number) {
-      commit('set',number)
+    async setUnread ({ state, commit }, number) {
+      commit('set', number)
     }
   },
   mutations: {
