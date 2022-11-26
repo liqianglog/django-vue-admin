@@ -19,21 +19,8 @@
               <el-form-item prop="name" required label="昵称">
                 <el-input v-model="userInfo.name" clearable></el-input>
               </el-form-item>
-              <el-form-item label="电话号码" prop="mobile">
+              <el-form-item label="电话号码" required prop="mobile">
                 <el-input v-model="userInfo.mobile" clearable></el-input>
-              </el-form-item>
-              <el-form-item label="所属部门" prop="dept">
-                <el-input :value="userInfo.dept_info && userInfo.dept_info.dept_name" clearable disabled></el-input>
-              </el-form-item>
-              <el-form-item label="当前角色" prop="role">
-                <el-select :value="userInfo.role" multiple placeholder="请选择" size="mini" disabled>
-                  <el-option
-                    v-for="item in userInfo.role_info"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-                  </el-option>
-                </el-select>
               </el-form-item>
               <el-form-item label="邮箱" prop="email">
                 <el-input v-model="userInfo.email" clearable></el-input>
@@ -44,6 +31,22 @@
                   <el-radio :label="0">女</el-radio>
                   <el-radio :label="-1">未知</el-radio>
                 </el-radio-group>
+              </el-form-item>
+              <el-form-item label="用户名" prop="dept">
+                <el-input :value="userInfo.username" clearable disabled></el-input>
+              </el-form-item>
+              <el-form-item label="所属部门" prop="dept">
+                <el-input :value="userInfo.dept_info && userInfo.dept_info.dept_name" clearable disabled></el-input>
+              </el-form-item>
+              <el-form-item label="当前角色" prop="role">
+                <el-select :value="userInfo.role" multiple placeholder="请选择" disabled style="width: 100%;">
+                  <el-option
+                    v-for="item in userInfo.role_info"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
               </el-form-item>
               <el-form-item>
                 <el-button @click="updateInfo" type="primary">
@@ -66,6 +69,7 @@
               ref="userPasswordForm"
               :model="userPasswordInfo"
               required-asterisk
+              label-width="100px"
               :label-position="position"
               :rules="passwordRules"
               center
@@ -73,6 +77,7 @@
               <el-form-item label="原密码" required prop="oldPassword">
                 <el-input
                   v-model="userPasswordInfo.oldPassword"
+                  placeholder="请输入原始密码"
                   clearable
                 ></el-input>
               </el-form-item>
@@ -80,6 +85,7 @@
                 <el-input
                   type="password"
                   v-model="userPasswordInfo.newPassword"
+                  placeholder="请输入新密码"
                   clearable
                 ></el-input>
               </el-form-item>
@@ -87,6 +93,7 @@
                 <el-input
                   type="password"
                   v-model="userPasswordInfo.newPassword2"
+                  placeholder="请再次输入新密码"
                   clearable
                 ></el-input>
               </el-form-item>

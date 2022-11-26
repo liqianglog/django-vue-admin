@@ -308,6 +308,7 @@ class UserViewSet(CustomModelViewSet):
         user = request.user
         result = {
             "id": user.id,
+            "username": user.username,
             "name": user.name,
             "mobile": user.mobile,
             "user_type": user.user_type,
