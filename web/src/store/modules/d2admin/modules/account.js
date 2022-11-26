@@ -11,6 +11,7 @@ import util from '@/libs/util.js'
 import router from '@/router'
 import store from '@/store/index'
 import { SYS_USER_LOGIN, SYS_USER_LOGOUT } from '@/views/system/login/api'
+import { request } from '@/api/service'
 
 export default {
   namespaced: true,
@@ -44,13 +45,19 @@ export default {
       util.cookies.set('token', res.access)
       util.cookies.set('refresh', res.refresh)
       // 设置 vuex 用户信息
-      await dispatch('d2admin/user/set', {
-        name: res.name,
-        user_id: res.userId,
-        avatar: res.avatar,
-        role_info: res.role_info,
-        dept_info: res.dept_info
-      }, { root: true })
+      // await dispatch('d2admin/user/set', {
+      //   name: res.name,
+      //   user_id: res.userId,
+      //   avatar: res.avatar,
+      //   role_info: res.role_info,
+      //   dept_info: res.dept_info
+      // }, { root: true })
+      var userInfoRes = await request({
+        url: '/api/system/user/user_info/',
+        method: 'get',
+        params: {}
+      })
+      await store.dispatch('d2admin/user/set', userInfoRes.data, { root: true })
       // 用户登录后从持久化数据加载一系列的设置
       await dispatch('load')
     },
