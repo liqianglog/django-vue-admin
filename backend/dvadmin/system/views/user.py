@@ -5,7 +5,7 @@ from django_restql.fields import DynamicSerializerMethodField
 from rest_framework import serializers
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import IsAuthenticated
-
+from django.db import connection
 from application import dispatch
 from dvadmin.system.models import Users, Role, Dept
 from dvadmin.system.views.role import RoleSerializer
@@ -15,16 +15,17 @@ from dvadmin.utils.validator import CustomUniqueValidator
 from dvadmin.utils.viewset import CustomModelViewSet
 
 
-def recursion(instance,parent,result):
-    new_instance = getattr(instance,parent,None)
+def recursion(instance, parent, result):
+    new_instance = getattr(instance, parent, None)
     res = []
     data = getattr(instance, result, None)
     if data:
         res.append(data)
     if new_instance:
-        array = recursion(new_instance,parent,result)
-        res+=(array)
+        array = recursion(new_instance, parent, result)
+        res += (array)
     return res
+
 
 class UserSerializer(CustomModelSerializer):
     """
@@ -63,12 +64,13 @@ class UsersInitSerializer(CustomModelSerializer):
     """
     初始化获取数信息(用于生成初始化json文件)
     """
+
     def save(self, **kwargs):
         instance = super().save(**kwargs)
-        role_key = self.initial_data.get('role_key',[])
-        role_ids = Role.objects.filter(key__in=role_key).values_list('id',flat=True)
+        role_key = self.initial_data.get('role_key', [])
+        role_ids = Role.objects.filter(key__in=role_key).values_list('id', flat=True)
         instance.role.set(role_ids)
-        dept_key = self.initial_data.get('dept_key',None)
+        dept_key = self.initial_data.get('dept_key', None)
         dept_id = Dept.objects.filter(key=dept_key).first()
         instance.dept = dept_id
         instance.save()
@@ -162,6 +164,29 @@ class UserUpdateSerializer(CustomModelSerializer):
         }
 
 
+class UserInfoUpdateSerializer(CustomModelSerializer):
+    """
+    用户修改-序列化器
+    """
+    mobile = serializers.CharField(
+        max_length=50,
+        validators=[
+            CustomUniqueValidator(queryset=Users.objects.all(), message="手机号必须唯一")
+        ],
+        allow_blank=True
+    )
+
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
+
+    class Meta:
+        model = Users
+        fields = ['email', 'mobile', 'avatar', 'name', 'gender']
+        extra_kwargs = {
+            "post": {"required": False, "read_only": True},
+        }
+
+
 class ExportUserProfileSerializer(CustomModelSerializer):
     """
     用户导出 序列化器
@@ -242,15 +267,15 @@ class UserViewSet(CustomModelViewSet):
     search_fields = ["username", "name", "gender", "dept__name", "role__name"]
     # 导出
     export_field_label = {
-        "username":"用户账号",
-        "name":"用户名称",
-        "email":"用户邮箱",
-        "mobile":"手机号码",
-        "gender":"用户性别",
-        "is_active":"帐号状态",
-        "last_login":"最后登录时间",
-        "dept_name":"部门名称",
-        "dept_owner":"部门负责人",
+        "username": "用户账号",
+        "name": "用户名称",
+        "email": "用户邮箱",
+        "mobile": "手机号码",
+        "gender": "用户性别",
+        "is_active": "帐号状态",
+        "last_login": "最后登录时间",
+        "dept_name": "部门名称",
+        "dept_owner": "部门负责人",
     }
     export_serializer_class = ExportUserProfileSerializer
     # 导入
@@ -283,6 +308,7 @@ class UserViewSet(CustomModelViewSet):
         user = request.user
         result = {
             "id": user.id,
+            "username": user.username,
             "name": user.name,
             "mobile": user.mobile,
             "user_type": user.user_type,
@@ -293,6 +319,9 @@ class UserViewSet(CustomModelViewSet):
             "is_superuser": user.is_superuser,
             "role": user.role.values_list('id', flat=True),
         }
+        if hasattr(connection, 'tenant'):
+            result['tenant_id'] = connection.tenant and connection.tenant.id
+            result['tenant_name'] = connection.tenant and connection.tenant.name
         dept = getattr(user, 'dept', None)
         if dept:
             result['dept_info'] = {
@@ -307,8 +336,9 @@ class UserViewSet(CustomModelViewSet):
     @action(methods=["PUT"], detail=False, permission_classes=[IsAuthenticated])
     def update_user_info(self, request):
         """修改当前用户信息"""
-        user = request.user
-        Users.objects.filter(id=user.id).update(**request.data)
+        serializer = UserInfoUpdateSerializer(request.user, data=request.data, request=request)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return DetailResponse(data=None, msg="修改成功")
 
     @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])

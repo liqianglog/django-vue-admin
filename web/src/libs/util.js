@@ -39,7 +39,7 @@ util.open = function (url) {
 util.baseURL = function () {
   var baseURL = process.env.VUE_APP_API
   var param = baseURL.split('/')[3] || ''
-  if (window.pluginsAll && window.pluginsAll.indexOf('dvadmin-tenant-web') !== -1 && (!param || baseURL.startsWith('/'))) {
+  if (window.pluginsAll && window.pluginsAll.indexOf('dvadmin-tenants-web') !== -1 && (!param || baseURL.startsWith('/'))) {
     // 1.把127.0.0.1 替换成和前端一样域名
     // 2.把 ip 地址替换成和前端一样域名
     // 3.把 /api 或其他类似的替换成和前端一样域名
@@ -66,7 +66,7 @@ util.baseURL = function () {
 util.wsBaseURL = function () {
   var baseURL = process.env.VUE_APP_API
   var param = baseURL.split('/')[3] || ''
-  if (window.pluginsAll && window.pluginsAll.indexOf('dvadmin-tenant-web') !== -1 && (!param || baseURL.startsWith('/'))) {
+  if (window.pluginsAll && window.pluginsAll.indexOf('dvadmin-tenants-web') !== -1 && (!param || baseURL.startsWith('/'))) {
     // 1.把127.0.0.1 替换成和前端一样域名
     // 2.把 ip 地址替换成和前端一样域名
     // 3.把 /api 或其他类似的替换成和前端一样域名
