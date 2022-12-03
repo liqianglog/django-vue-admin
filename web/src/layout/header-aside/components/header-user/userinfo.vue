@@ -1,11 +1,3 @@
-<!--
- * @创建文件时间: 2021-07-26 23:08:16
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-08-12 11:32:30
- * 联系Qq:1638245306
- * @文件介绍: 用户信息
--->
 <template>
   <d2-container class="page">
     <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -14,42 +6,20 @@
           <el-col :span="10" :offset="6">
             <el-form
               ref="userInfoForm"
+              label-width="100px"
               :model="userInfo"
               required-asterisk
               :rules="userInforules"
               :label-position="position"
               center
             >
-              <el-form-item prop="avatar" required label="头像">
-                <el-upload
-                  class="avatar-uploader"
-                  list-type="picture-card"
-                  :file-list="fileList"
-                  :action="action"
-                  :headers="headers"
-                  :limit="1"
-                  :disabled="fileList.length === 1"
-                  :on-success="handleAvatarSuccess"
-                >
-                  <!-- <el-image
-                    v-if="userInfo.avatar"
-                    :src="userInfo.avatar"
-                    :preview-src-list="[userInfo.avatar]"
-                    style="width: 100px; height: 100px"
-                    alt="头像"
-                  ></el-image>
-                  <i
-                    v-else
-                    class="el-icon-plus avatar-uploader-icon"
-                    style="width: 100px; height: 100px"
-                  ></i> -->
-                  <i class="el-icon-plus"></i>
-                </el-upload>
+              <el-form-item prop="avatar" label="头像">
+                <d2p-cropper-uploader :value="userInfo.avatar || '/image/avatar.png'" @input="handleAvatarSuccess"/>
               </el-form-item>
               <el-form-item prop="name" required label="昵称">
                 <el-input v-model="userInfo.name" clearable></el-input>
               </el-form-item>
-              <el-form-item label="电话号码" prop="mobile">
+              <el-form-item label="电话号码" required prop="mobile">
                 <el-input v-model="userInfo.mobile" clearable></el-input>
               </el-form-item>
               <el-form-item label="邮箱" prop="email">
@@ -61,6 +31,22 @@
                   <el-radio :label="0">女</el-radio>
                   <el-radio :label="-1">未知</el-radio>
                 </el-radio-group>
+              </el-form-item>
+              <el-form-item label="用户名" prop="dept">
+                <el-input :value="userInfo.username" clearable disabled></el-input>
+              </el-form-item>
+              <el-form-item label="所属部门" prop="dept">
+                <el-input :value="userInfo.dept_info && userInfo.dept_info.dept_name" clearable disabled></el-input>
+              </el-form-item>
+              <el-form-item label="当前角色" prop="role">
+                <el-select :value="userInfo.role" multiple placeholder="请选择" disabled style="width: 100%;">
+                  <el-option
+                    v-for="item in userInfo.role_info"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
               </el-form-item>
               <el-form-item>
                 <el-button @click="updateInfo" type="primary">
@@ -83,6 +69,7 @@
               ref="userPasswordForm"
               :model="userPasswordInfo"
               required-asterisk
+              label-width="100px"
               :label-position="position"
               :rules="passwordRules"
               center
@@ -90,6 +77,7 @@
               <el-form-item label="原密码" required prop="oldPassword">
                 <el-input
                   v-model="userPasswordInfo.oldPassword"
+                  placeholder="请输入原始密码"
                   clearable
                 ></el-input>
               </el-form-item>
@@ -97,6 +85,7 @@
                 <el-input
                   type="password"
                   v-model="userPasswordInfo.newPassword"
+                  placeholder="请输入新密码"
                   clearable
                 ></el-input>
               </el-form-item>
@@ -104,6 +93,7 @@
                 <el-input
                   type="password"
                   v-model="userPasswordInfo.newPassword2"
+                  placeholder="请再次输入新密码"
                   clearable
                 ></el-input>
               </el-form-item>
@@ -206,7 +196,6 @@ export default {
         params: {}
       }).then((res) => {
         _self.userInfo = res.data
-        _self.fileList = [{ name: 'avatar.png', url: res.data.avatar }]
       })
     },
     /**
@@ -217,10 +206,12 @@ export default {
 
       _self.$refs.userInfoForm.validate((valid) => {
         if (valid) {
+          const userInfo = _self.userInfo
+          delete userInfo.role
           request({
             url: '/api/system/user/update_user_info/',
             method: 'put',
-            data: _self.userInfo
+            data: userInfo
           }).then((res) => {
             _self.$message.success('修改成功')
             _self.getCurrentUserInfo()
@@ -289,8 +280,7 @@ export default {
      */
     handleAvatarSuccess (res, file) {
       console.log(11, res)
-      this.fileList = [{ url: util.baseURL() + res.data.url, name: file.name }]
-      this.userInfo.avatar = util.baseURL() + res.data.url
+      this.userInfo.avatar = res
     }
   }
 }

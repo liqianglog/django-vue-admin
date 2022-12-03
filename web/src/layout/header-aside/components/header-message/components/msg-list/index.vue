@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import { mapActions } from 'vuex'
 export default {
   name: 'msgList',
   props: {
@@ -32,7 +32,7 @@ export default {
     toPage () {
       // this.open({name:'messageCenter'})
       this.$router.push({
-        name:'messageCenter'
+        name: 'messageCenter'
       })
     }
   }

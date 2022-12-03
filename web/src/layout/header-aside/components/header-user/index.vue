@@ -8,7 +8,20 @@
 -->
 <template>
   <el-dropdown size="small" class="d2-mr">
-    <span class="btn-text">{{
+    <el-link
+      type="primary"
+      :underline="false"
+      style="margin-bottom: 2px;margin-left: 10px"
+      v-if="isTenants"
+      >
+      <span>
+        当前租户：{{info.tenant_name}}
+      </span>
+      <span class="btn-text">{{
+      info.name ? `你好 ${info.name}` : "未登录"
+    }}</span>
+    </el-link>
+    <span class="btn-text" v-else>{{
       info.name ? `你好 ${info.name}` : "未登录"
     }}</span>
     <el-dropdown-menu slot="dropdown">
@@ -20,7 +33,7 @@
         注销
       </el-dropdown-item>
     </el-dropdown-menu>
-    <el-image v-if="info.avatar" :src="info.avatar" :preview-src-list="[info.avatar]" style="width: 20px;height: 20px" alt="头像"></el-image>
+    <el-image v-if="info.avatar" :src="info.avatar" :preview-src-list="[info.avatar]" style="width: 20px;height: 20px;border-radius: 20%;top: 5px;" alt="头像"></el-image>
   </el-dropdown>
 </template>
 
@@ -29,6 +42,11 @@ import { mapState, mapActions } from 'vuex'
 export default {
   computed: {
     ...mapState('d2admin/user', ['info'])
+  },
+  data () {
+    return {
+      isTenants: window.pluginsAll && window.pluginsAll.indexOf('dvadmin-tenants-web') !== -1
+    }
   },
   methods: {
     ...mapActions('d2admin/account', ['logout']),
