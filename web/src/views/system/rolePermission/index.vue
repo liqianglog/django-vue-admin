@@ -93,7 +93,7 @@
               :default-checked-keys="menuCheckedKeys"
               :check-on-click-node="false"
               empty-text="请先选择角色"
-              :check-strictly="false"
+              :check-strictly="menuCheckStrictly"
               @check-change="handleCheckClick"
             >
               <span class="custom-tree-node" slot-scope="{ node, data }">
@@ -142,6 +142,7 @@ export default {
       menuOptions: [],
       permissionData: [],
       menuCheckedKeys: [], // 菜单默认选中的节点
+      menuCheckStrictly: false,
       deptOptions: [],
       deptCheckedKeys: [],
       dataScopeOptions: [
@@ -199,6 +200,7 @@ export default {
       this.getDeptData()
       this.getMenuData(this.roleObj)
       this.menuCheckedKeys = this.roleObj.menu // 加载已勾选的菜单
+      this.menuCheckStrictly = true // 父子不相互关联
       this.deptCheckedKeys = this.roleObj.dept
     },
     addRequest (row) {
@@ -292,6 +294,7 @@ export default {
         children,
         parent
       } = data
+      this.menuCheckStrictly = false
       for (const item of menuPermission) {
         this.$set(item, 'checked', checked)
       }
