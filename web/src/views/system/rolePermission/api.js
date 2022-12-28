@@ -55,3 +55,17 @@ export function GetMenuData (obj) {
     return res.data.data
   })
 }
+
+/**
+ * 获取数据权限
+ * @param obj
+ * @returns {*}
+ * @constructor
+ */
+export function GetDataScope () {
+  return request({
+    url: '/api/system/role/data_scope/',
+    method: 'get',
+    params: {}
+  })
+}

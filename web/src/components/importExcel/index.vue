@@ -3,36 +3,47 @@
     <el-button size="small" type="success" icon="el-icon-upload" @click="handleImport">
       <slot>导入</slot>
     </el-button>
-  <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
-    <el-upload
-      ref="upload"
-      :limit="1"
-      accept=".xlsx, .xls"
-      :headers="upload.headers"
-      :action="upload.url"
-      :disabled="upload.isUploading"
-      :on-progress="handleFileUploadProgress"
-      :on-success="handleFileSuccess"
-      :auto-upload="false"
-      drag
-    >
-      <i class="el-icon-upload" />
-      <div class="el-upload__text">
-        将文件拖到此处，或
-        <em>点击上传</em>
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
+      <el-upload
+        ref="upload"
+        :limit="1"
+        accept=".xlsx, .xls"
+        :headers="upload.headers"
+        :action="upload.url"
+        :disabled="upload.isUploading"
+        :on-progress="handleFileUploadProgress"
+        :on-success="handleFileSuccess"
+        :auto-upload="false"
+        drag
+      >
+        <i class="el-icon-upload"/>
+        <div class="el-upload__text">
+          将文件拖到此处，或
+          <em>点击上传</em>
+        </div>
+        <div slot="tip" class="el-upload__tip">
+          <el-checkbox size="medium" label="是否更新已经存在的数据" border v-model="upload.updateSupport"/>
+          <el-select v-if="upload.updateSupport" size="medium" v-model="upload.updateField" style="width: 130px"
+                     placeholder="请选择更新字段依据">
+            <el-option
+              v-for="item in fieldOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <div style="color: #b1b1b1;margin: 10px" v-if="upload.updateSupport">如果导入时需要更新数据,则请选择一个字段作为更新依据</div>
+        </div>
+        <div slot="tip" class="el-upload__tip" style="color:red">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+      </el-upload>
+      <div>
+        <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="importTemplate">下载模板</el-button>
       </div>
-      <div slot="tip" class="el-upload__tip">
-        <el-checkbox size="medium" label="是否更新已经存在的数据" border v-model="upload.updateSupport" />
-
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitFileForm">确 定</el-button>
+        <el-button @click="upload.open = false">取 消</el-button>
       </div>
-      <div slot="tip" class="el-upload__tip" style="color:red">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
-    </el-upload>
-    <div><el-link type="primary" style="font-size:14px;margin-top: 20px" @click="importTemplate">下载模板</el-link></div>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitFileForm">确 定</el-button>
-      <el-button @click="upload.open = false">取 消</el-button>
-    </div>
-  </el-dialog>
+    </el-dialog>
   </div>
 </template>
 
@@ -68,6 +79,18 @@ export default {
       default () {
         return undefined
       }
+    },
+    updateFieldApi: {
+      type: String,
+      default () {
+        return undefined
+      }
+    },
+    fieldOptions: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
   methods: {
@@ -99,7 +122,8 @@ export default {
         method: 'post',
         data: {
           url: response.data.url,
-          updateSupport: that.upload.updateSupport
+          updateSupport: that.upload.updateSupport,
+          updateField: that.upload.updateField
         }
       }).then(response => {
         // this.$alert("导入成功！", "导入结果", { dangerouslyUseHTMLString: true });
@@ -114,7 +138,21 @@ export default {
     // 提交上传文件
     submitFileForm () {
       this.$refs.upload.submit()
+    },
+    getUpdateField () {
+      const that = this
+      if (that.updateFieldApi) {
+        return request({
+          url: that.updateFieldApi,
+          method: 'get'
+        }).then(res => {
+          that.fieldOptions = res.data
+        })
+      }
     }
+  },
+  mounted () {
+    this.getUpdateField()
   }
 }
 </script>

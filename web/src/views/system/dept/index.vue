@@ -18,6 +18,7 @@
           >
           <importExcel
             importApi="api/system/dept/import_data/"
+            updateFieldApi = "api/system/dept/update_field/"
             v-permission="'Import'"
           >导入
           </importExcel>

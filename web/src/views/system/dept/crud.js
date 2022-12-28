@@ -1,10 +1,10 @@
 import * as api from './api'
 export const crudOptions = (vm) => {
   return {
-    // pagination: false,
     pageOptions: {
       compact: true
     },
+    pagination: false,
     options: {
       tableType: 'vxe-table',
       stripe: false,
@@ -14,10 +14,13 @@ export const crudOptions = (vm) => {
       highlightCurrentRow: false,
       defaultExpandAll: true,
       treeConfig: {
+        transform: true,
+        rowField: 'id',
+        parentField: 'parent',
+        hasChild: 'hasChild',
         lazy: true,
-        hasChild: 'has_children',
         loadMethod: ({ row }) => {
-          return api.GetList({ parent: row.id, lazy: true }).then(ret => {
+          return api.GetList({ parent: row.id }).then(ret => {
             return ret.data.data
           })
         },

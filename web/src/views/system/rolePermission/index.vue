@@ -202,6 +202,7 @@ export default {
       this.menuCheckedKeys = this.roleObj.menu // 加载已勾选的菜单
       this.menuCheckStrictly = true // 父子不相互关联
       this.deptCheckedKeys = this.roleObj.dept
+      this.GetDataScope()
     },
     addRequest (row) {
       return api.createObj(row)
@@ -236,6 +237,12 @@ export default {
           parentKey: 'parent',
           strict: true
         })
+      })
+    },
+    //获取权限范围
+    GetDataScope(){
+      api.GetDataScope().then(res=>{
+        this.dataScopeOptions = res.data
       })
     },
     // 所有勾选菜单节点数据

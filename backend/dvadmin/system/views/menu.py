@@ -180,9 +180,7 @@ class MenuViewSet(CustomModelViewSet):
         return SuccessResponse(data=data, total=len(data), msg="获取成功")
 
     def list(self,request):
-        """
-        懒加载
-        """
+        """懒加载"""
         params = request.query_params
         parent = params.get('parent', None)
         if params:
