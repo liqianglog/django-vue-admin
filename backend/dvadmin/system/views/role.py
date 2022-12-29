@@ -81,7 +81,7 @@ class MenuPermissonSerializer(CustomModelSerializer):
 
     class Meta:
         model = Menu
-        fields = '__all__'
+        fields = ['id','parent','name','menuPermission']
 
 
 class RoleViewSet(CustomModelViewSet):
@@ -102,12 +102,18 @@ class RoleViewSet(CustomModelViewSet):
     @action(methods=['GET'], detail=True, permission_classes=[IsAuthenticated])
     def roleId_get_menu(self, request,pk):
         """通过角色id获取该角色用于的菜单"""
-        instance = Role.objects.filter(id=pk).first()
-        queryset = instance.menu.all()
-        # queryset = Menu.objects.filter(status=1).all()
+        is_superuser = request.user.is_superuser
+        is_admin = Role.objects.filter(id=pk, admin=True).first()
+        if is_superuser or is_admin:
+            queryset = Menu.objects.filter(status=1).all()
+        else:
+            instance = Role.objects.filter(id=pk).first()
+            queryset = instance.menu.all()
+        print(111, queryset)
         queryset = self.filter_queryset(queryset)
         serializer = MenuPermissonSerializer(queryset, many=True)
-        return SuccessResponse(data=serializer.data)
+        print(114, serializer.data)
+        return DetailResponse(data=serializer.data)
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
     def data_scope(self,request):

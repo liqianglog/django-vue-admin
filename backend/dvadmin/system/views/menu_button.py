@@ -18,7 +18,7 @@ class MenuButtonSerializer(CustomModelSerializer):
 
     class Meta:
         model = MenuButton
-        fields = "__all__"
+        fields = ['id','name','value','api','method']
         read_only_fields = ["id"]
 
 
