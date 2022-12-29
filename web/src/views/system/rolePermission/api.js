@@ -52,7 +52,7 @@ export function GetMenuData (obj) {
     params: {}
   }).then(res => {
     // 将列表数据转换为树形数据
-    return res.data.data
+    return res.data
   })
 }
 

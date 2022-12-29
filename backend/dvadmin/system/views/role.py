@@ -109,10 +109,8 @@ class RoleViewSet(CustomModelViewSet):
         else:
             instance = Role.objects.filter(id=pk).first()
             queryset = instance.menu.all()
-        print(111, queryset)
         queryset = self.filter_queryset(queryset)
         serializer = MenuPermissonSerializer(queryset, many=True)
-        print(114, serializer.data)
         return DetailResponse(data=serializer.data)
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
