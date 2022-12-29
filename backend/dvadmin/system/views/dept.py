@@ -22,6 +22,13 @@ class DeptSerializer(CustomModelSerializer):
     parent_name = serializers.CharField(read_only=True, source='parent.name')
     status_label = serializers.SerializerMethodField()
     has_children = serializers.SerializerMethodField()
+    hasChild = serializers.SerializerMethodField()
+
+    def get_hasChild(self, instance):
+        hasChild = Dept.objects.filter(parent=instance.id)
+        if hasChild:
+            return True
+        return False
 
     def get_status_label(self, obj: Dept):
         if obj.status:
@@ -133,31 +140,19 @@ class DeptViewSet(CustomModelViewSet):
 
     def list(self, request, *args, **kwargs):
         # 如果懒加载，则只返回父级
-        queryset = self.filter_queryset(self.get_queryset())
-        lazy = self.request.query_params.get('lazy')
-        parent = self.request.query_params.get('parent')
-        if lazy:
-            # 如果懒加载模式，返回全部
-            if not parent:
-                role_list = request.user.role.filter(status=1).values("admin", "data_range")
-                is_admin = False
-                for ele in role_list:
-                    if 3 == ele.get("data_range") or ele.get("admin") == True:
-                        is_admin = True
-                        break
-                if self.request.user.is_superuser or is_admin:
-                    queryset = queryset.filter(parent__isnull=True)
-                else:
-                    queryset = queryset.filter(id=self.request.user.dept_id)
-            serializer = self.get_serializer(queryset, many=True, request=request)
-            return SuccessResponse(data=serializer.data, msg="获取成功")
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True, request=request)
-            return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(queryset, many=True, request=request)
-        return SuccessResponse(data=serializer.data, msg="获取成功")
+        params = request.query_params
+        parent = params.get('parent', None)
+        if params:
+            if parent:
+                queryset = self.queryset.filter(status=True, parent=parent)
+            else:
+                queryset = self.queryset.filter(status=True)
+        else:
+            queryset = self.queryset.filter(status=True, parent__isnull=True)
+        queryset = self.filter_queryset(queryset)
+        serializer = DeptSerializer(queryset, many=True, request=request)
+        data = serializer.data
+        return SuccessResponse(data=data)
 
     def dept_lazy_tree(self, request, *args, **kwargs):
         parent = self.request.query_params.get('parent')
@@ -170,9 +165,9 @@ class DeptViewSet(CustomModelViewSet):
         data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
         return DetailResponse(data=data, msg="获取成功")
 
+
     @action(methods=["GET"], detail=False, permission_classes=[AnonymousUserPermission])
     def all_dept(self, request, *args, **kwargs):
-        self.extra_filter_backends = []
         queryset = self.filter_queryset(self.get_queryset())
         data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
         return DetailResponse(data=data, msg="获取成功")

@@ -57,6 +57,11 @@ class ImportSerializerMixin:
             length += 2.1 if ord(char) > 256 else 1
         return round(length, 1) if length <= self.export_column_width else self.export_column_width
 
+    @action(methods=['get'],detail=False)
+    def update_field(self,request:Request):
+        data = [{"label":value,"value":key} for key,value in self.import_field_dict.items()]
+        return DetailResponse(data=data)
+
     @action(methods=['get','post'],detail=False)
     @transaction.atomic  # Django 事务,防止出错
     def import_data(self, request: Request, *args, **kwargs):
@@ -148,12 +153,15 @@ class ImportSerializerMixin:
         unique_list = [
             ele.name for ele in queryset.model._meta.get_fields() if hasattr(ele, "unique") and ele.unique == True
         ]
+        updateField = request.data.get("updateField")
         for ele in data:
-            # 获取 unique 字段
-            if queryset.model._meta.unique_together:  # 判断是否存在联合主键
-                filter_dic = {i: ele.get(i) for i in list(queryset.model._meta.unique_together[0])}
-            else:
-                filter_dic = {i: ele.get(i) for i in list(set(unique_list)) if ele.get(i) is not None}
+            # # 获取 unique 字段
+            # if queryset.model._meta.unique_together:  # 判断是否存在联合主键
+            #     filter_dic = {i: ele.get(i) for i in list(queryset.model._meta.unique_together[0])}
+            # else:
+            #     filter_dic = {i: ele.get(i) for i in list(set(unique_list)) if ele.get(i) is not None}
+            filter_dic = {updateField:ele.get(updateField)}
+            print(162,filter_dic)
             instance = filter_dic and queryset.filter(**filter_dic).first()
             if instance and not updateSupport:
                 continue
@@ -207,6 +215,7 @@ class ExportSerializerMixin:
             length += 2.1 if ord(char) > 256 else 1
         return round(length, 1) if length <= self.export_column_width else self.export_column_width
 
+    @action(methods=['get'],detail=False)
     def export_data(self, request: Request, *args, **kwargs):
         """
         导出功能

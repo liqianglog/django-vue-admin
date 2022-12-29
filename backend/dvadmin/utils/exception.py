@@ -40,9 +40,10 @@ def CustomExceptionHandler(ex, context):
     elif isinstance(ex, DRFAPIException):
         set_rollback()
         msg = ex.detail
-        for k, v in msg.items():
-            for i in v:
-                msg = "%s:%s" % (k, i)
+        if isinstance(msg,dict):
+            for k, v in msg.items():
+                for i in v:
+                    msg = "%s:%s" % (k, i)
     elif isinstance(ex, ProtectedError):
         set_rollback()
         msg = "删除失败:该条数据与其他数据有相关绑定"

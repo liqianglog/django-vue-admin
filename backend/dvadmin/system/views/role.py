@@ -8,12 +8,13 @@
 """
 from rest_framework import serializers
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 from dvadmin.system.models import Role, Menu
 from dvadmin.system.views.dept import DeptSerializer
 from dvadmin.system.views.menu import MenuSerializer
 from dvadmin.system.views.menu_button import MenuButtonSerializer
-from dvadmin.utils.json_response import SuccessResponse
+from dvadmin.utils.json_response import SuccessResponse, DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.validator import CustomUniqueValidator
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -96,12 +97,58 @@ class RoleViewSet(CustomModelViewSet):
     serializer_class = RoleSerializer
     create_serializer_class = RoleCreateUpdateSerializer
     update_serializer_class = RoleCreateUpdateSerializer
+    search_fields = ['name','key']
 
-    @action(methods=['GET'], detail=True, permission_classes=[])
-    def roleId_get_menu(self, request, *args, **kwargs):
+    @action(methods=['GET'], detail=True, permission_classes=[IsAuthenticated])
+    def roleId_get_menu(self, request,pk):
         """通过角色id获取该角色用于的菜单"""
-        # instance = self.get_object()
-        # queryset = instance.menu.all()
-        queryset = Menu.objects.filter(status=1).all()
+        instance = Role.objects.filter(id=pk).first()
+        queryset = instance.menu.all()
+        # queryset = Menu.objects.filter(status=1).all()
+        queryset = self.filter_queryset(queryset)
         serializer = MenuPermissonSerializer(queryset, many=True)
         return SuccessResponse(data=serializer.data)
+
+    @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
+    def data_scope(self,request):
+        is_superuser = request.user.is_superuser
+        is_admin = Role.objects.filter(users__id=request.user.id,admin=True)
+        if is_superuser or is_admin:
+            data = [
+            {
+              "value": 0,
+              "label": '仅本人数据权限'
+            },
+            {
+              "value": 1,
+              "label": '本部门及以下数据权限'
+            },
+            {
+              "value": 2,
+              "label": '本部门数据权限'
+            },
+            {
+              "value": 3,
+              "label": '全部数据权限'
+            },
+            {
+              "value": 4,
+              "label": '自定义数据权限'
+            }
+          ]
+        else:
+            data = [
+                {
+                    "value": 0,
+                    "label": '仅本人数据权限'
+                },
+                {
+                    "value": 1,
+                    "label": '本部门及以下数据权限'
+                },
+                {
+                    "value": 2,
+                    "label": '本部门数据权限'
+                }
+            ]
+        return DetailResponse(data=data)
