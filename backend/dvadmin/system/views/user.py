@@ -231,7 +231,6 @@ class UserProfileImportSerializer(CustomModelSerializer):
     class Meta:
         model = Users
         exclude = (
-            "password",
             "post",
             "user_permissions",
             "groups",

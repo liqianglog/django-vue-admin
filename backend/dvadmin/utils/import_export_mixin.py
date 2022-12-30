@@ -171,8 +171,15 @@ class ImportSerializerMixin:
         response["content-disposition"] = f'attachment;filename={quote(str(f"导出{get_verbose_name(queryset)}.xlsx"))}'
         wb = Workbook()
         ws = wb.active
-        header_data = ["序号","更新主键(勿改)", *self.import_field_dict.values()]
-        hidden_header = ["#","id", *self.import_field_dict.keys()]
+        import_field_dict = {}
+        for key,val in self.import_field_dict.items():
+            if isinstance(val,dict):
+                import_field_dict[key] = val.get('title')
+            else:
+                import_field_dict[key] = val
+        print(data)
+        header_data = ["序号","更新主键(勿改)", *import_field_dict.values()]
+        hidden_header = ["#","id", *import_field_dict.keys()]
         df_len_max = [self.get_string_len(ele) for ele in header_data]
         row = get_column_letter(len(hidden_header) + 1)
         column = 1
@@ -184,12 +191,15 @@ class ImportSerializerMixin:
                     if key == h_item:
                         if val is None or val == "":
                             results_list.append("")
+                        elif isinstance(val,list):
+                            results_list.append(str(val))
                         else:
                             results_list.append(val)
                         # 计算最大列宽度
-                        result_column_width = self.get_string_len(val)
-                        if h_index != 0 and result_column_width > df_len_max[h_index]:
-                            df_len_max[h_index] = result_column_width
+                        if isinstance(val,str):
+                            result_column_width = self.get_string_len(val)
+                            if h_index != 0 and result_column_width > df_len_max[h_index]:
+                                df_len_max[h_index] = result_column_width
             ws.append([index+1,*results_list])
             column += 1
         # 　更新列宽
