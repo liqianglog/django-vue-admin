@@ -10,7 +10,7 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
-from dvadmin.system.models import Role, Menu
+from dvadmin.system.models import Role, Menu, MenuButton
 from dvadmin.system.views.dept import DeptSerializer
 from dvadmin.system.views.menu import MenuSerializer
 from dvadmin.system.views.menu_button import MenuButtonSerializer
@@ -77,7 +77,17 @@ class MenuPermissonSerializer(CustomModelSerializer):
     """
     菜单的按钮权限
     """
-    menuPermission = MenuButtonSerializer(many=True, read_only=True)
+    menuPermission = serializers.SerializerMethodField()
+
+    def get_menuPermission(self, instance):
+        is_superuser = self.request.user.is_superuser
+        if is_superuser:
+            queryset = MenuButton.objects.filter(menu__id=instance.id)
+        else:
+            menu_permission_id_list = self.request.user.role.values_list('permission',flat=True)
+            queryset = MenuButton.objects.filter(id__in=menu_permission_id_list,menu__id=instance.id)
+        serializer = MenuButtonSerializer(queryset,many=True, read_only=True)
+        return serializer.data
 
     class Meta:
         model = Menu
@@ -99,18 +109,18 @@ class RoleViewSet(CustomModelViewSet):
     update_serializer_class = RoleCreateUpdateSerializer
     search_fields = ['name', 'key']
 
-    @action(methods=['GET'], detail=True, permission_classes=[IsAuthenticated])
-    def roleId_get_menu(self, request, pk):
-        """通过角色id获取该角色用于的菜单"""
+    @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
+    def role_get_menu(self, request):
+        """根据当前用户的角色返回角色拥有的菜单"""
         is_superuser = request.user.is_superuser
-        is_admin = Role.objects.filter(id=pk, admin=True).first()
-        if is_superuser or is_admin :
+        is_admin = request.user.role.values_list('admin',flat=True)
+        if is_superuser or True in is_admin:
             queryset = Menu.objects.filter(status=1).all()
         else:
-            instance = Role.objects.filter(id=pk).first()
-            queryset = instance.menu.all()
+            menu_id_list = request.user.role.values_list('menu',flat=True)
+            queryset = Menu.objects.filter(id__in=menu_id_list)
         queryset = self.filter_queryset(queryset)
-        serializer = MenuPermissonSerializer(queryset, many=True)
+        serializer = MenuPermissonSerializer(queryset, many=True,request=request)
         return DetailResponse(data=serializer.data)
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
