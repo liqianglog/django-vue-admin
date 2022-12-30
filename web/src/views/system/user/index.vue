@@ -32,7 +32,7 @@
             ><i class="el-icon-download" /> 导出
           </el-button>
           <importExcel
-            importApi="api/system/user/import/"
+            api="api/system/user/"
             v-permission="'Import'"
             >导入
           </importExcel>
