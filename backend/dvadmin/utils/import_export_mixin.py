@@ -177,7 +177,6 @@ class ImportSerializerMixin:
                 import_field_dict[key] = val.get('title')
             else:
                 import_field_dict[key] = val
-        print(data)
         header_data = ["序号","更新主键(勿改)", *import_field_dict.values()]
         hidden_header = ["#","id", *import_field_dict.keys()]
         df_len_max = [self.get_string_len(ele) for ele in header_data]
