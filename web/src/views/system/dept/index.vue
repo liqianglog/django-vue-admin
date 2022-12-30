@@ -17,8 +17,7 @@
             ><i class="el-icon-plus" /> 新增</el-button
           >
           <importExcel
-            importApi="api/system/dept/import_data/"
-            updateFieldApi = "api/system/dept/update_field/"
+            api="api/system/dept/"
             v-permission="'Import'"
           >导入
           </importExcel>

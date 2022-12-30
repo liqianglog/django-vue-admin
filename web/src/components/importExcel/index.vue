@@ -21,23 +21,11 @@
           将文件拖到此处，或
           <em>点击上传</em>
         </div>
-        <div slot="tip" class="el-upload__tip">
-          <el-checkbox size="medium" label="是否更新已经存在的数据" border v-model="upload.updateSupport"/>
-          <el-select v-if="upload.updateSupport" size="medium" v-model="upload.updateField" style="width: 130px"
-                     placeholder="请选择更新字段依据">
-            <el-option
-              v-for="item in fieldOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          <div style="color: #b1b1b1;margin: 10px" v-if="upload.updateSupport">如果导入时需要更新数据,则请选择一个字段作为更新依据</div>
-        </div>
         <div slot="tip" class="el-upload__tip" style="color:red">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
       </el-upload>
       <div>
-        <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="importTemplate">下载模板</el-button>
+        <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="importTemplate">下载导入模板</el-button>
+        <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="updateTemplate">批量更新模板</el-button>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
@@ -74,13 +62,7 @@ export default {
         }
       }
     },
-    importApi: { // 导入接口地址
-      type: String,
-      default () {
-        return undefined
-      }
-    },
-    updateFieldApi: {
+    api: { // 导入接口地址
       type: String,
       default () {
         return undefined
@@ -101,7 +83,17 @@ export default {
     /** 下载模板操作 */
     importTemplate () {
       downloadFile({
-        url: util.baseURL() + this.importApi,
+        url: util.baseURL() + this.api + 'import_data/',
+        params: {},
+        method: 'get'
+      })
+    },
+    /***
+     * 批量更新模板
+     */
+    updateTemplate () {
+      downloadFile({
+        url: util.baseURL() + this.api + 'update_template/',
         params: {},
         method: 'get'
       })
@@ -122,8 +114,7 @@ export default {
         method: 'post',
         data: {
           url: response.data.url,
-          updateSupport: that.upload.updateSupport,
-          updateField: that.upload.updateField
+          updateSupport: that.upload.updateSupport
         }
       }).then(response => {
         // this.$alert("导入成功！", "导入结果", { dangerouslyUseHTMLString: true });

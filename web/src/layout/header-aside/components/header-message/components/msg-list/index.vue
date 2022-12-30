@@ -3,7 +3,7 @@
   <el-divider content-position="left">消息中心</el-divider>
   <div v-if="msgObj">
      <h3>{{msgObj.title}}</h3>
-    <div class="content-style">{{msgObj.content}}</div>
+    <div class="content-style" v-html="msgObj.content"></div>
   </div>
   <div v-else>
     <el-empty :image-size="100"></el-empty>
