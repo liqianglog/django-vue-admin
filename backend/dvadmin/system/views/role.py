@@ -81,7 +81,7 @@ class MenuPermissonSerializer(CustomModelSerializer):
 
     class Meta:
         model = Menu
-        fields = ['id','parent','name','menuPermission']
+        fields = ['id', 'parent', 'name', 'menuPermission']
 
 
 class RoleViewSet(CustomModelViewSet):
@@ -97,14 +97,14 @@ class RoleViewSet(CustomModelViewSet):
     serializer_class = RoleSerializer
     create_serializer_class = RoleCreateUpdateSerializer
     update_serializer_class = RoleCreateUpdateSerializer
-    search_fields = ['name','key']
+    search_fields = ['name', 'key']
 
     @action(methods=['GET'], detail=True, permission_classes=[IsAuthenticated])
-    def roleId_get_menu(self, request,pk):
+    def roleId_get_menu(self, request, pk):
         """通过角色id获取该角色用于的菜单"""
         is_superuser = request.user.is_superuser
         is_admin = Role.objects.filter(id=pk, admin=True).first()
-        if is_superuser or is_admin:
+        if is_superuser or is_admin :
             queryset = Menu.objects.filter(status=1).all()
         else:
             instance = Role.objects.filter(id=pk).first()
@@ -114,33 +114,10 @@ class RoleViewSet(CustomModelViewSet):
         return DetailResponse(data=serializer.data)
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
-    def data_scope(self,request):
+    def data_scope(self, request):
         is_superuser = request.user.is_superuser
-        is_admin = Role.objects.filter(users__id=request.user.id,admin=True)
-        if is_superuser or is_admin:
-            data = [
-            {
-              "value": 0,
-              "label": '仅本人数据权限'
-            },
-            {
-              "value": 1,
-              "label": '本部门及以下数据权限'
-            },
-            {
-              "value": 2,
-              "label": '本部门数据权限'
-            },
-            {
-              "value": 3,
-              "label": '全部数据权限'
-            },
-            {
-              "value": 4,
-              "label": '自定义数据权限'
-            }
-          ]
-        else:
+        role_queryset = Role.objects.filter(users__id=request.user.id).values_list('data_range', flat=True)
+        if is_superuser:
             data = [
                 {
                     "value": 0,
@@ -153,6 +130,64 @@ class RoleViewSet(CustomModelViewSet):
                 {
                     "value": 2,
                     "label": '本部门数据权限'
+                },
+                {
+                    "value": 3,
+                    "label": '全部数据权限'
+                },
+                {
+                    "value": 4,
+                    "label": '自定义数据权限'
                 }
             ]
+        else:
+            data = []
+            data_range_list = list(set(role_queryset))
+            for item in data_range_list:
+                if item == 0:
+                    data = [{
+                        "value": 0,
+                        "label": '仅本人数据权限'
+                    }]
+                elif item == 1:
+                    data = [{
+                        "value": 0,
+                        "label": '仅本人数据权限'
+                    }, {
+                        "value": 1,
+                        "label": '本部门及以下数据权限'
+                    },
+                        {
+                            "value": 2,
+                            "label": '本部门数据权限'
+                        }]
+                elif item == 2:
+                    data = [{
+                        "value": 0,
+                        "label": '仅本人数据权限'
+                    },
+                        {
+                            "value": 2,
+                            "label": '本部门数据权限'
+                        }]
+                elif item == 3:
+                    data = [{
+                        "value": 0,
+                        "label": '仅本人数据权限'
+                    },
+                        {
+                            "value": 3,
+                            "label": '全部数据权限'
+                        }, ]
+                elif item == 4:
+                    data = [{
+                        "value": 0,
+                        "label": '仅本人数据权限'
+                    },
+                        {
+                            "value": 4,
+                            "label": '自定义数据权限'
+                        }]
+                else:
+                    data = []
         return DetailResponse(data=data)
