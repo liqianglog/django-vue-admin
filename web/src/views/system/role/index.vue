@@ -64,11 +64,16 @@ import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import rolePermission from '../rolePermission'
+import { mapState } from 'vuex'
+
 export default {
   name: 'role',
   mixins: [d2CrudPlus.crud],
   components: {
     rolePermission
+  },
+  computed: {
+    ...mapState('d2admin/user', ['info'])
   },
   data () {
     return {

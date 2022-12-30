@@ -215,7 +215,7 @@ export default {
     },
     // 获取部门数据
     getDeptData () {
-      deptApi.GetListAll().then(ret => {
+      api.GetDataScopeDept().then(ret => {
         this.deptOptions = XEUtils.toArrayTree(ret.data, { parentKey: 'parent', strict: false })
       })
     },

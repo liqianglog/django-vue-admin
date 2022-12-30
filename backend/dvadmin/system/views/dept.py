@@ -156,14 +156,19 @@ class DeptViewSet(CustomModelViewSet):
 
     def dept_lazy_tree(self, request, *args, **kwargs):
         parent = self.request.query_params.get('parent')
-        queryset = self.filter_queryset(self.get_queryset())
-        if not parent:
-            if self.request.user.is_superuser:
-                queryset = queryset.filter(parent__isnull=True)
+        is_superuser = request.user.is_superuser
+        if is_superuser:
+            if parent:
+                queryset = Dept.objects.filter(parent=parent).values('id', 'name', 'parent')
             else:
-                queryset = queryset.filter(id=self.request.user.dept_id)
-        data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
-        return DetailResponse(data=data, msg="获取成功")
+                queryset = Dept.objects.filter(parent__isnull=True).values('id', 'name', 'parent')
+        else:
+            dept_list = request.user.role.values_list('dept', flat=True)
+            if parent:
+                queryset = Dept.objects.filter(id__in=dept_list,parent=parent).values('id', 'name', 'parent')
+            else:
+                queryset = Dept.objects.filter(id__in=dept_list,parent__isnull=True).values('id', 'name', 'parent')
+        return DetailResponse(data=queryset, msg="获取成功")
 
 
     @action(methods=["GET"], detail=False, permission_classes=[AnonymousUserPermission])

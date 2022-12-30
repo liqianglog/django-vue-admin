@@ -10,7 +10,7 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
-from dvadmin.system.models import Role, Menu, MenuButton
+from dvadmin.system.models import Role, Menu, MenuButton, Dept
 from dvadmin.system.views.dept import DeptSerializer
 from dvadmin.system.views.menu import MenuSerializer
 from dvadmin.system.views.menu_button import MenuButtonSerializer
@@ -62,6 +62,9 @@ class RoleCreateUpdateSerializer(CustomModelSerializer):
         return super().validate(attrs)
 
     def save(self, **kwargs):
+        is_superuser = self.request.user.is_superuser
+        if not is_superuser:
+            self.validated_data.pop('admin')
         data = super().save(**kwargs)
         data.dept.set(self.initial_data.get('dept', []))
         data.menu.set(self.initial_data.get('menu', []))
@@ -119,7 +122,7 @@ class RoleViewSet(CustomModelViewSet):
         else:
             menu_id_list = request.user.role.values_list('menu',flat=True)
             queryset = Menu.objects.filter(id__in=menu_id_list)
-        queryset = self.filter_queryset(queryset)
+        # queryset = self.filter_queryset(queryset)
         serializer = MenuPermissonSerializer(queryset, many=True,request=request)
         return DetailResponse(data=serializer.data)
 
@@ -201,3 +204,14 @@ class RoleViewSet(CustomModelViewSet):
                 else:
                     data = []
         return DetailResponse(data=data)
+
+    @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
+    def data_scope_dept(self,request):
+        """根据当前角色获取部门信息"""
+        is_superuser = request.user.is_superuser
+        if is_superuser:
+            queryset = Dept.objects.values('id','name','parent')
+        else:
+            dept_list = request.user.role.values_list('dept',flat=True)
+            queryset = Dept.objects.filter(id__in=dept_list).values('id','name','parent')
+        return DetailResponse(data=queryset)

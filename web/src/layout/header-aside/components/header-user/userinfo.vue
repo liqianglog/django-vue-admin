@@ -279,7 +279,6 @@ export default {
      * @param file
      */
     handleAvatarSuccess (res, file) {
-      console.log(11, res)
       this.userInfo.avatar = res
     }
   }

@@ -47,7 +47,7 @@ export function DelObj (id) {
 // 通过角色id,获取菜单数据
 export function GetMenuData (obj) {
   return request({
-    url: '/api/system/role/' + obj.id + '/roleId_get_menu/',
+    url: '/api/system/role/role_get_menu/',
     method: 'get',
     params: {}
   }).then(res => {
@@ -65,6 +65,19 @@ export function GetMenuData (obj) {
 export function GetDataScope () {
   return request({
     url: '/api/system/role/data_scope/',
+    method: 'get',
+    params: {}
+  })
+}
+
+/**
+ * 获取角色部门
+ * @returns {*}
+ * @constructor
+ */
+export function GetDataScopeDept () {
+  return request({
+    url: '/api/system/role/data_scope_dept/',
     method: 'get',
     params: {}
   })
