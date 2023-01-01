@@ -163,7 +163,21 @@ class DeptViewSet(CustomModelViewSet):
             else:
                 queryset = Dept.objects.filter(parent__isnull=True).values('id', 'name', 'parent')
         else:
-            dept_list = request.user.role.values_list('dept', flat=True)
+            data_range = request.user.role.values_list('data_range', flat=True)
+            user_dept_id = request.user.dept.id
+            dept_list = []
+            data_range_list = list(set(data_range))
+            for item in data_range_list:
+                if item in [0,2]:
+                    dept_list = [user_dept_id]
+                elif item == 1:
+                    dept_list = Dept.recursion_dept_info(dept_id=user_dept_id)
+                elif item == 3:
+                    dept_list = Dept.objects.values_list('id',flat=True)
+                elif item == 4:
+                    dept_list = request.user.role.values_list('dept',flat=True)
+                else:
+                    dept_list = []
             if parent:
                 queryset = Dept.objects.filter(id__in=dept_list,parent=parent).values('id', 'name', 'parent')
             else:

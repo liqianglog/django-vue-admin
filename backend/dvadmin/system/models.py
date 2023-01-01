@@ -120,6 +120,25 @@ class Dept(CoreModel):
         help_text="上级部门",
     )
 
+    @classmethod
+    def recursion_dept_info(cls, dept_id: int, dept_all_list=None, dept_list=None):
+        """
+        递归获取部门的所有下级部门
+        :param dept_id: 需要获取的id
+        :param dept_all_list: 所有列表
+        :param dept_list: 递归list
+        :return:
+        """
+        if not dept_all_list:
+            dept_all_list = Dept.objects.values("id", "parent")
+        if dept_list is None:
+            dept_list = [dept_id]
+        for ele in dept_all_list:
+            if ele.get("parent") == dept_id:
+                dept_list.append(ele.get("id"))
+                cls.recursion_dept_info(ele.get("id"), dept_all_list, dept_list)
+        return list(set(dept_list))
+
     class Meta:
         db_table = table_prefix + "system_dept"
         verbose_name = "部门表"
