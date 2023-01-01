@@ -158,14 +158,11 @@ class DeptViewSet(CustomModelViewSet):
         parent = self.request.query_params.get('parent')
         is_superuser = request.user.is_superuser
         if is_superuser:
-            if parent:
-                queryset = Dept.objects.filter(parent=parent).values('id', 'name', 'parent')
-            else:
-                queryset = Dept.objects.filter(parent__isnull=True).values('id', 'name', 'parent')
+            queryset = Dept.objects.values('id', 'name', 'parent')
         else:
             data_range = request.user.role.values_list('data_range', flat=True)
             user_dept_id = request.user.dept.id
-            dept_list = []
+            dept_list = [user_dept_id]
             data_range_list = list(set(data_range))
             for item in data_range_list:
                 if item in [0,2]:
@@ -178,10 +175,7 @@ class DeptViewSet(CustomModelViewSet):
                     dept_list = request.user.role.values_list('dept',flat=True)
                 else:
                     dept_list = []
-            if parent:
-                queryset = Dept.objects.filter(id__in=dept_list,parent=parent).values('id', 'name', 'parent')
-            else:
-                queryset = Dept.objects.filter(id__in=dept_list,parent__isnull=True).values('id', 'name', 'parent')
+            queryset = Dept.objects.filter(id__in=dept_list).values('id', 'name', 'parent')
         return DetailResponse(data=queryset, msg="获取成功")
 
 

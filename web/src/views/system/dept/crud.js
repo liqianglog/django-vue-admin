@@ -109,13 +109,6 @@ export const crudOptions = (vm) => {
           cache: false,
           getData: (url, dict, { form, component }) => { // 配置此参数会覆盖全局的getRemoteDictFunc
             return api.DeptLazy().then(ret => { return ret.data })
-          },
-          getNodes (values, data) {
-            // 配置行展示远程获取nodes
-            return new Promise((resolve, reject) => {
-              const row = vm.getEditRow()
-              resolve(row.parent !== null ? [{ name: row.parent_name, id: row.parent }] : [])
-            })
           }
         },
         form: {
@@ -123,17 +116,7 @@ export const crudOptions = (vm) => {
           component: {
             span: 12,
             props: {
-              multiple: false,
-              elProps: {
-                lazy: true,
-                hasChild: 'has_children',
-                load (node, resolve) {
-                  // 懒加载
-                  api.DeptLazy({ parent: node.data.id }).then((data) => {
-                    resolve(data.data)
-                  })
-                }
-              }
+              multiple: false
             }
           }
         }
