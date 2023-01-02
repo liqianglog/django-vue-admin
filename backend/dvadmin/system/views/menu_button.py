@@ -18,6 +18,17 @@ class MenuButtonSerializer(CustomModelSerializer):
 
     class Meta:
         model = MenuButton
+        fields = ['id', 'name', 'value', 'api', 'method']
+        read_only_fields = ["id"]
+
+
+class MenuButtonInitSerializer(CustomModelSerializer):
+    """
+    初始化菜单按钮-序列化器
+    """
+
+    class Meta:
+        model = MenuButton
         fields = ['id', 'name', 'value', 'api', 'method', 'menu']
         read_only_fields = ["id"]
 
