@@ -105,6 +105,14 @@ class DeptCreateUpdateSerializer(CustomModelSerializer):
     部门管理 创建/更新时的列化器
     """
 
+    def validate_parent(self, value):
+        """
+        如果没有上级部门,则上级部门为创建者的部门
+        """
+        if value is None:
+            value = self.request.user.dept_id
+        return value
+
     def create(self, validated_data):
         instance = super().create(validated_data)
         instance.dept_belong_id = instance.id

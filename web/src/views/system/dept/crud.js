@@ -108,11 +108,11 @@ export const crudOptions = (vm) => {
           value: 'id',
           cache: false,
           getData: (url, dict, { form, component }) => { // 配置此参数会覆盖全局的getRemoteDictFunc
-            return api.DeptLazy().then(ret => { return ret.data })
+            return api.DeptLazy().then(ret => { return ret })
           }
         },
         form: {
-          helper: '默认留空为根节点',
+          helper: '默认留空为创建者的部门',
           component: {
             span: 12,
             props: {
