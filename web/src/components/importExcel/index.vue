@@ -4,32 +4,34 @@
       <slot>导入</slot>
     </el-button>
     <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
-      <el-upload
-        ref="upload"
-        :limit="1"
-        accept=".xlsx, .xls"
-        :headers="upload.headers"
-        :action="upload.url"
-        :disabled="upload.isUploading"
-        :on-progress="handleFileUploadProgress"
-        :on-success="handleFileSuccess"
-        :auto-upload="false"
-        drag
-      >
-        <i class="el-icon-upload"/>
-        <div class="el-upload__text">
-          将文件拖到此处，或
-          <em>点击上传</em>
+      <div v-loading="loading">
+        <el-upload
+          ref="upload"
+          :limit="1"
+          accept=".xlsx, .xls"
+          :headers="upload.headers"
+          :action="upload.url"
+          :disabled="upload.isUploading"
+          :on-progress="handleFileUploadProgress"
+          :on-success="handleFileSuccess"
+          :auto-upload="false"
+          drag
+        >
+          <i class="el-icon-upload"/>
+          <div class="el-upload__text">
+            将文件拖到此处，或
+            <em>点击上传</em>
+          </div>
+          <div slot="tip" class="el-upload__tip" style="color:red">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+        </el-upload>
+        <div>
+          <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="importTemplate">下载导入模板</el-button>
+          <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="updateTemplate">批量更新模板</el-button>
         </div>
-        <div slot="tip" class="el-upload__tip" style="color:red">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
-      </el-upload>
-      <div>
-        <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="importTemplate">下载导入模板</el-button>
-        <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="updateTemplate">批量更新模板</el-button>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitFileForm">确 定</el-button>
-        <el-button @click="upload.open = false">取 消</el-button>
+        <el-button type="primary" :disabled="loading" @click="submitFileForm">确 定</el-button>
+        <el-button :disabled="loading" @click="upload.open = false">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -75,6 +77,11 @@ export default {
       }
     }
   },
+  data(){
+    return {
+      loading:false
+    }
+  },
   methods: {
     /** 导入按钮操作 */
     handleImport () {
@@ -107,17 +114,17 @@ export default {
       const that = this
       // that.upload.open = false
       that.upload.isUploading = false
+      that.loading = true
       that.$refs.upload.clearFiles()
       // 是否更新已经存在的用户数据
       return request({
-        url: that.importApi,
+        url: util.baseURL() + that.api + 'import_data/',
         method: 'post',
         data: {
-          url: response.data.url,
-          updateSupport: that.upload.updateSupport
+          url: response.data.url
         }
       }).then(response => {
-        // this.$alert("导入成功！", "导入结果", { dangerouslyUseHTMLString: true });
+        that.loading = false
         that.$alert('导入成功', '导入完成', {
           confirmButtonText: '确定',
           callback: action => {
@@ -129,21 +136,7 @@ export default {
     // 提交上传文件
     submitFileForm () {
       this.$refs.upload.submit()
-    },
-    getUpdateField () {
-      const that = this
-      if (that.updateFieldApi) {
-        return request({
-          url: that.updateFieldApi,
-          method: 'get'
-        }).then(res => {
-          that.fieldOptions = res.data
-        })
-      }
     }
-  },
-  mounted () {
-    this.getUpdateField()
   }
 }
 </script>

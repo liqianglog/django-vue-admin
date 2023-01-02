@@ -165,7 +165,7 @@ export const crudOptions = (vm) => {
         component: {
           placeholder: '请选择是否管理员',
           show (context) {
-            return !!vm.info.is_superuser
+            return vm.info.is_superuser
           }
         }
       }
