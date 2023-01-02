@@ -128,7 +128,7 @@ def websocket_push(user_id,message):
         }
     )
 
-def create_message_push(title: str, content: str, target_type: int, target_user: list, target_dept=None, target_role=None,
+def create_message_push(title: str, content: str, target_type: int=0, target_user: list=[], target_dept=None, target_role=None,
              message: dict = {'contentType': 'INFO', 'content': '测试~'}, request= Request):
     if message is None:
         message = {"contentType": "INFO", "content": None}
