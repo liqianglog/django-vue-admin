@@ -48,6 +48,16 @@ def _get_all_system_config():
         value = system_config.get("value", "")
         if value and system_config.get("form_item_type") == 7:
             value = value[0].get("url")
+        if value and system_config.get("form_item_type") == 11:
+            new_value = []
+            for ele in value:
+                new_value.append({
+                    "key": ele.get('key'),
+                    "title": ele.get('title'),
+                    "value": ele.get('value'),
+                })
+            new_value.sort(key=lambda s: s["key"])
+            value = new_value
         data[f"{system_config.get('parent__key')}.{system_config.get('key')}"] = value
     return data
 
