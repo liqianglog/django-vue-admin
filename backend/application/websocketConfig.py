@@ -69,13 +69,15 @@ class DvadminWebSocket(AsyncJsonWebsocketConsumer):
                     self.channel_name
                 )
                 await self.accept()
-                # 发送连接成功
-                #await self.send_json(set_message('system', 'SYSTEM', '连接成功'))
                 # 主动推送消息
                 unread_count = await _get_message_unread(self.user_id)
-                await self.send_json(
-                    set_message('system', 'SYSTEM', "请查看您的未读消息~",
-                                unread=unread_count))
+                if unread_count == 0:
+                    # 发送连接成功
+                    await self.send_json(set_message('system', 'SYSTEM', '连接成功'))
+                else:
+                    await self.send_json(
+                        set_message('system', 'SYSTEM', "请查看您的未读消息~",
+                                    unread=unread_count))
         except InvalidSignatureError:
             await self.disconnect(None)
 
