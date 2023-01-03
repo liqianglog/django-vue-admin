@@ -77,9 +77,9 @@ export default {
       }
     }
   },
-  data(){
+  data () {
     return {
-      loading:false
+      loading: false
     }
   },
   methods: {
@@ -90,7 +90,7 @@ export default {
     /** 下载模板操作 */
     importTemplate () {
       downloadFile({
-        url: util.baseURL() + this.api + 'import_data/',
+        url: this.api + 'import_data/',
         params: {},
         method: 'get'
       })
@@ -100,7 +100,7 @@ export default {
      */
     updateTemplate () {
       downloadFile({
-        url: util.baseURL() + this.api + 'update_template/',
+        url: this.api + 'update_template/',
         params: {},
         method: 'get'
       })
