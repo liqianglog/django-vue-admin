@@ -14,10 +14,10 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'application.settings')
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
-from application.routing import websocket_urlpatterns
+
 
 http_application = get_asgi_application()
-
+from application.routing import websocket_urlpatterns
 application = ProtocolTypeRouter({
     "http":http_application,
     'websocket': AuthMiddlewareStack(

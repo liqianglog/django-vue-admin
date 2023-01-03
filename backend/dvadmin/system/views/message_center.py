@@ -138,8 +138,8 @@ class MessageCenterCreateSerializer(CustomModelSerializer):
         targetuser_instance.save()
         for user in users:
             unread_count = MessageCenterTargetUser.objects.filter(users__id=user, is_read=False).count()
-            websocket_push(user, {"sender": 'system', "contentType": 'TEXT',
-                                  "content": {"model": 'message_center', "unread": unread_count}})
+            websocket_push(user, message={"sender": 'system', "contentType": 'SYSTEM',
+                                  "content": '您有一条新消息~', "unread": unread_count})
         return data
 
     class Meta:
