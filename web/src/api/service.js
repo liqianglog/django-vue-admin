@@ -216,7 +216,7 @@ const refreshTken = function () {
  * @param method
  * @param filename
  */
-export const downloadFile = function ({ url, params, method, filename="文件导出" }) {
+export const downloadFile = function ({ url, params, method, filename= '文件导出' }) {
   request({
     url: url,
     method: method,
@@ -224,7 +224,8 @@ export const downloadFile = function ({ url, params, method, filename="文件导
     responseType: 'blob'
     // headers: {Accept: 'application/vnd.openxmlformats-officedocument'}
   }).then(res => {
-    const fileName = window.decodeURI(filename + '.xlsx' || res.headers['content-disposition'].split('=')[1]) || '文件导出.xlsx'
+    const xlsxName = window.decodeURI(res.headers['content-disposition'].split('=')[1])
+    const fileName = xlsxName || `${filename}.xlsx`
     if (res) {
       const blob = new Blob([res.data], { type: 'charset=utf-8' })
       const elink = document.createElement('a')
