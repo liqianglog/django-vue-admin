@@ -85,7 +85,10 @@ class DvadminWebSocket(AsyncJsonWebsocketConsumer):
         # Leave room group
         await self.channel_layer.group_discard(self.chat_group_name, self.channel_name)
         print("连接关闭")
-        await self.close(close_code)
+        try:
+            await self.close(close_code)
+        except Exception:
+            pass
 
 
 class MegCenter(DvadminWebSocket):
