@@ -119,7 +119,6 @@
 
 <script>
 import * as api from './api'
-import * as deptApi from '../dept/api'
 import XEUtils from 'xe-utils'
 
 export default {
@@ -239,9 +238,9 @@ export default {
         })
       })
     },
-    //获取权限范围
-    GetDataScope(){
-      api.GetDataScope().then(res=>{
+    // 获取权限范围
+    GetDataScope () {
+      api.GetDataScope().then(res => {
         this.dataScopeOptions = res.data
       })
     },

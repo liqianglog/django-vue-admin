@@ -216,7 +216,7 @@ const refreshTken = function () {
  * @param method
  * @param filename
  */
-export const downloadFile = function ({ url, params, method, filename= '文件导出' }) {
+export const downloadFile = function ({ url, params, method, filename = '文件导出' }) {
   request({
     url: url,
     method: method,

@@ -29,7 +29,7 @@ function webSocketOnError (e) {
  */
 function webSocketOnMessage (e) {
   const data = JSON.parse(e.data)
-  const {unread} = data
+  const { unread } = data
   store.dispatch('d2admin/messagecenter/setUnread', unread || 0)
   if (data.contentType === 'SYSTEM') {
     ElementUI.Notification({

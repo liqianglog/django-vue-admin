@@ -84,7 +84,7 @@ export default {
       this.tabActivted = name
       this.doRefresh()
     },
-    //关闭事件
+    // 关闭事件
     doDialogClosed (context) {
       this.doRefresh()
     }

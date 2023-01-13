@@ -199,8 +199,8 @@ export default {
         }
       })
     },
-    //部门懒加载
-    loadChildrenMethod({ row} ){
+    // 部门懒加载
+    loadChildrenMethod ({ row }) {
       return new Promise(resolve => {
         setTimeout(() => {
           const childs = [
