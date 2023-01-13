@@ -1,10 +1,10 @@
 import * as api from './api'
 export const crudOptions = (vm) => {
   return {
-    // pagination: false,
     pageOptions: {
       compact: true
     },
+    pagination: false,
     options: {
       tableType: 'vxe-table',
       stripe: false,
@@ -14,10 +14,13 @@ export const crudOptions = (vm) => {
       highlightCurrentRow: false,
       defaultExpandAll: true,
       treeConfig: {
+        transform: true,
+        rowField: 'id',
+        parentField: 'parent',
+        hasChild: 'hasChild',
         lazy: true,
-        hasChild: 'has_children',
         loadMethod: ({ row }) => {
-          return api.GetList({ parent: row.id, lazy: true }).then(ret => {
+          return api.GetList({ parent: row.id }).then(ret => {
             return ret.data.data
           })
         },
@@ -105,32 +108,15 @@ export const crudOptions = (vm) => {
           value: 'id',
           cache: false,
           getData: (url, dict, { form, component }) => { // 配置此参数会覆盖全局的getRemoteDictFunc
-            return api.DeptLazy().then(ret => { return ret.data })
-          },
-          getNodes (values, data) {
-            // 配置行展示远程获取nodes
-            return new Promise((resolve, reject) => {
-              const row = vm.getEditRow()
-              resolve(row.parent !== null ? [{ name: row.parent_name, id: row.parent }] : [])
-            })
+            return api.DeptLazy().then(ret => { return ret })
           }
         },
         form: {
-          helper: '默认留空为根节点',
+          helper: '默认留空为创建者的部门',
           component: {
             span: 12,
             props: {
-              multiple: false,
-              elProps: {
-                lazy: true,
-                hasChild: 'has_children',
-                load (node, resolve) {
-                  // 懒加载
-                  api.DeptLazy({ parent: node.data.id }).then((data) => {
-                    resolve(data.data)
-                  })
-                }
-              }
+              multiple: false
             }
           }
         }

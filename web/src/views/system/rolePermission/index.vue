@@ -119,7 +119,6 @@
 
 <script>
 import * as api from './api'
-import * as deptApi from '../dept/api'
 import XEUtils from 'xe-utils'
 
 export default {
@@ -202,6 +201,7 @@ export default {
       this.menuCheckedKeys = this.roleObj.menu // 加载已勾选的菜单
       this.menuCheckStrictly = true // 父子不相互关联
       this.deptCheckedKeys = this.roleObj.dept
+      this.GetDataScope()
     },
     addRequest (row) {
       return api.createObj(row)
@@ -214,7 +214,7 @@ export default {
     },
     // 获取部门数据
     getDeptData () {
-      deptApi.GetListAll().then(ret => {
+      api.GetDataScopeDept().then(ret => {
         this.deptOptions = XEUtils.toArrayTree(ret.data, { parentKey: 'parent', strict: false })
       })
     },
@@ -236,6 +236,12 @@ export default {
           parentKey: 'parent',
           strict: true
         })
+      })
+    },
+    // 获取权限范围
+    GetDataScope () {
+      api.GetDataScope().then(res => {
+        this.dataScopeOptions = res.data
       })
     },
     // 所有勾选菜单节点数据

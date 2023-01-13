@@ -6,6 +6,7 @@
       v-bind="_crudProps"
       v-on="_crudListeners"
       @onView="onView"
+      @doDialogClosed="doDialogClosed"
     >
       <div slot="header">
         <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
@@ -39,7 +40,6 @@ export default {
       tabActivted: 'send'
     }
   },
-
   computed: {
   },
   methods: {
@@ -78,11 +78,14 @@ export default {
         template: viewTemplate
       })
       this.infoRequest(row)
-      this.doRefresh()
     },
     onTabClick (tab) {
       const { name } = tab
       this.tabActivted = name
+      this.doRefresh()
+    },
+    // 关闭事件
+    doDialogClosed (context) {
       this.doRefresh()
     }
   }

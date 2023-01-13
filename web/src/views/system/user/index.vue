@@ -32,7 +32,7 @@
             ><i class="el-icon-download" /> 导出
           </el-button>
           <importExcel
-            importApi="api/system/user/import/"
+            api="api/system/user/"
             v-permission="'Import'"
             >导入
           </importExcel>
@@ -197,6 +197,18 @@ export default {
         } else {
           that.$message.error('表单校验失败，请检查')
         }
+      })
+    },
+    // 部门懒加载
+    loadChildrenMethod ({ row }) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const childs = [
+            { id: row.id + 100000, parent: row.id, name: row.name + 'Test45', type: 'mp4', size: null, date: '2021-10-03', hasChild: true },
+            { id: row.id + 150000, parent: row.id, name: row.name + 'Test56', type: 'mp3', size: null, date: '2021-07-09', hasChild: false }
+          ]
+          resolve(childs)
+        }, 500)
       })
     }
   }

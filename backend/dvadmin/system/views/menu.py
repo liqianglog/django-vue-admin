@@ -10,7 +10,7 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 
 from dvadmin.system.models import Menu, MenuButton
-from dvadmin.system.views.menu_button import MenuButtonSerializer
+from dvadmin.system.views.menu_button import MenuButtonInitSerializer
 from dvadmin.utils.json_response import SuccessResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -106,7 +106,7 @@ class MenuInitSerializer(CustomModelSerializer):
                     "value": menu_button_data['value']
                 }
                 instance_obj = MenuButton.objects.filter(**filter_data).first()
-                serializer = MenuButtonSerializer(instance_obj, data=menu_button_data, request=self.request)
+                serializer = MenuButtonInitSerializer(instance_obj, data=menu_button_data, request=self.request)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
         return instance
@@ -180,9 +180,7 @@ class MenuViewSet(CustomModelViewSet):
         return SuccessResponse(data=data, total=len(data), msg="获取成功")
 
     def list(self,request):
-        """
-        懒加载
-        """
+        """懒加载"""
         params = request.query_params
         parent = params.get('parent', None)
         if params:

@@ -29,9 +29,11 @@ function webSocketOnError (e) {
  */
 function webSocketOnMessage (e) {
   const data = JSON.parse(e.data)
+  const { unread } = data
+  store.dispatch('d2admin/messagecenter/setUnread', unread || 0)
   if (data.contentType === 'SYSTEM') {
     ElementUI.Notification({
-      title: 'websocket',
+      title: '系统消息',
       message: data.content,
       type: 'success',
       position: 'bottom-right',
@@ -54,11 +56,13 @@ function webSocketOnMessage (e) {
       duration: 0
     })
   } else {
-    const { content } = data
-    if (content.model === 'message_center') {
-      const unread = content.unread
-      store.dispatch('d2admin/messagecenter/setUnread', unread)
-    }
+    ElementUI.Notification({
+      title: '温馨提示',
+      message: data.content,
+      type: 'info',
+      position: 'bottom-right',
+      duration: 3000
+    })
   }
 }
 // 关闭websiocket

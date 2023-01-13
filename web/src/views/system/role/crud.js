@@ -156,7 +156,6 @@ export const crudOptions = (vm) => {
       title: '是否管理员',
       key: 'admin',
       sortable: true,
-
       type: 'radio',
       dict: {
         data: vm.dictionary('button_whether_bool')
@@ -164,11 +163,13 @@ export const crudOptions = (vm) => {
       form: {
         value: false,
         component: {
-          placeholder: '请选择是否管理员'
+          placeholder: '请选择是否管理员',
+          show (context) {
+            return vm.info.is_superuser
+          }
         }
       }
     },
-
     {
       title: '状态',
       key: 'status',

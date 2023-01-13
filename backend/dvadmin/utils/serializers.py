@@ -104,6 +104,24 @@ class CustomModelSerializer(DynamicFieldsMixin, ModelSerializer):
             return getattr(self.request.user, "id", None)
         return None
 
+    @property
+    def errors(self):
+        # get errors
+        errors = super().errors
+        verbose_errors = {}
+
+        # fields = { field.name: field.verbose_name } for each field in model
+        fields = {field.name: field.verbose_name for field in
+                  self.Meta.model._meta.get_fields() if hasattr(field, 'verbose_name')}
+
+        # iterate over errors and replace error key with verbose name if exists
+        for field_name, error in errors.items():
+            if field_name in fields:
+                verbose_errors[str(fields[field_name])] = error
+            else:
+                verbose_errors[field_name] = error
+        return verbose_errors
+
     # @cached_property
     # def fields(self):
     #     fields = BindingDict(self)

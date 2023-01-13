@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+from datetime import datetime
 
 import openpyxl
 from django.conf import settings
+
+from dvadmin.utils.validator import CustomValidationError
 
 
 def import_to_data(file_url, field_data, m2m_fields=None):
@@ -18,6 +21,10 @@ def import_to_data(file_url, field_data, m2m_fields=None):
     file_path_dir = os.path.join(settings.BASE_DIR, file_url)
     workbook = openpyxl.load_workbook(file_path_dir)
     table = workbook[workbook.sheetnames[0]]
+    theader = tuple(table.values)[0] #Excel的表头
+    is_update = '更新主键(勿改)' in theader #是否导入更新
+    if is_update is False: #不是更新时,删除id列
+        field_data.pop('id')
     # 获取参数映射
     validation_data_dict = {}
     for key, value in field_data.items():
@@ -40,15 +47,30 @@ def import_to_data(file_url, field_data, m2m_fields=None):
         if i == 0:
             continue
         array = {}
-        for index, key in enumerate(field_data.keys()):
+        for index, item in enumerate(field_data.items()):
+            items = list(item)
+            key = items[0]
+            values = items[1]
+            value_type = 'str'
+            if isinstance(values, dict):
+                value_type = values.get('type','str')
             cell_value = table.cell(row=row + 1, column=index + 2).value
-            # 由于excel导入数字类型后，会出现数字加 .0 的，进行处理
-            if type(cell_value) is float and str(cell_value).split(".")[1] == "0":
-                cell_value = int(str(cell_value).split(".")[0])
-            if type(cell_value) is str:
-                cell_value = cell_value.strip(" \t\n\r")
-            if cell_value is None:
+            if cell_value is None or cell_value=='':
                 continue
+            elif value_type == 'date':
+                print(61, datetime.strptime(str(cell_value), '%Y-%m-%d %H:%M:%S').date())
+                try:
+                    cell_value = datetime.strptime(str(cell_value), '%Y-%m-%d %H:%M:%S').date()
+                except:
+                    raise CustomValidationError('日期格式不正确')
+            elif value_type == 'datetime':
+                cell_value = datetime.strptime(str(cell_value), '%Y-%m-%d %H:%M:%S')
+            else:
+            # 由于excel导入数字类型后，会出现数字加 .0 的，进行处理
+                if type(cell_value) is float and str(cell_value).split(".")[1] == "0":
+                    cell_value = int(str(cell_value).split(".")[0])
+                elif type(cell_value) is str:
+                    cell_value = cell_value.strip(" \t\n\r")
             if key in validation_data_dict:
                 array[key] = validation_data_dict.get(key, {}).get(cell_value, None)
                 if key in m2m_fields:

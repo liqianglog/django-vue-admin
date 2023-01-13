@@ -1,6 +1,6 @@
 import { request } from '@/api/service'
+import XEUtils from 'xe-utils'
 export const urlPrefix = '/api/system/dept/'
-
 /**
  * 列表查询
  */
@@ -62,5 +62,7 @@ export function DeptLazy (query) {
     url: '/api/system/dept_lazy_tree/',
     method: 'get',
     params: query
+  }).then(res => {
+    return XEUtils.toArrayTree(res.data, { parentKey: 'parent' })
   })
 }

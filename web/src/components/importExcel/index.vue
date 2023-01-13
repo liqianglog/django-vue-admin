@@ -3,36 +3,37 @@
     <el-button size="small" type="success" icon="el-icon-upload" @click="handleImport">
       <slot>导入</slot>
     </el-button>
-  <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
-    <el-upload
-      ref="upload"
-      :limit="1"
-      accept=".xlsx, .xls"
-      :headers="upload.headers"
-      :action="upload.url"
-      :disabled="upload.isUploading"
-      :on-progress="handleFileUploadProgress"
-      :on-success="handleFileSuccess"
-      :auto-upload="false"
-      drag
-    >
-      <i class="el-icon-upload" />
-      <div class="el-upload__text">
-        将文件拖到此处，或
-        <em>点击上传</em>
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
+      <div v-loading="loading">
+        <el-upload
+          ref="upload"
+          :limit="1"
+          accept=".xlsx, .xls"
+          :headers="upload.headers"
+          :action="upload.url"
+          :disabled="upload.isUploading"
+          :on-progress="handleFileUploadProgress"
+          :on-success="handleFileSuccess"
+          :auto-upload="false"
+          drag
+        >
+          <i class="el-icon-upload"/>
+          <div class="el-upload__text">
+            将文件拖到此处，或
+            <em>点击上传</em>
+          </div>
+          <div slot="tip" class="el-upload__tip" style="color:red">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+        </el-upload>
+        <div>
+          <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="importTemplate">下载导入模板</el-button>
+          <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="updateTemplate">批量更新模板</el-button>
+        </div>
       </div>
-      <div slot="tip" class="el-upload__tip">
-        <el-checkbox size="medium" label="是否更新已经存在的数据" border v-model="upload.updateSupport" />
-
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" :disabled="loading" @click="submitFileForm">确 定</el-button>
+        <el-button :disabled="loading" @click="upload.open = false">取 消</el-button>
       </div>
-      <div slot="tip" class="el-upload__tip" style="color:red">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
-    </el-upload>
-    <div><el-link type="primary" style="font-size:14px;margin-top: 20px" @click="importTemplate">下载模板</el-link></div>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitFileForm">确 定</el-button>
-      <el-button @click="upload.open = false">取 消</el-button>
-    </div>
-  </el-dialog>
+    </el-dialog>
   </div>
 </template>
 
@@ -63,11 +64,22 @@ export default {
         }
       }
     },
-    importApi: { // 导入接口地址
+    api: { // 导入接口地址
       type: String,
       default () {
         return undefined
       }
+    },
+    fieldOptions: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
+  data () {
+    return {
+      loading: false
     }
   },
   methods: {
@@ -78,7 +90,17 @@ export default {
     /** 下载模板操作 */
     importTemplate () {
       downloadFile({
-        url: util.baseURL() + this.importApi,
+        url: this.api + 'import_data/',
+        params: {},
+        method: 'get'
+      })
+    },
+    /***
+     * 批量更新模板
+     */
+    updateTemplate () {
+      downloadFile({
+        url: this.api + 'update_template/',
         params: {},
         method: 'get'
       })
@@ -92,17 +114,17 @@ export default {
       const that = this
       // that.upload.open = false
       that.upload.isUploading = false
+      that.loading = true
       that.$refs.upload.clearFiles()
       // 是否更新已经存在的用户数据
       return request({
-        url: that.importApi,
+        url: util.baseURL() + that.api + 'import_data/',
         method: 'post',
         data: {
-          url: response.data.url,
-          updateSupport: that.upload.updateSupport
+          url: response.data.url
         }
       }).then(response => {
-        // this.$alert("导入成功！", "导入结果", { dangerouslyUseHTMLString: true });
+        that.loading = false
         that.$alert('导入成功', '导入完成', {
           confirmButtonText: '确定',
           callback: action => {
