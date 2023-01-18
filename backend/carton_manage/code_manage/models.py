@@ -1,6 +1,6 @@
 from django.db import models
 
-from carton_manage.basics.models import CodePackageTemplate
+from carton_manage.basics_manage.models import CodePackageTemplate
 from dvadmin.utils.models import CoreModel
 
 table_prefix = "carton_"
