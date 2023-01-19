@@ -1,0 +1,19 @@
+{
+  "name": "@great-dream/dvadmin-celery-web",
+  "version": "1.0.2",
+  "description": "#### Description {**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/huge-dream/dvadmin-celery-web.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "author": "sheng",
+  "license": "MIT"
+}
