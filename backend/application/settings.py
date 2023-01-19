@@ -43,6 +43,18 @@ DEBUG = locals().get("DEBUG", True)
 ALLOWED_HOSTS = locals().get("ALLOWED_HOSTS", ["*"])
 
 # Application definition
+# 缓存连接
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f'{REDIS_URL}/1',
+        "KEY_FUNCTION": "django_tenants.cache.make_key",
+        "REVERSE_KEY_FUNCTION": "django_tenants.cache.reverse_key",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+}
 
 INSTALLED_APPS = [
     "django.contrib.auth",
@@ -401,6 +413,6 @@ TENANT_EXCLUSIVE_APPS = [
 ]
 from dvadmin_tenants.settings import *    # 租户
 # from dvadmin_upgrade_center.settings import *    # 升级中心
-# from dvadmin_celery.settings import *            # celery 异步任务
+from dvadmin_celery.settings import *            # celery 异步任务
 # ...
 # ********** 一键导入插件配置结束 **********
