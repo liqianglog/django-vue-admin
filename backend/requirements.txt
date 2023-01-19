@@ -47,3 +47,7 @@ uvicorn==0.20.0
 gunicorn==20.1.0
 gevent==22.10.2
 websockets==10.4
+django-tenants==3.3.2
+tenant-schemas-celery==1.0.1
+django-postgres-extra==2.0.4
+psycopg2-binary==2.9.1

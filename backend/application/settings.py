@@ -396,6 +396,10 @@ TENANT_SHARED_APPS = []
 PLUGINS_URL_PATTERNS = []
 # ********** 一键导入插件配置开始 **********
 # 例如:
+# 租户独享app，只在普通租户有
+TENANT_EXCLUSIVE_APPS = [
+]
+from dvadmin_tenants.settings import *    # 租户
 # from dvadmin_upgrade_center.settings import *    # 升级中心
 # from dvadmin_celery.settings import *            # celery 异步任务
 # ...

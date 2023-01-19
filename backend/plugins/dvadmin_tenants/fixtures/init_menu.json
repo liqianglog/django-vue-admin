@@ -1,0 +1,110 @@
+[
+    {
+        "name": "租户管理",
+        "icon": "truck",
+        "sort": 0,
+        "is_link": false,
+        "is_catalog": false,
+        "web_path": "",
+        "component": null,
+        "component_name": null,
+        "status": true,
+        "cache": false,
+        "visible": true,
+        "children": [
+            {
+                "name": "租户信息",
+                "icon": "building",
+                "sort": 1,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/tenantClient",
+                "component": "plugins/dvadmin-tenants-web/src/client",
+                "component_name": "tenantClient",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "单例",
+                        "value": "Retrieve",
+                        "api": "/api/api/tenant/client/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "查询",
+                        "value": "Search",
+                        "api": "/api/api/tenant/client/",
+                        "method": 0
+                    },
+                    {
+                        "name": "新增",
+                        "value": "Create",
+                        "api": "/api/api/tenant/client/",
+                        "method": 1
+                    },
+                    {
+                        "name": "编辑",
+                        "value": "Update",
+                        "api": "/api/api/tenant/client/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "删除",
+                        "value": "Delete",
+                        "api": "/api/api/tenant/client/{id}/",
+                        "method": 3
+                    }
+                ]
+            },
+            {
+                "name": "租户域名",
+                "icon": "shopping-basket",
+                "sort": 2,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/tenantDomain",
+                "component": "plugins/dvadmin-tenants-web/src/domain",
+                "component_name": "tenantDomain",
+                "status": true,
+                "cache": false,
+                "visible": false,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "查询",
+                        "value": "Search",
+                        "api": "/api/api/tenant/domain/",
+                        "method": 0
+                    },
+                    {
+                        "name": "单例",
+                        "value": "Retrieve",
+                        "api": "/api/api/tenant/domain/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "新增",
+                        "value": "Create",
+                        "api": "/api/api/tenant/domain/",
+                        "method": 1
+                    },
+                    {
+                        "name": "编辑",
+                        "value": "Update",
+                        "api": "/api/api/tenant/domain/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "删除",
+                        "value": "Delete",
+                        "api": "/api/api/tenant/domain/{id}/",
+                        "method": 3
+                    }
+                ]
+            }
+        ],
+        "menu_button": []
+    }
+]
