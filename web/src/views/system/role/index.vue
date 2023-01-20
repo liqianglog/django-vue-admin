@@ -1,26 +1,15 @@
 <template>
 	<fs-page>
 		<fs-crud ref="crudRef" v-bind="crudBinding">
-			<template #cell-rowHandle-right="scope">
-				<el-button class="row-handle-btn" type="warning" size="default" @click="handleOpenRoleDrawer(scope.row.id, scope.row.name)"
-					>权限管理</el-button
-				>
+			<template #cell_url="scope">
+				<el-tag size="small">{{ scope.row.url }}</el-tag>
 			</template>
 		</fs-crud>
-		<el-drawer v-model="state.roleVisible" direction="rtl" destroy-on-close size="65%">
-			<template #header="{ close, titleId, titleClass }">
-				当前角色
-				<div>
-					<el-tag size="default">{{ state.roleDrawerTitle }}</el-tag>
-				</div>
-			</template>
-			<span>Hi, there!</span>
-		</el-drawer>
 	</fs-page>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useExpose, useCrud } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './curd';
 
@@ -36,16 +25,6 @@ const { crudOptions } = createCrudOptions({ crudExpose });
 const { resetCrudOptions } = useCrud({ crudExpose, crudOptions });
 // 你可以调用此方法，重新初始化crud配置
 // resetCrudOptions(options)
-
-const state = reactive({
-	roleVisible: false,
-	roleDrawerTitle: '',
-});
-
-const handleOpenRoleDrawer = (sign: string, title: string) => {
-	state.roleDrawerTitle = title;
-	state.roleVisible = true;
-};
 
 // 页面打开后获取列表数据
 onMounted(() => {
