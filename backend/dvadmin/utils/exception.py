@@ -51,6 +51,6 @@ def CustomExceptionHandler(ex, context):
     #     set_rollback()
     #     msg = "接口服务器异常,请联系管理员"
     elif isinstance(ex, Exception):
-        logger.error(traceback.format_exc())
+        logger.exception(traceback.format_exc())
         msg = str(ex)
     return ErrorResponse(msg=msg, code=code)
