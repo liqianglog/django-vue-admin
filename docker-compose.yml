@@ -1,7 +1,7 @@
 version: "3"
 services:
-  dvadmin-web:
-    container_name: dvadmin-web
+  dvadmin3-web:
+    container_name: dvadmin3-web
     ports:
       - "8080:8080"
     build:
@@ -17,18 +17,18 @@ services:
       network:
         ipv4_address: 177.10.0.11
 
-  dvadmin-django:
+  dvadmin3-django:
     build:
       context: .
       dockerfile: ./docker_env/django/Dockerfile
-    container_name: dvadmin-django
+    container_name: dvadmin3-django
     working_dir: /backend
 # 打开mysql 时，打开此选项
 #    depends_on:
-#      - dvadmin-mysql
+#      - dvadmin3-mysql
     environment:
       PYTHONUNBUFFERED: 1
-      DATABASE_HOST: dvadmin-mysql
+      DATABASE_HOST: dvadmin3-mysql
       TZ: Asia/Shanghai
     volumes:
       - ./backend:/backend
@@ -42,9 +42,9 @@ services:
       network:
         ipv4_address: 177.10.0.12
 
-#  dvadmin-mysql:
+#  dvadmin3-mysql:
 #    image: mysql:5.7
-#    container_name: dvadmin-mysql
+#    container_name: dvadmin3-mysql
 #    #使用该参数，container内的root拥有真正的root权限，否则，container内的root只是外部的一个普通用户权限
 #    #设置为true，不然数据卷可能挂载不了，启动不起
 ##    privileged: true
@@ -53,7 +53,7 @@ services:
 #      - "3306:3306"
 #    environment:
 #      MYSQL_ROOT_PASSWORD: "123456"
-#      MYSQL_DATABASE: "dvadmin_pro"
+#      MYSQL_DATABASE: "dvadmin3_pro"
 #      TZ: Asia/Shanghai
 #    command:
 #      --wait_timeout=31536000
@@ -70,18 +70,18 @@ services:
 
 
 # 如果使用celery 插件，请自行打开此注释
-#  dvadmin-celery:
+#  dvadmin3-celery:
 #    build:
 #      context: .
 #      dockerfile: ./docker_env/celery/Dockerfile
 #    # image: django:2.2
-#    container_name: dvadmin-celery
+#    container_name: dvadmin3-celery
 #    working_dir: /backend
 #    depends_on:
-#      - dvadmin-mysql
+#      - dvadmin3-mysql
 #    environment:
 #      PYTHONUNBUFFERED: 1
-#      DATABASE_HOST: dvadmin-mysql
+#      DATABASE_HOST: dvadmin3-mysql
 #      TZ: Asia/Shanghai
 #    volumes:
 #      - ./backend:/backend
@@ -92,9 +92,9 @@ services:
 #        ipv4_address: 177.10.0.14
 
 
-# dvadmin-redis:
+# dvadmin3-redis:
 #   image: redis:6.2.6-alpine # 指定服务镜像，最好是与之前下载的redis配置文件保持一致
-#   container_name: dvadmin-redis # 容器名称
+#   container_name: dvadmin3-redis # 容器名称
 #   restart: on-failure # 重启方式
 #   environment:
 #     - TZ=Asia/Shanghai # 设置时区

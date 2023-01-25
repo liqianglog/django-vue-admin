@@ -4,9 +4,9 @@
 
 ~~~sh
 # 编译打包到本地
-docker build -f ./docker_env/web/DockerfileBuild -t registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/node14-base-web:latest .
+docker build -f ./docker_env/web/DockerfileBuild -t registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/dvadmin3-base-web:latest .
 # 上传到阿里云仓库
-docker push registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/node14-base-web:latest
+docker push registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/dvadmin3-base-web:latest
 
 ~~~
 
@@ -14,9 +14,9 @@ docker push registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/node14-base-web:lat
 
 ~~~sh
 # 编译打包到本地
-docker build -f ./docker_env/django/DockerfileBuild -t registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/python310-base-backend:latest .
+docker build -f ./docker_env/django/DockerfileBuild -t registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/dvadmin3-base-backend:latest .
 # 上传到阿里云仓库
-docker push registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/python310-base-backend:latest
+docker push registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/dvadmin3-base-backend:latest
 ~~~
 
 ### 运行前端

@@ -1,4 +1,4 @@
 FROM node:14-alpine
-WORKDIR /web/
+WORKDIR /
 COPY ./web/package.json .
-RUN npm install --registry=https://registry.npm.taobao.org
+RUN npm install -g cnpm --registry=https://registry.npm.taobao.org && cnpm install --registry=https://registry.npm.taobao.org

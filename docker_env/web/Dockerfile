@@ -1,8 +1,7 @@
-FROM registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/node14-base-web:latest
+FROM registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/dvadmin3-base-web:latest
 WORKDIR /web/
 COPY web/. .
-RUN npm install --registry=https://registry.npm.taobao.org
-RUN npm run build
+RUN cnpm run build
 
 FROM nginx:alpine
 COPY ./docker_env/nginx/my.conf /etc/nginx/conf.d/my.conf
