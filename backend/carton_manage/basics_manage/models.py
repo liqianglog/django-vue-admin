@@ -1,11 +1,12 @@
 import random
 
-from django.db import models
+from django.db import models, connection
 from django.db.models import CASCADE
 
 from dvadmin.system.models import Users
 from dvadmin.utils.models import CoreModel
 from dvadmin.utils.string_util import random_str
+from dvadmin_tenants.models import Client
 
 table_prefix = "carton_"
 
@@ -51,7 +52,6 @@ class ProductionLine(CoreModel):
         return f"{self.name}"
 
 def default_code():
-    from tenant_backend.models import Client
     client = Client.objects.filter(schema_name=connection.tenant.schema_name).first()
     schema_id = client.id
     return f"{schema_id}{random_str(number=8)}"
