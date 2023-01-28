@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from basics_manage.models import DeviceManage, default_code, default_bind_pwd
 from dvadmin.system.models import Users, Role
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -8,7 +10,8 @@ class DeviceManageSerializer(CustomModelSerializer):
     """
     生产设备管理-序列化器
     """
-
+    production_line_name = serializers.CharField(source='production_line.name')
+    factory_name = serializers.CharField(source='production_line.belong_to_factory.name')
     class Meta:
         model = DeviceManage
         fields = "__all__"

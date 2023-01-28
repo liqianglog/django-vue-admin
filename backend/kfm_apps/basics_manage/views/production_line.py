@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from basics_manage.models import ProductionLine
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -7,7 +9,7 @@ class ProductionLineSerializer(CustomModelSerializer):
     """
     产线信息-序列化器
     """
-
+    belong_to_factory_name = serializers.CharField(source='belong_to_factory.name')
     class Meta:
         model = ProductionLine
         fields = "__all__"
