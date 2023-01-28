@@ -1,8 +1,4 @@
-import django_filters
-from rest_framework import serializers
-
-from carton_manage.basics_manage.models import ProductionLine
-from dvadmin.system.models import Dept
+from basics_manage.models import ProductionLine
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 

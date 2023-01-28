@@ -1,6 +1,6 @@
 from django.db import models
 
-from carton_manage.basics_manage.models import DeviceManage, ProductionLine, FactoryInfo
+from basics_manage.models import DeviceManage, ProductionLine, FactoryInfo
 from carton_manage.code_manage.models import CodePackage
 from dvadmin.utils.models import CoreModel
 

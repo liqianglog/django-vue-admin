@@ -1,4 +1,4 @@
-from carton_manage.basics_manage.models import DeviceManage, default_code, default_bind_pwd
+from basics_manage.models import DeviceManage, default_code, default_bind_pwd
 from dvadmin.system.models import Users, Role
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet

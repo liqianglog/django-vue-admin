@@ -1,4 +1,4 @@
-from carton_manage.basics_manage.models import FactoryInfo
+from basics_manage.models import FactoryInfo
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 
