@@ -329,7 +329,8 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
     "ROTATE_REFRESH_TOKENS": True,
 }
-
+# 设置app token 的有效时间
+APP_ACCESS_TOKEN_LIFETIME = timedelta(days=180)
 # ====================================#
 # ****************swagger************#
 # ====================================#

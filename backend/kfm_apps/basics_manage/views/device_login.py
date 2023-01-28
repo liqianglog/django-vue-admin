@@ -1,21 +1,30 @@
+# -*- coding: utf-8 -*-
+
+"""
+@author: 猿小天
+@contact: QQ:1638245306
+@Created on: 2021/12/3 003 19:10
+@Remark:
+"""
 from urllib.parse import urlsplit
 
+from django.conf import settings
 from django.contrib.auth.models import update_last_login
 from django.db import connection
 from django_tenants.utils import schema_context
-from rest_framework import serializers, exceptions
+from rest_framework import exceptions
+from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from application import settings
 from application.settings import APP_ACCESS_TOKEN_LIFETIME
-from basics_manage.models import DeviceManage, default_code, default_bind_pwd
-from dvadmin.system.models import Users, Role
+from basic_management.models import Device
+from dvadmin.utils.permission import AnonymousUserPermission
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
-from dvadmin_tenants.models import Client, Domain
+from tenant_backend.models import Domain, Client
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -31,6 +40,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         Refresh.lifetime = APP_ACCESS_TOKEN_LIFETIME
         token = Refresh.for_user(user)
         # Add custom claims
+        token['name'] = user.name
         token['production_line_id'] = user.production_line_id
         token['device_id'] = user.device_id
         return token
@@ -47,7 +57,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # 通过设备编号从所有租户中获取设备
         for schema_name in schema_name_list:
             with schema_context(schema_name):
-                _DeviceManage = DeviceManage.objects.filter(no=attrs.get('device_code')).first()
+                _DeviceManage = Device.objects.filter(no=attrs.get('device_code')).first()
                 if _DeviceManage:
                     _schema_name = schema_name
                     domain_obj = Domain.objects.filter(is_primary=True, tenant__schema_name=schema_name).first()
@@ -86,64 +96,38 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             }
 
 
-class DeviceManageLogin(TokenObtainPairView):
+class DeviceLogin(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
-class DeviceManageSerializer(CustomModelSerializer):
+class DeviceSerializer(CustomModelSerializer):
     """
-    生产设备管理-序列化器
+    设备管理-序列化器
     """
-    production_line_name = serializers.CharField(source='production_line.name')
-    factory_name = serializers.CharField(source='production_line.belong_to_factory.name')
+    production_status_label = serializers.SerializerMethodField(help_text="生产状态")
+    type_label = serializers.SerializerMethodField(help_text="设备类型")
+
+    def get_production_status_label(self, instance):
+        return instance.get_production_status_display()
+
+    def get_type_label(self, instance):
+        return instance.get_type_display()
 
     class Meta:
-        model = DeviceManage
+        model = Device
         fields = "__all__"
         read_only_fields = ["id"]
 
 
-class DeviceManageCreateSerializer(CustomModelSerializer):
+class DeviceViewSet(CustomModelViewSet):
     """
-    设备管理-新增序列化器
+    设备管理接口
+    list:查询
+    create:新增
+    update:修改
+    retrieve:详情
+    destroy:删除
     """
-
-    class Meta:
-        model = DeviceManage
-        fields = "__all__"
-        read_only_fields = ["id"]
-
-    def create(self, validated_data):
-        no = default_code()
-        password = default_bind_pwd()
-        validated_data['no'] = no
-        validated_data['password'] = password
-        name = "[device]" + no
-        user = Users.objects.create(username=no, password="", is_active=True, name=name, user_type=2,
-                                    dept_id=self.request.user.dept_id or None)
-        role_obj = Role.objects.filter(key='device_manage').first()
-        if role_obj:
-            user.role.set([role_obj.id])
-        validated_data['user'] = user
-        return super().create(validated_data)
-
-
-class DeviceManageUpdateSerializer(CustomModelSerializer):
-    """
-    生产设备管理 创建/更新时的列化器
-    """
-
-    class Meta:
-        model = DeviceManage
-        fields = '__all__'
-
-
-class DeviceManageViewSet(CustomModelViewSet):
-    """
-    生产设备管理接口:
-    """
-    queryset = DeviceManage.objects.all()
-    serializer_class = DeviceManageSerializer
-    create_serializer_class = DeviceManageCreateSerializer
-    update_serializer_class = DeviceManageUpdateSerializer
-    search_fields = ['no', 'name']
+    queryset = Device.objects.all()
+    serializer_class = DeviceSerializer
+    permission_classes = [AnonymousUserPermission]

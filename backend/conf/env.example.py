@@ -40,3 +40,4 @@ LOGIN_NO_CAPTCHA_AUTH = False
 # ================================================= #
 
 ALLOWED_HOSTS = ["*"]
+ENVIRONMENT = "local" # 环境，test 测试环境;prod线上环境;local本地环境
