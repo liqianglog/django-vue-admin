@@ -115,7 +115,6 @@ CODE_TYPE = (
 
 class CodePackageTemplate(CoreModel):
     no = models.CharField(max_length=100, unique=True, help_text="编号", verbose_name="编号")
-    name = models.CharField(max_length=50, null=True, blank=True, help_text="名称", verbose_name="名称")
     code_version = models.CharField(max_length=50, null=True, blank=True, help_text="模板版号", verbose_name="模板版号")
     code_source = models.IntegerField(choices=CODE_SOURCE, default=1, blank=True, help_text="编码来源",
                                       verbose_name="编码来源")

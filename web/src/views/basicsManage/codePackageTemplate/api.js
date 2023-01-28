@@ -6,11 +6,18 @@ export function GetList (query) {
   return request({
     url: urlPrefix,
     method: 'get',
-    params: { ...query }
+    params: query
   })
 }
 
-export function AddObj (obj) {
+export function GetObj (obj) {
+  return request({
+    url: urlPrefix + obj.id + '/',
+    method: 'get'
+  })
+}
+
+export function createObj (obj) {
   return request({
     url: urlPrefix,
     method: 'post',
