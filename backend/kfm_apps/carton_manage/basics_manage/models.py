@@ -10,7 +10,7 @@ from dvadmin_tenants.models import Client
 
 table_prefix = "carton_"
 
-status_CHOICES = (
+STATUS_CHOICES = (
     (0, "失效"),
     (1, "有效"),
 )
@@ -22,7 +22,7 @@ class FactoryInfo(CoreModel):
     address = models.CharField(max_length=200, verbose_name="详细地址", help_text="详细地址", null=True, blank=True)
     telephone = models.CharField(max_length=20, verbose_name="手机号码", help_text="手机号码", null=True, blank=True)
     contacts = models.CharField(max_length=20, verbose_name="联系人", help_text="联系人", null=True, blank=True)
-    status = models.IntegerField(choices=status_CHOICES, default=1, verbose_name="状态", help_text="状态")
+    status = models.IntegerField(choices=STATUS_CHOICES, default=1, verbose_name="状态", help_text="状态")
 
     class Meta:
         db_table = table_prefix + "factory_info"
@@ -38,8 +38,8 @@ class ProductionLine(CoreModel):
     code = models.CharField(max_length=50, verbose_name="编号", help_text="编号", null=True, blank=True, unique=True,
                             db_index=True)
     name = models.CharField(max_length=20, verbose_name="产线名称", help_text="产线名称")
-    status = models.IntegerField(choices=status_CHOICES, default=1, verbose_name="状态", help_text="状态")
-    belong_to_factory = models.ForeignKey(to='FactoryInfo', on_delete=CASCADE,related_name='fact_prodline', verbose_name="归属工厂", db_constraint=False,
+    status = models.IntegerField(choices=STATUS_CHOICES, default=1, verbose_name="状态", help_text="状态")
+    belong_to_factory = models.ForeignKey(to='FactoryInfo', on_delete=CASCADE,related_name='factory_info', verbose_name="归属工厂", db_constraint=False,
                                           help_text="归属工厂", null=True, blank=True,)
 
     class Meta:

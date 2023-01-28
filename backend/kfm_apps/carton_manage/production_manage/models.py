@@ -1,6 +1,6 @@
 from django.db import models
 
-from carton_manage.basics_manage.models import Device, ProductionLine, FactoryInfo
+from carton_manage.basics_manage.models import DeviceManage, ProductionLine, FactoryInfo
 from carton_manage.code_manage.models import CodePackage
 from dvadmin.utils.models import CoreModel
 
@@ -21,7 +21,7 @@ class ProductionWork(CoreModel):
     no = models.CharField(max_length=200,help_text="工单编号",verbose_name="工单编号")
     order_id = models.CharField(max_length=100, blank=True, help_text="订单编号", verbose_name="订单编号")
     batch_no = models.CharField(max_length=100, null=True,blank=True, help_text="批次号", verbose_name="批次号")
-    device = models.ForeignKey(Device,db_constraint=False,on_delete=models.CASCADE,related_name="prod_device",help_text="关联设备",verbose_name="关联设备")
+    device = models.ForeignKey(DeviceManage,db_constraint=False,on_delete=models.CASCADE,related_name="prod_device",help_text="关联设备",verbose_name="关联设备")
     production_line = models.ForeignKey(ProductionLine, db_constraint=False, on_delete=models.CASCADE, related_name="prod_production_line",
                                help_text="关联产线", verbose_name="关联产线")
     factory_info = models.ForeignKey(FactoryInfo, db_constraint=False, on_delete=models.CASCADE,
