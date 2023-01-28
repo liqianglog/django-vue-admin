@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
+from rest_framework.decorators import action
 
 from dvadmin.utils.json_response import DetailResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -81,7 +82,7 @@ class ProductionWorkViewSet(CustomModelViewSet):
             if code_package_instance is None:
                 return ErrorResponse(msg="未查询到码包号")
             else:
-                # TODO 获取设备的一些心想
+                # TODO 获取设备的一些信息
                 create_data = {
                     "no":work_no,
                     "code_package":code_pack_id,
@@ -89,3 +90,21 @@ class ProductionWorkViewSet(CustomModelViewSet):
                 }
                 
     """
+    @action(methods=['post'],detail=False)
+    def change(self,request):
+        #生产工单变化
+        data = request.data
+        work_no =data.get('work_no',None)
+        print_position = data.get('print_position',None)
+        work_status = data.get('work_status',None)
+        if work_no is None:
+            return ErrorResponse(msg="未获取到生产工单号")
+        else:
+            production_work_instance = ProductionWork.objects.filter(no=work_no).first()
+            if production_work_instance is None:
+                return ErrorResponse(msg="未查询到生产工单号")
+            else:
+                production_work_instance.print_position = print_position
+                production_work_instance.status = work_status
+                production_work_instance.save()
+                return DetailResponse(msg="更新成功")
