@@ -59,7 +59,7 @@ def default_code():
 def default_bind_pwd():
     return random.randint(10000000, 99999999)
 
-class Device(CoreModel):
+class DeviceManage(CoreModel):
     name = models.CharField(max_length=50, help_text="设备名称",verbose_name="设备名称")
     no = models.CharField(max_length=100, unique=True,blank=True,default=default_code, help_text="编号",verbose_name="编号")
     password = models.CharField(max_length=100, blank=True,default=default_bind_pwd,help_text="设备登录密码",verbose_name="设备登录密码")
@@ -79,8 +79,8 @@ class Device(CoreModel):
     production_line = models.ForeignKey(ProductionLine, db_constraint=False, related_name="device_prodline",
                                         on_delete=models.CASCADE, help_text="所属产线", verbose_name="所属产线")
     class Meta:
-        db_table = table_prefix + "production_device"
-        verbose_name = '生产设备表'
+        db_table = table_prefix + "device_manage"
+        verbose_name = '生产设备管理'
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
 

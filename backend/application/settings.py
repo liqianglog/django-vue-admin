@@ -30,6 +30,8 @@ from conf.env import *
 SECRET_KEY = "django-insecure--z8%exyzt7e_%i@1+#1mm=%lb5=^fx_57=1@a+_y7bg5-w%)sm"
 # 初始化plugins插件路径到环境变量中
 PLUGINS_PATH = os.path.join(BASE_DIR, "plugins")
+APPS_PATH = os.path.join(BASE_DIR, "kfm_apps")
+sys.path.insert(0, os.path.join(APPS_PATH))
 sys.path.insert(0, os.path.join(PLUGINS_PATH))
 
 [
@@ -71,6 +73,9 @@ INSTALLED_APPS = [
     "captcha",
     'channels',
 ]
+from kfm_apps.settings import INSTALLED_APPS as APPS_INSTALLED_APPS
+
+INSTALLED_APPS += APPS_INSTALLED_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -104,7 +109,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "application.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -411,8 +415,9 @@ PLUGINS_URL_PATTERNS = []
 # 租户独享app，只在普通租户有
 TENANT_EXCLUSIVE_APPS = [
 ]
-from dvadmin_tenants.settings import *    # 租户
+
+from dvadmin_tenants.settings import *  # 租户
 # from dvadmin_upgrade_center.settings import *    # 升级中心
-from dvadmin_celery.settings import *            # celery 异步任务
+from dvadmin_celery.settings import *  # celery 异步任务
 # ...
 # ********** 一键导入插件配置结束 **********

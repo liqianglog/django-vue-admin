@@ -1,0 +1,11 @@
+[
+    {
+        "name": "设备管理用户",
+        "key": "device_manage",
+        "sort": 3,
+        "status": true,
+        "admin": true,
+        "data_range": 3,
+        "remark": null
+    }
+]

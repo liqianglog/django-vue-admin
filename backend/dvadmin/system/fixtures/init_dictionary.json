@@ -2,7 +2,6 @@
     {
         "label": "启用/禁用-布尔值",
         "value": "button_status_bool",
-        "parent": null,
         "type": 0,
         "color": null,
         "is_value": false,
@@ -13,7 +12,6 @@
             {
                 "label": "启用",
                 "value": "true",
-                "parent": 1,
                 "type": 6,
                 "color": null,
                 "is_value": true,
@@ -25,7 +23,6 @@
             {
                 "label": "禁用",
                 "value": "false",
-                "parent": 1,
                 "type": 6,
                 "color": null,
                 "is_value": true,
@@ -39,7 +36,6 @@
     {
         "label": "系统按钮",
         "value": "system_button",
-        "parent": null,
         "type": 0,
         "color": null,
         "is_value": false,
@@ -50,7 +46,6 @@
             {
                 "label": "新增",
                 "value": "Create",
-                "parent": 66,
                 "type": 0,
                 "color": "success",
                 "is_value": true,
@@ -62,7 +57,6 @@
             {
                 "label": "编辑",
                 "value": "Update",
-                "parent": 66,
                 "type": 0,
                 "color": "primary",
                 "is_value": true,
@@ -74,7 +68,6 @@
             {
                 "label": "删除",
                 "value": "Delete",
-                "parent": 66,
                 "type": 0,
                 "color": "danger",
                 "is_value": true,
@@ -86,7 +79,6 @@
             {
                 "label": "详情",
                 "value": "Retrieve",
-                "parent": 66,
                 "type": 0,
                 "color": "info",
                 "is_value": true,
@@ -98,7 +90,6 @@
             {
                 "label": "查询",
                 "value": "Search",
-                "parent": 66,
                 "type": 0,
                 "color": "warning",
                 "is_value": true,
@@ -110,7 +101,6 @@
             {
                 "label": "保存",
                 "value": "Save",
-                "parent": 66,
                 "type": 0,
                 "color": "success",
                 "is_value": true,
@@ -122,7 +112,6 @@
             {
                 "label": "导入",
                 "value": "Import",
-                "parent": 66,
                 "type": 0,
                 "color": "primary",
                 "is_value": true,
@@ -134,7 +123,6 @@
             {
                 "label": "导出",
                 "value": "Export",
-                "parent": 66,
                 "type": 0,
                 "color": "warning",
                 "is_value": true,
@@ -148,7 +136,6 @@
     {
         "label": "启用/禁用-数字值",
         "value": "button_status_number",
-        "parent": null,
         "type": 0,
         "color": null,
         "is_value": false,
@@ -159,7 +146,6 @@
             {
                 "label": "启用",
                 "value": "1",
-                "parent": 7,
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -171,7 +157,6 @@
             {
                 "label": "禁用",
                 "value": "0",
-                "parent": 7,
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -185,7 +170,6 @@
     {
         "label": "是/否-布尔值",
         "value": "button_whether_bool",
-        "parent": null,
         "type": 0,
         "color": null,
         "is_value": false,
@@ -196,7 +180,6 @@
             {
                 "label": "是",
                 "value": "true",
-                "parent": 5,
                 "type": 6,
                 "color": null,
                 "is_value": true,
@@ -208,7 +191,6 @@
             {
                 "label": "否",
                 "value": "false",
-                "parent": 5,
                 "type": 6,
                 "color": null,
                 "is_value": true,
@@ -222,7 +204,6 @@
     {
         "label": "是/否-数字值",
         "value": "button_whether_number",
-        "parent": null,
         "type": 0,
         "color": null,
         "is_value": false,
@@ -233,7 +214,6 @@
             {
                 "label": "是",
                 "value": "1",
-                "parent": 10,
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -245,7 +225,6 @@
             {
                 "label": "否",
                 "value": "2",
-                "parent": 10,
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -259,7 +238,6 @@
     {
         "label": "用户类型",
         "value": "user_type",
-        "parent": null,
         "type": 0,
         "color": null,
         "is_value": false,
@@ -268,9 +246,19 @@
         "remark": null,
         "children": [
             {
-                "label": "后台用户",
+                "label": "后台管理用户",
                 "value": "0",
-                "parent": 15,
+                "type": 1,
+                "color": null,
+                "is_value": true,
+                "status": true,
+                "sort": 0,
+                "remark": null,
+                "children": []
+            },
+            {
+                "label": "小程序用户",
+                "value": "1",
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -280,9 +268,8 @@
                 "children": []
             },
             {
-                "label": "前台用户",
-                "value": "1",
-                "parent": 15,
+                "label": "设备用户",
+                "value": "2",
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -296,7 +283,6 @@
     {
         "label": "表单类型",
         "value": "config_form_type",
-        "parent": null,
         "type": 0,
         "color": null,
         "is_value": false,
@@ -307,7 +293,6 @@
             {
                 "label": "text",
                 "value": "0",
-                "parent": 49,
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -319,7 +304,6 @@
             {
                 "label": "textarea",
                 "value": "3",
-                "parent": 49,
                 "type": 1,
                 "color": "",
                 "is_value": true,
@@ -331,7 +315,6 @@
             {
                 "label": "number",
                 "value": "10",
-                "parent": 49,
                 "type": 1,
                 "color": "",
                 "is_value": true,
@@ -343,7 +326,6 @@
             {
                 "label": "datetime",
                 "value": "1",
-                "parent": 49,
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -355,7 +337,6 @@
             {
                 "label": "date",
                 "value": "2",
-                "parent": 49,
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -367,7 +348,6 @@
             {
                 "label": "time",
                 "value": "15",
-                "parent": 49,
                 "type": 1,
                 "color": "",
                 "is_value": true,
@@ -379,7 +359,6 @@
             {
                 "label": "select",
                 "value": "4",
-                "parent": 49,
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -391,7 +370,6 @@
             {
                 "label": "checkbox",
                 "value": "5",
-                "parent": 49,
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -403,7 +381,6 @@
             {
                 "label": "radio",
                 "value": "6",
-                "parent": 49,
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -415,7 +392,6 @@
             {
                 "label": "switch",
                 "value": "9",
-                "parent": 49,
                 "type": 1,
                 "color": "",
                 "is_value": true,
@@ -427,7 +403,6 @@
             {
                 "label": "文件附件",
                 "value": "8",
-                "parent": 49,
                 "type": 1,
                 "color": "",
                 "is_value": true,
@@ -439,7 +414,6 @@
             {
                 "label": "图片(单张)",
                 "value": "7",
-                "parent": 49,
                 "type": 1,
                 "color": "",
                 "is_value": true,
@@ -451,7 +425,6 @@
             {
                 "label": "图片(多张)",
                 "value": "12",
-                "parent": 49,
                 "type": 1,
                 "color": "",
                 "is_value": true,
@@ -463,7 +436,6 @@
             {
                 "label": "数组",
                 "value": "11",
-                "parent": 49,
                 "type": 1,
                 "color": "",
                 "is_value": true,
@@ -475,7 +447,6 @@
             {
                 "label": "关联表",
                 "value": "13",
-                "parent": 49,
                 "type": 1,
                 "color": "",
                 "is_value": true,
@@ -487,7 +458,6 @@
             {
                 "label": "关联表(多选)",
                 "value": "14",
-                "parent": 49,
                 "type": 1,
                 "color": "",
                 "is_value": true,
@@ -501,7 +471,6 @@
     {
         "label": "性别",
         "value": "gender",
-        "parent": null,
         "type": 0,
         "color": null,
         "is_value": false,
@@ -512,7 +481,6 @@
             {
                 "label": "未知",
                 "value": "0",
-                "parent": 18,
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -524,7 +492,6 @@
             {
                 "label": "男",
                 "value": "1",
-                "parent": 18,
                 "type": 1,
                 "color": null,
                 "is_value": true,
@@ -536,7 +503,6 @@
             {
                 "label": "女",
                 "value": "2",
-                "parent": 18,
                 "type": 1,
                 "color": null,
                 "is_value": true,
