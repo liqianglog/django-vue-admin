@@ -1,6 +1,7 @@
-from django.urls import path
+from django.urls import path, re_path
 from rest_framework import routers
 
+from application import settings
 from dvadmin.system.views.api_white_list import ApiWhiteListViewSet
 from dvadmin.system.views.area import AreaViewSet
 from dvadmin.system.views.dept import DeptViewSet
@@ -39,5 +40,6 @@ urlpatterns = [
     path('login_log/', LoginLogViewSet.as_view({'get': 'list'})),
     path('login_log/<int:pk>/', LoginLogViewSet.as_view({'get': 'retrieve'})),
     path('dept_lazy_tree/', DeptViewSet.as_view({'get': 'dept_lazy_tree'})),
+    re_path(r'^download/(files/.*)$', FileViewSet.get_file_response, {'document_root': settings.MEDIA_ROOT})
 ]
 urlpatterns += system_url.urls
