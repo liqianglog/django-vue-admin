@@ -4,7 +4,7 @@ from rest_framework import serializers
 from dvadmin.utils.json_response import DetailResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
-from kfm_apps.basics_manage.models import CodePackageTemplate
+from basics_manage.models import CodePackageTemplate
 
 
 class CodePackageTemplateSerializer(CustomModelSerializer):

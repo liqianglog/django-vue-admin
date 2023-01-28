@@ -1,7 +1,7 @@
 from django.db import models
 
 from dvadmin.utils.models import CoreModel
-from kfm_apps.basics_manage.models import CodePackageTemplate
+from basics_manage.models import CodePackageTemplate
 
 table_prefix = "carton_"
 

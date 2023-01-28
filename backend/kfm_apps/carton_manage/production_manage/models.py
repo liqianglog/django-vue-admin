@@ -2,7 +2,7 @@ from django.db import models
 
 from basics_manage.models import DeviceManage, ProductionLine, FactoryInfo
 from dvadmin.utils.models import CoreModel
-from kfm_apps.carton_manage.code_manage.models import CodePackage
+from carton_manage.code_manage.models import CodePackage
 
 table_prefix = "carton_"
 
