@@ -1,0 +1,110 @@
+[
+  {
+    "name": "码包管理",
+    "icon": "qrcode",
+    "sort": 3,
+    "is_link": false,
+    "is_catalog": true,
+    "web_path": "",
+    "component": "",
+    "component_name": "",
+    "status": true,
+    "cache": false,
+    "visible": true,
+    "children": [
+      {
+        "name": "正常码包",
+        "icon": "qrcode",
+        "sort": 1,
+        "is_link": false,
+        "is_catalog": false,
+        "web_path": "/codePackage",
+        "component": "cartonManage/codeManage/codePackage/index",
+        "component_name": "factoryInfo",
+        "status": true,
+        "cache": true,
+        "visible": true,
+        "children": [],
+        "menu_button": [
+          {
+            "name": "查询",
+            "value": "Search",
+            "api": "/api/basics_manage/factory_info/",
+            "method": 0
+          },
+          {
+            "name": "详情",
+            "value": "Retrieve",
+            "api": "/api/basics_manage/factory_info/{id}/",
+            "method": 0
+          },
+          {
+            "name": "新增",
+            "value": "Create",
+            "api": "/api/basics_manage/factory_info/",
+            "method": 1
+          },
+          {
+            "name": "编辑",
+            "value": "Update",
+            "api": "/api/basics_manage/factory_info/{id}/",
+            "method": 2
+          },
+          {
+            "name": "删除",
+            "value": "Delete",
+            "api": "/api/basics_manage/factory_info/{id}/",
+            "method": 3
+          }
+        ]
+      },
+      {
+        "name": "重码记录",
+        "icon": "qrcode",
+        "sort": 2,
+        "is_link": false,
+        "is_catalog": false,
+        "web_path": "/codeRepetitionRecord",
+        "component": "cartonManage/codeManage/codeRepetitionRecord/index",
+        "component_name": "productionLine",
+        "status": true,
+        "cache": true,
+        "visible": true,
+        "children": [],
+        "menu_button": [
+          {
+            "name": "查询",
+            "value": "Search",
+            "api": "/api/basics_manage/production_line/",
+            "method": 0
+          },
+          {
+            "name": "详情",
+            "value": "Retrieve",
+            "api": "/api/basics_manage/production_line/{id}/",
+            "method": 0
+          },
+          {
+            "name": "新增",
+            "value": "Create",
+            "api": "/api/basics_manage/production_line/",
+            "method": 1
+          },
+          {
+            "name": "编辑",
+            "value": "Update",
+            "api": "/api/basics_manage/production_line/{id}/",
+            "method": 2
+          },
+          {
+            "name": "删除",
+            "value": "Delete",
+            "api": "/api/basics_manage/production_line/{id}/",
+            "method": 3
+          }
+        ]
+      }
+    ],
+    "menu_button": []
+  }
+]

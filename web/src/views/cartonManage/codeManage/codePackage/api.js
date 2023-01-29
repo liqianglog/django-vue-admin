@@ -1,8 +1,12 @@
-import { request } from '@/api/service'
 
-export const urlPrefix = '/api/basics_manage/factory_info/'
+import { request } from '@/api/service'
+export const urlPrefix = 'api/production/brand_owner_order/'
 
 export function GetList (query) {
+  if (sessionStorage.getItem('brandOwnerId')) {
+    query.brand_owner = sessionStorage.getItem('brandOwnerId')
+  }
+  query.limit = 999
   return request({
     url: urlPrefix,
     method: 'get',
@@ -10,14 +14,18 @@ export function GetList (query) {
   })
 }
 
-export function GetObj (obj) {
+/**
+ * 获取单例
+ */
+export function getObj (params) {
   return request({
-    url: urlPrefix + obj.id + '/',
-    method: 'get'
+    url: urlPrefix + params.id + '/',
+    method: 'get',
+    params: params
   })
 }
 
-export function createObj (obj) {
+export function AddObj (obj) {
   return request({
     url: urlPrefix,
     method: 'post',
@@ -32,11 +40,55 @@ export function UpdateObj (obj) {
     data: obj
   })
 }
-
 export function DelObj (id) {
   return request({
     url: urlPrefix + id + '/',
-    method: 'delete',
-    data: { id }
+    method: 'delete'
+  })
+}
+
+/**
+ * 创建订单
+ */
+export function createOrder (obj) {
+  return request({
+    url: urlPrefix + 'create_order/',
+    method: 'post',
+    data: obj
+  })
+}
+
+/**
+ * 获取码包详情
+ */
+export function getCodePackage (params) {
+  return request({
+    url: 'api/production/code_package/',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 获取导入报告
+ * @param {*} params
+ * @returns
+ */
+export function getExportReport (params) {
+  return request({
+    url: urlPrefix + 'export_report/' + params.id + '/',
+    method: 'get'
+  })
+}
+
+/**
+ * 数据归档
+ * @param {*} params
+ * @returns
+ */
+export function placeOnFile (params) {
+  return request({
+    url: urlPrefix + 'place_on_file/' + params.id + '/',
+    method: 'post'
   })
 }
