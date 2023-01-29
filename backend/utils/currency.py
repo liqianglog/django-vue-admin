@@ -106,7 +106,7 @@ def file_now_datetime():
     """
     from django.utils import timezone
     now = timezone.now()
-    return now.strftime("%Y%m%d%H:%M:%S")
+    return now.strftime("%Y%m%d%H%M%S")
 
 
 def zip_compress_file(source_file_path, target_file_path, is_rm=False):

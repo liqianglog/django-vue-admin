@@ -63,8 +63,10 @@ class CodePackageViewSet(CustomModelViewSet):
         name = file_split[0]
         file_suffix = file_split[1]
         folder_abs = get_code_package_import_path()
-        file_path = os.path.join(folder_abs, file_now_datetime(), file.name)
-        with open(file_path, 'wb') as fp:  # 写文件
+        file_path = os.path.join(folder_abs, file_now_datetime())
+        if not os.path.exists(file_path):  # 文件夹不存在则创建
+            os.makedirs(file_path)
+        with open(os.path.join(file_path, file.name), 'wb') as fp:  # 写文件
             for i in file.chunks():
                 fp.write(i)
 
