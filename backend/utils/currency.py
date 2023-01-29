@@ -106,7 +106,7 @@ def file_now_datetime():
     """
     from django.utils import timezone
     now = timezone.now()
-    return now.strftime("%Y%m%d%H%M%S")
+    return now.strftime("%Y%m%d")
 
 
 def zip_compress_file(source_file_path, target_file_path, is_rm=False):
@@ -176,13 +176,24 @@ def zip_package_split(file_path, unpack_list):
     return file_paths
 
 
-def get_code_package_import_path():
+def get_code_package_import_zip_path():
     """
     订单管理导入文件路径
     :return:
     """
     from django.db import connection
-    path = os.path.join(BASE_DIR, 'kfm_code_file', 'code_package_file', connection.tenant.schema_name)
+    path = os.path.join(BASE_DIR, 'kfm_code_file', 'code_package_zip_file', connection.tenant.schema_name)
+    if not os.path.exists(path):  # 文件夹不存在则创建
+        os.makedirs(path)
+    return path
+
+def get_code_package_import_txt_path():
+    """
+    订单管理导入文件路径
+    :return:
+    """
+    from django.db import connection
+    path = os.path.join(BASE_DIR, 'kfm_code_file', 'code_package_txt_file', connection.tenant.schema_name)
     if not os.path.exists(path):  # 文件夹不存在则创建
         os.makedirs(path)
     return path
