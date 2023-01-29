@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
+from basics_manage.models import ProductionLine
 from dvadmin.utils.json_response import DetailResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
-from kfm_apps.carton_manage.code_manage.models import CodePackage
-from kfm_apps.carton_manage.production_manage.models import ProductionWork
+from carton_manage.code_manage.models import CodePackage
+from carton_manage.production_manage.models import ProductionWork
 
 
 class ProductionWorkSerializer(CustomModelSerializer):
@@ -67,30 +69,40 @@ class ProductionWorkViewSet(CustomModelViewSet):
     create_serializer_class = ProductionWorkCreateSerializer
     update_serializer_class = ProductionWorkUpdateSerializer
 
-    """
+    @action(methods=['post'],detail=False,permission_classes=[IsAuthenticated])
     def bind_code_package(self, request, *args, **kwargs):
         #码包绑定
         data = request.data
-        work_no = data.get('work_no')
-        code_pack_id= data.get('code_pack_id')
+        work_no = data.get('work_no',None)
+        code_pack_id= data.get('code_pack_id',None)
         if work_no is None:
             return ErrorResponse(msg="未获取生产工单号")
         if code_pack_id is None:
             return ErrorResponse(msg="未获取码包号")
         else:
+            # print(request.user.device_id)
+            # print(request.user.production_line_id)
             code_package_instance = CodePackage.objects.filter(id=code_pack_id).first()
             if code_package_instance is None:
                 return ErrorResponse(msg="未查询到码包号")
             else:
-                # TODO 获取设备的一些信息
+                device = request.user.device_id
+                production_line = request.user.production_line_id
+                production_line_queryset = ProductionLine.objects.filter(id=production_line).first()
                 create_data = {
                     "no":work_no,
                     "code_package":code_pack_id,
-                    "order_id":code_package_instance.order_id
+                    "order_id":code_package_instance.order_id,
+                    "device":device,
+                    "production_line":production_line,
+                    "factory_info":production_line_queryset.belong_to_factory.id
                 }
-                
-    """
-    @action(methods=['post'],detail=False)
+                serializer=ProductionWorkCreateSerializer(create_data,many=False,request=request)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+        return DetailResponse(data=None)
+
+    @action(methods=['post'],detail=False,permission_classes=[IsAuthenticated])
     def change(self,request):
         #生产工单变化
         data = request.data
@@ -104,6 +116,10 @@ class ProductionWorkViewSet(CustomModelViewSet):
             if production_work_instance is None:
                 return ErrorResponse(msg="未查询到生产工单号")
             else:
+                if print_position is None:
+                    return ErrorResponse(msg="未获取到打印位置")
+                if work_status is None:
+                    return ErrorResponse(msg="未获取到生产状态")
                 production_work_instance.print_position = print_position
                 production_work_instance.status = work_status
                 production_work_instance.save()
