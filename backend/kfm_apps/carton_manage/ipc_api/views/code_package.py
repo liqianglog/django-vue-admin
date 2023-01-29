@@ -13,7 +13,6 @@ class CodePackageSerializer(CustomModelSerializer):
     """
     code_pack_id = serializers.IntegerField(source="id",read_only=True)
     code_pack_name = serializers.CharField(source="no",read_only=True)
-    # "code_type": 1,
     package_template_no = serializers.CharField(source="code_package_template.no",read_only=True)
 
     class Meta:
