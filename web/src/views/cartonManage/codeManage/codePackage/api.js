@@ -1,12 +1,8 @@
 
 import { request } from '@/api/service'
-export const urlPrefix = 'api/production/brand_owner_order/'
+export const urlPrefix = 'api/carton/code_manage/code_package/'
 
 export function GetList (query) {
-  if (sessionStorage.getItem('brandOwnerId')) {
-    query.brand_owner = sessionStorage.getItem('brandOwnerId')
-  }
-  query.limit = 999
   return request({
     url: urlPrefix,
     method: 'get',
