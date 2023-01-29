@@ -8,8 +8,7 @@ from hashlib import md5
 
 from django.conf import settings
 
-from application.settings import BASE_DIR, DEBUG, ORDER_IMPORT_PATH, PRODUCTION_ORDER_ZIP_PATH, \
-    PRODUCTION_ORDER_FILE_PATH
+from application.settings import BASE_DIR
 
 
 def md5_file(file):
@@ -100,6 +99,16 @@ def now_datetime():
     return now.strftime("%Y-%m-%d %H:%M:%S")
 
 
+def file_now_datetime():
+    """
+    获取文件目录当前时间
+    :return:
+    """
+    from django.utils import timezone
+    now = timezone.now()
+    return now.strftime("%Y%m%d%H:%M:%S")
+
+
 def zip_compress_file(source_file_path, target_file_path, is_rm=False):
     """
     压缩文件为zip文件
@@ -167,16 +176,17 @@ def zip_package_split(file_path, unpack_list):
     return file_paths
 
 
-def get_order_import_path():
+def get_code_package_import_path():
     """
     订单管理导入文件路径
     :return:
     """
     from django.db import connection
-    path = os.path.join(BASE_DIR, 'kfm_code_file', 'upload_file', connection.tenant.schema_name)
+    path = os.path.join(BASE_DIR, 'kfm_code_file', 'code_package_file', connection.tenant.schema_name)
     if not os.path.exists(path):  # 文件夹不存在则创建
         os.makedirs(path)
     return path
+
 
 def check_zip_is_encrypted(file: str) -> bool:
     '''
