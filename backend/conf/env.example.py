@@ -41,3 +41,17 @@ LOGIN_NO_CAPTCHA_AUTH = False
 
 ALLOWED_HOSTS = ["*"]
 ENVIRONMENT = "local" # 环境，test 测试环境;prod线上环境;local本地环境
+
+# 加密秘钥KEY
+ENCRYPTION_KEY_ID = [
+    'test0000',
+    'test0001',
+    'test0002',
+    'test0003',
+    'test0004',
+    'test0005',
+    'test0006',
+    'test0007',
+    'test0008',
+    'test0009',
+]

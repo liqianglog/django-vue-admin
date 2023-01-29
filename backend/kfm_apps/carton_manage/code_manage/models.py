@@ -41,6 +41,7 @@ class CodePackage(CoreModel):
     # 码类型
     code_type = models.IntegerField(choices=CODE_TYPE_STATUS, default=1, blank=True, help_text="码类型",
                                     verbose_name="码类型")
+    key_id = models.IntegerField(default=0, blank=True, help_text="加密ID索引", verbose_name="加密ID索引")
     package_repetition_number = models.IntegerField(default=0, blank=True, help_text="码包重码数",
                                                     verbose_name="码包重码数")
     database_repetition_number = models.IntegerField(default=0, blank=True, help_text="数据库重码数",
