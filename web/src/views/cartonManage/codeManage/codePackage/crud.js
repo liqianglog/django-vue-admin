@@ -1,7 +1,7 @@
 
 import util from '@/libs/util'
 
-const uploadUrl = util.baseURL() + 'api/production/brand_owner_order/upload_file/'
+const uploadUrl = util.baseURL() + 'api/carton/code_manage/code_package/upload_file/'
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
@@ -53,7 +53,7 @@ export const crudOptions = (vm) => {
     columns: [
       {
         title: '订单号',
-        key: 'id',
+        key: 'order_id',
         search: {
           disabled: false
         },
@@ -130,7 +130,6 @@ export const crudOptions = (vm) => {
                   return ret.data.data
                 }
               },
-
               returnType: 'object',
               elProps: { // 与el-uploader 配置一致
                 multiple: false,
@@ -156,10 +155,9 @@ export const crudOptions = (vm) => {
           },
           valueChange (key, value, form) { // 当返回值有变化时触发
             if (value != null) {
-              // form.no = value.no
-              form.name = value.name
+              form.zip_name = value.name
               form.file_type = value.file_type
-              form.is_encrypted = value.is_encrypted
+              vm.is_encrypted = value.is_encrypted
             }
           },
           helper: '只能上传 zip / txt 后缀文件'
@@ -186,14 +184,12 @@ export const crudOptions = (vm) => {
         type: 'input',
         form: {
           rules: [ // 表单校验规则
-
             {
               required: true,
               message: '必填项'
             }
           ],
           component: {
-
             placeholder: '请输入产品名称',
             span: 24,
             props: {
@@ -275,7 +271,7 @@ export const crudOptions = (vm) => {
               clearable: true
             },
             show (context) {
-              return context.form.is_encrypted
+              return vm.is_encrypted
             }
           }
         }

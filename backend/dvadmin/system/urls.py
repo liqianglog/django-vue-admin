@@ -40,6 +40,5 @@ urlpatterns = [
     path('login_log/', LoginLogViewSet.as_view({'get': 'list'})),
     path('login_log/<int:pk>/', LoginLogViewSet.as_view({'get': 'retrieve'})),
     path('dept_lazy_tree/', DeptViewSet.as_view({'get': 'dept_lazy_tree'})),
-    re_path(r'^download/(files/.*)$', FileViewSet.get_file_response, {'document_root': settings.MEDIA_ROOT})
 ]
 urlpatterns += system_url.urls

@@ -10,6 +10,18 @@ from django.conf import settings
 
 from application.settings import BASE_DIR
 
+def file_iterator(file_path, start_pos, chunk_size):
+    """
+    文件生成器，防止文件过大，导致内存溢出
+    :param file_path: 文件绝对路径
+    :param start_pos: 文件读取的起始位置
+    :param chunk_size: 文件读取的块大小
+    :return: yield
+    """
+    with open(file_path, mode='rb') as f:
+        f.seek(start_pos, os.SEEK_SET)
+        content = f.read(chunk_size)
+        yield content
 
 def md5_file(file):
     """

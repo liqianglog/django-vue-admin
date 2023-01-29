@@ -4,6 +4,7 @@ import random
 import shutil
 import time
 import zipfile
+from wsgiref.util import FileWrapper
 
 from rest_framework.decorators import action
 
@@ -13,9 +14,19 @@ from dvadmin.utils.json_response import ErrorResponse, SuccessResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 from carton_manage.code_manage.models import CodePackage
+from utils.currency import get_code_package_import_zip_path, check_zip_is_encrypted, file_now_datetime, file_iterator
+import mimetypes
+import os
+import posixpath
+import re
+import stat
 from utils.currency import get_code_package_import_zip_path, check_zip_is_encrypted, file_now_datetime, zip_is_txt, \
     get_code_package_import_txt_path, read_max_row, md5_file, md5_value, read_file_first
 
+from django.http import Http404, HttpResponseNotModified, FileResponse, StreamingHttpResponse
+from django.utils._os import safe_join
+from django.utils.http import http_date
+from django.views.static import was_modified_since
 
 class CodePackageSerializer(CustomModelSerializer):
     """
@@ -69,8 +80,7 @@ class CodePackageViewSet(CustomModelViewSet):
         name = file_split[0]
         file_suffix = file_split[1]
         folder_abs = get_code_package_import_zip_path()
-        file_date = file_now_datetime()
-        file_path = os.path.join(folder_abs, file_date)
+        file_path = os.path.join(folder_abs, file_now_datetime())
         if not os.path.exists(file_path):  # 文件夹不存在则创建
             os.makedirs(file_path)
         with open(os.path.join(file_path, file.name), 'wb') as fp:  # 写文件
@@ -86,7 +96,7 @@ class CodePackageViewSet(CustomModelViewSet):
             file_type = "txt"
         else:
             return ErrorResponse(code=2100, data=None, msg="文件格式不正确")
-        data = {"file_path": os.path.join(file_date, file.name), "name": name, "is_encrypted": is_encrypted,
+        data = {"file_path": os.path.join(file_now_datetime(), file.name), "name": name, "is_encrypted": is_encrypted,
                 "file_type": file_type}
         return SuccessResponse(data=data, msg="上传成功")
 
@@ -160,3 +170,48 @@ class CodePackageViewSet(CustomModelViewSet):
             code_package_serializer.save()
             # code_package_import_check.delay(code_package_id=code_package_serializer.instance.id)
         return SuccessResponse(data=None, msg="正在导入中...")
+
+    @action(methods=['get'], detail=False,permission_classes=[])
+    # 基于django.views.static.serve实现，支持大文件的断点续传（暂停/继续下载）
+    def download_file(self,request):
+        path = request.query_params.get('file')
+        # 防止目录遍历漏洞
+        path = posixpath.normpath(path).lstrip('/')
+        fullpath = safe_join('kfm_code_file/code_package_file', path)
+        print(fullpath)
+        if os.path.isdir(fullpath):
+            raise Http404('这里不允许使用目录索引')
+        if not os.path.exists(fullpath):
+            raise Http404('"%(path)s" 不存在' % {'path': fullpath})
+
+        statobj = os.stat(fullpath)
+
+        # 判断下载过程中文件是否被修改过
+        if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
+                                  statobj.st_mtime, statobj.st_size):
+            return HttpResponseNotModified()
+
+        # 获取客户端请求的文件部分
+        range_header = request.META.get('HTTP_RANGE', '').strip()
+        range_re = re.compile(r'bytes\s*=\s*(\d+)\s*-\s*(\d*)')
+        range_match = range_re.match(range_header)
+        size = os.path.getsize(fullpath)
+        content_type = mimetypes.guess_type(fullpath)[0] or 'application/octet-stream'
+        if range_match:
+            first_byte, last_byte = range_match.groups()
+            first_byte = int(first_byte) if first_byte else 0
+            last_byte = int(last_byte) if last_byte else size - 1
+            if last_byte >= size:
+                last_byte = size - 1
+            length = last_byte - first_byte + 1
+            response = StreamingHttpResponse(FileWrapper(open(fullpath, 'rb'), 8192), content_type=content_type)
+            response['Content-Length'] = str(length)
+            response['Content-Range'] = 'bytes %s-%s/%s' % (first_byte, last_byte, size)
+            response['Accept-Ranges'] = 'bytes'
+            response.status_code = 206
+            return response
+        else:
+            response = StreamingHttpResponse(FileWrapper(open(fullpath, 'rb'), 8192), content_type=content_type)
+            response['Content-Length'] = str(size)
+            response['Accept-Ranges'] = 'bytes'
+            return response

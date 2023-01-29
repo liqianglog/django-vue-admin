@@ -31,6 +31,7 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
+      is_encrypted:false
     }
   },
   methods: {
@@ -41,7 +42,8 @@ export default {
       return api.GetList(query)
     },
     addRequest (row) {
-      return api.createObj(row)
+      console.log(row)
+      // return api.createObj(row)
     },
     updateRequest (row) {
       return api.UpdateObj(row)
