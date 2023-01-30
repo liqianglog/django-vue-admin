@@ -53,3 +53,4 @@ django-postgres-extra==2.0.4
 psycopg2-binary==2.9.1
 dvadmin-celery==1.0.2
 infi.clickhouse_orm==2.1.3
+pycryptodome==3.17

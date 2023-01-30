@@ -27,7 +27,7 @@ from django.http import Http404, HttpResponseNotModified, FileResponse, Streamin
 from django.utils._os import safe_join
 from django.utils.http import http_date
 from django.views.static import was_modified_since
-
+from carton_manage.code_manage.tasks import code_package_import_check
 class CodePackageSerializer(CustomModelSerializer):
     """
     码包管理-序列化器
@@ -168,7 +168,7 @@ class CodePackageViewSet(CustomModelViewSet):
             if not code_package_serializer.is_valid(raise_exception=True):
                 return ErrorResponse(code=2101, data=None, msg=code_package_serializer.error_messages)
             code_package_serializer.save()
-            # code_package_import_check.delay(code_package_id=code_package_serializer.instance.id)
+            code_package_import_check.delay(code_package_id=code_package_serializer.instance.id)
         return SuccessResponse(data=None, msg="正在导入中...")
 
     @action(methods=['get'], detail=False,permission_classes=[])

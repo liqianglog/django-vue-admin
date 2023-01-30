@@ -293,7 +293,7 @@ export const crudOptions = (vm) => {
           data: [{ label: '维护中', value: 2 }, { label: '生产中', value: 1 }, { label: '闲置中', value: 0 }]
         },
         form: {
-          value: 1,
+          value: 0,
           component: {},
           rules: [
             { required: true, message: '状态不能为空', trigger: 'blur' }

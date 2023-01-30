@@ -6,9 +6,12 @@ import subprocess
 import zipfile
 from hashlib import md5
 
+from Crypto.Cipher import DES
+from Crypto.Util.Padding import pad
 from django.conf import settings
 
 from application.settings import BASE_DIR
+
 
 def file_iterator(file_path, start_pos, chunk_size):
     """
@@ -22,6 +25,7 @@ def file_iterator(file_path, start_pos, chunk_size):
         f.seek(start_pos, os.SEEK_SET)
         content = f.read(chunk_size)
         yield content
+
 
 def md5_file(file):
     """
@@ -137,7 +141,6 @@ def zip_compress_file(source_file_path, target_file_path, is_rm=False):
         else:
             # 单文件
             cmd = ['zip', '-9jrq', '-b', '/tmp', target_file_path] + [ele for ele in source_file_path]
-        print(f"222-----{cmd}")
         p = subprocess.Popen(cmd)
         p.wait()
         return
@@ -199,6 +202,7 @@ def get_code_package_import_zip_path():
         os.makedirs(path)
     return path
 
+
 def get_code_package_import_txt_path():
     """
     订单管理导入文件路径
@@ -248,3 +252,34 @@ def get_production_order_file_path():
     if not os.path.exists(path):  # 文件夹不存在则创建
         os.makedirs(path)
     return path
+
+
+def des_encrypt_file(file_path, secret_key: str):
+    """
+    DES加密文件
+    :param file_path:
+    :param secret_key:
+    :return:
+    """
+    with open(file_path, "rb+") as f:
+        cipher2 = DES.new(secret_key.encode(), DES.MODE_ECB)
+        data = pad(f.read(), 8)
+        en = cipher2.encrypt(data)
+        f.seek(0)
+        f.truncate()
+        f.write(en)
+
+
+def des_descrypt_file(file_path, secret_key: str):
+    """
+    DES解密文件
+    :param file_path:
+    :param secret_key:
+    :return:
+    """
+    with open(file_path, "rb+") as f:
+        cipher2 = DES.new(secret_key.encode(), DES.MODE_ECB)
+        de = cipher2.decrypt(f.read())
+        f.seek(0)
+        f.truncate()
+        f.write(de)

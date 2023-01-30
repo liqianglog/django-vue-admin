@@ -417,8 +417,8 @@ PLUGINS_URL_PATTERNS = []
 TENANT_EXCLUSIVE_APPS = [
 ]
 
-from dvadmin_tenants.settings import *  # 租户
 # from dvadmin_upgrade_center.settings import *    # 升级中心
 from dvadmin_celery.settings import *  # celery 异步任务
+from dvadmin_tenants.settings import *  # 租户
 # ...
 # ********** 一键导入插件配置结束 **********
