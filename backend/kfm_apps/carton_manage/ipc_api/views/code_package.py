@@ -82,7 +82,6 @@ def download_code_package_file(request,path):
     path = posixpath.normpath(path).lstrip('/')
     print(path)
     fullpath = safe_join('kfm_code_file/code_package_txt_file', path)
-    print(fullpath)
     if os.path.isdir(fullpath):
         raise Http404('这里不允许使用目录索引')
     if not os.path.exists(fullpath):

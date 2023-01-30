@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
+import posixpath
 from urllib.parse import urlsplit
 
 from django.db import connection
@@ -48,6 +49,7 @@ class IpcProductionWorkCreateSerializer(CustomModelSerializer):
     生产工单管理-新增序列化器
     """
     def to_representation(self,instance):
+        file_position = posixpath.normpath(instance.code_package.file_position).lstrip('/')
         result = {
         "code_pack_id": instance.code_package.id,
         "code_pack_no":instance.code_package.no,
@@ -57,14 +59,13 @@ class IpcProductionWorkCreateSerializer(CustomModelSerializer):
         "first_line_md5": instance.code_package.first_line_md5,
         "total_number": instance.code_package.total_number,
         "keyid": instance.code_package.key_id,
-        "file_url": instance.code_package.file_position
+        "file_url": file_position
         }
         if connection.tenant.schema_name == "public":
             schema_name_list = Client.objects.exclude(schema_name="public").values_list('schema_name', flat=True)
         else:
             schema_name_list = [connection.tenant.schema_name]
         _DeviceManage = None
-        data = {}
         _schema_name = None
         # 通过设备编号从所有租户中获取设备
         for schema_name in schema_name_list:
@@ -74,15 +75,14 @@ class IpcProductionWorkCreateSerializer(CustomModelSerializer):
                 _DeviceManage = DeviceManage.objects.filter(id=device_id).first()
                 if _DeviceManage:
                     _schema_name = schema_name
-                    print(_schema_name)
                     domain_obj = Domain.objects.filter(is_primary=True, tenant__schema_name=schema_name).first()
                     http = urlsplit(request.build_absolute_uri(None)).scheme
                     if settings.ENVIRONMENT == "prod":
-                        result['file_url'] = f"https://{domain_obj.domain}/api/carton/ipc/download_code_package_file/{_schema_name}/{instance.code_package.file_position}"
+                        result['file_url'] = f"https://{domain_obj.domain}/api/carton/ipc/download_code_package_file/{_schema_name}/{file_position}"
                     elif settings.ENVIRONMENT == "test":
-                        result['file_url'] = f"http://{domain_obj.domain}/api/carton/ipc/download_code_package_file/{_schema_name}/{instance.code_package.file_position}"
+                        result['file_url'] = f"http://{domain_obj.domain}/api/carton/ipc/download_code_package_file/{_schema_name}/{file_position}"
                     else:
-                        result['file_url'] = f"{http}://{domain_obj.domain}:{request.META['SERVER_PORT']}/api/carton/ipc/download_code_package_file/{_schema_name}/{instance.code_package.file_position}"
+                        result['file_url'] = f"{http}://{domain_obj.domain}:{request.META['SERVER_PORT']}/api/carton/ipc/download_code_package_file/{_schema_name}/{file_position}"
         return result
 
     class Meta:
@@ -145,19 +145,19 @@ class ProductionWorkViewSet(CustomModelViewSet):
 
     @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated])
     def before_verify(self,request):
-        # data = request.data
-        # work_no = data.get('work_no',None)
-        # if work_no is None:
-        #     return ErrorResponse(msg="未获取到生产工单号")
-        # code_type= data.get('code_type',None)
-        # if code_type is None:
-        #     return ErrorResponse(msg="未获取到码类型")
-        # code_list= data.get('code_list',None)
-        # if code_list is None:
-        #     return ErrorResponse(msg="未获取到码内容")
-        # _ProductionWork = ProductionWork.objects.filter(no=work_no).first()
-        # if _ProductionWork is None:
-        #     return ErrorResponse(msg="未查询到生产工单号")
+        data = request.data
+        work_no = data.get('work_no',None)
+        if work_no is None:
+            return ErrorResponse(msg="未获取到生产工单号")
+        code_type= data.get('code_type',None)
+        if code_type is None:
+            return ErrorResponse(msg="未获取到码类型")
+        code_list= data.get('code_list',None)
+        if code_list is None:
+            return ErrorResponse(msg="未获取到码内容")
+        _ProductionWork = ProductionWork.objects.filter(no=work_no).first()
+        if _ProductionWork is None:
+            return ErrorResponse(msg="未查询到生产工单号")
         return DetailResponse(msg="码包正常")
 
 
