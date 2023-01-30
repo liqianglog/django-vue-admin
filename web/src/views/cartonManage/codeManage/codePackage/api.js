@@ -23,7 +23,7 @@ export function getObj (params) {
 
 export function AddObj (obj) {
   return request({
-    url: urlPrefix,
+    url: urlPrefix + 'create_code_package_info/',
     method: 'post',
     data: obj
   })

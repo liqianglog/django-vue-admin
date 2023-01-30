@@ -1,4 +1,3 @@
-
 import util from '@/libs/util'
 
 const uploadUrl = util.baseURL() + 'api/carton/code_manage/code_package/upload_file/'
@@ -20,21 +19,21 @@ export const crudOptions = (vm) => {
       view: {
         thin: true,
         text: '',
-        disabled () {
+        disabled() {
           return !vm.hasPermissions('Retrieve')
         }
       },
       edit: {
         thin: true,
         text: '',
-        disabled () {
+        disabled() {
           return !vm.hasPermissions('Update')
         }
       },
       remove: {
         thin: true,
         text: '',
-        disabled () {
+        disabled() {
           return !vm.hasPermissions('Delete')
         }
       }
@@ -70,12 +69,13 @@ export const crudOptions = (vm) => {
             }
           ],
           component: {
+            placeholder: '请输入订单号',
             span: 24,
             props: {
               clearable: true
             }
           },
-          valueChange (key, value, form, {
+          valueChange(key, value, form, {
             getColumn,
             mode,
             component,
@@ -83,14 +83,14 @@ export const crudOptions = (vm) => {
             getComponent
           }) {
             if (value) {
-              form.id = value
+              form.order_id = value
             } else {
-              form.id = util.autoCreateCode()
+              form.order_id = util.autoCreateCode()
             }
           },
           valueChangeImmediate: true,
           helper: {
-            render (h) {
+            render(h) {
               return (< el-alert title="如有实际订单号，请重新输入" type="warning"/>
               )
             }
@@ -104,6 +104,7 @@ export const crudOptions = (vm) => {
         type: 'file-uploader',
         width: 150,
         align: 'left',
+        show: false,
         form: {
           rules: [ // 表单校验规则
             {
@@ -120,7 +121,7 @@ export const crudOptions = (vm) => {
                   Authorization: 'JWT ' + util.cookies.get('token')
                 },
                 type: 'form',
-                successHandle (ret, option) {
+                successHandle(ret, option) {
                   if (ret.code !== 2000) {
                     throw new Error('上传失败')
                   }
@@ -134,7 +135,7 @@ export const crudOptions = (vm) => {
               elProps: { // 与el-uploader 配置一致
                 multiple: false,
                 limit: 1, // 限制1个文件
-                beforeUpload (file) {
+                beforeUpload(file) {
                   const fileName = file.name
                   // 获取最后一个.的位置
                   const index = fileName.lastIndexOf('.')
@@ -153,7 +154,7 @@ export const crudOptions = (vm) => {
             },
             span: 24
           },
-          valueChange (key, value, form) { // 当返回值有变化时触发
+          valueChange(key, value, form) { // 当返回值有变化时触发
             if (value != null) {
               form.zip_name = value.name
               form.file_type = value.file_type
@@ -162,7 +163,7 @@ export const crudOptions = (vm) => {
           },
           helper: '只能上传 zip / txt 后缀文件'
         },
-        valueResolve (row, col) {
+        valueResolve(row, col) {
           const value = row[col.key]
           if (value != null && value instanceof Array) {
             if (value.length >= 0) {
@@ -253,9 +254,7 @@ export const crudOptions = (vm) => {
       {
         title: '文件密码',
         key: 'pwd',
-        search: {
-          disabled: false
-        },
+        show: false,
         type: 'input',
         form: {
           rules: [ // 表单校验规则
@@ -267,10 +266,11 @@ export const crudOptions = (vm) => {
           component: {
             placeholder: '请输入',
             span: 24,
+            showPassword: true,
             props: {
               clearable: true
             },
-            show (context) {
+            show(context) {
               return vm.is_encrypted
             }
           }

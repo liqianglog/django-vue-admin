@@ -12,7 +12,7 @@ from carton_manage.code_manage.models import CodePackage
 from carton_manage.production_manage.models import ProductionWork
 
 
-class ProductionWorkSerializer(CustomModelSerializer):
+class IpcProductionWorkSerializer(CustomModelSerializer):
     """
     码包模板管理-序列化器
     """
@@ -39,7 +39,7 @@ class ProductionWorkSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-class ProductionWorkCreateSerializer(CustomModelSerializer):
+class IpcProductionWorkCreateSerializer(CustomModelSerializer):
     """
     码包模板管理-新增序列化器
     """
@@ -50,7 +50,7 @@ class ProductionWorkCreateSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-class ProductionWorkUpdateSerializer(CustomModelSerializer):
+class IpcProductionWorkUpdateSerializer(CustomModelSerializer):
     """
     码包模板管理-更新列化器
     """
@@ -65,9 +65,9 @@ class ProductionWorkViewSet(CustomModelViewSet):
     码包模板管理接口:
     """
     queryset = ProductionWork.objects.all()
-    serializer_class = ProductionWorkSerializer
-    create_serializer_class = ProductionWorkCreateSerializer
-    update_serializer_class = ProductionWorkUpdateSerializer
+    serializer_class = IpcProductionWorkSerializer
+    create_serializer_class = IpcProductionWorkCreateSerializer
+    update_serializer_class = IpcProductionWorkUpdateSerializer
 
     @action(methods=['post'],detail=False,permission_classes=[IsAuthenticated])
     def bind_code_package(self, request, *args, **kwargs):
@@ -97,10 +97,10 @@ class ProductionWorkViewSet(CustomModelViewSet):
                     "production_line":production_line,
                     "factory_info":production_line_queryset.belong_to_factory.id
                 }
-                serializer=ProductionWorkCreateSerializer(create_data,many=False,request=request)
+                serializer=IpcProductionWorkCreateSerializer(create_data,many=False,request=request)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
-        return DetailResponse(data=None)
+                return DetailResponse(data=serializer.data)
 
     @action(methods=['post'],detail=False,permission_classes=[IsAuthenticated])
     def change(self,request):

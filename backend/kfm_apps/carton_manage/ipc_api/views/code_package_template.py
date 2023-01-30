@@ -9,7 +9,7 @@ from dvadmin.utils.viewset import CustomModelViewSet
 from basics_manage.models import CodePackageTemplate
 
 
-class CodePackageTemplateSerializer(CustomModelSerializer):
+class IpcCodePackageTemplateSerializer(CustomModelSerializer):
     """
     码包模板管理-序列化器
     """
@@ -56,7 +56,7 @@ class CodePackageTemplateSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-class CodePackageTemplateCreateSerializer(CustomModelSerializer):
+class IpcCodePackageTemplateCreateSerializer(CustomModelSerializer):
     """
     码包模板管理-新增序列化器
     """
@@ -67,7 +67,7 @@ class CodePackageTemplateCreateSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-class CodePackageTemplateUpdateSerializer(CustomModelSerializer):
+class IpcCodePackageTemplateUpdateSerializer(CustomModelSerializer):
     """
     码包模板管理-更新列化器
     """
@@ -82,9 +82,9 @@ class CodePackageTemplateViewSet(CustomModelViewSet):
     码包模板管理接口:
     """
     queryset = CodePackageTemplate.objects.all()
-    serializer_class = CodePackageTemplateSerializer
-    create_serializer_class = CodePackageTemplateCreateSerializer
-    update_serializer_class = CodePackageTemplateUpdateSerializer
+    serializer_class = IpcCodePackageTemplateSerializer
+    create_serializer_class = IpcCodePackageTemplateCreateSerializer
+    update_serializer_class = IpcCodePackageTemplateUpdateSerializer
     @action(methods=['get'],detail=False,permission_classes=[IsAuthenticated])
     def get_detail(self, request, *args, **kwargs):
         params = request.query_params.dict()
@@ -95,5 +95,5 @@ class CodePackageTemplateViewSet(CustomModelViewSet):
             queryset =self.get_queryset().filter(no=package_template_no).first()
             if queryset is None:
                 return ErrorResponse(msg="模板编号不正确")
-            serializer = CodePackageTemplateSerializer(queryset, many=False)
+            serializer = IpcCodePackageTemplateSerializer(queryset, many=False)
             return DetailResponse(data=serializer.data)

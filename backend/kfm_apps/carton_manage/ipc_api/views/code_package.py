@@ -7,7 +7,7 @@ from dvadmin.utils.viewset import CustomModelViewSet
 from carton_manage.code_manage.models import CodePackage
 
 
-class CodePackageSerializer(CustomModelSerializer):
+class IpcCodePackageSerializer(CustomModelSerializer):
     """
     码包管理-序列化器
     """
@@ -30,7 +30,7 @@ class CodePackageSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-class CodePackageCreateSerializer(CustomModelSerializer):
+class IpcCodePackageCreateSerializer(CustomModelSerializer):
     """
     码包管理-新增序列化器
     """
@@ -40,7 +40,7 @@ class CodePackageCreateSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-class CodePackageUpdateSerializer(CustomModelSerializer):
+class IpcCodePackageUpdateSerializer(CustomModelSerializer):
     """
     码包管理-更新列化器
     """
@@ -55,11 +55,11 @@ class CodePackageViewSet(CustomModelViewSet):
     码包管理接口:
     """
     queryset = CodePackage.objects.all()
-    serializer_class = CodePackageSerializer
-    create_serializer_class = CodePackageCreateSerializer
-    update_serializer_class = CodePackageUpdateSerializer
+    serializer_class = IpcCodePackageSerializer
+    create_serializer_class = IpcCodePackageCreateSerializer
+    update_serializer_class = IpcCodePackageUpdateSerializer
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        serializer=CodePackageSerializer(queryset,many=True)
+        serializer=IpcCodePackageSerializer(queryset,many=True)
         return DetailResponse(data=serializer.data)
