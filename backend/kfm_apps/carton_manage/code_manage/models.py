@@ -57,6 +57,8 @@ class CodePackage(CoreModel):
     file_position = models.CharField(max_length=255, blank=True, null=True, help_text="码包存放位置",
                                      verbose_name="码包存放位置")
     file_md5 = models.CharField(max_length=255, blank=True, null=True, help_text="码包MD5", verbose_name="码包MD5")
+    des_file_md5 = models.CharField(max_length=255, blank=True, null=True, help_text="DES码包MD5",
+                                    verbose_name="DES码包MD5")
     first_line_md5 = models.CharField(max_length=255, blank=True, null=True, help_text="码包首行MD5",
                                       verbose_name="码包首行MD5")
 
