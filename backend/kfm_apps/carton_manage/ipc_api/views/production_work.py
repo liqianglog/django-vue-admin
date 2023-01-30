@@ -49,7 +49,7 @@ class IpcProductionWorkCreateSerializer(CustomModelSerializer):
     生产工单管理-新增序列化器
     """
     def to_representation(self,instance):
-        file_position = posixpath.normpath(instance.code_package.file_position).lstrip('/')
+        file_position = str(instance.code_package.file_position).replace('\\','/')
         result = {
         "code_pack_id": instance.code_package.id,
         "code_pack_no":instance.code_package.no,
