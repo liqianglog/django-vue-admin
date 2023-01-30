@@ -1,7 +1,7 @@
 <template>
 	<el-form size="large" class="login-content-form">
 		<el-form-item class="login-animation1">
-			<el-input type="text" :placeholder="$t('message.account.accountPlaceholder1')" v-model="ruleForm.userName" clearable autocomplete="off">
+			<el-input type="text" :placeholder="$t('message.account.accountPlaceholder1')" v-model="ruleForm.username" clearable autocomplete="off">
 				<template #prefix>
 					<el-icon class="el-input__icon"><ele-User /></el-icon>
 				</template>
@@ -33,7 +33,7 @@
 					type="text"
 					maxlength="4"
 					:placeholder="$t('message.account.accountPlaceholder3')"
-					v-model="ruleForm.code"
+					v-model="ruleForm.captcha"
 					clearable
 					autocomplete="off"
 				>
@@ -44,11 +44,14 @@
 			</el-col>
 			<el-col :span="1"></el-col>
 			<el-col :span="8">
-				<el-button class="login-content-code">1234</el-button>
+				<el-button class="login-content-captcha">
+					<el-image :src="ruleForm.captchaImgBase" @click="refreshCaptcha" />
+					<!-- TODO 完成点击刷新验证码 -->
+				</el-button>
 			</el-col>
 		</el-form-item>
 		<el-form-item class="login-animation4">
-			<el-button type="primary" class="login-content-submit" round @click="onSignIn" :loading="loading.signIn">
+			<el-button type="primary" class="login-content-submit" round @click="loginClick" :loading="loading.signIn">
 				<span>{{ $t('message.account.accountBtnText') }}</span>
 			</el-button>
 		</el-form-item>
@@ -56,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, defineComponent, computed } from 'vue';
+import { toRefs, reactive, defineComponent, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
@@ -68,6 +71,8 @@ import { initBackEndControlRoutes } from '/@/router/backEnd';
 import { Session } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
 import { NextLoading } from '/@/utils/loading';
+import * as loginApi from '/@/views/system/login/api';
+import { useUserInfo } from '/@/stores/userInfo';
 
 export default defineComponent({
 	name: 'loginAccount',
@@ -75,14 +80,17 @@ export default defineComponent({
 		const { t } = useI18n();
 		const storesThemeConfig = useThemeConfig();
 		const { themeConfig } = storeToRefs(storesThemeConfig);
+		const { userInfos } = storeToRefs(useUserInfo());
 		const route = useRoute();
 		const router = useRouter();
 		const state = reactive({
 			isShowPassword: false,
 			ruleForm: {
-				userName: 'admin',
-				password: '123456',
-				code: '1234',
+				username: 'superadmin',
+				password: 'admin123456',
+				captcha: '',
+				captchaKey: '',
+				captchaImgBase: '',
 			},
 			loading: {
 				signIn: false,
@@ -92,27 +100,48 @@ export default defineComponent({
 		const currentTime = computed(() => {
 			return formatAxis(new Date());
 		});
-		// 登录
-		const onSignIn = async () => {
-			state.loading.signIn = true;
-			// 存储 token 到浏览器缓存
-			Session.set('token', Math.random().toString(36).substr(0));
-			// 模拟数据，对接接口时，记得删除多余代码及对应依赖的引入。用于 `/src/stores/userInfo.ts` 中不同用户登录判断（模拟数据）
-			Cookies.set('userName', state.ruleForm.userName);
-			if (!themeConfig.value.isRequestRoutes) {
-				// 前端控制路由，2、请注意执行顺序
-				await initFrontEndControlRoutes();
-				signInSuccess();
-			} else {
-				// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
-				// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
-				await initBackEndControlRoutes();
-				// 执行完 initBackEndControlRoutes，再执行 signInSuccess
-				signInSuccess();
-			}
+
+		const getCaptcha = async () => {
+			loginApi.getCaptcha().then((ret: any) => {
+				state.ruleForm.captchaImgBase = ret.image_base;
+				state.ruleForm.captchaKey = ret.key;
+			});
+		};
+		const refreshCaptcha = async () => {
+			loginApi.getCaptcha().then((ret: any) => {
+				state.ruleForm.captchaImgBase = ret.image_base;
+				state.ruleForm.captchaKey = ret.key;
+			});
+		};
+		const loginClick = async () => {
+			loginApi.login(state.ruleForm).then((ret: any) => {
+				console.log(ret);
+				Session.set('token', ret.access);
+				Cookies.set('username', ret.name);
+				if (!themeConfig.value.isRequestRoutes) {
+					// 前端控制路由，2、请注意执行顺序
+					initFrontEndControlRoutes();
+					loginSuccess();
+				} else {
+					// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
+					// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
+					initBackEndControlRoutes();
+					// 执行完 initBackEndControlRoutes，再执行 signInSuccess
+					loginSuccess();
+				}
+			});
+		};
+		const getUserInfo = () => {
+			loginApi.getUserInfo().then((ret: any) => {
+				console.log('getUserInfo');
+				console.log(ret);
+			});
 		};
 		// 登录成功后的跳转
-		const signInSuccess = () => {
+		const loginSuccess = () => {
+			//登录成功获取用户信息
+			getUserInfo();
+
 			// 初始化登录成功时间问候语
 			let currentTimeInfo = currentTime.value;
 			// 登录成功，跳到转首页
@@ -133,8 +162,14 @@ export default defineComponent({
 			// 添加 loading，防止第一次进入界面时出现短暂空白
 			NextLoading.start();
 		};
+		onMounted(() => {
+			getCaptcha();
+		});
+
 		return {
-			onSignIn,
+			refreshCaptcha,
+			loginClick,
+			loginSuccess,
 			...toRefs(state),
 		};
 	},
@@ -161,7 +196,7 @@ export default defineComponent({
 			color: #909399;
 		}
 	}
-	.login-content-code {
+	.login-content-captcha {
 		width: 100%;
 		padding: 0;
 		font-weight: bold;

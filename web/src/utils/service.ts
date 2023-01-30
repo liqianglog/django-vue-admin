@@ -31,14 +31,13 @@ function createService() {
       const { code } = dataAxios;
       // 根据 code 进行判断
       if (code === undefined) {
-        // 如果没有 code 代表这不是项目后端开发的接口 比如可能是 D2Admin 请求最新版本
+        // 如果没有 code 代表这不是项目后端开发的接口 
         errorCreate(`非标准返回：${dataAxios}， ${response.config.url}`);
         return dataAxios;
       } else {
         // 有 code 代表这是一个后端接口 可以进行进一步的判断
         switch (code) {
-          case 0:
-            // [ 示例 ] code === 0 代表没有错误
+          case 2000:
             // @ts-ignore
             if (response.config.unpack === false) {
               //如果不需要解包
@@ -106,14 +105,14 @@ function createService() {
  * @description 创建请求方法
  * @param {Object} service axios 实例
  */
-function createRequestFunction(service:any) {
-  return function (config:any) {
+function createRequestFunction(service: any) {
+  return function (config: any) {
     const configDefault = {
       headers: {
         "Content-Type": get(config, "headers.Content-Type", "application/json")
       },
       timeout: 5000,
-      baseURL: '',
+      baseURL: import.meta.env.VITE_API_URL as any,
       data: {}
     };
 
@@ -121,7 +120,7 @@ function createRequestFunction(service:any) {
     const token = Session.get('token')
     if (token != null) {
       // @ts-ignore
-      configDefault.headers.Authorization = token;
+      configDefault.headers.Authorization = 'JWT ' + token;
     }
     return service(Object.assign(configDefault, config));
   };

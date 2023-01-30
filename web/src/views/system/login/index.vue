@@ -9,7 +9,7 @@
 		</div>
 		<div class="login-content">
 			<div class="login-content-main">
-				<h4 class="login-content-title ml15">{{ getThemeConfig.globalTitle }}后台模板</h4>
+				<h4 class="login-content-title ml15">{{ getThemeConfig.globalTitle }}后台管理系统</h4>
 				<div v-if="!isScan">
 					<el-tabs v-model="tabsActiveName">
 						<el-tab-pane :label="$t('message.label.one1')" name="account">
@@ -37,9 +37,9 @@ import { useThemeConfig } from '/@/stores/themeConfig';
 import logoMini from '/@/assets/logo-mini.svg';
 import loginIconTwo from '/@/assets/login-icon-two.svg';
 import { NextLoading } from '/@/utils/loading';
-import Account from '/@/views/login/component/account.vue';
-import Mobile from '/@/views/login/component/mobile.vue';
-import Scan from '/@/views/login/component/scan.vue';
+import Account from '/@/views/system/login/component/account.vue';
+import Mobile from '/@/views/system/login/component/mobile.vue';
+import Scan from '/@/views/system/login/component/scan.vue';
 
 // 定义接口来定义对象的类型
 interface LoginState {
