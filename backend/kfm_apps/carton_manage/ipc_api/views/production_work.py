@@ -78,9 +78,9 @@ class IpcProductionWorkCreateSerializer(CustomModelSerializer):
                     domain_obj = Domain.objects.filter(is_primary=True, tenant__schema_name=schema_name).first()
                     http = urlsplit(request.build_absolute_uri(None)).scheme
                     if settings.ENVIRONMENT == "prod":
-                        result['file_url'] = f"https://{domain_obj.domain}/api/carton/ipc/download_code_package_file/{_schema_name}/{file_position}"
+                        result['file_url'] = f"https://{domain_obj.domain}/api/api/carton/ipc/download_code_package_file/{_schema_name}/{file_position}"
                     elif settings.ENVIRONMENT == "test":
-                        result['file_url'] = f"http://{domain_obj.domain}/api/carton/ipc/download_code_package_file/{_schema_name}/{file_position}"
+                        result['file_url'] = f"http://{domain_obj.domain}/api/api/carton/ipc/download_code_package_file/{_schema_name}/{file_position}"
                     else:
                         result['file_url'] = f"{http}://{domain_obj.domain}:{request.META['SERVER_PORT']}/api/carton/ipc/download_code_package_file/{_schema_name}/{file_position}"
         return result
