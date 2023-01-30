@@ -1,5 +1,5 @@
 #!/bin/bash
- python manage.py pgmakemigrations
+python manage.py pgmakemigrations
 # python manage.py migrate
 # python manage.py init -y
 gunicorn -c gunicorn.py application.asgi:application

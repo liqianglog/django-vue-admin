@@ -40,6 +40,7 @@ def code_package_import_check(code_package_id):
     des_encrypt_file(target_file_path, settings.ENCRYPTION_KEY_ID[code_package_obj.key_id])
     os.rename(target_file_path, target_file_path.replace('.zip', '.zip.des'))
     code_package_obj.file_position = code_package_obj.file_position.replace('.txt', '.zip.des')
+    code_package_obj.validate_status = 4
     code_package_obj.des_file_md5 = md5_file(
         os.path.join(get_code_package_import_txt_path(), code_package_obj.file_position))
     code_package_obj.save()
