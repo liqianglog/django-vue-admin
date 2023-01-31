@@ -12,7 +12,7 @@ url.register(r'production_work', ProductionWorkViewSet)
 urlpatterns = [
     path('code_package/', CodePackageViewSet.as_view({'get': 'list'})),
     path(r'download_code_package_file/<str:tenant_name>/<str:day>/<str:file_name>',
-         CodePackageViewSet.as_view({'post': 'download_code_package_file'}))
+         CodePackageViewSet.as_view({'get': 'download_code_package_file'}))
 
 ]
 urlpatterns += url.urls
