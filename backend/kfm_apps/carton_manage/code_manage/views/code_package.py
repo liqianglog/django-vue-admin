@@ -6,6 +6,7 @@ import time
 import zipfile
 from wsgiref.util import FileWrapper
 
+from django.db import transaction
 from rest_framework.decorators import action
 
 from application import settings
@@ -28,6 +29,8 @@ from django.utils._os import safe_join
 from django.utils.http import http_date
 from django.views.static import was_modified_since
 from carton_manage.code_manage.tasks import code_package_import_check
+
+
 class CodePackageSerializer(CustomModelSerializer):
     """
     码包管理-序列化器
@@ -100,6 +103,7 @@ class CodePackageViewSet(CustomModelViewSet):
                 "file_type": file_type}
         return SuccessResponse(data=data, msg="上传成功")
 
+    @transaction.atomic
     @action(methods=['POST'], detail=False, permission_classes=[])
     def create_code_package_info(self, request):
         """
@@ -169,4 +173,5 @@ class CodePackageViewSet(CustomModelViewSet):
                 return ErrorResponse(code=2101, data=None, msg=code_package_serializer.error_messages)
             code_package_serializer.save()
             code_package_import_check.delay(code_package_id=code_package_serializer.instance.id)
+            print("码包信息ID", code_package_serializer.instance.id)
         return SuccessResponse(data=None, msg="正在导入中...")
