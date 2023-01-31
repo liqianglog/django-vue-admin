@@ -103,7 +103,6 @@ class CodePackageViewSet(CustomModelViewSet):
                 "file_type": file_type}
         return SuccessResponse(data=data, msg="上传成功")
 
-    @transaction.atomic
     @action(methods=['POST'], detail=False, permission_classes=[])
     def create_code_package_info(self, request):
         """
@@ -146,32 +145,36 @@ class CodePackageViewSet(CustomModelViewSet):
         code_package_template_obj = CodePackageTemplate.objects.filter(id=data.get('code_package_template')).first()
         if not code_package_template_obj:
             return ErrorResponse(msg="码包模板不存在!")
-        for file_name in file_name_list:
-            print(file_name)
-            file_path = os.path.join(get_code_package_import_txt_path(), file_now_date, file_name)
-            total_number = read_max_row(file_path).get('count')  # 文件总行数
-            file_md5 = md5_file(file_path)  # 文件MD5 值
-            first_line_md5 = md5_value(read_file_first(file_path))  # 文件首行MD5值
-            # 校验文件是否重复
-            code_package_data = {
-                "zip_name": data.get("file_path").split(os.sep)[-1],
-                "no": file_name.strip('.txt'),
-                "order_id": data.get("order_id"),
-                "product_name": data.get("product_name"),
-                "arrival_factory": data.get("arrival_factory"),
-                "total_number": total_number,
-                "code_package_template": data.get('code_package_template'),
-                "code_type": code_package_template_obj.code_type,
-                "key_id": settings.ENCRYPTION_KEY_ID.index(random.choice(settings.ENCRYPTION_KEY_ID)),
-                "file_position": os.path.join(file_now_date, file_name),
-                "file_md5": file_md5,
-                "first_line_md5": first_line_md5,
-            }
-            # # 保存码包信息
-            code_package_serializer = CodePackageCreateSerializer(data=code_package_data, many=False, request=request)
-            if not code_package_serializer.is_valid(raise_exception=True):
-                return ErrorResponse(code=2101, data=None, msg=code_package_serializer.error_messages)
-            code_package_serializer.save()
-            code_package_import_check.delay(code_package_id=code_package_serializer.instance.id)
-            print("码包信息ID", code_package_serializer.instance.id)
+        code_package_id_list = []
+        with transaction.atomic():
+            for file_name in file_name_list:
+                print(file_name)
+                file_path = os.path.join(get_code_package_import_txt_path(), file_now_date, file_name)
+                total_number = read_max_row(file_path).get('count')  # 文件总行数
+                file_md5 = md5_file(file_path)  # 文件MD5 值
+                first_line_md5 = md5_value(read_file_first(file_path))  # 文件首行MD5值
+                # 校验文件是否重复
+                code_package_data = {
+                    "zip_name": data.get("file_path").split(os.sep)[-1],
+                    "no": file_name.strip('.txt'),
+                    "order_id": data.get("order_id"),
+                    "product_name": data.get("product_name"),
+                    "arrival_factory": data.get("arrival_factory"),
+                    "total_number": total_number,
+                    "code_package_template": data.get('code_package_template'),
+                    "code_type": code_package_template_obj.code_type,
+                    "key_id": settings.ENCRYPTION_KEY_ID.index(random.choice(settings.ENCRYPTION_KEY_ID)),
+                    "file_position": os.path.join(file_now_date, file_name),
+                    "file_md5": file_md5,
+                    "first_line_md5": first_line_md5,
+                }
+                # # 保存码包信息
+                code_package_serializer = CodePackageCreateSerializer(data=code_package_data, many=False, request=request)
+                if not code_package_serializer.is_valid(raise_exception=True):
+                    return ErrorResponse(code=2101, data=None, msg=code_package_serializer.error_messages)
+                code_package_serializer.save()
+                code_package_id_list.append(code_package_serializer.instance.id)
+                print("码包信息ID", code_package_serializer.instance.id)
+        for code_package_id in code_package_id_list:
+            code_package_import_check.delay(code_package_id=code_package_id)
         return SuccessResponse(data=None, msg="正在导入中...")
