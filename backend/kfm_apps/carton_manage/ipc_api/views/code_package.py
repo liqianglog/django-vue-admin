@@ -6,7 +6,7 @@ import re
 from wsgiref.util import FileWrapper
 
 from django.db.models import Q
-from django.http import Http404, HttpResponseNotModified, StreamingHttpResponse
+from django.http import Http404, HttpResponseNotModified, StreamingHttpResponse, HttpResponseBadRequest
 from django.utils._os import safe_join
 from django.views.static import was_modified_since
 from rest_framework import serializers
@@ -92,14 +92,20 @@ class CodePackageViewSet(CustomModelViewSet):
         print(path)
         fullpath = safe_join('kfm_code_file/code_package_txt_file', path)
         if os.path.isdir(fullpath):
-            raise Http404('这里不允许使用目录索引')
+            ret = HttpResponseBadRequest('这里不允许使用目录索引')
+            ret["STATUS-CODE"] = 400
+            return ret
         if not os.path.exists(fullpath):
-            raise Http404('"%(path)s" 不存在' % {'path': fullpath})
+            ret = HttpResponseBadRequest('"%(path)s" 不存在' % {'path': fullpath})
+            ret["STATUS-CODE"] = 400
+            return ret
         statobj = os.stat(fullpath)
         # 判断下载过程中文件是否被修改过
         if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
                                   statobj.st_mtime, statobj.st_size):
-            return HttpResponseNotModified()
+            ret = HttpResponseNotModified()
+            ret["STATUS-CODE"] = 304
+            return ret
 
         # 获取客户端请求的文件部分
         range_header = request.META.get('HTTP_RANGE', '').strip()
@@ -118,10 +124,12 @@ class CodePackageViewSet(CustomModelViewSet):
             response['Content-Length'] = str(length)
             response['Content-Range'] = 'bytes %s-%s/%s' % (first_byte, last_byte, size)
             response['Accept-Ranges'] = 'bytes'
+            response["STATUS-CODE"] = 200
             response.status_code = 206
             return response
         else:
             response = StreamingHttpResponse(FileWrapper(open(fullpath, 'rb'), 8192), content_type=content_type)
             response['Content-Length'] = str(size)
             response['Accept-Ranges'] = 'bytes'
+            response["STATUS-CODE"] = 200
             return response
