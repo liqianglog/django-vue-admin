@@ -30,11 +30,6 @@ def code_package_import_check(code_package_ids):
         # 1.校验码包状态
         if code_package_obj.validate_status != 1:
             return f"校验状态错误:{code_package_obj.get_validate_status_display()}"
-        file_path = os.path.join(get_code_package_import_txt_path(), code_package_obj.file_position)
-        total_number = read_max_row(file_path).get('count')  # 文件总行数
-        file_md5 = md5_file(file_path)  # 文件MD5 值
-        code_package_obj.total_number = total_number
-        code_package_obj.file_md5 = file_md5
         code_package_obj.validate_status = 2
         code_package_obj.save()
         # 2.根据规则验证码包是否合格

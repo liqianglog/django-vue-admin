@@ -15,7 +15,8 @@ from dvadmin.utils.json_response import ErrorResponse, SuccessResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 from carton_manage.code_manage.models import CodePackage
-from utils.currency import get_code_package_import_zip_path, check_zip_is_encrypted, file_now_datetime, file_iterator
+from utils.currency import get_code_package_import_zip_path, check_zip_is_encrypted, file_now_datetime, file_iterator, \
+    unzip_compress_file
 import mimetypes
 import os
 import posixpath
@@ -130,11 +131,14 @@ class CodePackageViewSet(CustomModelViewSet):
                 if not is_txt:
                     return ErrorResponse(code=2101, msg="zip包中内部文件格式不正确")
                 try:
-                    for f in file_name_list:
-                        zip_file.extract(f, txt_file_path, pwd=pwd)  # 循环解压文件到指定目录
+                    with zip_file.open(zip_file.namelist()[0], pwd=pwd) as myfile:  # 得到压缩包里所有文件
+                        myfile.readline()
                 except Exception as e:
                     print("zip文件密码错误", e)
                     return ErrorResponse(code=2101, msg="zip文件密码错误")
+                # 进行解压文件
+                unzip_compress_file(file_path, txt_file_path, is_rm=False, pwd=pwd,
+                                    specify_file_name=file_name_list)
             # os.remove(file_path)  # 删除zip包
         elif file_type == "txt":
             new_file_path = os.path.join(txt_file_path, str(file_path.split(os.sep)[-1]))
@@ -149,7 +153,10 @@ class CodePackageViewSet(CustomModelViewSet):
         with transaction.atomic():
             for file_name in file_name_list:
                 print("file_name", file_name)
-                first_line_md5 = md5_value(read_file_first(file_path))  # 文件首行MD5值
+                txt_file = os.path.join(txt_file_path, file_name)
+                first_line_md5 = md5_value(read_file_first(txt_file))  # 文件首行MD5值
+                total_number = read_max_row(txt_file).get('count')  # 文件总行数
+                file_md5 = md5_file(txt_file)  # 文件MD5 值
                 # 校验文件是否重复
                 code_package_data = {
                     "zip_name": data.get("file_path").split(os.sep)[-1],
@@ -157,15 +164,17 @@ class CodePackageViewSet(CustomModelViewSet):
                     "order_id": data.get("order_id"),
                     "product_name": data.get("product_name"),
                     "arrival_factory": data.get("arrival_factory"),
-                    "total_number": 0,
+                    "total_number": total_number,
                     "code_package_template": data.get('code_package_template'),
                     "code_type": code_package_template_obj.code_type,
                     "key_id": settings.ENCRYPTION_KEY_ID.index(random.choice(settings.ENCRYPTION_KEY_ID)),
                     "file_position": os.path.join(file_now_date, file_name),
+                    "file_md5": file_md5,
                     "first_line_md5": first_line_md5,
                 }
                 # # 保存码包信息
-                code_package_serializer = CodePackageCreateSerializer(data=code_package_data, many=False, request=request)
+                code_package_serializer = CodePackageCreateSerializer(data=code_package_data, many=False,
+                                                                      request=request)
                 if not code_package_serializer.is_valid(raise_exception=True):
                     return ErrorResponse(code=2101, data=None, msg=code_package_serializer.error_messages)
                 code_package_serializer.save()

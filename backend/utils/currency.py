@@ -153,6 +153,41 @@ def zip_compress_file(source_file_path, target_file_path, is_rm=False):
             os.remove(ele)
 
 
+def unzip_compress_file(source_file_path, target_file_path, is_rm=False, pwd=None, specify_file_name=[]):
+    """
+    解压文件为zip文件
+    :param source_file_path: 源文件
+    :param target_file_path: 目标文件夹
+    :param is_rm: 是否删除
+    :param pwd: 解压密码
+    :param specify_file_name: 需要解密指定的文件名
+    :return:
+    """
+    if settings.ENVIRONMENT == 'prod':
+        if pwd:
+            cmd = ['unzip', '-n', '-P', pwd, '-d', target_file_path, source_file_path]
+        else:
+            cmd = ['unzip', '-n', '-d', target_file_path, source_file_path]
+        if specify_file_name:
+            cmd += [ele for ele in specify_file_name]
+        p = subprocess.Popen(cmd)
+        p.wait()
+        print(cmd)
+        if is_rm:
+            os.remove(source_file_path)
+        return True
+    with zipfile.ZipFile(source_file_path) as zip_file:
+        file_name_list = zip_file.namelist()  # 得到压缩包里所有文件
+        if specify_file_name:
+            file_name_list = [ele for ele in file_name_list if ele in specify_file_name]
+        for f in file_name_list:
+            zip_file.extract(f, target_file_path, pwd=pwd)
+
+    if is_rm:
+        os.remove(source_file_path)
+    return True
+
+
 def zip_package_split(file_path, unpack_list):
     """
     zip 拆包
