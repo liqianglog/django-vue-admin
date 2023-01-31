@@ -132,9 +132,11 @@ class ProductionWorkViewSet(CustomModelViewSet):
         device = request.user.device_id
         # 码包进行绑定到当前请求的设备
         # 加锁，多个客户端去获取时，只能一个成功
-        with cache.lock(key="write_log"):
+        with cache.lock(key="bind_code_package"):
+            if code_package_instance.device_manage_id == device:
+                return ErrorResponse(msg="当前码包已被您绑定,请勿重复操作")
             if code_package_instance.device_manage_id:
-                return ErrorResponse(msg="当前设备已被其他设备绑定")
+                return ErrorResponse(msg="当前码包已被其他设备绑定")
             code_package_instance.device_manage_id = device
             code_package_instance.save()
         # 保存生产工单
