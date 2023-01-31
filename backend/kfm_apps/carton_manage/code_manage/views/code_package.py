@@ -175,5 +175,5 @@ class CodePackageViewSet(CustomModelViewSet):
                 code_package_serializer.save()
                 code_package_id_list.append(code_package_serializer.instance.id)
                 print("码包信息ID", code_package_serializer.instance.id)
-        code_package_import_check.delay(code_package_id=code_package_id_list)
+        code_package_import_check.delay(code_package_ids=code_package_id_list)
         return SuccessResponse(data=None, msg="正在导入中...")
