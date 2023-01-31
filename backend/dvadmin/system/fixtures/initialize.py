@@ -22,7 +22,7 @@ class Initialize(CoreInitialize):
         """
         初始化部门信息
         """
-        self.init_base(DeptInitSerializer, unique_fields=['name', 'parent','key'])
+        self.init_base(DeptInitSerializer, unique_fields=['key'])
 
     def init_role(self):
         """

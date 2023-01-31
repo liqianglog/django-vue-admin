@@ -1,7 +1,7 @@
 from django.db import models
 
 from dvadmin.utils.models import CoreModel
-from basics_manage.models import CodePackageTemplate
+from basics_manage.models import CodePackageTemplate, DeviceManage
 
 table_prefix = "carton_"
 
@@ -53,7 +53,8 @@ class CodePackage(CoreModel):
     import_run_time = models.DecimalField(max_digits=10, decimal_places=3, default=0, blank=True, help_text="导入耗时",
                                           verbose_name="导入耗时")
     import_log = models.JSONField(null=True, blank=True, help_text="导入日志", verbose_name="导入日志")
-    is_use = models.BooleanField(default=False, blank=True, help_text="是否被使用", verbose_name="是否被使用")
+    device_manage = models.ForeignKey(DeviceManage, db_constraint=False, blank=True, null=True,
+                                      on_delete=models.PROTECT, help_text="被生产设备", verbose_name="被生产设备")
     file_position = models.CharField(max_length=255, blank=True, null=True, help_text="码包存放位置",
                                      verbose_name="码包存放位置")
     file_md5 = models.CharField(max_length=255, blank=True, null=True, help_text="码包MD5", verbose_name="码包MD5")
