@@ -148,10 +148,7 @@ class CodePackageViewSet(CustomModelViewSet):
         code_package_id_list = []
         with transaction.atomic():
             for file_name in file_name_list:
-                print(file_name)
-                file_path = os.path.join(get_code_package_import_txt_path(), file_now_date, file_name)
-                total_number = read_max_row(file_path).get('count')  # 文件总行数
-                file_md5 = md5_file(file_path)  # 文件MD5 值
+                print("file_name", file_name)
                 first_line_md5 = md5_value(read_file_first(file_path))  # 文件首行MD5值
                 # 校验文件是否重复
                 code_package_data = {
@@ -160,12 +157,11 @@ class CodePackageViewSet(CustomModelViewSet):
                     "order_id": data.get("order_id"),
                     "product_name": data.get("product_name"),
                     "arrival_factory": data.get("arrival_factory"),
-                    "total_number": total_number,
+                    "total_number": 0,
                     "code_package_template": data.get('code_package_template'),
                     "code_type": code_package_template_obj.code_type,
                     "key_id": settings.ENCRYPTION_KEY_ID.index(random.choice(settings.ENCRYPTION_KEY_ID)),
                     "file_position": os.path.join(file_now_date, file_name),
-                    "file_md5": file_md5,
                     "first_line_md5": first_line_md5,
                 }
                 # # 保存码包信息
