@@ -37,7 +37,7 @@ settings.INSTALLED_APPS += [app for app in apps if app not in settings.INSTALLED
 settings.TENANT_SHARED_APPS += tenant_shared_apps
 # ********** celery 配置 **********
 if not hasattr(settings, 'BROKER_URL'):
-    settings.BROKER_URL = f'{settings.REDIS_URL}/2'
+    settings.BROKER_URL = f'{settings.REDIS_URL}/{getattr(settings,"CELERY_BROKER_DB") or 2}'
 
 # ********** 执行结果保存位置 **********
 if not hasattr(settings, 'CELERY_RESULT_BACKEND'):

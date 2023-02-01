@@ -76,7 +76,7 @@ class CodePackageViewSet(CustomModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         queryset = queryset \
-            .filter(Q(device_manage_id__isnull=True) | Q(device_manage_id=self.request.user.device_id)) \
+            .filter(device_manage_id__isnull=True) \
             .filter(validate_status=4) \
             .filter(Q(work_code_package__isnull=True) | Q(work_code_package__status=0))
         serializer = IpcCodePackageSerializer(queryset, many=True)
