@@ -49,7 +49,7 @@ ALLOWED_HOSTS = locals().get("ALLOWED_HOSTS", ["*"])
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f'{REDIS_URL}/1',
+        "LOCATION": f'{REDIS_URL}/{REDIS_DB}',
         "KEY_FUNCTION": "django_tenants.cache.make_key",
         "REVERSE_KEY_FUNCTION": "django_tenants.cache.reverse_key",
         "OPTIONS": {
