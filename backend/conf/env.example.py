@@ -26,7 +26,8 @@ TABLE_PREFIX = "dvadmin_"
 # ================================================= #
 REDIS_PASSWORD = ''
 REDIS_HOST = '127.0.0.1'
-REDIS_DB = 10
+REDIS_DB = 21
+CELERY_BROKER_DB = 22
 REDIS_URL = f'redis://:{REDIS_PASSWORD or ""}@{REDIS_HOST}:6380'
 # ================================================= #
 # ****************** 功能 启停  ******************* #
