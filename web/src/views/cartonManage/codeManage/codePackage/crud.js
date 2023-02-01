@@ -15,28 +15,37 @@ export const crudOptions = (vm) => {
       highlightCurrentRow: false
     },
     rowHandle: {
-      width: 140,
+      width: 240,
       view: {
         thin: true,
         text: '',
-        disabled() {
+        disabled () {
           return !vm.hasPermissions('Retrieve')
         }
       },
       edit: {
         thin: true,
         text: '',
-        disabled() {
+        disabled () {
           return !vm.hasPermissions('Update')
         }
       },
       remove: {
         thin: true,
         text: '',
-        disabled() {
+        disabled () {
           return !vm.hasPermissions('Delete')
         }
-      }
+      },
+      custom: [
+        {
+          thin: true,
+          text: '日志',
+          size: 'medium',
+          type: 'primary',
+          emit: 'onOrderLog'
+        }
+      ]
     },
     viewOptions: {
       componentType: 'form'
@@ -75,7 +84,7 @@ export const crudOptions = (vm) => {
               clearable: true
             }
           },
-          valueChange(key, value, form, {
+          valueChange (key, value, form, {
             getColumn,
             mode,
             component,
@@ -90,7 +99,7 @@ export const crudOptions = (vm) => {
           },
           valueChangeImmediate: true,
           helper: {
-            render(h) {
+            render (h) {
               return (< el-alert title="如有实际订单号，请重新输入" type="warning"/>
               )
             }
@@ -121,7 +130,7 @@ export const crudOptions = (vm) => {
                   Authorization: 'JWT ' + util.cookies.get('token')
                 },
                 type: 'form',
-                successHandle(ret, option) {
+                successHandle (ret, option) {
                   if (ret.code !== 2000) {
                     throw new Error('上传失败')
                   }
@@ -135,7 +144,7 @@ export const crudOptions = (vm) => {
               elProps: { // 与el-uploader 配置一致
                 multiple: false,
                 limit: 1, // 限制1个文件
-                beforeUpload(file) {
+                beforeUpload (file) {
                   const fileName = file.name
                   // 获取最后一个.的位置
                   const index = fileName.lastIndexOf('.')
@@ -154,7 +163,7 @@ export const crudOptions = (vm) => {
             },
             span: 24
           },
-          valueChange(key, value, form) { // 当返回值有变化时触发
+          valueChange (key, value, form) { // 当返回值有变化时触发
             if (value != null) {
               form.zip_name = value.name
               form.file_type = value.file_type
@@ -163,7 +172,7 @@ export const crudOptions = (vm) => {
           },
           helper: '只能上传 zip / txt 后缀文件'
         },
-        valueResolve(row, col) {
+        valueResolve (row, col) {
           const value = row[col.key]
           if (value != null && value instanceof Array) {
             if (value.length >= 0) {
@@ -270,11 +279,21 @@ export const crudOptions = (vm) => {
             props: {
               clearable: true
             },
-            show(context) {
+            show (context) {
               return vm.is_encrypted
             }
           }
         }
+      },
+      {
+        title: '码包总数',
+        key: 'total_number',
+        type: 'input',
+      },
+      {
+        title: '码类型..00你家门那就买那就买那就买你舅妈年级没拿解码你舅妈那几名那几名那几名那几名那几名那几名那几名那几名你家门 你家门你家门你家门你家门你家门你家门你家门你家门你家门你家门 你家门你家门你家门看            ',
+        key: 'code_type',
+        type: 'input',
       }
     ]
   }

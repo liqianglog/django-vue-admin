@@ -1,14 +1,16 @@
 <template>
-  <d2-container  :class="{'page-compact':crud.pageOptions.compact}">
+  <d2-container :class="{'page-compact':crud.pageOptions.compact}">
     <d2-crud-x
-        ref="d2Crud"
-        v-bind="_crudProps"
-        v-on="_crudListeners"
+      ref="d2Crud"
+      v-bind="_crudProps"
+      v-on="_crudListeners"
+      @onOrderLog="onOrderLog"
     >
       <div slot="header">
-        <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
+        <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"/>
         <el-button-group>
-          <el-button size="small" type="primary" v-permission="'Create'" @click="addRow"><i class="el-icon-plus"/> 新增</el-button>
+          <el-button size="small" type="primary" v-permission="'Create'" @click="addRow"><i class="el-icon-plus"/> 新增
+          </el-button>
         </el-button-group>
         <crud-toolbar :search.sync="crud.searchOptions.show"
                       :compact.sync="crud.pageOptions.compact"
@@ -18,7 +20,7 @@
 
       </div>
     </d2-crud-x>
-
+    <orderLog ref="orderLog" :options="selectRow"></orderLog>
   </d2-container>
 </template>
 
@@ -26,12 +28,18 @@
 import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
+import orderLog from './component/orderLog'
+
 export default {
   name: 'codePackage',
   mixins: [d2CrudPlus.crud],
+  components: {
+    orderLog
+  },
   data () {
     return {
-      is_encrypted:false
+      is_encrypted: false,
+      selectRow: {}
     }
   },
   methods: {
@@ -49,6 +57,12 @@ export default {
     },
     delRequest (row) {
       return api.DelObj(row.id)
+    },
+    // 导入日志
+    onOrderLog ({ row }) {
+      this.$refs.orderLog.options = row
+      this.$refs.orderLog.drawer = true
+      this.$refs.orderLog.getInit()
     }
   }
 }

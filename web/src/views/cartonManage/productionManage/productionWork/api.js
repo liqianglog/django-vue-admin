@@ -1,6 +1,6 @@
 import { request } from '@/api/service'
 
-export const urlPrefix = '/api/basics_manage/factory_info/'
+export const urlPrefix = '/api/carton/production_manage/production_work/'
 
 export function GetList (query) {
   return request({
