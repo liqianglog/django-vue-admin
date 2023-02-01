@@ -7,6 +7,7 @@ import zipfile
 from wsgiref.util import FileWrapper
 
 from django.db import transaction
+from rest_framework import serializers
 from rest_framework.decorators import action
 
 from application import settings
@@ -36,6 +37,8 @@ class CodePackageSerializer(CustomModelSerializer):
     """
     码包管理-序列化器
     """
+    code_type_label = serializers.CharField(source="get_code_type_display",read_only=True)
+    source_label = serializers.CharField(source="get_source_display", read_only=True)
 
     class Meta:
         model = CodePackage

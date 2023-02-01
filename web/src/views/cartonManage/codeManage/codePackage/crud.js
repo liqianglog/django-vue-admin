@@ -15,6 +15,7 @@ export const crudOptions = (vm) => {
       highlightCurrentRow: false
     },
     rowHandle: {
+      fixed:"right",
       width: 240,
       view: {
         thin: true,
@@ -66,6 +67,7 @@ export const crudOptions = (vm) => {
           disabled: false
         },
         type: 'input',
+        width: 200,
         form: {
           rules: [ // 表单校验规则
             {
@@ -192,6 +194,7 @@ export const crudOptions = (vm) => {
           disabled: false
         },
         type: 'input',
+        width: 120,
         form: {
           rules: [ // 表单校验规则
             {
@@ -215,6 +218,7 @@ export const crudOptions = (vm) => {
           disabled: false
         },
         type: 'input',
+        width: 120,
         form: {
           rules: [ // 表单校验规则
             {
@@ -238,6 +242,7 @@ export const crudOptions = (vm) => {
           disabled: false
         },
         type: 'select',
+        width: 120,
         dict: {
           url: '/api/basics_manage/code_package_template/',
           label: 'no',
@@ -289,11 +294,63 @@ export const crudOptions = (vm) => {
         title: '码包总数',
         key: 'total_number',
         type: 'input',
+        width: 120,
       },
       {
         title: '码类型',
         key: 'code_type',
+        type: 'select',
+        width: 100,
+        dict: {
+          data: [
+            { value: 0, label: '外码' },
+            { value: 1, label: '内码' },
+            { value: 2, label: '外码+内码' }
+          ]
+        },
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请选择码类型'
+          }
+        }
+      },
+      {
+        title: '压缩包名称',
+        key: 'zip_name',
         type: 'input',
+        width: 200,
+      }, {
+        title: '来源',
+        key: 'source_label',
+        type: 'input',
+        width: 80,
+      },
+      {
+        title: '码包重码数',
+        key: 'package_repetition_number',
+        type: 'input',
+        width: 100,
+      },
+      {
+        title: '数据库重码数',
+        key: 'database_repetition_number',
+        type: 'input',
+        width: 120,
+      },
+      {
+        title: '校验状态',
+        key: 'validate_status',
+        type: 'select',
+        width: 100,
+        dict: {
+          data: [
+            { value: 1, label: '待校验' },
+            { value: 2, label: '校验中' },
+            { value: 3, label: '校验失败' },
+            { value: 4, label: '校验成功' }
+          ]
+        }
       }
     ]
   }
