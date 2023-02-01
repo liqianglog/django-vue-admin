@@ -87,7 +87,7 @@ class CodePackageTemplateViewSet(CustomModelViewSet):
     update_serializer_class = IpcCodePackageTemplateUpdateSerializer
     @action(methods=['post'],detail=False,permission_classes=[IsAuthenticated])
     def get_detail(self, request, *args, **kwargs):
-        params = request.query_params.dict()
+        params = request.data
         package_template_no = params.get('package_template_no', None)
         if package_template_no is None:
             return ErrorResponse(msg="未获取到模板编号")
