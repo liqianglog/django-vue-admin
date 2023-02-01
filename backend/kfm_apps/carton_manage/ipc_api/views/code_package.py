@@ -12,6 +12,7 @@ from django.views.static import was_modified_since
 from rest_framework import serializers
 from rest_framework.decorators import action
 
+from carton_manage.production_manage.models import ProductionWork
 from dvadmin.utils.json_response import DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -86,6 +87,18 @@ class CodePackageViewSet(CustomModelViewSet):
         """
         # 基于django.views.static.serve实现，支持大文件的断点续传（暂停/继续下载）
         """
+        data = request.data
+        work_no = data.get('work_no', None)
+        if work_no is None:
+            ret = HttpResponseBadRequest('未获取到生产工单号')
+            ret["STATUS-CODE"] = 400
+            return ret
+        device = request.user.device_id
+        _ProductionWork = ProductionWork.objects.filter(no=work_no,device__id=device).first()
+        if _ProductionWork is None:
+            ret = HttpResponseBadRequest('非当前设备的生产工单')
+            ret["STATUS-CODE"] = 400
+            return ret
         # 防止目录遍历漏洞
         path = posixpath.normpath(
             os.path.join(kwargs.get('tenant_name'), kwargs.get('day'), kwargs.get('file_name'))).lstrip('/')
