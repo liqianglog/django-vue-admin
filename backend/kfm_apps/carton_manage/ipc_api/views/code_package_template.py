@@ -85,7 +85,7 @@ class CodePackageTemplateViewSet(CustomModelViewSet):
     serializer_class = IpcCodePackageTemplateSerializer
     create_serializer_class = IpcCodePackageTemplateCreateSerializer
     update_serializer_class = IpcCodePackageTemplateUpdateSerializer
-    @action(methods=['get'],detail=False,permission_classes=[IsAuthenticated])
+    @action(methods=['post'],detail=False,permission_classes=[IsAuthenticated])
     def get_detail(self, request, *args, **kwargs):
         params = request.query_params.dict()
         package_template_no = params.get('package_template_no', None)
