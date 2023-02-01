@@ -15,7 +15,7 @@ export const crudOptions = (vm) => {
       highlightCurrentRow: false
     },
     rowHandle: {
-      fixed:"right",
+      fixed: 'right',
       width: 240,
       view: {
         thin: true,
@@ -294,7 +294,7 @@ export const crudOptions = (vm) => {
         title: '码包总数',
         key: 'total_number',
         type: 'input',
-        width: 120,
+        width: 120
       },
       {
         title: '码类型',
@@ -319,24 +319,24 @@ export const crudOptions = (vm) => {
         title: '压缩包名称',
         key: 'zip_name',
         type: 'input',
-        width: 200,
+        width: 200
       }, {
         title: '来源',
         key: 'source_label',
         type: 'input',
-        width: 80,
+        width: 80
       },
       {
         title: '码包重码数',
         key: 'package_repetition_number',
         type: 'input',
-        width: 100,
+        width: 100
       },
       {
         title: '数据库重码数',
         key: 'database_repetition_number',
         type: 'input',
-        width: 120,
+        width: 120
       },
       {
         title: '校验状态',

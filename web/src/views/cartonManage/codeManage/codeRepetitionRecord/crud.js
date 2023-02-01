@@ -14,31 +14,32 @@ export const crudOptions = (vm) => {
       highlightCurrentRow: false
 
     },
-    rowHandle: {
-      fixed: 'right',
-      view: {
-        thin: true,
-        text: '',
-        disabled () {
-          return !vm.hasPermissions('Retrieve')
-        }
-      },
-      width: 140,
-      edit: {
-        thin: true,
-        text: '',
-        disabled () {
-          return !vm.hasPermissions('Update')
-        }
-      },
-      remove: {
-        thin: true,
-        text: '',
-        disabled () {
-          return !vm.hasPermissions('Delete')
-        }
-      }
-    },
+    rowHandle: false,
+    // rowHandle: {
+    //   fixed: 'right',
+    //   view: {
+    //     thin: true,
+    //     text: '',
+    //     disabled () {
+    //       return !vm.hasPermissions('Retrieve')
+    //     }
+    //   },
+    //   width: 140,
+    //   edit: {
+    //     thin: true,
+    //     text: '',
+    //     disabled () {
+    //       return !vm.hasPermissions('Update')
+    //     }
+    //   },
+    //   remove: {
+    //     thin: true,
+    //     text: '',
+    //     disabled () {
+    //       return !vm.hasPermissions('Delete')
+    //     }
+    //   }
+    // },
     viewOptions: {
       componentType: 'row'
     },
@@ -52,31 +53,6 @@ export const crudOptions = (vm) => {
     },
     columns: [
       {
-        title: '关键词',
-        key: 'search',
-        show: false,
-        disabled: true,
-        search: {
-          disabled: false,
-          component: {
-            props: {
-              clearable: true
-            }
-          }
-        },
-        form: {
-          disabled: true,
-          component: {
-            placeholder: '请输入关键词',
-            props: {
-              clearable: true
-            }
-          }
-        },
-        view: {
-          disabled: true
-        }
-      }, {
         title: 'ID',
         key: 'id',
         show: false,
@@ -85,8 +61,8 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '工厂编号',
-        key: 'code',
+        title: '码包',
+        key: 'code_package',
         width: 120,
         search: {
           disabled: true,
@@ -96,143 +72,84 @@ export const crudOptions = (vm) => {
             }
           }
         },
-        type: 'input',
-        form: {
-          rules: [
-            { required: true, message: '工厂编号不能为空', trigger: 'blur' }
-          ],
-          component: {
-            placeholder: '请输入工厂编号'
-          },
-          itemProps: {
-            class: { yxtInput: true }
-          },
-          valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
-            if (mode === 'add') {
-              form.code = util.autoShortCreateCode()
-            }
-          },
-          valueChangeImmediate: true
-        }
-      }, {
-        title: '工厂名称',
-        key: 'name',
-        minWidth: 100,
-        search: {
-          disabled: false,
-          component: {
-            props: {
-              clearable: true
-            }
-          }
-        },
-        type: 'input',
-        form: {
-          rules: [
-            { required: true, message: '工厂名称不能为空', trigger: 'blur' }
-          ],
-          component: {
-            placeholder: '请输入工厂名称'
-          },
-          itemProps: {
-            class: { yxtInput: true }
-          }
-        }
+        type: 'input'
       },
       {
-        title: '联系人',
-        key: 'contacts',
-        width: 120,
-        search: {
-          disabled: false,
-          component: {
-            props: {
-              clearable: true
-            }
-          }
-        },
-        type: 'input',
-        form: {
-          itemProps: {
-            class: { yxtInput: true }
-          },
-          component: {
-            placeholder: '请输入联系人'
-          }
-        }
-      }, {
-        title: '联系电话',
-        key: 'telephone',
-        width: 120,
-        search: {
-          disabled: false,
-          component: {
-            props: {
-              clearable: true
-            }
-          }
-        },
-        type: 'input',
-        form: {
-          rules: [
-            { max: 11, message: '请输入正确的联系电话', trigger: 'blur' },
-            { pattern: /^1[3|4|5|7|8]\d{9}$/, message: '请输入正确的联系电话' }
-          ],
-          itemProps: {
-            class: { yxtInput: true }
-          },
-          component: {
-            placeholder: '请输入联系电话'
-          }
-        }
-      },
-      {
-        title: '状态',
-        key: 'status',
-        search: {
-          disabled: false
-        },
-        width: 70,
-        type: 'radio',
-        dict: {
-          data: BUTTON_STATUS_NUMBER
-        },
-        form: {
-          value: 1,
-          component: {
-            span: 12
-          },
-          rules: [
-            { required: true, message: '状态不能为空', trigger: 'blur' }
-          ],
-          itemProps: {
-            class: { yxtInput: true }
-          }
-        }
-      },
-      {
-        title: '详细地址',
-        key: 'address',
+        title: '码内容',
+        key: 'code_content',
         width: 200,
         search: {
-          disabled: true
-        },
-        type: 'input',
-        form: {
-          itemProps: {
-            class: { yxtInput: true }
-          },
+          disabled: false,
           component: {
+            placeholder: '请输入码内容',
             props: {
-              type: 'textarea'
-            },
-            placeholder: '请输入详细地址'
+              clearable: true
+            }
           }
+        },
+        type: 'input'
+      }, {
+        title: '码类型',
+        key: 'code_type',
+        width: 120,
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请选择码类型',
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'select',
+        dist: {
+          data: [
+            { value: 0, label: '外码' },
+            { value: 1, label: '内码' },
+            { value: 2, label: '外码+内码' }
+          ]
+        }
+      },
+      {
+        title: '重码码包',
+        key: 'repetition_code_package',
+        width: 100,
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请输入重码码包',
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'input'
+      },
+      {
+        title: '重码码类型',
+        key: 'repetition_type',
+        width: 100,
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请选择重码码类型',
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'select',
+        dist: {
+          data: [
+            { value: 0, label: '外码' },
+            { value: 1, label: '内码' },
+            { value: 2, label: '外码+内码' }
+          ]
         }
       }
     ].concat(vm.commonEndColumns({
       update_datetime: { showTable: false },
-      dept_belong_id: { showForm: true, showTable: true }
+      dept_belong_id: { showForm: false, showTable: false }
     }))
   }
 }
