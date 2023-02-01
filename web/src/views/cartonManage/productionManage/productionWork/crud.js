@@ -14,31 +14,32 @@ export const crudOptions = (vm) => {
       highlightCurrentRow: false
 
     },
-    rowHandle: {
-      fixed: 'right',
-      view: {
-        thin: true,
-        text: '',
-        disabled () {
-          return !vm.hasPermissions('Retrieve')
-        }
-      },
-      width: 140,
-      edit: {
-        thin: true,
-        text: '',
-        disabled () {
-          return !vm.hasPermissions('Update')
-        }
-      },
-      remove: {
-        thin: true,
-        text: '',
-        disabled () {
-          return !vm.hasPermissions('Delete')
-        }
-      }
-    },
+    rowHandle:false,
+    // rowHandle: {
+    //   fixed: 'right',
+    //   view: {
+    //     thin: true,
+    //     text: '',
+    //     disabled () {
+    //       return !vm.hasPermissions('Retrieve')
+    //     }
+    //   },
+    //   width: 140,
+    //   edit: {
+    //     thin: true,
+    //     text: '',
+    //     disabled () {
+    //       return !vm.hasPermissions('Update')
+    //     }
+    //   },
+    //   remove: {
+    //     thin: true,
+    //     text: '',
+    //     disabled () {
+    //       return !vm.hasPermissions('Delete')
+    //     }
+    //   }
+    // },
     viewOptions: {
       componentType: 'row'
     },
@@ -52,31 +53,6 @@ export const crudOptions = (vm) => {
     },
     columns: [
       {
-        title: '关键词',
-        key: 'search',
-        show: false,
-        disabled: true,
-        search: {
-          disabled: false,
-          component: {
-            props: {
-              clearable: true
-            }
-          }
-        },
-        form: {
-          disabled: true,
-          component: {
-            placeholder: '请输入关键词',
-            props: {
-              clearable: true
-            }
-          }
-        },
-        view: {
-          disabled: true
-        }
-      }, {
         title: 'ID',
         key: 'id',
         show: false,
@@ -85,9 +61,9 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '工厂编号',
-        key: 'code',
-        width: 120,
+        title: '生产工单号',
+        key: 'no',
+        width: 140,
         search: {
           disabled: true,
           component: {
@@ -115,8 +91,8 @@ export const crudOptions = (vm) => {
           valueChangeImmediate: true
         }
       }, {
-        title: '工厂名称',
-        key: 'name',
+        title: '生产订单号',
+        key: 'order_id',
         minWidth: 100,
         search: {
           disabled: false,
@@ -129,10 +105,10 @@ export const crudOptions = (vm) => {
         type: 'input',
         form: {
           rules: [
-            { required: true, message: '工厂名称不能为空', trigger: 'blur' }
+            { required: true, message: '不能为空', trigger: 'blur' }
           ],
           component: {
-            placeholder: '请输入工厂名称'
+            placeholder: '请输入生产订单号'
           },
           itemProps: {
             class: { yxtInput: true }
@@ -140,8 +116,8 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '联系人',
-        key: 'contacts',
+        title: '批次号',
+        key: 'batch_no',
         width: 120,
         search: {
           disabled: false,
@@ -157,12 +133,12 @@ export const crudOptions = (vm) => {
             class: { yxtInput: true }
           },
           component: {
-            placeholder: '请输入联系人'
+            placeholder: '请输入批次号'
           }
         }
       }, {
-        title: '联系电话',
-        key: 'telephone',
+        title: '工厂名称',
+        key: 'factory_info_name',
         width: 120,
         search: {
           disabled: false,
@@ -174,28 +150,41 @@ export const crudOptions = (vm) => {
         },
         type: 'input',
         form: {
-          rules: [
-            { max: 11, message: '请输入正确的联系电话', trigger: 'blur' },
-            { pattern: /^1[3|4|5|7|8]\d{9}$/, message: '请输入正确的联系电话' }
-          ],
           itemProps: {
             class: { yxtInput: true }
           },
           component: {
-            placeholder: '请输入联系电话'
+            placeholder: '请输入工厂名称'
           }
         }
       },
       {
-        title: '状态',
+        title: '产线名称',
+        key: 'production_line_name',
+        type: 'input'
+      },
+      {
+        title: '设备名称',
+        key: 'device_name',
+        type: 'input'
+      },
+      {
+        title: '生产状态',
         key: 'status',
         search: {
           disabled: false
         },
-        width: 70,
+        width: 100,
         type: 'radio',
         dict: {
-          data: BUTTON_STATUS_NUMBER
+          data: [
+            { value: 0, label: '待下载' },
+            { value: 1, label: '待生产' },
+            { value: 2, label: '生产中' },
+            { value: 3, label: '暂停中' },
+            { value: 4, label: '结束生产' },
+            { value: 5, label: '工单异常' }
+          ]
         },
         form: {
           value: 1,
@@ -209,30 +198,10 @@ export const crudOptions = (vm) => {
             class: { yxtInput: true }
           }
         }
-      },
-      {
-        title: '详细地址',
-        key: 'address',
-        width: 200,
-        search: {
-          disabled: true
-        },
-        type: 'input',
-        form: {
-          itemProps: {
-            class: { yxtInput: true }
-          },
-          component: {
-            props: {
-              type: 'textarea'
-            },
-            placeholder: '请输入详细地址'
-          }
-        }
       }
     ].concat(vm.commonEndColumns({
       update_datetime: { showTable: false },
-      dept_belong_id: { showForm: true, showTable: true }
+      dept_belong_id: { showForm: false, showTable: false }
     }))
   }
 }
