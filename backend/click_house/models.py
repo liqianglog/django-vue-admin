@@ -14,8 +14,8 @@ class ClusterBaseModel(object):
     objects: QuerySet = None
 
     @classmethod
-    def set_db(cls, brand_owner_id, timeout=120):
-        cls.db = get_click_house_pool(brand_owner_id, timeout=timeout)
+    def set_db(cls, db_name, timeout=120):
+        cls.db = get_click_house_pool(db_name, timeout=timeout)
         cls.objects = QuerySet(
             cls.get_base_all_model() if hasattr(cls, 'get_base_all_model') else cls,
             cls.db)
@@ -118,7 +118,9 @@ class ClusterModel(Model, ClusterBaseModel):
         return cls.get_base_all_model().create_table_sql()
 
     @classmethod
-    def create_table(cls):
+    def create_table(cls, table_suffix=None):
+        if table_suffix:
+            cls.set_table_name(name=f"{cls.table_name()}_{table_suffix}")
         # 创建基础表
         cls.db.create_table(cls)
         # 创建分布式表
@@ -136,7 +138,7 @@ class ClusterModel(Model, ClusterBaseModel):
         return len(data)
 
     @classmethod
-    def select_duplicate(cls, limit=1000, where=""):
+    def select_duplicate(cls, limit=100, where=""):
         """
         本表内查重
         SELECT
@@ -166,19 +168,22 @@ class ClusterModel(Model, ClusterBaseModel):
         # 获取所有重码
         for ele in result.split('\n'):
             if ele:
-                result_data[ele.split('\t')[0]] = {"values": "", "content": "", "count": int(ele.split('\t')[1])}
+                result_data[ele.split('\t')[0]] = {"code_type": "", "tenant_id": "", "package_id": "", "content": "",
+                                                   "count": int(ele.split('\t')[1])}
         if result_data:
             # 获取重码详细内容
             sql = f"""
-SELECT {order_by},values,content FROM {cls.db.db_name}.{cls.get_base_all_model().table_name()} 
+SELECT {order_by},code_type,tenant_id,package_id,content FROM {cls.db.db_name}.{cls.get_base_all_model().table_name()} 
 WHERE {order_by}  GLOBAL IN {list(result_data.keys())}
 """
             logger.debug(sql)
             result = cls.db.raw(sql)
             for ele in result.split('\n'):
                 if ele:
-                    result_data[ele.split('\t')[0]]["values"] = ele.split('\t')[1]
-                    result_data[ele.split('\t')[0]]["content"] = ele.split('\t')[2]
+                    result_data[ele.split('\t')[0]]["code_type"] = ele.split('\t')[1]
+                    result_data[ele.split('\t')[0]]["tenant_id"] = ele.split('\t')[2]
+                    result_data[ele.split('\t')[0]]["package_id"] = ele.split('\t')[3]
+                    result_data[ele.split('\t')[0]]["content"] = ele.split('\t')[4]
         logger.debug("码包本身是否有重复结束...")
         return len(result_data.keys()), result_data
 
@@ -199,7 +204,7 @@ WHERE {order_by}  GLOBAL IN {list(result_data.keys())}
         """
         order_by = cls.engine.order_by[0]
         sql = f"""
-SELECT {order_by},count() FROM {cls.db.db_name}.{from_table} 
+SELECT {order_by},count(),package_id FROM {cls.db.db_name}.{from_table} 
 WHERE {order_by} GLOBAL IN (
     SELECT {order_by} FROM {cls.db.db_name}.{cls.get_base_all_model().table_name()}
 ) 
@@ -213,19 +218,23 @@ group by {order_by} limit 1001
         for ele in result.split('\n'):
             if ele:
                 repetition_count += int(ele.split('\t')[1])
-                result_data[ele.split('\t')[0]] = {"values": "", "content": "", "count": int(ele.split('\t')[1])}
+                result_data[ele.split('\t')[0]] = {"code_type": "", "tenant_id": "", "package_id": "", "content": "",
+                                                   "count": int(ele.split('\t')[1]),
+                                                   "repetition_code_package": int(ele.split('\t')[2])}
         if result_data:
             # 获取重码详细内容
             sql = f"""
-SELECT {order_by},values,content FROM {cls.db.db_name}.{cls.get_base_all_model().table_name()} 
+SELECT {order_by},code_type,tenant_id,package_id,content FROM {cls.db.db_name}.{cls.get_base_all_model().table_name()} 
 WHERE {order_by}  GLOBAL IN {list(result_data.keys())}
 """
             logger.debug(sql)
             result = cls.db.raw(sql)
             for ele in result.split('\n'):
                 if ele:
-                    result_data[ele.split('\t')[0]]["values"] = ele.split('\t')[1]
-                    result_data[ele.split('\t')[0]]["content"] = ele.split('\t')[2]
+                    result_data[ele.split('\t')[0]]["code_type"] = ele.split('\t')[1]
+                    result_data[ele.split('\t')[0]]["tenant_id"] = ele.split('\t')[2]
+                    result_data[ele.split('\t')[0]]["package_id"] = ele.split('\t')[3]
+                    result_data[ele.split('\t')[0]]["content"] = ele.split('\t')[4]
         logger.debug("匹配历史码结束...")
         return repetition_count, result_data
 

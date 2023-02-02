@@ -102,9 +102,8 @@ class CodePackage(CoreModel):
 
 
 CODE_TYPE = (
-    (0, "外码"),
-    (1, "内码"),
-    (2, "外码+内码")
+    (0, "内码"),
+    (1, "外码"),
 )
 REPETITION_TYPE = (
     (0, "码包重码"),
@@ -121,7 +120,7 @@ class CodeRepetitionRecord(CoreModel):
     code_content = models.CharField(max_length=255, help_text="码内容", verbose_name="码内容")
     code_content_md5 = models.CharField(max_length=255, help_text="码内容MD5", verbose_name="码内容MD5")
     code_type = models.IntegerField(choices=CODE_TYPE, help_text="码类型", verbose_name="码类型")
-    repetition_type = models.IntegerField(choices=REPETITION_TYPE, help_text="码类型", verbose_name="码类型")
+    repetition_type = models.IntegerField(choices=REPETITION_TYPE, help_text="重码类型", verbose_name="重码类型")
 
     class Meta:
         db_table = table_prefix + "code_repetition_record"

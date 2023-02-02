@@ -37,12 +37,22 @@ DEBUG = True
 ENABLE_LOGIN_ANALYSIS_LOG = False
 # 登录接口 /api/token/ 是否需要验证码认证，用于测试，正式环境建议取消
 LOGIN_NO_CAPTCHA_AUTH = False
+
+# ================================================= #
+# ************** ClickHouseDb 配置  ************** #
+# ================================================= #
+CLICK_HOUSE_DB_URL = 'http://127.0.0.1:8123'
+CLICK_HOUSE_DB_USERNAME = ''
+CLICK_HOUSE_DB_PASSWORD = ''
+CLICK_HOUSE_DB_PREFIX = 'packaging_coding_test'
+CLICK_HOUSE_CLUSTER_NAME = 'default'
+
 # ================================================= #
 # ****************** 其他 配置  ******************* #
 # ================================================= #
 
 ALLOWED_HOSTS = ["*"]
-ENVIRONMENT = "local" # 环境，test 测试环境;prod线上环境;local本地环境
+ENVIRONMENT = "local"  # 环境，test 测试环境;prod线上环境;local本地环境
 
 # 加密秘钥KEY
 ENCRYPTION_KEY_ID = [

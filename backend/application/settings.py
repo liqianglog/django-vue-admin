@@ -411,6 +411,8 @@ DICTIONARY_CONFIG = {}
 TENANT_SHARED_APPS = []
 # 插件 urlpatterns
 PLUGINS_URL_PATTERNS = []
+# ck配置
+HISTORY_CLICK_HOUSE_DB_POOLS = {}
 # ********** 一键导入插件配置开始 **********
 # 例如:
 # 租户独享app，只在普通租户有

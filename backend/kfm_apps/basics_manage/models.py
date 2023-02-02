@@ -120,14 +120,12 @@ class CodePackageTemplate(CoreModel):
                                       verbose_name="编码来源")
     separator = models.CharField(max_length=20, blank=True, default=",", help_text="分隔符", verbose_name="分隔符")
     fields = models.IntegerField(default=0, blank=True, help_text="字段数", verbose_name="字段数")
-    char_length = models.IntegerField(default=0, blank=True, help_text="字符长度", verbose_name="字符长度")
+    char_length = models.IntegerField(default=0, blank=True, help_text="字符长度(不含换行)", verbose_name="字符长度")
     line_feed = models.IntegerField(choices=LINE_FEED, help_text="换行符", verbose_name="换行符")
     code_type = models.IntegerField(choices=CODE_TYPE, help_text="码类型", verbose_name="码类型")
     w_url_prefix = models.CharField(max_length=200, help_text="外码地址", verbose_name="外码地址")
-    w_url_length = models.IntegerField(default=0, help_text="外码长度", verbose_name="外码长度")
     w_field_position = models.IntegerField(default=0, help_text="外码位置", verbose_name="外码位置")
     n_url_prefix = models.CharField(max_length=200, help_text="内码地址", verbose_name="内码地址")
-    n_url_length = models.IntegerField(default=0, help_text="内码长度", verbose_name="内码长度")
     n_field_position = models.IntegerField(default=0, help_text="内码位置", verbose_name="内码位置")
 
     class Meta:
