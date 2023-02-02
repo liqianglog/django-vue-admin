@@ -43,7 +43,7 @@ class ProductionWork(CoreModel):
 
 class ProductionWorkStatusRecord(models.Model):
     production_work = models.ForeignKey(ProductionWork, db_constraint=False, on_delete=models.CASCADE,
-                                     related_name="production_work", help_text="关联生产工单", verbose_name="关联生产工单")
+                                     related_name="status_record_prod_work", help_text="关联生产工单", verbose_name="关联生产工单")
     status = models.IntegerField(choices=WORK_STATUS, default=0, blank=True, help_text="生产状态",
                                  verbose_name="生产状态")
     print_position = models.IntegerField(default=0, blank=True, help_text="打印位置", verbose_name="打印位置")
@@ -60,7 +60,7 @@ VERIFY_RESULT = (
 )
 class ProductionWorkVerifyRecord(models.Model):
     production_work = models.ForeignKey(ProductionWork, db_constraint=False, on_delete=models.CASCADE,
-                                        related_name="production_work", help_text="关联生产工单",
+                                        related_name="verify_record_prod_work", help_text="关联生产工单",
                                         verbose_name="关联生产工单")
     code_list = models.JSONField(verbose_name="码数据集合",help_text="码数据集合")
     result = models.IntegerField(default=1,choices=VERIFY_RESULT, blank=True, help_text="验证结果", verbose_name="验证结果")
@@ -75,7 +75,7 @@ class ProductionWorkVerifyRecord(models.Model):
 
 class CodePackageDownloadRecord(models.Model):
     production_work = models.ForeignKey(ProductionWork, db_constraint=False, on_delete=models.CASCADE,
-                                        related_name="production_work", help_text="关联生产工单",
+                                        related_name="codepackage_download_prod_work", help_text="关联生产工单",
                                         verbose_name="关联生产工单")
     record_datetime = models.DateTimeField(auto_now_add=True, blank=True, verbose_name="记录时间", help_text="记录时间")
     download_ip = models.CharField(max_length=255,verbose_name="下载IP",help_text="下载IP")
