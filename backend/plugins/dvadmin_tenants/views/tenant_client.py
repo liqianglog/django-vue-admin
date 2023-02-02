@@ -3,7 +3,7 @@ from django_tenants.utils import tenant_context
 
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
-from dvadmin_tenants.models import Client
+from dvadmin_tenants.models import Client, HistoryCodeInfo
 
 
 class ClientSerializer(CustomModelSerializer):
@@ -23,6 +23,8 @@ class ClientSerializer(CustomModelSerializer):
             from dvadmin_tenants.management.commands.tenant_init import Command
             res = Command()
             res.run()
+            # 初始化ck表
+            HistoryCodeInfo.set_db().create_table()
         return instance
 
 

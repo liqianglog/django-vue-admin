@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.core.cache import cache
@@ -98,6 +99,10 @@ class CodePackage(CoreModel):
             code_package_obj.import_log = json.dumps(log)
             if obj.get('type') != 'success':
                 code_package_obj.validate_status = 3
+            if code_package_obj.import_start_datetime:
+                import_end_datetime = datetime.datetime.now()
+                code_package_obj.import_end_datetime = import_end_datetime
+                code_package_obj.import_run_time = (import_end_datetime - code_package_obj.import_start_datetime).seconds
             code_package_obj.save()
 
 
