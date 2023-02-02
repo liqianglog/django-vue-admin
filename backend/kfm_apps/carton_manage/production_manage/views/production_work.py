@@ -56,9 +56,9 @@ class ProductionWorkUpdateSerializer(CustomModelSerializer):
         fields = '__all__'
 
 class ProductionWorkFilterSet(FilterSet):
-    factory_info_name = django_filters.CharFilter(field_name="factory_info.name", lookup_expr="icontain")
-    production_line_name = django_filters.CharFilter(field_name="production_line.name", lookup_expr="icontain")
-    device_name = django_filters.CharFilter(field_name="device.name", lookup_expr="icontain")
+    factory_info_name = django_filters.CharFilter(field_name="factory_info.name", lookup_expr="icontains")
+    production_line_name = django_filters.CharFilter(field_name="production_line.name", lookup_expr="icontains")
+    device_name = django_filters.CharFilter(field_name="device.name", lookup_expr="icontains")
 
     class Meta:
         model = ProductionWork
