@@ -39,13 +39,13 @@ export const crudOptions = (vm) => {
         }
       },
       custom: [
-        {
-          thin: true,
-          text: '日志',
-          size: 'medium',
-          type: 'primary',
-          emit: 'onOrderLog'
-        }
+        // {
+        //   thin: true,
+        //   text: '日志',
+        //   size: 'medium',
+        //   type: 'primary',
+        //   emit: 'onOrderLog'
+        // }
       ]
     },
     viewOptions: {
