@@ -294,7 +294,10 @@ export const crudOptions = (vm) => {
         title: '码包总数',
         key: 'total_number',
         type: 'input',
-        width: 120
+        width: 120,
+        form: {
+          disabled: true
+        }
       },
       {
         title: '码类型',
@@ -313,30 +316,45 @@ export const crudOptions = (vm) => {
           component: {
             placeholder: '请选择码类型'
           }
+        },
+        form: {
+          disabled: true
         }
       },
       {
         title: '压缩包名称',
         key: 'zip_name',
         type: 'input',
-        width: 200
+        width: 200,
+        form: {
+          disabled: true
+        }
       }, {
         title: '来源',
         key: 'source_label',
         type: 'input',
-        width: 80
+        width: 80,
+        form: {
+          disabled: true
+        }
       },
       {
         title: '码包重码数',
         key: 'package_repetition_number',
         type: 'input',
-        width: 100
+        width: 100,
+        form: {
+          disabled: true
+        }
       },
       {
         title: '数据库重码数',
         key: 'database_repetition_number',
         type: 'input',
-        width: 120
+        width: 120,
+        form: {
+          disabled: true
+        }
       },
       {
         title: '校验状态',
@@ -350,6 +368,9 @@ export const crudOptions = (vm) => {
             { value: 3, label: '校验失败' },
             { value: 4, label: '校验成功' }
           ]
+        },
+        form: {
+          disabled: true
         }
       }
     ]
