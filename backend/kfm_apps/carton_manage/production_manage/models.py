@@ -1,4 +1,5 @@
 from django.db import models
+from user_agents.parsers import Device
 
 from basics_manage.models import DeviceManage, ProductionLine, FactoryInfo
 from dvadmin.utils.models import CoreModel
@@ -40,3 +41,52 @@ class ProductionWork(CoreModel):
         verbose_name = '生产工单'
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
+
+
+class ProductionWorkStatusRecord(models.Model):
+    production_work = models.ForeignKey(ProductionWork, db_constraint=False, on_delete=models.CASCADE,
+                                     related_name="production_work", help_text="关联生产工单", verbose_name="关联生产工单")
+    status = models.IntegerField(choices=WORK_STATUS, default=0, blank=True, help_text="生产状态",
+                                 verbose_name="生产状态")
+    print_position = models.IntegerField(default=0, blank=True, help_text="打印位置", verbose_name="打印位置")
+    record_datetime = models.DateTimeField(auto_now_add=True,blank=True,verbose_name="记录时间",help_text="记录时间")
+
+    class Meta:
+        db_table = table_prefix + "production_work_status_record"
+        verbose_name = '生产工单状态记录'
+        verbose_name_plural = verbose_name
+
+VERIFY_RESULT = (
+    (0,"失败"),
+    (1,"成功")
+)
+class ProductionWorkVerifyRecord(models.Model):
+    production_work = models.ForeignKey(ProductionWork, db_constraint=False, on_delete=models.CASCADE,
+                                        related_name="production_work", help_text="关联生产工单",
+                                        verbose_name="关联生产工单")
+    code_list = models.JSONField(verbose_name="码数据集合",help_text="码数据集合")
+    result = models.IntegerField(default=1,choices=VERIFY_RESULT, blank=True, help_text="验证结果", verbose_name="验证结果")
+    remark = models.CharField(max_length=255,blank=True,null=True,verbose_name="备注",help_text='备注')
+    record_datetime = models.DateTimeField(auto_now_add=True, blank=True, verbose_name="记录时间", help_text="记录时间")
+
+    class Meta:
+        db_table = table_prefix + "production_work_verify_record"
+        verbose_name = '生产工单生产校验记录'
+        verbose_name_plural = verbose_name
+
+
+class CodePackageDownloadRecord(models.Model):
+    production_work = models.ForeignKey(ProductionWork, db_constraint=False, on_delete=models.CASCADE,
+                                        related_name="production_work", help_text="关联生产工单",
+                                        verbose_name="关联生产工单")
+    record_datetime = models.DateTimeField(auto_now_add=True, blank=True, verbose_name="记录时间", help_text="记录时间")
+    download_ip = models.CharField(max_length=255,verbose_name="下载IP",help_text="下载IP")
+    device = models.ForeignKey(Device, db_constraint=False, on_delete=models.CASCADE,
+                                        related_name="download_device", help_text="关联设备",
+                                        verbose_name="关联设备")
+    header_range = models.CharField(max_length=255,null=True,blank=True,verbose_name="请求头Range",help_text="请求头Range")
+
+    class Meta:
+        db_table = table_prefix + "code_package_download_record"
+        verbose_name = '码包下载记录'
+        verbose_name_plural = verbose_name
