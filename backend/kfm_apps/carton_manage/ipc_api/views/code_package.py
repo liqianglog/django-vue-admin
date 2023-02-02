@@ -87,8 +87,7 @@ class CodePackageViewSet(CustomModelViewSet):
         """
         # 基于django.views.static.serve实现，支持大文件的断点续传（暂停/继续下载）
         """
-        data = request.data
-        work_no = data.get('work_no', None)
+        work_no = request.META.get('HTTP_WORK_NO', '').strip()
         if work_no is None:
             ret = HttpResponseBadRequest('未获取到生产工单号')
             ret["STATUS-CODE"] = 400

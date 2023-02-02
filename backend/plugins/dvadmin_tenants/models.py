@@ -2,8 +2,10 @@ import datetime
 
 from django.db import models
 from django_tenants.models import TenantMixin, DomainMixin
+from infi.clickhouse_orm import StringField, DateTimeField, MergeTree
 
 from application import dispatch
+from click_house.models import ClusterModel
 from dvadmin.utils.models import table_prefix
 # 商城微信小程序
 
@@ -48,3 +50,45 @@ class Domain(DomainMixin):
         verbose_name = '租户domain'
         verbose_name_plural = verbose_name
         ordering = ('id',)
+
+
+class HistoryCodeInfo(ClusterModel):
+    """
+    历史码数据表
+    """
+    code = StringField()
+    code_type = StringField() # 0 内码; 1 外码
+    tenant_id = StringField() # 租户id
+    package_id = StringField() # 码包id
+    timestamp = DateTimeField()
+    engine = MergeTree('timestamp', ('code',),
+                                replica_table_path='/clickhouse/tables/{database}/{table}/{shard}',
+                                replica_name='{replica}')
+
+
+class HistoryTemporaryCode(ClusterModel):
+    """
+    临时历史码码数据表
+    """
+    code = StringField()
+    code_type = StringField() # 0 内码; 1 外码
+    tenant_id = StringField() # 租户id
+    package_id = StringField() # 码包id
+    timestamp = DateTimeField()
+    engine = MergeTree('timestamp', ('code',),
+                       replica_table_path='/clickhouse/tables/{database}/{table}/{shard}',
+                       replica_name='{replica}')
+
+    @classmethod
+    def insert_history(cls, insert_table):
+        """
+        把历史数据插入历史码数据中
+        :param insert_table:
+        :return:
+        """
+        sql = f"""
+INSERT INTO {cls.db.db_name}.{insert_table}  (code, code_type, tenant_id, package_id, timestamp) 
+SELECT code, code_type, tenant_id, package_id, timestamp FROM 
+{cls.db.db_name}.{cls.get_base_all_model().table_name()};
+        """
+        cls.db.raw(sql)

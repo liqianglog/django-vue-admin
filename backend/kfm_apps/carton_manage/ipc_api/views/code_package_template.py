@@ -27,12 +27,12 @@ class IpcCodePackageTemplateSerializer(CustomModelSerializer):
         code_type = instance.code_type
         if code_type==0:
             result["w_url_prefix"]= instance.w_url_prefix
-            result["w_url_length"] = instance.w_url_length
+            result["w_url_length"] = len(instance.w_url_prefix)
             result["w_field_position"] = instance.w_field_position
             return result
         elif code_type==1:
             result["n_url_prefix"] = instance.n_url_prefix
-            result["n_url_length"] = instance.n_url_length
+            result["n_url_length"] = len(instance.n_url_prefix)
             result["n_field_position"] = instance.n_field_position
             return result
         else:

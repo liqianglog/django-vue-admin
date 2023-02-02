@@ -310,46 +310,6 @@ export const crudOptions = (vm) => {
           }
         }
       }, {
-        title: '外码长度',
-        key: 'w_url_length',
-        type: 'number',
-        width: 80,
-        form: {
-          value: 0,
-          rules: [
-            { required: true, message: '外码长度不能为空', trigger: 'blur' }
-          ],
-          component: {
-            placeholder: '外码长度',
-            props: {
-              min: 0
-            }
-          },
-          itemProps: {
-            class: { yxtInput: true }
-          }
-        }
-      }, {
-        title: '内码长度',
-        key: 'n_url_length',
-        type: 'number',
-        width: 80,
-        form: {
-          value: 0,
-          rules: [
-            { required: true, message: '内码长度不能为空', trigger: 'blur' }
-          ],
-          component: {
-            placeholder: '内码长度',
-            props: {
-              min: 0
-            }
-          },
-          itemProps: {
-            class: { yxtInput: true }
-          }
-        }
-      }, {
         title: '外码位置',
         key: 'w_field_position',
         type: 'number',
