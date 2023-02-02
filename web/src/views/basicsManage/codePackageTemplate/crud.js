@@ -186,10 +186,10 @@ export const crudOptions = (vm) => {
           disabled: true
         },
         width: 70,
-        type: 'select',
-        dict: {
-          data: [{ label: ',', value: ',' }, { label: '|', value: '|' }, { label: ';', value: ';' }]
-        },
+        type: 'input',
+        // dict: {
+        //   data: [{ label: ',', value: ',' }, { label: '竖线', value: '|' }, { label: '分号', value: ';' }]
+        // },
         form: {
           component: {
             span: 12

@@ -61,8 +61,8 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '码包',
-        key: 'code_package',
+        title: '生产工单号',
+        key: 'production_work_no',
         minWidth: 120,
         search: {
           disabled: true,
@@ -75,21 +75,20 @@ export const crudOptions = (vm) => {
         type: 'input'
       },
       {
-        title: '码内容',
-        key: 'code_content',
+        title: '码包订单号',
+        key: 'order_id',
         minWidth: 200,
         search: {
-          disabled: false,
-          width: 300,
+          disabled: true,
           component: {
-            placeholder: '请输入码内容',
             props: {
               clearable: true
             }
           }
         },
         type: 'input'
-      }, {
+      },
+      {
         title: '码类型',
         key: 'code_type',
         minWidth: 120,
@@ -112,13 +111,33 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '重码码包',
-        key: 'repetition_code_package',
+        title: '下载IP',
+        key: 'download_ip',
+        minWidth: 100,
+        type: 'input'
+      },{
+        title: '记录时间',
+        key: 'record_datetime',
         minWidth: 100,
         search: {
           disabled: false,
           component: {
-            placeholder: '请输入重码码包',
+            placeholder: '请选择记录时间',
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'datetime'
+      },
+      {
+        title: '生产工厂',
+        key: 'factory_info_name',
+        minWidth: 100,
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请输入生产工厂',
             props: {
               clearable: true
             }
@@ -127,26 +146,34 @@ export const crudOptions = (vm) => {
         type: 'input'
       },
       {
-        title: '重码码类型',
-        key: 'repetition_type',
+        title: '生产产线',
+        key: 'production_line_name',
         minWidth: 100,
         search: {
           disabled: false,
           component: {
-            placeholder: '请选择重码码类型',
+            placeholder: '请输入生产产线',
             props: {
               clearable: true
             }
           }
         },
-        type: 'select',
-        dist: {
-          data: [
-            { value: 0, label: '外码' },
-            { value: 1, label: '内码' },
-            { value: 2, label: '外码+内码' }
-          ]
-        }
+        type: 'input'
+      },
+      {
+        title: '生产设备',
+        key: 'device_name',
+        minWidth: 100,
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请输入生产设备',
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'input'
       }
     ].concat(vm.commonEndColumns({
       update_datetime: { showTable: false },
