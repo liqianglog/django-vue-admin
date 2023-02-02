@@ -12,8 +12,10 @@ from django.views.static import was_modified_since
 from rest_framework import serializers
 from rest_framework.decorators import action
 
+from carton_manage.ipc_api.views.code_package_download_record import IpcCodePackageDownloadRecordCreateSerializer
 from carton_manage.production_manage.models import ProductionWork
 from dvadmin.utils.json_response import DetailResponse
+from dvadmin.utils.request_util import get_request_ip
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 from carton_manage.code_manage.models import CodePackage
@@ -101,7 +103,6 @@ class CodePackageViewSet(CustomModelViewSet):
         # 防止目录遍历漏洞
         path = posixpath.normpath(
             os.path.join(kwargs.get('tenant_name'), kwargs.get('day'), kwargs.get('file_name'))).lstrip('/')
-        print(path)
         fullpath = safe_join('kfm_code_file/code_package_txt_file', path)
         if os.path.isdir(fullpath):
             ret = HttpResponseBadRequest('这里不允许使用目录索引')
@@ -125,6 +126,17 @@ class CodePackageViewSet(CustomModelViewSet):
         range_match = range_re.match(range_header)
         size = os.path.getsize(fullpath)
         content_type = mimetypes.guess_type(fullpath)[0] or 'application/octet-stream'
+        # *************加入文件下载记录***************#
+        create_data = {
+            "production_work": _ProductionWork.id,
+            "download_ip": get_request_ip(request=request),
+            "device": device,
+            "header_range": range_header
+        }
+        serializer = IpcCodePackageDownloadRecordCreateSerializer(data=create_data, many=False)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        # *************加入文件下载记录***************#
         if range_match:
             first_byte, last_byte = range_match.groups()
             first_byte = int(first_byte) if first_byte else 0
