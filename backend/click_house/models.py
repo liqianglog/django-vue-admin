@@ -188,7 +188,7 @@ WHERE {order_by}  GLOBAL IN {list(result_data.keys())}
         return len(result_data.keys()), result_data
 
     @classmethod
-    def verify_history_code_repetition(cls, from_table=""):
+    def verify_history_code_repetition(cls, from_db="", from_table=""):
         """
         历史码内查重
         SELECT
@@ -203,12 +203,14 @@ WHERE {order_by}  GLOBAL IN {list(result_data.keys())}
         :return: count,data
         """
         order_by = cls.engine.order_by[0]
+        if not from_db:
+            from_db = cls.db.db_name
         sql = f"""
-SELECT {order_by},count(),package_id FROM {cls.db.db_name}.{from_table} 
+SELECT {order_by},count(),package_id FROM {from_db}.{from_table} 
 WHERE {order_by} GLOBAL IN (
     SELECT {order_by} FROM {cls.db.db_name}.{cls.get_base_all_model().table_name()}
 ) 
-group by {order_by} limit 1001
+group by {order_by},package_id limit 1001
         """
         result_data = {}
         logger.debug("匹配历史码开始...")

@@ -120,14 +120,16 @@ class HistoryTemporaryCode(ClusterModel):
         return super().set_db(db_name, timeout)
 
     @classmethod
-    def insert_history(cls, insert_table):
+    def insert_history(cls, insert_table, insert_db=None):
         """
         把临时数据插入历史码数据中
         :param insert_table:
         :return:
         """
+        if not insert_db:
+            insert_db = cls.db.db_name
         sql = f"""
-INSERT INTO {cls.db.db_name}.{insert_table}  (code, code_type, tenant_id, package_id, timestamp) 
+INSERT INTO {insert_db}.{insert_table}  (code, code_type, tenant_id, package_id, timestamp) 
 SELECT code, code_type, tenant_id, package_id, timestamp FROM 
 {cls.db.db_name}.{cls.get_base_all_model().table_name()};
         """

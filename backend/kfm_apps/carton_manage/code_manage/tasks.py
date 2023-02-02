@@ -1,5 +1,4 @@
 import datetime
-import json
 import os
 
 import django
@@ -42,16 +41,15 @@ def code_package_import_check(code_package_ids):
                 "type": 'error'
             })
             return f"校验状态错误:{code_package_obj.get_validate_status_display()}"
-        code_package_obj.write_log({"content": f"码包状态校验通过"})
         code_package_obj.validate_status = 2
         code_package_obj.save()
+        code_package_obj.write_log({"content": f"码包状态校验通过"})
         # 2.根据规则验证码包是否合格
         source_file_path = os.path.join(get_code_package_import_txt_path(), code_package_obj.file_position)
         code_package_template_obj = code_package_obj.code_package_template
         with open(source_file_path) as file:
             readline = file.readline()
             old_readline = readline
-            print("readline", readline)
             # 2.1.校验换行符
             if (code_package_template_obj.line_feed == 1 and not readline.endswith(
                     '\r\n')) or code_package_template_obj.line_feed == 0 and readline.endswith('\r\n'):  # 回车换行
@@ -123,7 +121,6 @@ def code_package_import_check(code_package_ids):
         code_data_list = []
         # 码数据先入临时表中
         _HistoryTemporaryCode = HistoryTemporaryCode.set_db(timeout=60 * 30)
-        print(1,code_package_template_obj.id)
         _HistoryTemporaryCode.create_table(table_suffix=code_package_template_obj.id)
         tenant_id = Client.objects.get(schema_name=connection.tenant.schema_name).id
         with open(source_file_path) as file:
@@ -185,8 +182,11 @@ def code_package_import_check(code_package_ids):
         code_package_obj.write_log({"content": '本码包重复码校验通过'})
         # 4.历史重码校验
         from_table = HistoryCodeInfo.get_base_all_model().table_name()
+        print(from_table)
         _HistoryCodeInfo = HistoryCodeInfo.set_db()
-        count, history_code_data = _HistoryTemporaryCode.verify_history_code_repetition(from_table=from_table)
+        print(2222, _HistoryCodeInfo.db.db_name)
+        count, history_code_data = _HistoryTemporaryCode.verify_history_code_repetition(
+            from_db=_HistoryCodeInfo.db.db_name, from_table=from_table)
         if count != 0:
             if count > 1000:
                 code_package_obj.write_log({
@@ -220,13 +220,14 @@ def code_package_import_check(code_package_ids):
             return
         code_package_obj.write_log({"content": '历史码包重复码校验成功'})
         # 5.数据入库到ck中
-        _HistoryTemporaryCode.insert_history(from_table)
+        _HistoryTemporaryCode.insert_history(from_table, insert_db=HistoryCodeInfo.db.db_name)
         _HistoryTemporaryCode.delete()
         # 6.对数据进行加密并删除源数据
         target_file_path = source_file_path.replace('.txt', '.zip')
         zip_compress_file(source_file_path, target_file_path, is_rm=True)
         des_encrypt_file(target_file_path, settings.ENCRYPTION_KEY_ID[code_package_obj.key_id])
         os.rename(target_file_path, target_file_path.replace('.zip', '.zip.des'))
+        code_package_obj = CodePackage.objects.get(id=code_package_id)
         code_package_obj.file_position = code_package_obj.file_position.replace('.txt', '.zip.des')
         code_package_obj.validate_status = 4
         code_package_obj.des_file_md5 = md5_file(
