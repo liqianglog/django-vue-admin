@@ -1,6 +1,4 @@
 from django.db import models
-from user_agents.parsers import Device
-
 from basics_manage.models import DeviceManage, ProductionLine, FactoryInfo
 from dvadmin.utils.models import CoreModel
 from carton_manage.code_manage.models import CodePackage
@@ -81,7 +79,7 @@ class CodePackageDownloadRecord(models.Model):
                                         verbose_name="关联生产工单")
     record_datetime = models.DateTimeField(auto_now_add=True, blank=True, verbose_name="记录时间", help_text="记录时间")
     download_ip = models.CharField(max_length=255,verbose_name="下载IP",help_text="下载IP")
-    device = models.ForeignKey(Device, db_constraint=False, on_delete=models.CASCADE,
+    device = models.ForeignKey(DeviceManage, db_constraint=False, on_delete=models.CASCADE,
                                         related_name="download_device", help_text="关联设备",
                                         verbose_name="关联设备")
     header_range = models.CharField(max_length=255,null=True,blank=True,verbose_name="请求头Range",help_text="请求头Range")

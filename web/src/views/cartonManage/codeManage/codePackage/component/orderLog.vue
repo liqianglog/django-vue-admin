@@ -32,7 +32,7 @@ export default {
   },
   data () {
     return {
-      options:{},
+      options: {},
       drawer: false,
       activities: [],
       timer: null
@@ -40,26 +40,28 @@ export default {
   },
   methods: {
     getInit () {
-      console.log(this.options.id)
+      const that = this
       if (this.options.id) {
         const params = {
           id: this.options.id,
           _fields: 'import_log,'
         }
         api.getObj(params).then((res) => {
-          const { data } = res.data
-          const activities = JSON.parse(data.import_log)
-          this.activities = activities.reverse()
+          const { data } = res
+          if (data.import_log) {
+            const activities = JSON.parse(data.import_log)
+            that.activities = activities.reverse()
+          }
         })
       }
     }
   },
   mounted () {
     const that = this
-    //that.timer = setInterval(that.getInit, 3000)
+    // that.timer = setInterval(that.getInit, 3000)
   },
   created () {
-    //this.getInit()
+    // this.getInit()
   },
   beforeDestroy () {
     clearInterval(this.timer)
