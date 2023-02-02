@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
-import os
 import random
 import shutil
-import time
 import zipfile
-from wsgiref.util import FileWrapper
 
 from django.db import transaction
 from rest_framework import serializers
@@ -16,20 +13,11 @@ from dvadmin.utils.json_response import ErrorResponse, SuccessResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 from carton_manage.code_manage.models import CodePackage
-from utils.currency import get_code_package_import_zip_path, check_zip_is_encrypted, file_now_datetime, file_iterator, \
-    unzip_compress_file
-import mimetypes
+from utils.currency import unzip_compress_file
 import os
-import posixpath
-import re
-import stat
 from utils.currency import get_code_package_import_zip_path, check_zip_is_encrypted, file_now_datetime, zip_is_txt, \
     get_code_package_import_txt_path, read_max_row, md5_file, md5_value, read_file_first
 
-from django.http import Http404, HttpResponseNotModified, FileResponse, StreamingHttpResponse
-from django.utils._os import safe_join
-from django.utils.http import http_date
-from django.views.static import was_modified_since
 from carton_manage.code_manage.tasks import code_package_import_check
 
 
@@ -37,7 +25,7 @@ class CodePackageSerializer(CustomModelSerializer):
     """
     码包管理-序列化器
     """
-    code_type_label = serializers.CharField(source="get_code_type_display",read_only=True)
+    code_type_label = serializers.CharField(source="get_code_type_display", read_only=True)
     source_label = serializers.CharField(source="get_source_display", read_only=True)
 
     class Meta:

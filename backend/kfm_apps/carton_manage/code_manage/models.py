@@ -1,4 +1,8 @@
+import json
+
+from django.core.cache import cache
 from django.db import models
+from django.utils import timezone
 
 from dvadmin.utils.models import CoreModel
 from basics_manage.models import CodePackageTemplate, DeviceManage
@@ -71,6 +75,30 @@ class CodePackage(CoreModel):
 
     def __str__(self):
         return str(self.no)
+
+    def write_log(self, obj: dict):
+        """
+        写入日志
+        :param obj:  {
+            "content": 'xxxx',
+            "timestamp": '2023-01-01 00:00:00',
+            "type": 'success' # error
+        }
+        :return:
+        """
+        if not obj.get('timestamp', None):
+            obj['timestamp'] = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+        if not obj.get('type', None):
+            obj['type'] = 'success'
+
+        with cache.lock(key="write_log"):
+            code_package_obj = CodePackage.objects.get(id=self.id)
+            log = (code_package_obj.import_log and json.loads(code_package_obj.import_log)) or []
+            log.append(obj)
+            code_package_obj.import_log = json.dumps(log)
+            if obj.get('type') != 'success':
+                code_package_obj.validate_status = 3
+            code_package_obj.save()
 
 
 CODE_TYPE = (
