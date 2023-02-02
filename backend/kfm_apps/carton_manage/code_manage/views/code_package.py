@@ -130,7 +130,7 @@ class CodePackageViewSet(CustomModelViewSet):
                 # 进行解压文件
                 unzip_compress_file(file_path, txt_file_path, is_rm=False, pwd=pwd,
                                     specify_file_name=file_name_list)
-            # os.remove(file_path)  # 删除zip包
+            os.remove(file_path)  # 删除zip包
         elif file_type == "txt":
             new_file_path = os.path.join(txt_file_path, str(file_path.split(os.sep)[-1]))
             shutil.move(file_path, new_file_path)

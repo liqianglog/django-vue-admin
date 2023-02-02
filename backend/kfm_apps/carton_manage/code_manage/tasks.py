@@ -32,6 +32,7 @@ def code_package_import_check(code_package_ids):
     for code_package_id in code_package_ids:
         code_package_obj = CodePackage.objects.get(id=code_package_id)
         code_package_obj.import_log = None
+        code_package_obj.import_start_datetime = datetime.datetime.now()
         code_package_obj.save()
         # 1.校验码包状态
 
@@ -182,9 +183,7 @@ def code_package_import_check(code_package_ids):
         code_package_obj.write_log({"content": '本码包重复码校验通过'})
         # 4.历史重码校验
         from_table = HistoryCodeInfo.get_base_all_model().table_name()
-        print(from_table)
         _HistoryCodeInfo = HistoryCodeInfo.set_db()
-        print(2222, _HistoryCodeInfo.db.db_name)
         count, history_code_data = _HistoryTemporaryCode.verify_history_code_repetition(
             from_db=_HistoryCodeInfo.db.db_name, from_table=from_table)
         if count != 0:
