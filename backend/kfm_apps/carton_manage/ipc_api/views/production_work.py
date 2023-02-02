@@ -12,6 +12,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from application import settings
 from basics_manage.models import ProductionLine, DeviceManage
+from carton_manage.ipc_api.views.production_work_status_record import IpcProductionWorkStatusRecordCreateSerializer
+from carton_manage.ipc_api.views.production_work_verify_record import IpcProductionWorkVerifyRecordCreateSerializer
 from dvadmin.utils.json_response import DetailResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -170,6 +172,16 @@ class ProductionWorkViewSet(CustomModelViewSet):
         _ProductionWork = ProductionWork.objects.filter(no=work_no).first()
         if _ProductionWork is None:
             return ErrorResponse(msg="未查询到生产工单号")
+        #*************加入检测记录***************#
+        create_data = {
+            "production_work":_ProductionWork.id,
+            "code_list":code_list,
+            "result":1
+        }
+        serializer=IpcProductionWorkVerifyRecordCreateSerializer(data=create_data,many=False)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        # *************加入检测记录***************#
         return DetailResponse(msg="码包正常")
 
     @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated])
@@ -193,4 +205,14 @@ class ProductionWorkViewSet(CustomModelViewSet):
                 production_work_instance.print_position = print_position
                 production_work_instance.status = work_status
                 production_work_instance.save()
+                # *************加入生产状态记录***************#
+                create_data = {
+                    "production_work": production_work_instance.id,
+                    "print_position": print_position,
+                    "status": work_status
+                }
+                serializer = IpcProductionWorkStatusRecordCreateSerializer(data=create_data, many=False)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                # *************加入生产状态记录***************#
                 return DetailResponse(msg="更新成功")
