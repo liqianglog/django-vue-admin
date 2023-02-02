@@ -22,7 +22,7 @@
         "component": "cartonManage/productionManage/productionWork/index",
         "component_name": "productionWork",
         "status": true,
-        "cache": true,
+        "cache": false,
         "visible": true,
         "children": [],
         "menu_button": [
@@ -68,7 +68,7 @@
         "component": "cartonManage/productionManage/productionWorkStatusRecord/index",
         "component_name": "ProductionWorkStatusRecord",
         "status": true,
-        "cache": true,
+        "cache": false,
         "visible": true,
         "children": [],
         "menu_button": [
@@ -114,7 +114,7 @@
         "component": "cartonManage/productionManage/productionWorkVerifyRecord/index",
         "component_name": "ProductionWorkVerifyRecord",
         "status": true,
-        "cache": true,
+        "cache": false,
         "visible": true,
         "children": [],
         "menu_button": [

@@ -22,7 +22,7 @@
         "component": "basicsManage/factoryInfo/index",
         "component_name": "factoryInfo",
         "status": true,
-        "cache": true,
+        "cache": false,
         "visible": true,
         "children": [],
         "menu_button": [
@@ -68,7 +68,7 @@
         "component": "basicsManage/productionLine/index",
         "component_name": "productionLine",
         "status": true,
-        "cache": true,
+        "cache": false,
         "visible": true,
         "children": [],
         "menu_button": [
@@ -114,7 +114,7 @@
         "component": "basicsManage/deviceManage/index",
         "component_name": "deviceManage",
         "status": true,
-        "cache": true,
+        "cache": false,
         "visible": true,
         "children": [],
         "menu_button": [
@@ -160,7 +160,7 @@
         "component": "basicsManage/codePackageTemplate/index",
         "component_name": "codePackageTemplate",
         "status": true,
-        "cache": true,
+        "cache": false,
         "visible": true,
         "children": [],
         "menu_button": [
