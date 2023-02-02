@@ -3,12 +3,12 @@ import django_filters
 from django_filters.rest_framework import FilterSet
 from rest_framework import serializers
 
-from carton_manage.production_manage.models import ProductionWorkStatusRecord
+from carton_manage.production_manage.models import CodePackageDownloadRecord
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 
 
-class ProductionWorkStatusRecordSerializer(CustomModelSerializer):
+class CodePackageDownloadRecordSerializer(CustomModelSerializer):
     """
     生产状态记录-序列化器
     """
@@ -17,52 +17,53 @@ class ProductionWorkStatusRecordSerializer(CustomModelSerializer):
     order_id = serializers.CharField(source="production_work.order_id", read_only=True)
     factory_info_name = serializers.CharField(source="production_work.factory_info.name", read_only=True)
     production_line_name = serializers.CharField(source="production_work.production_line.name", read_only=True)
-    device_name = serializers.CharField(source="production_work.device.name", read_only=True)
+    device_name = serializers.CharField(source="device.name", read_only=True)
 
     class Meta:
-        model = ProductionWorkStatusRecord
+        model = CodePackageDownloadRecord
         fields = "__all__"
         read_only_fields = ["id"]
 
 
-class ProductionWorkStatusRecordCreateSerializer(CustomModelSerializer):
+class CodePackageDownloadRecordCreateSerializer(CustomModelSerializer):
     """
     生产状态记录-新增序列化器
     """
 
     class Meta:
-        model = ProductionWorkStatusRecord
+        model = CodePackageDownloadRecord
         fields = "__all__"
         read_only_fields = ["id"]
 
 
-class ProductionWorkStatusRecordUpdateSerializer(CustomModelSerializer):
+class CodePackageDownloadRecordUpdateSerializer(CustomModelSerializer):
     """
     生产状态记录-更新列化器
     """
 
     class Meta:
-        model = ProductionWorkStatusRecord
+        model = CodePackageDownloadRecord
         fields = '__all__'
 
 
-class ProductionWorkStatusRecordFilterSet(FilterSet):
-    code_type = django_filters.NumberFilter(field_name="production_work__code_package__code_type", lookup_expr="icontains")
+class CodePackageDownloadRecordFilterSet(FilterSet):
+    code_type = django_filters.NumberFilter(field_name="production_work__code_package__code_type",
+                                            lookup_expr="icontains")
     factory_info_name = django_filters.CharFilter(field_name="production_work__factory_info__name", lookup_expr="icontains")
     production_line_name = django_filters.CharFilter(field_name="production_work__production_line__name", lookup_expr="icontains")
-    device_name = django_filters.CharFilter(field_name="production_work__device__name", lookup_expr="icontains")
+    device_name = django_filters.CharFilter(field_name="device__name", lookup_expr="icontains")
 
 
 class Meta:
-        model = ProductionWorkStatusRecord
+        model = CodePackageDownloadRecord
         fields = '__all__'
 
-class ProductionWorkStatusRecordViewSet(CustomModelViewSet):
+class CodePackageDownloadRecordViewSet(CustomModelViewSet):
     """
     生产状态记录接口:
     """
-    queryset = ProductionWorkStatusRecord.objects.all()
-    serializer_class = ProductionWorkStatusRecordSerializer
-    create_serializer_class = ProductionWorkStatusRecordCreateSerializer
-    update_serializer_class = ProductionWorkStatusRecordUpdateSerializer
-    filter_class = ProductionWorkStatusRecordFilterSet
+    queryset = CodePackageDownloadRecord.objects.all()
+    serializer_class = CodePackageDownloadRecordSerializer
+    create_serializer_class = CodePackageDownloadRecordCreateSerializer
+    update_serializer_class = CodePackageDownloadRecordUpdateSerializer
+    filter_class = CodePackageDownloadRecordFilterSet

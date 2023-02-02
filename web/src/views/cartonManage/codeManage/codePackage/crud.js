@@ -183,7 +183,7 @@ export const crudOptions = (vm) => {
               row[col.key] = null
             }
           } else {
-            row[col.key] = value.file_path
+            row[col.key] = value
           }
         }
       },
@@ -373,6 +373,9 @@ export const crudOptions = (vm) => {
           disabled: true
         }
       }
-    ]
+    ].concat(vm.commonEndColumns({
+      create_datetime: { showTable: true },
+      dept_belong_id: { showForm: false, showTable: false }
+    }))
   }
 }

@@ -59,14 +59,14 @@
         ]
       },
       {
-        "name": "生产状态记录",
-        "icon": "bookmark-o",
+        "name": "码包下载记录",
+        "icon": "cloud-download",
         "sort": 2,
         "is_link": false,
         "is_catalog": false,
-        "web_path": "/productionWorkStatusRecord",
-        "component": "cartonManage/productionManage/productionWorkStatusRecord/index",
-        "component_name": "ProductionWorkStatusRecord",
+        "web_path": "/codePackageDownloadRecord",
+        "component": "cartonManage/productionManage/codePackageDownloadRecord/index",
+        "component_name": "CodePackageDownloadRecord",
         "status": true,
         "cache": false,
         "visible": true,
@@ -75,31 +75,31 @@
           {
             "name": "查询",
             "value": "Search",
-            "api": "/api/carton/production_manage/production_work_status_record/",
+            "api": "/api/carton/production_manage/code_package_download_record/",
             "method": 0
           },
           {
             "name": "详情",
             "value": "Retrieve",
-            "api": "/api/carton/production_manage/production_work_status_record/{id}/",
+            "api": "/api/carton/production_manage/code_package_download_record/{id}/",
             "method": 0
           },
           {
             "name": "新增",
             "value": "Create",
-            "api": "/api/carton/production_manage/production_work_status_record/",
+            "api": "/api/carton/production_manage/code_package_download_record/",
             "method": 1
           },
           {
             "name": "编辑",
             "value": "Update",
-            "api": "/api/carton/production_manage/production_work_status_record/{id}/",
+            "api": "/api/carton/production_manage/code_package_download_record/{id}/",
             "method": 2
           },
           {
             "name": "删除",
             "value": "Delete",
-            "api": "/api/carton/production_manage/production_work_status_record/{id}/",
+            "api": "/api/carton/production_manage/code_package_download_record/{id}/",
             "method": 3
           }
         ]
@@ -146,6 +146,52 @@
             "name": "删除",
             "value": "Delete",
             "api": "/api/carton/production_manage/production_work_verify_record/{id}/",
+            "method": 3
+          }
+        ]
+      },
+      {
+        "name": "生产状态记录",
+        "icon": "bookmark-o",
+        "sort": 4,
+        "is_link": false,
+        "is_catalog": false,
+        "web_path": "/productionWorkStatusRecord",
+        "component": "cartonManage/productionManage/productionWorkStatusRecord/index",
+        "component_name": "ProductionWorkStatusRecord",
+        "status": true,
+        "cache": true,
+        "visible": true,
+        "children": [],
+        "menu_button": [
+          {
+            "name": "查询",
+            "value": "Search",
+            "api": "/api/carton/production_manage/production_work_status_record/",
+            "method": 0
+          },
+          {
+            "name": "详情",
+            "value": "Retrieve",
+            "api": "/api/carton/production_manage/production_work_status_record/{id}/",
+            "method": 0
+          },
+          {
+            "name": "新增",
+            "value": "Create",
+            "api": "/api/carton/production_manage/production_work_status_record/",
+            "method": 1
+          },
+          {
+            "name": "编辑",
+            "value": "Update",
+            "api": "/api/carton/production_manage/production_work_status_record/{id}/",
+            "method": 2
+          },
+          {
+            "name": "删除",
+            "value": "Delete",
+            "api": "/api/carton/production_manage/production_work_status_record/{id}/",
             "method": 3
           }
         ]

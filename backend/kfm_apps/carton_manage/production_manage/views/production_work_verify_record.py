@@ -46,10 +46,10 @@ class ProductionWorkVerifyRecordUpdateSerializer(CustomModelSerializer):
         fields = '__all__'
 
 
-class ProductionWorkFilterSet(FilterSet):
-    factory_info_name = django_filters.CharFilter(field_name="production_work.factory_info.name", lookup_expr="icontains")
-    production_line_name = django_filters.CharFilter(field_name="production_work.production_line.name", lookup_expr="icontains")
-    device_name = django_filters.CharFilter(field_name="production_work.device.name", lookup_expr="icontains")
+class ProductionWorkVerifyRecordFilterSet(FilterSet):
+    factory_info_name = django_filters.CharFilter(field_name="production_work__factory_info__name", lookup_expr="icontains")
+    production_line_name = django_filters.CharFilter(field_name="production_work__production_line__name", lookup_expr="icontains")
+    device_name = django_filters.CharFilter(field_name="production_work__device__name", lookup_expr="icontains")
 
 
 class Meta:
@@ -64,3 +64,4 @@ class ProductionWorkVerifyRecordViewSet(CustomModelViewSet):
     serializer_class = ProductionWorkVerifyRecordSerializer
     create_serializer_class = ProductionWorkVerifyRecordCreateSerializer
     update_serializer_class = ProductionWorkVerifyRecordUpdateSerializer
+    filter_class = ProductionWorkVerifyRecordFilterSet
