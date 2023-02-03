@@ -22,7 +22,7 @@
         "component": "cartonManage/codeManage/codePackage/index",
         "component_name": "codePackage",
         "status": true,
-        "cache": true,
+        "cache": false,
         "visible": true,
         "children": [],
         "menu_button": [
@@ -68,7 +68,7 @@
         "component": "cartonManage/codeManage/codeRepetitionRecord/index",
         "component_name": "codeRepetitionRecord",
         "status": true,
-        "cache": true,
+        "cache": false,
         "visible": true,
         "children": [],
         "menu_button": [

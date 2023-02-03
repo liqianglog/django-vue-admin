@@ -134,7 +134,7 @@ def code_package_import_check(code_package_ids):
                         code=md5_value(w_url),
                         code_type='1',
                         content=w_url,
-                        tenant_id=f"{tenant_id - 100000}",
+                        tenant_id=f"{tenant_id}",
                         package_id=f"{code_package_template_obj.id}",
                         timestamp=datetime.datetime.now()
                     ))
@@ -144,7 +144,7 @@ def code_package_import_check(code_package_ids):
                         code=md5_value(n_url),
                         code_type='0',
                         content=n_url,
-                        tenant_id=f"{tenant_id - 100000}",
+                        tenant_id=f"{tenant_id}",
                         package_id=f"{code_package_template_obj.id}",
                         timestamp=datetime.datetime.now()
                     ))
