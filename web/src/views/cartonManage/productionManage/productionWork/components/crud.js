@@ -15,31 +15,6 @@ export const crudOptions = (vm) => {
 
     },
     rowHandle: false,
-    // rowHandle: {
-    //   fixed: 'right',
-    //   view: {
-    //     thin: true,
-    //     text: '',
-    //     disabled () {
-    //       return !vm.hasPermissions('Retrieve')
-    //     }
-    //   },
-    //   width: 140,
-    //   edit: {
-    //     thin: true,
-    //     text: '',
-    //     disabled () {
-    //       return !vm.hasPermissions('Update')
-    //     }
-    //   },
-    //   remove: {
-    //     thin: true,
-    //     text: '',
-    //     disabled () {
-    //       return !vm.hasPermissions('Delete')
-    //     }
-    //   }
-    // },
     viewOptions: {
       componentType: 'row'
     },
@@ -102,7 +77,7 @@ export const crudOptions = (vm) => {
           }
         },
         type: 'select',
-        dist: {
+        dict: {
           data: [
             { value: 0, label: '外码' },
             { value: 1, label: '内码' },
@@ -199,9 +174,6 @@ export const crudOptions = (vm) => {
         },
         type: 'input'
       }
-    ].concat(vm.commonEndColumns({
-      update_datetime: { showTable: false },
-      dept_belong_id: { showForm: false, showTable: false }
-    }))
+    ]
   }
 }

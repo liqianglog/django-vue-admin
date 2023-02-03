@@ -3,7 +3,7 @@
     :visible.sync="drawer"
     direction="rtl"
     :title="title"
-    size="50%"
+    :size="1200"
   >
     <div slot="title">
       <span>生产工单</span>
@@ -12,6 +12,7 @@
         }}</el-tag>
     </div>
     <div>
+      <d2-container  style="margin-left: 10px;margin-top: 80px" :class="{ 'page-compact': crud.pageOptions.compact }">
       <d2-crud-x
         ref="d2Crud"
         v-bind="_crudProps"
@@ -27,6 +28,7 @@
 
         </div>
       </d2-crud-x>
+      </d2-container>
     </div>
   </el-drawer>
 </template>
@@ -34,14 +36,19 @@
 <script>
 import { d2CrudPlus } from 'd2-crud-plus'
 import { crudOptions } from './crud'
-import * as api from '@/views/cartonManage/productionManage/productionWorkStatusRecord/api'
+import * as api from './api'
 export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
       drawer: false,
-      title:"生产状态记录",
-      options:{}
+      title: '生产状态记录',
+      options: {}
+    }
+  },
+  watch: {
+    options () {
+      this.doRefresh({ from: 'load' })
     }
   },
   methods: {
@@ -49,7 +56,8 @@ export default {
       return crudOptions(this)
     },
     pageRequest (query) {
-      return api.GetList(query)
+      const production_work = this.options.id
+      return api.GetList({ ...query, production_work: production_work })
     }
   }
 }
