@@ -79,20 +79,6 @@ class Role(CoreModel):
     sort = models.IntegerField(default=1, verbose_name="角色顺序", help_text="角色顺序")
     status = models.BooleanField(default=True, verbose_name="角色状态", help_text="角色状态")
     admin = models.BooleanField(default=False, verbose_name="是否为admin", help_text="是否为admin")
-    DATASCOPE_CHOICES = (
-        (0, "仅本人数据权限"),
-        (1, "本部门及以下数据权限"),
-        (2, "本部门数据权限"),
-        (3, "全部数据权限"),
-        (4, "自定数据权限"),
-    )
-    data_range = models.IntegerField(default=0, choices=DATASCOPE_CHOICES, verbose_name="数据权限范围", help_text="数据权限范围")
-    remark = models.TextField(verbose_name="备注", help_text="备注", null=True, blank=True)
-    dept = models.ManyToManyField(to="Dept", verbose_name="数据权限-关联部门", db_constraint=False, help_text="数据权限-关联部门")
-    menu = models.ManyToManyField(to="Menu", verbose_name="关联菜单", db_constraint=False, help_text="关联菜单")
-    permission = models.ManyToManyField(
-        to="MenuButton", verbose_name="关联菜单的接口按钮", db_constraint=False, help_text="关联菜单的接口按钮"
-    )
 
     class Meta:
         db_table = table_prefix + "system_role"
@@ -121,7 +107,7 @@ class Dept(CoreModel):
     )
 
     @classmethod
-    def recursion_dept_info(cls, dept_id: int, dept_all_list=None, dept_list=None):
+    def recursion_all_dept(cls, dept_id: int, dept_all_list=None, dept_list=None):
         """
         递归获取部门的所有下级部门
         :param dept_id: 需要获取的id
@@ -136,7 +122,7 @@ class Dept(CoreModel):
         for ele in dept_all_list:
             if ele.get("parent") == dept_id:
                 dept_list.append(ele.get("id"))
-                cls.recursion_dept_info(ele.get("id"), dept_all_list, dept_list)
+                cls.recursion_all_dept(ele.get("id"), dept_all_list, dept_list)
         return list(set(dept_list))
 
     class Meta:
@@ -205,6 +191,40 @@ class MenuButton(CoreModel):
         verbose_name_plural = verbose_name
         ordering = ("-name",)
 
+
+class RoleMenuButtonPermission(CoreModel):
+    role = models.ForeignKey(
+        to="Role",
+        db_constraint=False,
+        related_name="role_menu_button",
+        on_delete=models.CASCADE,
+        verbose_name="关联角色",
+        help_text="关联角色",
+    )
+    menu_button = models.ForeignKey(
+        to="MenuButton",
+        db_constraint=False,
+        related_name="menu_button_permission",
+        on_delete=models.CASCADE,
+        verbose_name="关联菜单按钮",
+        help_text="关联菜单按钮",
+    )
+    DATASCOPE_CHOICES = (
+        (0, "仅本人数据权限"),
+        (1, "本部门及以下数据权限"),
+        (2, "本部门数据权限"),
+        (3, "全部数据权限"),
+        (4, "自定数据权限"),
+    )
+    data_range = models.IntegerField(default=0, choices=DATASCOPE_CHOICES, verbose_name="数据权限范围",
+                                     help_text="数据权限范围")
+    dept = models.ManyToManyField(to="Dept", verbose_name="数据权限-关联部门", db_constraint=False,
+                                  help_text="数据权限-关联部门")
+    class Meta:
+        db_table = table_prefix + "role_menu_button_permission"
+        verbose_name = "角色菜单权限表"
+        verbose_name_plural = verbose_name
+        ordering = ("-create_datetime",)
 
 class Dictionary(CoreModel):
     TYPE_LIST = (
