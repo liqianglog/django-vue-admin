@@ -98,6 +98,39 @@ class HistoryCodeInfo(ClusterModel):
         cls.db.raw(sql)
         return exists
 
+    @classmethod
+    def select_data_duplicate(cls, code_list: list, package_id):
+        """
+        查询数据是否在本工单中
+        SELECT
+        code,code_type,tenant_id,package_id,content
+        FROM code_db.code_info_test_all
+        WHERE code IN (code_list) AND tenant_id=tenant_id AND package_id=package_id
+
+        :param code_list:
+        :param package_id:
+        :return:
+        """
+        tenant_id = Client.objects.get(schema_name=connection.tenant.schema_name).id
+        order_by = cls.engine.order_by[0]
+        sql = f"""SELECT
+        code,code_type,tenant_id,package_id
+        FROM {cls.db.db_name}.{cls.get_base_all_model().table_name()}
+        WHERE code IN {code_list} AND tenant_id='{str(tenant_id)}' AND package_id='{str(package_id)}'
+        ORDER BY {order_by} ASC
+        """
+        result_data = {}
+        result = cls.db.raw(sql)
+        # 获取所有数据
+        for ele in result.split('\n'):
+            if ele:
+                result_data[ele.split('\t')[0]] = {
+                    "code_type": ele.split('\t')[1],
+                    "tenant_id": ele.split('\t')[2],
+                    "package_id": ele.split('\t')[3],
+                }
+        return result_data
+
 
 class HistoryTemporaryCode(ClusterModel):
     """

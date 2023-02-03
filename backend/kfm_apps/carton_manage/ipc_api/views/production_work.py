@@ -19,7 +19,7 @@ from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 from carton_manage.code_manage.models import CodePackage
 from carton_manage.production_manage.models import ProductionWork
-from dvadmin_tenants.models import Client, Domain
+from dvadmin_tenants.models import Client, Domain, HistoryCodeInfo
 
 
 class IpcProductionWorkSerializer(CustomModelSerializer):
@@ -163,22 +163,26 @@ class ProductionWorkViewSet(CustomModelViewSet):
         work_no = data.get('work_no', None)
         if work_no is None:
             return ErrorResponse(msg="未获取到生产工单号")
-        code_type = data.get('code_type', None)
-        if code_type is None:
-            return ErrorResponse(msg="未获取到码类型")
         code_list = data.get('code_list', None)
         if code_list is None:
             return ErrorResponse(msg="未获取到码内容")
         _ProductionWork = ProductionWork.objects.filter(no=work_no).first()
         if _ProductionWork is None:
             return ErrorResponse(msg="未查询到生产工单号")
-        #*************加入检测记录***************#
+        # 进行校验
+        duplicate_data = HistoryCodeInfo.set_db().select_data_duplicate(code_list,
+                                                                        package_id=_ProductionWork.code_package_id)
+        if len(duplicate_data) != len(code_list):
+            result = 0
+        else:
+            result = 1
+        # *************加入检测记录***************#
         create_data = {
-            "production_work":_ProductionWork.id,
-            "code_list":code_list,
-            "result":1
+            "production_work": _ProductionWork.id,
+            "code_list": code_list,
+            "result": result,
         }
-        serializer=IpcProductionWorkVerifyRecordCreateSerializer(data=create_data,many=False)
+        serializer = IpcProductionWorkVerifyRecordCreateSerializer(data=create_data, many=False)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         # *************加入检测记录***************#
