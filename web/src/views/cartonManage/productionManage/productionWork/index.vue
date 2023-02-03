@@ -31,7 +31,7 @@ import statusLog from './components/productionWorkStatusRecord'
 export default {
   name: 'productionWork',
   mixins: [d2CrudPlus.crud],
-  components:{
+  components: {
     statusLog
   },
   data () {
@@ -54,8 +54,8 @@ export default {
     delRequest (row) {
       return api.DelObj(row.id)
     },
-    //生产状态日志
-    onStatusLog({row}){
+    // 生产状态日志
+    onStatusLog ({ row }) {
       this.$refs.statusLog.options = row
       this.$refs.statusLog.drawer = true
     }

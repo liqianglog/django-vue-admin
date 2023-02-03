@@ -1,6 +1,3 @@
-import { BUTTON_STATUS_NUMBER } from '@/config/button'
-import util from '@/libs/util'
-
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
@@ -139,7 +136,7 @@ export const crudOptions = (vm) => {
         key: 'print_position',
         width: 100,
         type: 'input'
-      },{
+      }, {
         title: '记录时间',
         key: 'record_datetime',
         width: 100,

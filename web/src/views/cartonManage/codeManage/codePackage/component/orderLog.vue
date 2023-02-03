@@ -48,7 +48,7 @@ export default {
     getInit () {
       const that = this
       if (this.options.id) {
-         const params = {
+        const params = {
           id: this.options.id
         }
         api.viewLog(params).then((res) => {
@@ -63,7 +63,6 @@ export default {
     }
   },
   mounted () {
-    const that = this
     // that.timer = setInterval(that.getInit, 3000)
   },
   created () {

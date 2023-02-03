@@ -1,3 +1,5 @@
+import { getButtonSettings } from '@/config/button'
+
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
@@ -110,7 +112,7 @@ export const crudOptions = (vm) => {
       {
         title: '码内容集合',
         key: 'code_list',
-        minWidth: 200,
+        minWidth: 270,
         rowSlot: true,
         search: {
           disabled: true,
@@ -123,30 +125,9 @@ export const crudOptions = (vm) => {
         type: 'input'
       },
       {
-        title: '校验结果',
-        key: 'result',
-        width: 120,
-        search: {
-          disabled: false,
-          component: {
-            placeholder: '请选择校验结果',
-            props: {
-              clearable: true
-            }
-          }
-        },
-        type: 'select',
-        dict: {
-          data: [
-            { value: 0, label: '失败' },
-            { value: 1, label: '成功' }
-          ]
-        }
-      },
-      {
         title: '生产工厂',
         key: 'factory_info_name',
-        width: 100,
+        width: 140,
         search: {
           disabled: false,
           component: {
@@ -161,7 +142,7 @@ export const crudOptions = (vm) => {
       {
         title: '生产产线',
         key: 'production_line_name',
-        width: 100,
+        width: 140,
         search: {
           disabled: false,
           component: {
@@ -176,7 +157,7 @@ export const crudOptions = (vm) => {
       {
         title: '生产设备',
         key: 'device_name',
-        width: 100,
+        width: 140,
         search: {
           disabled: false,
           component: {
@@ -187,13 +168,35 @@ export const crudOptions = (vm) => {
           }
         },
         type: 'input'
+      }, {
+        title: '校验结果',
+        key: 'result',
+        width: 120,
+        fixed: 'right',
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请选择校验结果',
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'select',
+        dict: {
+          data: getButtonSettings([
+            { value: 0, label: '失败' },
+            { value: 1, label: '成功' }
+          ])
+        }
       },
       {
         title: '记录时间',
         key: 'record_datetime',
-        minWidth: 140,
+        minWidth: 160,
+        fixed: 'right',
         search: {
-          disabled: false,
+          disabled: true,
           component: {
             placeholder: '请选择记录时间',
             props: {

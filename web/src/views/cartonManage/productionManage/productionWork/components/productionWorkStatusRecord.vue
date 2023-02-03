@@ -56,8 +56,7 @@ export default {
       return crudOptions(this)
     },
     pageRequest (query) {
-      const production_work = this.options.id
-      return api.GetList({ ...query, production_work: production_work })
+      return api.GetList({ ...query, production_work: this.options.id })
     }
   }
 }

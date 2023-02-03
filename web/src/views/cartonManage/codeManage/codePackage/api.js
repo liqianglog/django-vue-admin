@@ -78,5 +78,3 @@ export function getExportReport (params) {
     method: 'get'
   })
 }
-
-

@@ -1,6 +1,3 @@
-import { BUTTON_STATUS_NUMBER } from '@/config/button'
-import util from '@/libs/util'
-
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
@@ -115,7 +112,7 @@ export const crudOptions = (vm) => {
         key: 'download_ip',
         minWidth: 100,
         type: 'input'
-      },{
+      }, {
         title: '记录时间',
         key: 'record_datetime',
         minWidth: 100,

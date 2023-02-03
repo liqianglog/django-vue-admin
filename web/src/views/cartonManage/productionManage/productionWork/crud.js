@@ -1,4 +1,3 @@
-import { BUTTON_STATUS_NUMBER } from '@/config/button'
 import util from '@/libs/util'
 
 export const crudOptions = (vm) => {
@@ -14,13 +13,13 @@ export const crudOptions = (vm) => {
       highlightCurrentRow: false
 
     },
-    rowHandle:{
-      width:120,
+    rowHandle: {
+      width: 120,
       fixed: 'right',
-      view:false,
-      edit:false,
-      remove:false,
-      custom:[
+      view: false,
+      edit: false,
+      remove: false,
+      custom: [
         {
           thin: true,
           text: '生产日志',
