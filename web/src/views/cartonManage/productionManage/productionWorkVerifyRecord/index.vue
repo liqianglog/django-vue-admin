@@ -17,6 +17,12 @@
                       @columns-filter-changed="handleColumnsFilterChanged"/>
 
       </div>
+              <template slot="code_listSlot" slot-scope="scope">
+          <div v-for="(data,index) in scope.row['code_list']" :key="index">
+            <el-tag size="mini">{{data}}</el-tag>
+            <br>
+          </div>
+        </template>
     </d2-crud-x>
 
   </d2-container>

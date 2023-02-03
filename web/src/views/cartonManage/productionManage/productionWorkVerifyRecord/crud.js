@@ -1,6 +1,3 @@
-import { BUTTON_STATUS_NUMBER } from '@/config/button'
-import util from '@/libs/util'
-
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
@@ -114,6 +111,7 @@ export const crudOptions = (vm) => {
         title: '码内容集合',
         key: 'code_list',
         minWidth: 200,
+        rowSlot: true,
         search: {
           disabled: true,
           component: {
@@ -193,7 +191,7 @@ export const crudOptions = (vm) => {
       {
         title: '记录时间',
         key: 'record_datetime',
-        minWidth: 100,
+        minWidth: 140,
         search: {
           disabled: false,
           component: {
