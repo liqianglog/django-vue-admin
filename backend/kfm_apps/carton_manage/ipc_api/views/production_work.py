@@ -186,7 +186,7 @@ class ProductionWorkViewSet(CustomModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         # *************加入检测记录***************#
-        return DetailResponse(msg="码包正常")
+        return DetailResponse(msg=f"码包校验失败,在本工单中只查找到{len(duplicate_data)}个存在数据" if result == 0 else "码包校验正常")
 
     @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated])
     def change(self, request):
