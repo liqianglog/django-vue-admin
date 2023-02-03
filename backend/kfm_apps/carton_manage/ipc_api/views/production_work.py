@@ -171,11 +171,11 @@ class ProductionWorkViewSet(CustomModelViewSet):
         if _ProductionWork is None:
             return ErrorResponse(msg="未查询到生产工单号")
         # 进行校验
-        # duplicate_data = HistoryCodeInfo.set_db().select_data_duplicate(code_list, package_id=_ProductionWork.code_package_id)
-        # if len(duplicate_data) != len(code_list):
-        #     result = 0
-        # else:
-        #     result = 1
+        duplicate_data = HistoryCodeInfo.set_db().select_data_duplicate(code_list, package_id=_ProductionWork.code_package_id)
+        if len(duplicate_data) != len(code_list):
+            result = 0
+        else:
+            result = 1
         # *************加入检测记录***************#
         create_data = {
             "production_work": _ProductionWork.id,
