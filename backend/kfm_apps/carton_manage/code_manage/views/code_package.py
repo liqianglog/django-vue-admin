@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 
 from application import settings
 from basics_manage.models import CodePackageTemplate
-from dvadmin.utils.json_response import ErrorResponse, SuccessResponse
+from dvadmin.utils.json_response import ErrorResponse, SuccessResponse, DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 from carton_manage.code_manage.models import CodePackage
@@ -30,7 +30,7 @@ class CodePackageSerializer(CustomModelSerializer):
 
     class Meta:
         model = CodePackage
-        fields = "__all__"
+        exclude =['import_log']
         read_only_fields = ["id"]
 
 
@@ -173,3 +173,12 @@ class CodePackageViewSet(CustomModelViewSet):
                 print("码包信息ID", code_package_serializer.instance.id)
         code_package_import_check.delay(code_package_ids=code_package_id_list)
         return SuccessResponse(data=None, msg="正在导入中...")
+
+    @action(methods=['get'], detail=True, permission_classes=[])
+    def view_log(self,request,pk):
+        _CodePackage = CodePackage.objects.filter(id=pk).first()
+        print(_CodePackage.import_log)
+        if _CodePackage is None:
+            return DetailResponse(data=None)
+        else:
+            return DetailResponse(data=_CodePackage.import_log)

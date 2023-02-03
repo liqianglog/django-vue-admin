@@ -14,7 +14,22 @@ export const crudOptions = (vm) => {
       highlightCurrentRow: false
 
     },
-    rowHandle:false,
+    rowHandle:{
+      width:120,
+      fixed: 'right',
+      view:false,
+      edit:false,
+      remove:false,
+      custom:[
+        {
+          thin: true,
+          text: '生产日志',
+          size: 'medium',
+          type: 'primary',
+          emit: 'onStatusLog'
+        }
+      ]
+    },
     // rowHandle: {
     //   fixed: 'right',
     //   view: {
@@ -63,7 +78,7 @@ export const crudOptions = (vm) => {
       {
         title: '生产工单号',
         key: 'no',
-        width: 140,
+        minWidth: 140,
         search: {
           disabled: true,
           component: {
@@ -161,7 +176,16 @@ export const crudOptions = (vm) => {
       {
         title: '产线名称',
         key: 'production_line_name',
-        type: 'input'
+        type: 'input',
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请输入产线名称',
+            props: {
+              clearable: true
+            }
+          }
+        }
       },
       {
         title: '设备名称',

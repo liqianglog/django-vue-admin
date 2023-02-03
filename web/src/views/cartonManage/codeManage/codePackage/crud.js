@@ -16,7 +16,7 @@ export const crudOptions = (vm) => {
     },
     rowHandle: {
       fixed: 'right',
-      width: 240,
+      width: 220,
       view: {
         thin: true,
         text: '',
@@ -24,13 +24,7 @@ export const crudOptions = (vm) => {
           return !vm.hasPermissions('Retrieve')
         }
       },
-      edit: {
-        thin: true,
-        text: '',
-        disabled () {
-          return !vm.hasPermissions('Update')
-        }
-      },
+      edit: false,
       remove: {
         thin: true,
         text: '',
@@ -39,13 +33,13 @@ export const crudOptions = (vm) => {
         }
       },
       custom: [
-        // {
-        //   thin: true,
-        //   text: '日志',
-        //   size: 'medium',
-        //   type: 'primary',
-        //   emit: 'onOrderLog'
-        // }
+        {
+          thin: true,
+          text: '导入日志',
+          size: 'medium',
+          type: 'primary',
+          emit: 'onOrderLog'
+        }
       ]
     },
     viewOptions: {
@@ -183,7 +177,11 @@ export const crudOptions = (vm) => {
               row[col.key] = null
             }
           } else {
-            row[col.key] = value
+            if (value instanceof Object) {
+              row[col.key] = value.file_path
+            } else {
+              row[col.key] = value
+            }
           }
         }
       },

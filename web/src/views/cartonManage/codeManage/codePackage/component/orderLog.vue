@@ -4,13 +4,19 @@
     :visible.sync="drawer"
     direction="rtl"
     >
-    <div>
+    <div slot="title">
+      <span>码包订单</span>
+      <el-tag size="small" style="margin-left: 10px">{{
+          options.order_id
+        }}</el-tag>
+    </div>
+    <div style="margin-left: 2em;">
       <el-timeline>
         <el-timeline-item
           v-for="(activity, index) in activities"
           :key="index"
           :icon="activity.icon"
-          :type="activity.type"
+          :type="activity.type==='error'?'danger':activity.type"
           :color="activity.color"
           :size="activity.size"
           :timestamp="activity.timestamp"
@@ -42,15 +48,15 @@ export default {
     getInit () {
       const that = this
       if (this.options.id) {
-        const params = {
-          id: this.options.id,
-          _fields: 'import_log,'
+         const params = {
+          id: this.options.id
         }
-        api.getObj(params).then((res) => {
+        api.viewLog(params).then((res) => {
           const { data } = res
-          if (data.import_log) {
-            const activities = JSON.parse(data.import_log)
-            that.activities = activities.reverse()
+          if (data) {
+            const activities = JSON.parse(data)
+            console.log(activities)
+            that.activities = activities
           }
         })
       }

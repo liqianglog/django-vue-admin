@@ -44,13 +44,15 @@ export function DelObj (id) {
 }
 
 /**
- * 创建订单
+ * 查看日志
+ * @param params
+ * @returns {*}
  */
-export function createOrder (obj) {
+export function viewLog (params) {
   return request({
-    url: urlPrefix + 'create_order/',
-    method: 'post',
-    data: obj
+    url: urlPrefix + params.id + '/view_log/',
+    method: 'get',
+    params: params
   })
 }
 
@@ -77,14 +79,4 @@ export function getExportReport (params) {
   })
 }
 
-/**
- * 数据归档
- * @param {*} params
- * @returns
- */
-export function placeOnFile (params) {
-  return request({
-    url: urlPrefix + 'place_on_file/' + params.id + '/',
-    method: 'post'
-  })
-}
+
