@@ -264,7 +264,7 @@ export const crudOptions = (vm) => {
       }, {
         title: '外码地址',
         key: 'w_url_prefix',
-        minWidth: 140,
+        minWidth: 180,
         search: {
           disabled: true,
           component: {
@@ -288,7 +288,7 @@ export const crudOptions = (vm) => {
       }, {
         title: '内码地址',
         key: 'n_url_prefix',
-        minWidth: 140,
+        minWidth: 180,
         search: {
           disabled: true,
           component: {
@@ -304,6 +304,46 @@ export const crudOptions = (vm) => {
           ],
           component: {
             placeholder: '请输入内码地址'
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        }
+      }, {
+        title: '外码内容长度',
+        key: 'w_url_length',
+        type: 'number',
+        width: 100,
+        form: {
+          value: 0,
+          rules: [
+            { required: true, message: '外码内容长度不能为空', trigger: 'blur' }
+          ],
+          component: {
+            placeholder: '外码内容长度',
+            props: {
+              min: 0
+            }
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        }
+      }, {
+        title: '外码内容长度',
+        key: 'n_url_length',
+        type: 'number',
+        width: 100,
+        form: {
+          value: 0,
+          rules: [
+            { required: true, message: '内码长度不能为空', trigger: 'blur' }
+          ],
+          component: {
+            placeholder: '内码长度',
+            props: {
+              min: 0
+            }
           },
           itemProps: {
             class: { yxtInput: true }
