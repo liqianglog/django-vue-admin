@@ -33,8 +33,8 @@ class MenuSerializer(CustomModelSerializer):
     def get_hasChild(self, instance):
         hasChild = Menu.objects.filter(parent=instance.id)
         if hasChild:
-            return True
-        return False
+            return False
+        return True
 
     class Meta:
         model = Menu

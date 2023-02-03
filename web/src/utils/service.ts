@@ -31,7 +31,7 @@ function createService() {
       const { code } = dataAxios;
       // 根据 code 进行判断
       if (code === undefined) {
-        // 如果没有 code 代表这不是项目后端开发的接口 
+        // 如果没有 code 代表这不是项目后端开发的接口
         errorCreate(`非标准返回：${dataAxios}， ${response.config.url}`);
         return dataAxios;
       } else {
@@ -43,7 +43,7 @@ function createService() {
               //如果不需要解包
               return dataAxios;
             }
-            return dataAxios.data;
+            return dataAxios;
           default:
             // 不是正确的 code
             errorCreate(`${dataAxios.msg}: ${response.config.url}`);
