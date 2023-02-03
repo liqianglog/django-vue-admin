@@ -2,7 +2,15 @@
   <el-drawer
     :visible.sync="drawer"
     direction="rtl"
+    :title="title"
+    size="50%"
   >
+    <div slot="title">
+      <span>生产工单</span>
+      <el-tag size="small" style="margin-left: 10px">{{
+          options.no
+        }}</el-tag>
+    </div>
     <div>
       <d2-crud-x
         ref="d2Crud"
@@ -11,11 +19,11 @@
       >
         <div slot="header">
           <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
-          <crud-toolbar :search.sync="crud.searchOptions.show"
-                        :compact.sync="crud.pageOptions.compact"
-                        :columns="crud.columns"
-                        @refresh="doRefresh()"
-                        @columns-filter-changed="handleColumnsFilterChanged"/>
+<!--          <crud-toolbar :search.sync="crud.searchOptions.show"-->
+<!--                        :compact.sync="crud.pageOptions.compact"-->
+<!--                        :columns="crud.columns"-->
+<!--                        @refresh="doRefresh()"-->
+<!--                        @columns-filter-changed="handleColumnsFilterChanged"/>-->
 
         </div>
       </d2-crud-x>
@@ -25,13 +33,15 @@
 
 <script>
 import { d2CrudPlus } from 'd2-crud-plus'
-import { crudOptions } from '@/views/cartonManage/productionManage/productionWorkStatusRecord/crud'
+import { crudOptions } from './crud'
 import * as api from '@/views/cartonManage/productionManage/productionWorkStatusRecord/api'
 export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
-      drawer: false
+      drawer: false,
+      title:"生产状态记录",
+      options:{}
     }
   },
   methods: {

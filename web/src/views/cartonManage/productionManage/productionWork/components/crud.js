@@ -63,7 +63,7 @@ export const crudOptions = (vm) => {
       {
         title: '生产工单号',
         key: 'production_work_no',
-        minWidth: 220,
+        width: 120,
         search: {
           disabled: true,
           component: {
@@ -77,7 +77,7 @@ export const crudOptions = (vm) => {
       {
         title: '码包订单号',
         key: 'order_id',
-        minWidth: 200,
+        width: 200,
         search: {
           disabled: true,
           component: {
@@ -102,7 +102,7 @@ export const crudOptions = (vm) => {
           }
         },
         type: 'select',
-        dict: {
+        dist: {
           data: [
             { value: 0, label: '外码' },
             { value: 1, label: '内码' },
@@ -111,27 +111,13 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '码内容集合',
-        key: 'code_list',
-        minWidth: 200,
-        search: {
-          disabled: true,
-          component: {
-            props: {
-              clearable: true
-            }
-          }
-        },
-        type: 'input'
-      },
-      {
-        title: '校验结果',
-        key: 'result',
-        width: 120,
+        title: '生产状态',
+        key: 'status',
+        width: 100,
         search: {
           disabled: false,
           component: {
-            placeholder: '请选择校验结果',
+            placeholder: '请输入码内容',
             props: {
               clearable: true
             }
@@ -140,10 +126,33 @@ export const crudOptions = (vm) => {
         type: 'select',
         dict: {
           data: [
-            { value: 0, label: '失败' },
-            { value: 1, label: '成功' }
+            { value: 0, label: '待下载' },
+            { value: 1, label: '待生产' },
+            { value: 2, label: '生产中' },
+            { value: 3, label: '暂停中' },
+            { value: 4, label: '结束生产' },
+            { value: 5, label: '工单异常' }
           ]
         }
+      }, {
+        title: '打印位置',
+        key: 'print_position',
+        width: 100,
+        type: 'input'
+      },{
+        title: '记录时间',
+        key: 'record_datetime',
+        width: 100,
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请选择记录时间',
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'datetime'
       },
       {
         title: '生产工厂',
@@ -189,22 +198,10 @@ export const crudOptions = (vm) => {
           }
         },
         type: 'input'
-      },
-      {
-        title: '记录时间',
-        key: 'record_datetime',
-        minWidth: 100,
-        search: {
-          disabled: false,
-          component: {
-            placeholder: '请选择记录时间',
-            props: {
-              clearable: true
-            }
-          }
-        },
-        type: 'datetime'
       }
-    ]
+    ].concat(vm.commonEndColumns({
+      update_datetime: { showTable: false },
+      dept_belong_id: { showForm: false, showTable: false }
+    }))
   }
 }
