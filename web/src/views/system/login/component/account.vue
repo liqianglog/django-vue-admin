@@ -103,14 +103,14 @@ export default defineComponent({
 
 		const getCaptcha = async () => {
 			loginApi.getCaptcha().then((ret: any) => {
-				state.ruleForm.captchaImgBase = ret.image_base;
-				state.ruleForm.captchaKey = ret.key;
+				state.ruleForm.captchaImgBase = ret.data.image_base;
+				state.ruleForm.captchaKey = ret.data.key;
 			});
 		};
 		const refreshCaptcha = async () => {
 			loginApi.getCaptcha().then((ret: any) => {
-				state.ruleForm.captchaImgBase = ret.image_base;
-				state.ruleForm.captchaKey = ret.key;
+				state.ruleForm.captchaImgBase = ret.data.image_base;
+				state.ruleForm.captchaKey = ret.data.key;
 			});
 		};
 		const loginClick = async () => {

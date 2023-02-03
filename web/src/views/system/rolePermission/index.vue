@@ -1,0 +1,269 @@
+<template>
+  <el-drawer
+      size="70%"
+      v-model="drawer"
+      direction="rtl"
+      destroy-on-close
+      :before-close="handleClose"
+  >
+    <template #header>
+      <h4>
+        <el-tag>当前角色:超管</el-tag>
+      </h4>
+    </template>
+    <div style="padding: 1em">
+    <el-row :gutter="10">
+      <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="6">
+        <el-card header="页面菜单">
+          <el-tree :data="menuData"
+                   ref="menuTree"
+                   show-checkbox
+                   node-key="id"
+                   highlight-current
+                   :expand-on-click-node="false"
+                   :check-on-click-node="true"
+                   :lazy="true"
+                   :load="loadMenuNone"
+                   :props="defaultProps"
+                   @node-click="menuNodeClick"
+          />
+        </el-card>
+      </el-col>
+      <el-col :xs="24" :sm="24" :md="16" :lg="18" :xl="18">
+        <el-card v-if="!isCatalog">
+          <template #header>
+            <div class="card-header">
+              <span>页面授权</span>
+              <el-button size="small" type="primary">保存授权</el-button>
+            </div>
+          </template>
+          <div>
+            <el-divider content-position="left">按钮授权</el-divider>
+            <el-button type="primary" size="small" style="margin-bottom: 0.5em" @click="createBtnPermission">新增</el-button>
+            <el-table size="small" :data="buttonPermissionData" border style="width: 100%">
+              <el-table-column prop="name" label="权限名称" width="100"/>
+              <el-table-column prop="datarange" label="权限范围" width="100"/>
+              <el-table-column prop="dept" label="权限涉及部门"/>
+              <el-table-column fixed="right" label="操作" width="120">
+                <template #default>
+                  <el-button type="danger" size="small">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+
+
+<!--          <el-divider content-position="left">字段授权</el-divider>-->
+<!--          <el-table size="small" :data="crudPermissionData" border style="width: 100%">-->
+<!--            <el-table-column prop="field" label="字段"></el-table-column>-->
+<!--            <el-table-column prop="table" label="列表显示">-->
+<!--              <template #default="scope">-->
+<!--                <div>-->
+<!--                  <el-switch size="mini" v-model="scope.row.table"/>-->
+<!--                </div>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
+<!--            <el-table-column prop="view" label="表单查看">-->
+<!--              <template #default="scope">-->
+<!--                <div>-->
+<!--                  <el-switch size="mini" v-model="scope.row.view"/>-->
+<!--                </div>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
+<!--            <el-table-column prop="edit" label="表单编辑">-->
+<!--              <template #default="scope">-->
+<!--                <div>-->
+<!--                  <el-switch size="mini" v-model="scope.row.edit"/>-->
+<!--                </div>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
+<!--          </el-table>-->
+        </el-card>
+      </el-col>
+    </el-row>
+      <el-dialog v-model="dialogFormVisible" title="配置按钮权限">
+        <el-form :model="buttonForm" :rules="buttonRules" label-width="120px">
+          <el-form-item label="按钮">
+            <el-select v-model="buttonForm.name" placeholder="请选择按钮">
+              <el-option label="Zone No.1" value="shanghai" />
+              <el-option label="Zone No.2" value="beijing" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="权限范围">
+            <el-select v-model="buttonForm.data_range" placeholder="请选择按钮">
+              <el-option v-for="(item,index) in dataScopeOptions" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="数据部门"  v-show="buttonForm.data_range === 4">
+            <div class="dept-tree">
+              <el-tree
+                  :data="deptOptions"
+                  show-checkbox
+                  default-expand-all
+                  :default-checked-keys="deptCheckedKeys"
+                  ref="dept"
+                  node-key="id"
+                  :check-strictly="true"
+                  :props="{ label: 'name' }"
+              ></el-tree>
+            </div>
+          </el-form-item>
+        </el-form>
+        <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">
+          Confirm
+        </el-button>
+      </span>
+        </template>
+      </el-dialog>
+    </div>
+  </el-drawer>
+</template>
+
+<script lang="ts" setup>
+import {ref, defineExpose,reactive} from 'vue'
+import {ElMessageBox} from 'element-plus'
+import * as api from './api'
+import type { FormInstance, FormRules } from 'element-plus'
+const drawer = ref(false)
+//抽屉关闭确认
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm('您确定要关闭?', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+      .then(() => {
+        done()
+      })
+      .catch(() => {
+        // catch error
+      })
+}
+
+/*****菜单的配置项***/
+const defaultProps = {
+  children: 'children',
+  label: 'name',
+  isLeaf:'hasChild'
+}
+
+interface Tree {
+  name: string
+  children?: Tree[],
+  isLeaf:boolean
+}
+let menuData: Tree[] = ref([])
+//获取菜单
+const getMenuData = (node: Node, resolve: (data: Tree[]) => void) => {
+  api.getMenu().then(res=>{
+    const {data} = res
+    menuData.value = data
+  })
+}
+//懒加载菜单节点
+const loadMenuNone = (node: Node, resolve: (data: Tree[]) => void) => {
+  api.getMenu({parent:node.id}).then(res=>{
+    const {data} = res
+    resolve(data)
+  })
+}
+let isCatalog = ref(true)
+const menuNodeClick=(node)=>{
+  isCatalog.value = node.is_catalog
+}
+/*****菜单的配置项***/
+/***按钮授权的弹窗****/
+const dialogFormVisible = ref(false)
+const deptOptions = [{
+  name:"dvadmin"
+}]
+const deptCheckedKeys=[]
+const dataScopeOptions=[
+  {
+    value: 0,
+    label: '仅本人数据权限'
+  },
+  {
+    value: 1,
+    label: '本部门及以下数据权限'
+  },
+  {
+    value: 2,
+    label: '本部门数据权限'
+  },
+  {
+    value: 3,
+    label: '全部数据权限'
+  },
+  {
+    value: 4,
+    label: '自定义数据权限'
+  }
+]
+const buttonForm = reactive({
+  menu_button:'',
+  role:'',
+  data_range:'',
+  dept:[]
+})
+const buttonRules = reactive<FormRules>({
+  name:[
+    { required: true, message: '必填项' }
+  ],
+  data_range:[
+    { required: true, message: '必填项' }
+  ]
+})
+const createBtnPermission = ()=>{
+  dialogFormVisible.value = true
+}
+/***按钮授权的弹窗****/
+//初始化数据
+const initGet = ()=>{
+  getMenuData()
+}
+//按钮权限
+const buttonPermissionData: any[] = [
+  {
+    name: "查询",
+    datarange: 1,
+    dept: ""
+  }
+]
+
+//字段权限
+const crudPermissionData: any[] = [
+  {
+    field: "name",
+    table: true,
+    view: true,
+    edit: true
+  }
+]
+
+defineExpose({drawer,initGet})
+</script>
+
+<style scoped>
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dept-tree::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
+}
+
+.dept-tree {
+  height: 160px;
+  overflow-y: scroll;
+  scrollbar-width: none; /* firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  border: 1px solid #e1e1e1;
+  width: 16em;
+  border-radius: 2px;
+}
+</style>
