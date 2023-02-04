@@ -91,7 +91,7 @@
           </el-form-item>
           <el-form-item label="权限范围">
             <el-select v-model="buttonForm.data_range" placeholder="请选择按钮">
-              <el-option v-for="(item,index) in dataScopeOptions" :label="item.label" :value="item.value" />
+              <el-option v-for="(item,index) in dataScopeOptions" :key="index" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="数据部门"  v-show="buttonForm.data_range === 4">
@@ -126,7 +126,8 @@
 import {ref, defineExpose,reactive} from 'vue'
 import {ElMessageBox} from 'element-plus'
 import * as api from './api'
-import type { FormInstance, FormRules } from 'element-plus'
+import type {  FormRules } from 'element-plus'
+import type Node from 'element-plus/es/components/tree/src/model/node'
 const drawer = ref(false)
 //抽屉关闭确认
 const handleClose = (done: () => void) => {
@@ -155,23 +156,23 @@ interface Tree {
   children?: Tree[],
   isLeaf:boolean
 }
-let menuData: Tree[] = ref([])
+let menuData= ref<Tree>()
 //获取菜单
-const getMenuData = (node: Node, resolve: (data: Tree[]) => void) => {
-  api.getMenu().then(res=>{
+const getMenuData = () => {
+  api.GetMenu({}).then((res:any)=>{
     const {data} = res
     menuData.value = data
   })
 }
 //懒加载菜单节点
-const loadMenuNone = (node: Node, resolve: (data: Tree[]) => void) => {
-  api.getMenu({parent:node.id}).then(res=>{
+const loadMenuNone = (node: Node , resolve: (data: Tree[]) => void) => {
+  api.GetMenu({parent:node.id}).then((res:any)=>{
     const {data} = res
     resolve(data)
   })
 }
 let isCatalog = ref(true)
-const menuNodeClick=(node)=>{
+const menuNodeClick=(node:any)=>{
   isCatalog.value = node.is_catalog
 }
 /*****菜单的配置项***/
@@ -181,34 +182,21 @@ const deptOptions = [{
   name:"dvadmin"
 }]
 const deptCheckedKeys=[]
-const dataScopeOptions=[
-  {
-    value: 0,
-    label: '仅本人数据权限'
-  },
-  {
-    value: 1,
-    label: '本部门及以下数据权限'
-  },
-  {
-    value: 2,
-    label: '本部门数据权限'
-  },
-  {
-    value: 3,
-    label: '全部数据权限'
-  },
-  {
-    value: 4,
-    label: '自定义数据权限'
-  }
-]
+const dataScopeOptions=ref<[]>()
+const getDataScope = ()=>{
+  api.GetDataScope().then((res:any)=>{
+    dataScopeOptions.value = res.data
+  })
+}
+
+//按钮表单
 const buttonForm = reactive({
   menu_button:'',
   role:'',
   data_range:'',
   dept:[]
 })
+//按钮表单验证
 const buttonRules = reactive<FormRules>({
   name:[
     { required: true, message: '必填项' }
@@ -217,15 +205,12 @@ const buttonRules = reactive<FormRules>({
     { required: true, message: '必填项' }
   ]
 })
+//新增按钮
 const createBtnPermission = ()=>{
   dialogFormVisible.value = true
+  getDataScope()
 }
-/***按钮授权的弹窗****/
-//初始化数据
-const initGet = ()=>{
-  getMenuData()
-}
-//按钮权限
+//按钮表格
 const buttonPermissionData: any[] = [
   {
     name: "查询",
@@ -233,6 +218,12 @@ const buttonPermissionData: any[] = [
     dept: ""
   }
 ]
+/***按钮授权的弹窗****/
+//初始化数据
+const initGet = ()=>{
+  getMenuData()
+}
+
 
 //字段权限
 const crudPermissionData: any[] = [
