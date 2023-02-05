@@ -88,3 +88,7 @@ export interface ThemeConfigState {
 export interface ThemeConfigStates {
 	themeConfig: ThemeConfigState;
 }
+
+export interface DictionaryStates {
+	data: any;
+}

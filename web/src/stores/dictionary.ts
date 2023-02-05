@@ -49,4 +49,7 @@ export const DictionaryStore = defineStore('Dictionary', {
             })
         },
     },
+    persist: {
+        enabled: true,
+    },
 });
