@@ -73,6 +73,7 @@ import { formatAxis } from '/@/utils/formatTime';
 import { NextLoading } from '/@/utils/loading';
 import * as loginApi from '/@/views/system/login/api';
 import { useUserInfo } from '/@/stores/userInfo';
+import { Md5 } from 'ts-md5';
 
 export default defineComponent({
 	name: 'loginAccount',
@@ -114,10 +115,9 @@ export default defineComponent({
 			});
 		};
 		const loginClick = async () => {
-			loginApi.login(state.ruleForm).then((ret: any) => {
-				console.log(ret);
-				Session.set('token', ret.access);
-				Cookies.set('username', ret.name);
+			loginApi.login({ ...state.ruleForm, password: Md5.hashStr(state.ruleForm.password) }).then((ret: any) => {
+				Session.set('token', ret.data.access);
+				Cookies.set('username', ret.data.name);
 				if (!themeConfig.value.isRequestRoutes) {
 					// 前端控制路由，2、请注意执行顺序
 					initFrontEndControlRoutes();
@@ -132,10 +132,7 @@ export default defineComponent({
 			});
 		};
 		const getUserInfo = () => {
-			loginApi.getUserInfo().then((ret: any) => {
-				console.log('getUserInfo');
-				console.log(ret);
-			});
+			useUserInfo().setUserInfos();
 		};
 		// 登录成功后的跳转
 		const loginSuccess = () => {

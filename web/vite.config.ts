@@ -8,13 +8,14 @@ const pathResolve = (dir: string): any => {
 
 const alias: Record<string, string> = {
 	'/@': pathResolve('./src/'),
+	'@views': pathResolve('./src/views'),
 	'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
 };
 
 const viteConfig = defineConfig((mode: ConfigEnv) => {
 	const env = loadEnv(mode.mode, process.cwd());
 	return {
-		plugins: [vue(),vueJsx() ],
+		plugins: [vue(), vueJsx()],
 		root: process.cwd(),
 		resolve: { alias },
 		base: mode.command === 'serve' ? './' : env.VITE_PUBLIC_PATH,

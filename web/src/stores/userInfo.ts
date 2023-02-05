@@ -25,8 +25,8 @@ export const useUserInfo = defineStore('userInfo', {
 				this.userInfos = Session.get('userInfo');
 			} else {
 				let userInfos: any = await this.getApiUserInfo();
-				this.userInfos.userName = userInfos.name;
-				this.userInfos.photo = userInfos.avatar || 'https://img2.baidu.com/it/u=1978192862,2048448374&fm=253&fmt=auto&app=138&f=JPEG?w=504&h=500'
+				this.userInfos.userName = userInfos.data.name;
+				this.userInfos.photo = userInfos.data.avatar || 'https://img2.baidu.com/it/u=1978192862,2048448374&fm=253&fmt=auto&app=138&f=JPEG?w=504&h=500'
 				this.userInfos.time = new Date().getTime()
 				this.userInfos.roles = ['admin']
 				Session.set('userInfo', this.userInfos)
