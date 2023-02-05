@@ -30,7 +30,7 @@ class CodePackageSerializer(CustomModelSerializer):
 
     class Meta:
         model = CodePackage
-        exclude =['import_log']
+        exclude = ['import_log']
         read_only_fields = ["id"]
 
 
@@ -63,6 +63,13 @@ class CodePackageViewSet(CustomModelViewSet):
     serializer_class = CodePackageSerializer
     create_serializer_class = CodePackageCreateSerializer
     update_serializer_class = CodePackageUpdateSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.validate_status == 4:
+            return ErrorResponse(msg='当前为正常已导入订单不可删除')
+        instance.delete()
+        return DetailResponse(data=[], msg="删除成功")
 
     @action(methods=['POST'], detail=False, permission_classes=[])
     def upload_file(self, request, *args, **kwargs):
@@ -133,6 +140,8 @@ class CodePackageViewSet(CustomModelViewSet):
             os.remove(file_path)  # 删除zip包
         elif file_type == "txt":
             new_file_path = os.path.join(txt_file_path, str(file_path.split(os.sep)[-1]))
+            if not os.path.exists(txt_file_path):  # 文件夹不存在则创建
+                os.makedirs(txt_file_path)
             shutil.move(file_path, new_file_path)
             file_name_list = [new_file_path]
         else:
@@ -143,6 +152,7 @@ class CodePackageViewSet(CustomModelViewSet):
         code_package_id_list = []
         with transaction.atomic():
             for file_name in file_name_list:
+                file_name = file_name.split(os.sep)[-1]
                 print("file_name", file_name)
                 txt_file = os.path.join(txt_file_path, file_name)
                 first_line_md5 = md5_value(read_file_first(txt_file))  # 文件首行MD5值
@@ -175,9 +185,8 @@ class CodePackageViewSet(CustomModelViewSet):
         return SuccessResponse(data=None, msg="正在导入中...")
 
     @action(methods=['get'], detail=True, permission_classes=[])
-    def view_log(self,request,pk):
+    def view_log(self, request, pk):
         _CodePackage = CodePackage.objects.filter(id=pk).first()
-        print(_CodePackage.import_log)
         if _CodePackage is None:
             return DetailResponse(data=None)
         else:

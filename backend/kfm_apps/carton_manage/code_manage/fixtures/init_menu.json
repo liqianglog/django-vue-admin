@@ -13,7 +13,7 @@
     "visible": true,
     "children": [
       {
-        "name": "正常码包",
+        "name": "码包导入",
         "icon": "qrcode",
         "sort": 1,
         "is_link": false,

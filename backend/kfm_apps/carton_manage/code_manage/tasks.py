@@ -122,7 +122,7 @@ def code_package_import_check(code_package_ids):
         code_data_list = []
         # 码数据先入临时表中
         _HistoryTemporaryCode = HistoryTemporaryCode.set_db(timeout=60 * 30)
-        _HistoryTemporaryCode.create_table(table_suffix=code_package_template_obj.id)
+        _HistoryTemporaryCode.create_table(table_suffix=code_package_obj.id)
         tenant_id = Client.objects.get(schema_name=connection.tenant.schema_name).id
         with open(source_file_path) as file:
             for readline in file:
@@ -135,7 +135,7 @@ def code_package_import_check(code_package_ids):
                         code_type='1',
                         content=w_url,
                         tenant_id=f"{tenant_id}",
-                        package_id=f"{code_package_template_obj.id}",
+                        package_id=f"{code_package_obj.id}",
                         timestamp=datetime.datetime.now()
                     ))
                 if code_package_template_obj.code_type in [1, 2]:  # 内码
@@ -145,7 +145,7 @@ def code_package_import_check(code_package_ids):
                         code_type='0',
                         content=n_url,
                         tenant_id=f"{tenant_id}",
-                        package_id=f"{code_package_template_obj.id}",
+                        package_id=f"{code_package_obj.id}",
                         timestamp=datetime.datetime.now()
                     ))
                 if len(code_data_list) >= 500000:
@@ -160,17 +160,18 @@ def code_package_import_check(code_package_ids):
             error_data_list = []
             for key, val in data.items():
                 for ele in range(val.get('count') - 1):
+                    print(1, key)
                     error_data_list.append(CodeRepetitionRecord(
                         **{
-                            "code_package": code_package_template_obj,
-                            "repetition_code_package": code_package_template_obj,
+                            "code_package": code_package_obj,
+                            "repetition_code_package": code_package_obj,
                             "code_content": val.get('content'),
-                            "code_content_md5": val.get('code'),
+                            "code_content_md5": key,
                             "code_type": val.get('code_type'),
                             "repetition_type": 0,
-                            "creator": code_package_template_obj.creator,
-                            "modifier": code_package_template_obj.modifier,
-                            "dept_belong_id": code_package_template_obj.dept_belong_id,
+                            "creator": code_package_obj.creator,
+                            "modifier": code_package_obj.modifier,
+                            "dept_belong_id": code_package_obj.dept_belong_id,
                         }
                     ))
             CodeRepetitionRecord.objects.bulk_create(error_data_list)
@@ -199,15 +200,15 @@ def code_package_import_check(code_package_ids):
                 # 获取明码内容
                 duplicate_list.append(CodeRepetitionRecord(
                     **{
-                        "code_package": code_package_template_obj,
-                        "repetition_code_package": val.get('repetition_code_package'),
+                        "code_package": code_package_obj,
+                        "repetition_code_package_id": val.get('repetition_code_package'),
                         "code_content": val.get('content'),
-                        "code_content_md5": val.get('code'),
+                        "code_content_md5": key,
                         "code_type": val.get('code_type'),
                         "repetition_type": 1,
-                        "creator": code_package_template_obj.creator,
-                        "modifier": code_package_template_obj.modifier,
-                        "dept_belong_id": code_package_template_obj.dept_belong_id,
+                        "creator": code_package_obj.creator,
+                        "modifier": code_package_obj.modifier,
+                        "dept_belong_id": code_package_obj.dept_belong_id,
                     }
                 ))
             CodeRepetitionRecord.objects.bulk_create(duplicate_list)

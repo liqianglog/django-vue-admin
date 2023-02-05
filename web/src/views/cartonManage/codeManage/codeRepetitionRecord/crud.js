@@ -58,9 +58,23 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '码包',
-        key: 'code_package',
-        minWidth: 120,
+        title: '重码订单编号',
+        key: 'code_package_order_id',
+        width: 200,
+        search: {
+          disabled: true,
+          component: {
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'input'
+      },
+      {
+        title: '重码码包编号',
+        key: 'code_package_no',
+        width: 240,
         search: {
           disabled: true,
           component: {
@@ -74,7 +88,7 @@ export const crudOptions = (vm) => {
       {
         title: '码内容',
         key: 'code_content',
-        minWidth: 200,
+        width: 320,
         search: {
           disabled: false,
           width: 300,
@@ -89,7 +103,7 @@ export const crudOptions = (vm) => {
       }, {
         title: '码类型',
         key: 'code_type',
-        minWidth: 120,
+        width: 100,
         search: {
           disabled: false,
           component: {
@@ -100,7 +114,7 @@ export const crudOptions = (vm) => {
           }
         },
         type: 'select',
-        dist: {
+        dict: {
           data: [
             { value: 0, label: '外码' },
             { value: 1, label: '内码' },
@@ -109,13 +123,28 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '重码码包',
-        key: 'repetition_code_package',
-        minWidth: 100,
+        title: '被重码订单编号',
+        key: 'repetition_code_package_id',
+        width: 200,
         search: {
           disabled: false,
           component: {
-            placeholder: '请输入重码码包',
+            placeholder: '请输入被重码码包',
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'input'
+      },
+      {
+        title: '被重码码包编号',
+        key: 'repetition_code_package_no',
+        width: 240,
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请输入被重码码包',
             props: {
               clearable: true
             }
@@ -126,7 +155,8 @@ export const crudOptions = (vm) => {
       {
         title: '重码码类型',
         key: 'repetition_type',
-        minWidth: 100,
+        width: 100,
+        fixed: 'right',
         search: {
           disabled: false,
           component: {
@@ -137,17 +167,38 @@ export const crudOptions = (vm) => {
           }
         },
         type: 'select',
-        dist: {
+        dict: {
           data: [
-            { value: 0, label: '外码' },
-            { value: 1, label: '内码' },
-            { value: 2, label: '外码+内码' }
+            { value: 0, label: '码包重码' },
+            { value: 1, label: '历史重码' }
           ]
         }
+      },
+      {
+        title: '重码时间',
+        key: 'create_datetime',
+        width: 160,
+        fixed: 'right',
+        search: {
+          disabled: true,
+          width: 240,
+          component: { // 查询框组件配置，默认根据form配置生成
+            name: 'el-date-picker',
+            props: {
+              type: 'daterange',
+              'range-separator': '至',
+              'start-placeholder': '开始',
+              'end-placeholder': '结束',
+              valueFormat: 'yyyy-MM-dd'
+            }
+          }
+        },
+        type: 'datetime',
+        sortable: true,
+        form: {
+          disabled: false
+        }
       }
-    ].concat(vm.commonEndColumns({
-      update_datetime: { showTable: false },
-      dept_belong_id: { showForm: false, showTable: false }
-    }))
+    ]
   }
 }

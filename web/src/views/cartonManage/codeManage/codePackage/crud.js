@@ -32,8 +32,8 @@ export const crudOptions = (vm) => {
         thin: true,
         text: '',
         size: 'small',
-        disabled () {
-          return !vm.hasPermissions('Delete')
+        disabled (_, form) {
+          return !vm.hasPermissions('Delete') || form.validate_status === 4
         }
       },
       custom: [

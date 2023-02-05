@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from rest_framework import serializers
+
 from carton_manage.code_manage.models import CodeRepetitionRecord
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -8,6 +10,11 @@ class CodeRepetitionRecordSerializer(CustomModelSerializer):
     """
     码包管理-序列化器
     """
+    code_package_no = serializers.CharField(source='code_package.no', read_only=True)
+    code_package_order_id = serializers.CharField(source='code_package.order_id', read_only=True)
+    repetition_code_package_no = serializers.CharField(source='repetition_code_package.no', read_only=True)
+    repetition_code_package_order_id = serializers.CharField(source='repetition_code_package.order_id', read_only=True)
+
     class Meta:
         model = CodeRepetitionRecord
         fields = "__all__"

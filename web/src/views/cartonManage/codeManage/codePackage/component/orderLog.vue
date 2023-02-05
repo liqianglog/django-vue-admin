@@ -9,8 +9,8 @@
       <el-tag size="small" style="margin-left: 10px">{{
           options.order_id
         }}</el-tag>
-      <el-tag size="small" style="margin-left: 10px">{{
-          {1:'待校验',2:'校验中',3:'校验失败',4:'校验成功'}[options.validate_status]
+      <el-tag size="small" style="margin-left: 10px" :type="options.validate_status === 4 ?'success':'danger'">{{
+          {1:'待校验',2:'校验中',3:'校验失败',4:'校验通过'}[options.validate_status]
         }}</el-tag>
     </div>
     <div style="margin-left: 2em;">
