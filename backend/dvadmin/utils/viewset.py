@@ -20,7 +20,8 @@ from dvadmin.utils.json_response import SuccessResponse, ErrorResponse, DetailRe
 from dvadmin.utils.permission import CustomPermission
 from django_restql.mixins import QueryArgumentsMixin
 
-class CustomModelViewSet(ModelViewSet,ImportSerializerMixin,ExportSerializerMixin,QueryArgumentsMixin):
+
+class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMixin, QueryArgumentsMixin):
     """
     自定义的ModelViewSet:
     统一标准的返回格式;新增,查询,修改可使用不同序列化器
@@ -51,7 +52,6 @@ class CustomModelViewSet(ModelViewSet,ImportSerializerMixin,ExportSerializerMixi
             return self.values_queryset
         return super().get_queryset()
 
-
     def get_serializer_class(self):
         action_serializer_name = f"{self.action}_serializer_class"
         action_serializer_class = getattr(self, action_serializer_name, None)
@@ -80,7 +80,7 @@ class CustomModelViewSet(ModelViewSet,ImportSerializerMixin,ExportSerializerMixi
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True, request=request)
-            return self.get_paginated_response(serializer.data)
+            return SuccessResponse(serializer.data, msg="获取成功")
         serializer = self.get_serializer(queryset, many=True, request=request)
         return SuccessResponse(data=serializer.data, msg="获取成功")
 
@@ -107,17 +107,17 @@ class CustomModelViewSet(ModelViewSet,ImportSerializerMixin,ExportSerializerMixi
         instance.delete()
         return DetailResponse(data=[], msg="删除成功")
 
+    keys = openapi.Schema(description='主键列表', type=openapi.TYPE_ARRAY, items=openapi.TYPE_STRING)
 
-    keys = openapi.Schema(description='主键列表',type=openapi.TYPE_ARRAY,items=openapi.TYPE_STRING)
     @swagger_auto_schema(request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         required=['keys'],
         properties={'keys': keys}
     ), operation_summary='批量删除')
-    @action(methods=['delete'],detail=False)
-    def multiple_delete(self,request,*args,**kwargs):
+    @action(methods=['delete'], detail=False)
+    def multiple_delete(self, request, *args, **kwargs):
         request_data = request.data
-        keys = request_data.get('keys',None)
+        keys = request_data.get('keys', None)
         if keys:
             self.get_queryset().filter(id__in=keys).delete()
             return SuccessResponse(data=[], msg="删除成功")
