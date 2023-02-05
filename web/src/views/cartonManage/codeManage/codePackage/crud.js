@@ -1,4 +1,6 @@
 import util from '@/libs/util'
+import { request } from '@/api/service'
+import { d2CrudPlus } from 'd2-crud-plus'
 
 const uploadUrl = util.baseURL() + 'api/carton/code_manage/code_package/upload_file/'
 export const crudOptions = (vm) => {
@@ -16,10 +18,11 @@ export const crudOptions = (vm) => {
     },
     rowHandle: {
       fixed: 'right',
-      width: 220,
+      width: 180,
       view: {
         thin: true,
         text: '',
+        size: 'small',
         disabled () {
           return !vm.hasPermissions('Retrieve')
         }
@@ -28,6 +31,7 @@ export const crudOptions = (vm) => {
       remove: {
         thin: true,
         text: '',
+        size: 'small',
         disabled () {
           return !vm.hasPermissions('Delete')
         }
@@ -36,7 +40,7 @@ export const crudOptions = (vm) => {
         {
           thin: true,
           text: '导入日志',
-          size: 'medium',
+          size: 'small',
           type: 'primary',
           emit: 'onOrderLog'
         }
@@ -51,7 +55,7 @@ export const crudOptions = (vm) => {
     indexRow: { // 或者直接传true,不显示title，不居中
       title: '序号',
       align: 'center',
-      width: 100
+      width: 80
     },
     columns: [
       {
@@ -192,7 +196,7 @@ export const crudOptions = (vm) => {
           disabled: false
         },
         type: 'input',
-        width: 120,
+        width: 150,
         form: {
           rules: [ // 表单校验规则
             {
@@ -216,7 +220,7 @@ export const crudOptions = (vm) => {
           disabled: false
         },
         type: 'input',
-        width: 120,
+        width: 150,
         form: {
           rules: [ // 表单校验规则
             {
@@ -244,7 +248,12 @@ export const crudOptions = (vm) => {
         dict: {
           url: '/api/basics_manage/code_package_template/',
           label: 'no',
-          value: 'id'
+          value: 'id',
+          getData: (url, dict, { form, component }) => {
+            return request({ url: url, params: { page: 1, limit: 999 } }).then(ret => {
+              return ret.data.data
+            })
+          }
         },
         form: {
           rules: [ // 表单校验规则
@@ -260,7 +269,16 @@ export const crudOptions = (vm) => {
             props: {
               clearable: true
             }
-          }
+          },
+          valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
+            const dict = { url: '/api/basics_manage/code_package_template/' }
+            d2CrudPlus.util.dict.get(dict).then((data) => {
+              if (data.length === 1) {
+                form.code_package_template = data[0].id
+              }
+            })
+          },
+          valueChangeImmediate: true // 是否在打开对话框后触发一次valueChange事件
         }
       },
       {
@@ -323,7 +341,7 @@ export const crudOptions = (vm) => {
         title: '压缩包名称',
         key: 'zip_name',
         type: 'input',
-        width: 200,
+        width: 260,
         form: {
           disabled: true
         }
@@ -358,6 +376,7 @@ export const crudOptions = (vm) => {
         title: '校验状态',
         key: 'validate_status',
         type: 'select',
+        fixed: 'right',
         width: 100,
         dict: {
           data: [
@@ -366,6 +385,12 @@ export const crudOptions = (vm) => {
             { value: 3, label: '校验失败' },
             { value: 4, label: '校验成功' }
           ]
+        },
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请选择校验状态'
+          }
         },
         form: {
           disabled: true

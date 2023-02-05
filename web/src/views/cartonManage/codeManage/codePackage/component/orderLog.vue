@@ -5,9 +5,12 @@
     direction="rtl"
     >
     <div slot="title">
-      <span>码包订单</span>
+      <span>码包导入日志</span>
       <el-tag size="small" style="margin-left: 10px">{{
           options.order_id
+        }}</el-tag>
+      <el-tag size="small" style="margin-left: 10px">{{
+          {1:'待校验',2:'校验中',3:'校验失败',4:'校验成功'}[options.validate_status]
         }}</el-tag>
     </div>
     <div style="margin-left: 2em;">
