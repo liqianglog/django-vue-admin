@@ -440,7 +440,7 @@ CELERY_QUEUES = {
     }
 }
 CELERY_ROUTES = {
-    'kfm_apps.carton_manage.code_manage.code_package_import_check': {
+    'carton_manage.code_manage.tasks.code_package_import_check': {
         "queue": "task_1",
         "routing_key": "task_1.#"
     },
