@@ -186,8 +186,33 @@ class CodePackageViewSet(CustomModelViewSet):
 
     @action(methods=['get'], detail=True, permission_classes=[])
     def view_log(self, request, pk):
+        """导入日志"""
         _CodePackage = CodePackage.objects.filter(id=pk).first()
         if _CodePackage is None:
-            return DetailResponse(data=None)
+            return ErrorResponse(msg="未查询到码包")
         else:
             return DetailResponse(data=_CodePackage.import_log)
+
+    @action(methods=['get'], detail=True, permission_classes=[])
+    def import_report(self,request,pk):
+        """导入报告"""
+        _CodePackage = CodePackage.objects.filter(id=pk).first()
+        if _CodePackage is None:
+            return ErrorResponse(msg="未查询到码包")
+        else:
+            data = {
+                "zip_name":_CodePackage.zip_name,
+                "total_number":_CodePackage.total_number,
+                "code_type":_CodePackage.get_code_type_display(),
+                "product_name":_CodePackage.product_name,
+                "arrival_factory":_CodePackage.arrival_factory,
+                "import_start_datetime":_CodePackage.import_start_datetime,
+                "import_end_datetime":_CodePackage.import_end_datetime,
+                "import_run_time":_CodePackage.import_run_time,
+                "import_log":_CodePackage.import_log,
+                "char_length":_CodePackage.code_package_template.char_length,
+                "fields":_CodePackage.code_package_template.fields,
+                "w_url_prefix": _CodePackage.code_package_template.w_url_prefix,
+                "n_url_prefix": _CodePackage.code_package_template.n_url_prefix
+            }
+            return DetailResponse(data=data)

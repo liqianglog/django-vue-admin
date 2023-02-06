@@ -18,7 +18,7 @@ export const crudOptions = (vm) => {
     },
     rowHandle: {
       fixed: 'right',
-      width: 180,
+      width: 260,
       view: {
         thin: true,
         text: '',
@@ -43,6 +43,13 @@ export const crudOptions = (vm) => {
           size: 'small',
           type: 'primary',
           emit: 'onOrderLog'
+        },
+        {
+          thin: true,
+          text: '导入报告',
+          size: 'small',
+          type: 'warning',
+          emit: 'onImportLog'
         }
       ]
     },
