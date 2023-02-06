@@ -91,6 +91,9 @@ class CodePackage(CoreModel):
             obj['timestamp'] = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
         if not obj.get('type', None):
             obj['type'] = 'success'
+            obj['result'] = '校验通过'
+        else:
+            obj['result'] = '校验失败'
 
         with cache.lock(key="write_log"):
             code_package_obj = CodePackage.objects.get(id=self.id)

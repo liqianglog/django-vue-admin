@@ -149,7 +149,6 @@ class CodePackageViewSet(CustomModelViewSet):
         code_package_template_obj = CodePackageTemplate.objects.filter(id=data.get('code_package_template')).first()
         if not code_package_template_obj:
             return ErrorResponse(msg="码包模板不存在!")
-        code_package_id_list = []
         with transaction.atomic():
             for file_name in file_name_list:
                 file_name = file_name.split(os.sep)[-1]
@@ -179,9 +178,8 @@ class CodePackageViewSet(CustomModelViewSet):
                 if not code_package_serializer.is_valid(raise_exception=True):
                     return ErrorResponse(code=2101, data=None, msg=code_package_serializer.error_messages)
                 code_package_serializer.save()
-                code_package_id_list.append(code_package_serializer.instance.id)
                 print("码包信息ID", code_package_serializer.instance.id)
-        code_package_import_check.delay(code_package_ids=code_package_id_list)
+                code_package_import_check.delay(code_package_serializer.instance.id)
         return SuccessResponse(data=None, msg="正在导入中...")
 
     @action(methods=['get'], detail=True, permission_classes=[])
