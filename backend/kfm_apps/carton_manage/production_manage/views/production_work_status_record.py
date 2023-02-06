@@ -47,6 +47,7 @@ class ProductionWorkStatusRecordUpdateSerializer(CustomModelSerializer):
 
 
 class ProductionWorkStatusRecordFilterSet(FilterSet):
+    production_work = django_filters.NumberFilter(field_name="production_work_id", lookup_expr="icontains")
     code_type = django_filters.NumberFilter(field_name="production_work__code_package__code_type", lookup_expr="icontains")
     factory_info_name = django_filters.CharFilter(field_name="production_work__factory_info__name", lookup_expr="icontains")
     production_line_name = django_filters.CharFilter(field_name="production_work__production_line__name", lookup_expr="icontains")
@@ -61,7 +62,7 @@ class ProductionWorkStatusRecordViewSet(CustomModelViewSet):
     """
     生产状态记录接口:
     """
-    queryset = ProductionWorkStatusRecord.objects.all()
+    queryset = ProductionWorkStatusRecord.objects.all().order_by('-record_datetime')
     serializer_class = ProductionWorkStatusRecordSerializer
     create_serializer_class = ProductionWorkStatusRecordCreateSerializer
     update_serializer_class = ProductionWorkStatusRecordUpdateSerializer

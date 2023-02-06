@@ -65,7 +65,7 @@ class ProductionWorkVerifyRecordViewSet(CustomModelViewSet):
     """
     生产校验记录接口:
     """
-    queryset = ProductionWorkVerifyRecord.objects.all()
+    queryset = ProductionWorkVerifyRecord.objects.all().order_by('-record_datetime')
     serializer_class = ProductionWorkVerifyRecordSerializer
     create_serializer_class = ProductionWorkVerifyRecordCreateSerializer
     update_serializer_class = ProductionWorkVerifyRecordUpdateSerializer

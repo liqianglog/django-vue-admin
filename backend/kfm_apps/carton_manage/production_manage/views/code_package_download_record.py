@@ -62,7 +62,7 @@ class CodePackageDownloadRecordViewSet(CustomModelViewSet):
     """
     生产状态记录接口:
     """
-    queryset = CodePackageDownloadRecord.objects.all()
+    queryset = CodePackageDownloadRecord.objects.all().order_by('-record_datetime')
     serializer_class = CodePackageDownloadRecordSerializer
     create_serializer_class = CodePackageDownloadRecordCreateSerializer
     update_serializer_class = CodePackageDownloadRecordUpdateSerializer
