@@ -14,7 +14,7 @@ export const crudOptions = (vm) => {
 
     },
     rowHandle: {
-      width: 100,
+      width: 120,
       fixed: 'right',
       view: false,
       edit: false,
@@ -22,7 +22,7 @@ export const crudOptions = (vm) => {
       custom: [
         {
           thin: true,
-          text: '生产日志',
+          text: '生产状态记录',
           size: 'small',
           type: 'primary',
           emit: 'onStatusLog'
@@ -150,6 +150,56 @@ export const crudOptions = (vm) => {
             placeholder: '请输入批次号'
           }
         }
+      },
+      {
+        title: '码类型',
+        key: 'code_type',
+        minWidth: 100,
+        type: 'select',
+        dict: {
+          data: [
+            { value: 0, label: '外码' },
+            { value: 1, label: '内码' },
+            { value: 2, label: '外码+内码' }
+          ]
+        }
+      },
+      {
+        title: '码包总数',
+        key: 'total_number',
+        minWidth: 200,
+        search: {
+          disabled: false,
+          component: {
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'number',
+        form: {
+          itemProps: {
+            class: { yxtInput: true }
+          },
+          component: {
+            placeholder: '请输入码包总数'
+          }
+        }
+      },{
+        title: '打印位置',
+        key: 'print_position',
+        minWidth: 100,
+        type: 'number'
+      },{
+        title: '产品名称',
+        key: 'product_name',
+        minWidth: 100,
+        type: 'input'
+      },{
+        title: '到货工厂',
+        key: 'arrival_factory',
+        minWidth: 100,
+        type: 'input'
       }, {
         title: '生产工厂',
         key: 'factory_info_name',

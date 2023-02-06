@@ -29,6 +29,10 @@ class ProductionWorkSerializer(CustomModelSerializer):
     factory_info_name = serializers.CharField(source="factory_info.name", read_only=True)
     production_line_name = serializers.CharField(source="production_line.name", read_only=True)
     device_name= serializers.CharField(source="device.name", read_only=True)
+    total_number = serializers.IntegerField(source='code_package.total_number',read_only=True)
+    code_type = serializers.IntegerField(source='code_package.code_type',read_only=True)
+    product_name = serializers.CharField(source='code_package.product_name',read_only=True)
+    arrival_factory = serializers.CharField(source='code_package.arrival_factory',read_only=True)
 
     class Meta:
         model = ProductionWork

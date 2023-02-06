@@ -6,6 +6,7 @@ from urllib.parse import urlsplit
 
 from django.core.cache import cache
 from django.db import connection
+from django.utils import timezone
 from django_tenants.utils import schema_context
 from rest_framework import serializers
 from rest_framework.decorators import action
@@ -208,6 +209,7 @@ class ProductionWorkViewSet(CustomModelViewSet):
                     return ErrorResponse(msg="未获取到生产状态")
                 production_work_instance.print_position = print_position
                 production_work_instance.status = work_status
+                production_work_instance.print_last_datetime = timezone.now()
                 production_work_instance.save()
                 # *************加入生产状态记录***************#
                 create_data = {
