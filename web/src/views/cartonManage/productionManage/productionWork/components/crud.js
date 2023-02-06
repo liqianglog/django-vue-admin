@@ -33,20 +33,6 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '生产工单号',
-        key: 'production_work_no',
-        width: 120,
-        search: {
-          disabled: true,
-          component: {
-            props: {
-              clearable: true
-            }
-          }
-        },
-        type: 'input'
-      },
-      {
         title: '码包订单号',
         key: 'order_id',
         width: 200,
@@ -111,25 +97,11 @@ export const crudOptions = (vm) => {
         key: 'print_position',
         width: 100,
         type: 'input'
-      }, {
-        title: '记录时间',
-        key: 'record_datetime',
-        width: 100,
-        search: {
-          disabled: false,
-          component: {
-            placeholder: '请选择记录时间',
-            props: {
-              clearable: true
-            }
-          }
-        },
-        type: 'datetime'
       },
       {
         title: '生产工厂',
         key: 'factory_info_name',
-        width: 100,
+        width: 180,
         search: {
           disabled: false,
           component: {
@@ -144,7 +116,7 @@ export const crudOptions = (vm) => {
       {
         title: '生产产线',
         key: 'production_line_name',
-        width: 100,
+        width: 160,
         search: {
           disabled: false,
           component: {
@@ -159,7 +131,7 @@ export const crudOptions = (vm) => {
       {
         title: '生产设备',
         key: 'device_name',
-        width: 100,
+        width: 160,
         search: {
           disabled: false,
           component: {
@@ -170,6 +142,21 @@ export const crudOptions = (vm) => {
           }
         },
         type: 'input'
+      }, {
+        title: '记录时间',
+        key: 'record_datetime',
+        width: 160,
+        fixed: 'right',
+        search: {
+          disabled: true,
+          component: {
+            placeholder: '请选择记录时间',
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'datetime'
       }
     ]
   }
