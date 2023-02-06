@@ -138,6 +138,7 @@ class CodePackageViewSet(CustomModelViewSet):
                 for file_name in file_name_list:
                     file_name = file_name.split(os.sep)[-1]
                     if CodePackage.objects.filter(no=file_name.replace('.txt', '')).exists():
+                        os.remove(file_path)  # 删除zip包
                         return ErrorResponse(code=2001, msg=f"文件名查重校验未通过，文件重复导入:{file_name}")
                 # 进行解压文件
                 unzip_compress_file(file_path, txt_file_path, is_rm=False, pwd=pwd,

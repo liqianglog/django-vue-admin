@@ -24,12 +24,13 @@ def base_task_error():
     """
 
     def wraps(func):
+        @app.task()
         @functools.wraps(func)
-        def wrapper(self, *args, **kwargs):
+        def wrapper(*args, **kwargs):
             try:
-                return func(self, *args, **kwargs)
+                return func(*args, **kwargs)
             except Exception as exc:
-                code_package_obj = CodePackage.objects.get(id=kwargs.get('code_package_id'))
+                code_package_obj = CodePackage.objects.get(id=args[0])
                 code_package_obj.write_log({
                     "content": f"未知错误",
                     "remark": f"错误信息:{exc}",
@@ -44,7 +45,6 @@ def base_task_error():
 
 
 @base_task_error()
-@app.task
 def code_package_import_check(code_package_id):
     """
     码包导入校验确认(单队列)
@@ -125,7 +125,8 @@ def code_package_import_check(code_package_id):
         code_package_obj.write_log({"content": f"规则验证-字段数", "step": 2.4})
         if code_package_template_obj.code_type in [0, 2]:  # 外码
             # 2.5.外码内容长度
-            if len(readline_list[-1]) != code_package_template_obj.w_url_length:
+            print(1, readline_list)
+            if len(readline_list[code_package_template_obj.w_field_position].split(os.sep)[-1]) != code_package_template_obj.w_url_length:
                 code_package_obj.write_log({
                     "content": '规则验证-外码内容长度',
                     "remark": old_readline,
@@ -136,7 +137,7 @@ def code_package_import_check(code_package_id):
             code_package_obj.write_log({"content": f"规则验证-外码内容长度", "step": 2.5})
         if code_package_template_obj.code_type in [1, 2]:  # 内码
             # 2.6.内码内容长度
-            if len(readline_list[-1]) != code_package_template_obj.n_url_length:
+            if len(readline_list[code_package_template_obj.n_field_position].split(os.sep)[-1]) != code_package_template_obj.n_url_length:
                 code_package_obj.write_log({
                     "content": '规则验证-内码内容长度',
                     "remark": old_readline,

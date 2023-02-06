@@ -112,13 +112,17 @@ class CodePackage(CoreModel):
                 des_encrypt_file(target_file_path, settings.ENCRYPTION_KEY_ID[code_package_obj.key_id])
                 os.rename(target_file_path, target_file_path.replace('.zip', '.zip.des'))
                 code_package_obj.des_file_md5 = md5_file(
-                    os.path.join(get_code_package_import_txt_path(), code_package_obj.file_position))
-                date_strf_time = {timezone.now().strftime("%Y%m%d%H%M%S")}
-                new_file_position = code_package_obj.file_position.replace('.txt', f'{date_strf_time}.zip.des')
+                    os.path.join(get_code_package_import_txt_path(), target_file_path.replace('.zip', '.zip.des')))
+                date_strf_time = timezone.now().strftime("%Y%m%d%H%M%S")
+                new_file_position = code_package_obj.file_position.replace('.txt', f'_{date_strf_time}.zip.des')
                 code_package_obj.file_position = new_file_position
                 # 移动文件到指定目录
-                shutil.move(target_file_path.replace('.zip', '.zip.des'),
-                            os.path.join(get_code_package_import_fail_path(), new_file_position))
+                to_file = os.path.join(get_code_package_import_fail_path(), new_file_position)
+                if not os.path.exists(os.path.join(get_code_package_import_fail_path(),
+                                                   *new_file_position.split(os.sep)[:-1])):  # 文件夹不存在则创建
+                    os.makedirs(
+                        os.path.join(get_code_package_import_fail_path(), *new_file_position.split(os.sep)[:-1]))
+                shutil.move(target_file_path.replace('.zip', '.zip.des'), to_file)
                 # 把no重新进行命名
                 code_package_obj.no = f"{code_package_obj.no}_{date_strf_time}"
 
