@@ -1,12 +1,17 @@
 import datetime
 import json
+import os
+import shutil
 
+from django.conf import settings
 from django.core.cache import cache
 from django.db import models
 from django.utils import timezone
 
 from dvadmin.utils.models import CoreModel
 from basics_manage.models import CodePackageTemplate, DeviceManage
+from utils.currency import get_code_package_import_txt_path, zip_compress_file, des_encrypt_file, md5_file, \
+    get_code_package_import_fail_path
 
 table_prefix = "carton_"
 
@@ -91,9 +96,7 @@ class CodePackage(CoreModel):
             obj['timestamp'] = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
         if not obj.get('type', None):
             obj['type'] = 'success'
-            obj['result'] = '校验通过'
-        else:
-            obj['result'] = '校验失败'
+        obj['result'] = '校验通过' if obj['type'] == 'success' else '校验失败'
 
         with cache.lock(key="write_log"):
             code_package_obj = CodePackage.objects.get(id=self.id)
@@ -102,10 +105,28 @@ class CodePackage(CoreModel):
             code_package_obj.import_log = json.dumps(log)
             if obj.get('type') != 'success':
                 code_package_obj.validate_status = 3
+                # 对失败的数据进行加密并删除源数据
+                source_file_path = os.path.join(get_code_package_import_txt_path(), code_package_obj.file_position)
+                target_file_path = source_file_path.replace('.txt', '.zip')
+                zip_compress_file(source_file_path, target_file_path, is_rm=True)
+                des_encrypt_file(target_file_path, settings.ENCRYPTION_KEY_ID[code_package_obj.key_id])
+                os.rename(target_file_path, target_file_path.replace('.zip', '.zip.des'))
+                code_package_obj.des_file_md5 = md5_file(
+                    os.path.join(get_code_package_import_txt_path(), code_package_obj.file_position))
+                date_strf_time = {timezone.now().strftime("%Y%m%d%H%M%S")}
+                new_file_position = code_package_obj.file_position.replace('.txt', f'{date_strf_time}.zip.des')
+                code_package_obj.file_position = new_file_position
+                # 移动文件到指定目录
+                shutil.move(target_file_path.replace('.zip', '.zip.des'),
+                            os.path.join(get_code_package_import_fail_path(), new_file_position))
+                # 把no重新进行命名
+                code_package_obj.no = f"{code_package_obj.no}_{date_strf_time}"
+
             if code_package_obj.import_start_datetime:
                 import_end_datetime = datetime.datetime.now()
                 code_package_obj.import_end_datetime = import_end_datetime
-                code_package_obj.import_run_time = (import_end_datetime - code_package_obj.import_start_datetime).seconds
+                code_package_obj.import_run_time = (
+                        import_end_datetime - code_package_obj.import_start_datetime).seconds
             code_package_obj.save()
 
 

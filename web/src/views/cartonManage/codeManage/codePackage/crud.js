@@ -345,6 +345,15 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
+      },
+      {
+        title: '码包编号',
+        key: 'no',
+        type: 'input',
+        width: 260,
+        form: {
+          disabled: true
+        }
       }, {
         title: '来源',
         key: 'source_label',
