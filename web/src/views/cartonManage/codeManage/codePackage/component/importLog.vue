@@ -1,57 +1,4 @@
 <template>
-<!--  <el-container>-->
-<!--    <el-main>-->
-<!--      <table-->
-<!--        width="100%"-->
-<!--        border="0"-->
-<!--        cellspacing="1"-->
-<!--        cellpadding="4"-->
-<!--        bgcolor="#cccccc"-->
-<!--        class="tabtop13"-->
-<!--        align="center"-->
-<!--      >-->
-<!--        <tr>-->
-<!--          <td class="btbg font-center titfont" colspan="2">导入报告</td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--          <td width="20%" class="btbg1 font-center">订单编号</td>-->
-<!--          <td>{{ objData.id }}</td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--          <td width="20%" class="btbg1 font-center">订单名称</td>-->
-<!--          <td>{{ objData.name }}</td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--          <td width="20%" class="btbg1 font-center">包内文件数量(个)</td>-->
-<!--          <td>{{ objData.code_package_count }}</td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--          <td width="20%" class="btbg1 font-center">订单总码数量(个)</td>-->
-<!--          <td>{{ objData.order_sum_number }} ({{objData.order_sum_number/10000}}万)</td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--          <td width="20%" class="btbg1 font-center">每包数量(个)</td>-->
-<!--          <td>{{ objData.single_code_package_number }} ({{objData.single_code_package_number/10000}}万)</td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--          <td width="20%" class="btbg1 font-center">导入成功数量(个)</td>-->
-<!--          <td>{{ objData.success_code_data_number }} ({{objData.success_code_data_number/10000}}万)</td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--          <td width="20%" class="btbg1 font-center">导入负责人</td>-->
-<!--          <td>{{ objData.creator_name }}</td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--          <td width="20%" class="btbg1 font-center">导入开始时间</td>-->
-<!--          <td>{{ objData.create_datetime }}</td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--          <td width="20%" class="btbg1 font-center">导入结束时间</td>-->
-<!--          <td>{{ objData.update_datetime }}</td>-->
-<!--        </tr>-->
-<!--      </table>-->
-<!--    </el-main>-->
-<!--  </el-container>-->
   <el-drawer
     :visible.sync="drawer"
     direction="rtl"
@@ -64,22 +11,67 @@
         }}</el-tag>
     </div>
     <div style="padding: 0em 1em">
-      <el-descriptions column="1">
-        <el-descriptions-item label="压缩包名称">{{objData.zip_name}}</el-descriptions-item>
-        <el-descriptions-item label="码包总数">
-          <el-tag size="small">{{objData.total_number}}</el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="码类型">
-          <el-tag size="small">{{objData.code_type}}</el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="产品名称">{{objData.product_name}}</el-descriptions-item>
-        <el-descriptions-item label="到货工厂">{{objData.arrival_factory}}</el-descriptions-item>
-        <el-descriptions-item label="导入开始时间">{{formatDatetime(objData.import_start_datetime)}}</el-descriptions-item>
-        <el-descriptions-item label="导入结束时间">{{formatDatetime(objData.import_end_datetime)}}</el-descriptions-item>
-        <el-descriptions-item label="导入耗时时长">{{objData.import_run_time}}</el-descriptions-item>
-        <el-descriptions-item label="码总长度">{{objData.char_length}}</el-descriptions-item>
-        <el-descriptions-item label="码字段数">{{objData.fields}}</el-descriptions-item>
-      </el-descriptions>
+      <navTitle>基础信息</navTitle>
+      <ul class="overview_info">
+        <li>
+          <span class="item_title">码包编号：</span>
+          <span>{{ objData.no }} </span>
+        </li>
+        <li>
+          <span class="item_title">订单编号：</span>
+          <span>{{ objData.order_id }} </span>
+        </li>
+        <li>
+          <span class="item_title">码包名称：</span>
+          <span>{{ objData.zip_name }} </span>
+        </li>
+        <li>
+          <span class="item_title">码包总数：</span>
+          <span>{{ objData.total_number }} </span>
+        </li>
+        <li>
+          <span class="item_title">码类型：</span>
+          <span>{{ objData.code_type }} </span>
+        </li>
+        <li>
+          <span class="item_title">外码网址：</span>
+          <span>{{objData.w_url_prefix}}</span>
+        </li>
+        <li>
+          <span class="item_title">内码网址：</span>
+          <span>{{objData.n_url_prefix}}</span>
+        </li>
+        <li>
+          <span class="item_title">产品名称：</span>
+          <span>{{ objData.product_name }} </span>
+        </li>
+        <li>
+          <span class="item_title">到货工厂：</span>
+          <span>{{ objData.arrival_factory }}</span>
+        </li>
+
+        <li>
+          <span class="item_title">码长度：</span>
+          <span>{{objData.char_length}}</span>
+        </li>
+        <li>
+          <span class="item_title">字段数：</span>
+          <span>{{objData.fields}}</span>
+        </li>
+        <li>
+          <span class="item_title">导入开始时间：</span>
+          <span>{{ objData.import_start_datetime }}</span>
+        </li>
+        <li>
+          <span class="item_title">导入完成时间：</span>
+          <span>{{ objData.import_end_datetime }}</span>
+        </li>
+        <li>
+          <span class="item_title">导入耗时时长：</span>
+          <span>{{objData.import_run_time}}</span>
+        </li>
+      </ul>
+      <navTitle>导入日志</navTitle>
     </div>
   </el-drawer>
 </template>
@@ -87,7 +79,11 @@
 <script>
 import * as api from '../api'
 import dayjs from 'dayjs'
+import navTitle from './navTitle'
 export default {
+  components:{
+    navTitle
+  },
   data () {
     return {
       options: {},
@@ -128,7 +124,6 @@ export default {
     }
   },
   created () {
-
   }
 }
 </script>
@@ -185,4 +180,20 @@ export default {
   margin-bottom: 10px;
   line-height: 20px;
 }
+
+
+.overview_info {
+  li {
+    list-style: none;
+    line-height: 40px;
+    background-color: #f8fbff;
+    margin-bottom: 10px;
+    color: #333;
+    .item_title {
+      width: 200px;
+      display: inline-block;
+    }
+  }
+}
+
 </style>

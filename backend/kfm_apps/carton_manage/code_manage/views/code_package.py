@@ -207,6 +207,8 @@ class CodePackageViewSet(CustomModelViewSet):
             return ErrorResponse(msg="未查询到码包")
         else:
             data = {
+                "no":_CodePackage.no,
+                "order_id":_CodePackage.order_id,
                 "zip_name":_CodePackage.zip_name,
                 "total_number":_CodePackage.total_number,
                 "code_type":_CodePackage.get_code_type_display(),
