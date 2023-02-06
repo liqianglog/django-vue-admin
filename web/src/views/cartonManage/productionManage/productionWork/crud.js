@@ -185,17 +185,17 @@ export const crudOptions = (vm) => {
             placeholder: '请输入码包总数'
           }
         }
-      },{
+      }, {
         title: '打印位置',
         key: 'print_position',
         minWidth: 100,
         type: 'number'
-      },{
+      }, {
         title: '产品名称',
         key: 'product_name',
         minWidth: 100,
         type: 'input'
-      },{
+      }, {
         title: '到货工厂',
         key: 'arrival_factory',
         minWidth: 100,

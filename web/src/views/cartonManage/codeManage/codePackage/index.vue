@@ -5,6 +5,7 @@
       v-bind="_crudProps"
       v-on="_crudListeners"
       @onOrderLog="onOrderLog"
+      @onImportLog="onImportLog"
     >
       <div slot="header">
         <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"/>
@@ -21,6 +22,7 @@
       </div>
     </d2-crud-x>
     <orderLog ref="orderLog" :options="selectRow"></orderLog>
+    <importLog ref="importLog"></importLog>
   </d2-container>
 </template>
 
@@ -29,12 +31,13 @@ import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import orderLog from './component/orderLog'
-
+import importLog from './component/importLog'
 export default {
   name: 'codePackage',
   mixins: [d2CrudPlus.crud],
   components: {
-    orderLog
+    orderLog,
+    importLog
   },
   data () {
     return {
@@ -63,6 +66,12 @@ export default {
       this.$refs.orderLog.options = row
       this.$refs.orderLog.drawer = true
       this.$refs.orderLog.getInit()
+    },
+    // 导入报告
+    onImportLog ({ row }) {
+      this.$refs.importLog.options = row
+      this.$refs.importLog.drawer = true
+      this.$refs.importLog.getInit()
     }
   }
 }

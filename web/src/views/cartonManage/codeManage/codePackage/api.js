@@ -56,25 +56,15 @@ export function viewLog (params) {
   })
 }
 
-/**
- * 获取码包详情
- */
-export function getCodePackage (params) {
-  return request({
-    url: 'api/production/code_package/',
-    method: 'get',
-    params: params
-  })
-}
 
 /**
  * 获取导入报告
  * @param {*} params
  * @returns
  */
-export function getExportReport (params) {
+export function getImportReport (params) {
   return request({
-    url: urlPrefix + 'export_report/' + params.id + '/',
+    url: urlPrefix + params.id + '/import_report/',
     method: 'get'
   })
 }
