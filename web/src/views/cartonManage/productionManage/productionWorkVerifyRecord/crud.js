@@ -110,7 +110,7 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '码内容集合',
+        title: '校验码内容集合',
         key: 'code_list',
         minWidth: 270,
         rowSlot: true,
@@ -193,7 +193,7 @@ export const crudOptions = (vm) => {
       {
         title: '记录时间',
         key: 'record_datetime',
-        minWidth: 160,
+        width: 160,
         fixed: 'right',
         search: {
           disabled: true,

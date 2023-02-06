@@ -14,7 +14,7 @@ export const crudOptions = (vm) => {
 
     },
     rowHandle: {
-      width: 120,
+      width: 100,
       fixed: 'right',
       view: false,
       edit: false,
@@ -23,7 +23,7 @@ export const crudOptions = (vm) => {
         {
           thin: true,
           text: '生产日志',
-          size: 'medium',
+          size: 'small',
           type: 'primary',
           emit: 'onStatusLog'
         }
@@ -77,7 +77,7 @@ export const crudOptions = (vm) => {
       {
         title: '生产工单号',
         key: 'no',
-        minWidth: 140,
+        minWidth: 200,
         search: {
           disabled: true,
           component: {
@@ -107,7 +107,7 @@ export const crudOptions = (vm) => {
       }, {
         title: '生产订单号',
         key: 'order_id',
-        minWidth: 100,
+        minWidth: 200,
         search: {
           disabled: false,
           component: {
@@ -132,7 +132,7 @@ export const crudOptions = (vm) => {
       {
         title: '批次号',
         key: 'batch_no',
-        width: 120,
+        minWidth: 200,
         search: {
           disabled: false,
           component: {
@@ -151,9 +151,9 @@ export const crudOptions = (vm) => {
           }
         }
       }, {
-        title: '工厂名称',
+        title: '生产工厂',
         key: 'factory_info_name',
-        width: 120,
+        width: 180,
         search: {
           disabled: false,
           component: {
@@ -168,18 +168,19 @@ export const crudOptions = (vm) => {
             class: { yxtInput: true }
           },
           component: {
-            placeholder: '请输入工厂名称'
+            placeholder: '请输入生产工厂'
           }
         }
       },
       {
-        title: '产线名称',
+        title: '生产产线',
         key: 'production_line_name',
+        width: 160,
         type: 'input',
         search: {
           disabled: false,
           component: {
-            placeholder: '请输入产线名称',
+            placeholder: '请输入生产产线',
             props: {
               clearable: true
             }
@@ -187,13 +188,24 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '设备名称',
+        title: '生产设备',
         key: 'device_name',
-        type: 'input'
+        width: 160,
+        type: 'input',
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请输入生产设备',
+            props: {
+              clearable: true
+            }
+          }
+        }
       },
       {
         title: '生产状态',
         key: 'status',
+        fixed: 'right',
         search: {
           disabled: false
         },
