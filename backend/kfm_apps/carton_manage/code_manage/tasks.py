@@ -95,30 +95,52 @@ def code_package_import_check(code_package_id):
             })
             return "规则验证-字段数校验失败"
         code_package_obj.write_log({"content": f"规则验证-字段数", "step": 2.4})
-        # 2.5.外码校验
+        if code_package_template_obj.code_type in [0, 2]:  # 外码
+            # 2.5.外码内容长度
+            if len(readline_list[-1]) != code_package_template_obj.w_url_length:
+                code_package_obj.write_log({
+                    "content": '规则验证-外码内容长度',
+                    "remark": old_readline,
+                    "step": 2.5,
+                    "type": 'error'
+                })
+                return "规则验证-外码内容长度校验失败"
+            code_package_obj.write_log({"content": f"规则验证-外码内容长度", "step": 2.5})
+        if code_package_template_obj.code_type in [1, 2]:  # 内码
+            # 2.6.内码内容长度
+            if len(readline_list[-1]) != code_package_template_obj.n_url_length:
+                code_package_obj.write_log({
+                    "content": '规则验证-内码内容长度',
+                    "remark": old_readline,
+                    "step": 2.6,
+                    "type": 'error'
+                })
+                return "规则验证-内码内容长度校验失败"
+            code_package_obj.write_log({"content": f"规则验证-内码内容长度", "step": 2.6})
+        # 2.7.外码网址校验
         if code_package_template_obj.code_type in [0, 2]:  # 外码
             w_url = readline_list[code_package_template_obj.w_field_position]
             if not w_url.startswith(code_package_template_obj.w_url_prefix):
                 code_package_obj.write_log({
                     "content": '规则验证-外码网址',
                     "remark": old_readline,
-                    "step": 2.5,
+                    "step": 2.7,
                     "type": 'error'
                 })
                 return "规则验证-外码网址校验失败"
-            code_package_obj.write_log({"content": f"规则验证-外码网址", "step": 2.5})
-        # 2.6.内码校验
+            code_package_obj.write_log({"content": f"规则验证-外码网址", "step": 2.7})
+        # 2.8.内码网址校验
         if code_package_template_obj.code_type in [1, 2]:  # 内码
             n_url = readline_list[code_package_template_obj.n_field_position]
             if not n_url.startswith(code_package_template_obj.n_url_prefix):
                 code_package_obj.write_log({
                     "content": '规则验证-内码网址',
                     "remark": old_readline,
-                    "step": 2.6,
+                    "step": 2.8,
                     "type": 'error'
                 })
                 return "规则验证-内码网址校验失败"
-            code_package_obj.write_log({"content": f"规则验证-内码网址", "step": 2.6})
+            code_package_obj.write_log({"content": f"规则验证-内码网址", "step": 2.8})
     code_data_list = []
     # 码数据先入临时表中
     _HistoryTemporaryCode = HistoryTemporaryCode.set_db(timeout=60 * 30)
