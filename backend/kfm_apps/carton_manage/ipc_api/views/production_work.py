@@ -218,5 +218,11 @@ class ProductionWorkViewSet(CustomModelViewSet):
                 serializer = IpcProductionWorkStatusRecordCreateSerializer(data=create_data, many=False)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
+                #修改生产设备状态
+                device = request.user.device_id
+                if work_status in [2]:
+                    DeviceManage.objects.filter(id=device).update(production_status=1)
+                else:
+                    DeviceManage.objects.filter(id=device).update(production_status=0)
                 # *************加入生产状态记录***************#
                 return DetailResponse(msg="更新成功")

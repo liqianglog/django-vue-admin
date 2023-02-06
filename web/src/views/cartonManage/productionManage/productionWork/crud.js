@@ -235,7 +235,7 @@ export const crudOptions = (vm) => {
         }
       }
     ].concat(vm.commonEndColumns({
-      update_datetime: { showTable: false },
+      update_datetime: { showTable: true },
       dept_belong_id: { showForm: false, showTable: false }
     }))
   }
