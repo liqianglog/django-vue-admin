@@ -5,7 +5,7 @@
 				<el-tag size="small">{{ scope.row.url }}</el-tag>
 			</template>
 		</fs-crud>
-    <RolePermission ref="rolePermission"></RolePermission>
+		<RolePermission ref="rolePermission"></RolePermission>
 	</fs-page>
 </template>
 
@@ -13,9 +13,9 @@
 import { ref, onMounted } from 'vue';
 import { useExpose, useCrud } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './curd';
-import RolePermission from '/@/views/system/rolePermission/index.vue'
+import RolePermission from '/@/views/system/rolePermission/index.vue';
 const rolePermission = ref();
-defineExpose(rolePermission)
+defineExpose(rolePermission);
 // crud组件的ref
 const crudRef = ref();
 // crud 配置的ref
@@ -23,7 +23,7 @@ const crudBinding = ref();
 // 暴露的方法
 const { crudExpose } = useExpose({ crudRef, crudBinding });
 // 你的crud配置
-const { crudOptions } = createCrudOptions({ crudExpose ,rolePermission });
+const { crudOptions } = createCrudOptions({ crudExpose, rolePermission });
 // 初始化crud配置
 const { resetCrudOptions } = useCrud({ crudExpose, crudOptions });
 // 你可以调用此方法，重新初始化crud配置
@@ -33,7 +33,4 @@ const { resetCrudOptions } = useCrud({ crudExpose, crudOptions });
 onMounted(() => {
 	crudExpose.doRefresh();
 });
-
-
-
 </script>

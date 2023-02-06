@@ -1,9 +1,10 @@
 import axios from "axios";
 import { get } from "lodash-es";
+// @ts-ignore
 import { errorLog, errorCreate } from "./tools.ts";
 // import { env } from "/src/utils/util.env";
 // import { useUserStore } from "../store/modules/user";
-import { Session } from '/@/utils/storage';
+import { Local, Session } from '/@/utils/storage';
 /**
  * @description 创建请求实例
  */
@@ -37,6 +38,13 @@ function createService() {
       } else {
         // 有 code 代表这是一个后端接口 可以进行进一步的判断
         switch (code) {
+          case 401:
+            Local.clear();
+            Session.clear();
+            window.location.reload();
+            dataAxios.msg = "登录授权过期，请重新登录";
+            errorCreate(`${dataAxios.msg}: ${response.config.url}`);
+            break
           case 2000:
             // @ts-ignore
             if (response.config.unpack === false) {

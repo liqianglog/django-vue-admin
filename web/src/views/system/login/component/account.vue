@@ -73,6 +73,7 @@ import { formatAxis } from '/@/utils/formatTime';
 import { NextLoading } from '/@/utils/loading';
 import * as loginApi from '/@/views/system/login/api';
 import { useUserInfo } from '/@/stores/userInfo';
+import { DictionaryStore } from '/@/stores/dictionary';
 import { Md5 } from 'ts-md5';
 
 export default defineComponent({
@@ -136,8 +137,9 @@ export default defineComponent({
 		};
 		// 登录成功后的跳转
 		const loginSuccess = () => {
-			//登录成功获取用户信息
+			//登录成功获取用户信息,获取系统字典数据
 			getUserInfo();
+			DictionaryStore().getSystemDictionarys();
 
 			// 初始化登录成功时间问候语
 			let currentTimeInfo = currentTime.value;

@@ -28,6 +28,8 @@
     "mitt": "^3.0.0",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.16",
+    "pinia-plugin-persist": "^1.0.0",
+    "pinia-plugin-persistedstate": "^3.0.2",
     "print-js": "^1.6.0",
     "qrcodejs2-fixes": "^0.0.2",
     "screenfull": "^6.0.2",
