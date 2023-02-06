@@ -127,25 +127,33 @@ class CodePackageViewSet(CustomModelViewSet):
                 file_name_list = [ele for ele in file_name_list if not ele.startswith("_")]
                 is_txt = zip_is_txt(file_name_list)  # 判断是否全是txt文件
                 if not is_txt:
-                    return ErrorResponse(code=2101, msg="zip包中内部文件格式不正确")
+                    return ErrorResponse(code=2001, msg="zip包中内部文件格式不正确")
                 try:
                     with zip_file.open(zip_file.namelist()[0], pwd=pwd) as myfile:  # 得到压缩包里所有文件
                         myfile.readline()
                 except Exception as e:
                     print("zip文件密码错误", e)
-                    return ErrorResponse(code=2101, msg="zip文件密码错误")
+                    return ErrorResponse(code=2001, msg="zip文件密码错误")
+                # 码包导入前名称检测是否已存在
+                for file_name in file_name_list:
+                    file_name = file_name.split(os.sep)[-1]
+                    if CodePackage.objects.filter(no=file_name.replace('.txt', '')).exists():
+                        return ErrorResponse(code=2001, msg=f"文件名查重校验未通过，文件重复导入:{file_name}")
                 # 进行解压文件
                 unzip_compress_file(file_path, txt_file_path, is_rm=False, pwd=pwd,
                                     specify_file_name=file_name_list)
             os.remove(file_path)  # 删除zip包
-        elif file_type == "txt":
+        elif file_type == "txt" and file_path.endswith('.txt'):
             new_file_path = os.path.join(txt_file_path, str(file_path.split(os.sep)[-1]))
             if not os.path.exists(txt_file_path):  # 文件夹不存在则创建
                 os.makedirs(txt_file_path)
             shutil.move(file_path, new_file_path)
+            file_name = new_file_path.split(os.sep)[-1]
+            if CodePackage.objects.filter(no=file_name.replace('.txt', '')).exists():
+                return ErrorResponse(code=2001, msg=f"文件名查重校验未通过，文件重复导入:{file_name}")
             file_name_list = [new_file_path]
         else:
-            return ErrorResponse(code=2101, msg="文件类型错误")
+            return ErrorResponse(code=2001, msg="文件类型错误")
         code_package_template_obj = CodePackageTemplate.objects.filter(id=data.get('code_package_template')).first()
         if not code_package_template_obj:
             return ErrorResponse(msg="码包模板不存在!")
@@ -176,7 +184,7 @@ class CodePackageViewSet(CustomModelViewSet):
                 code_package_serializer = CodePackageCreateSerializer(data=code_package_data, many=False,
                                                                       request=request)
                 if not code_package_serializer.is_valid(raise_exception=True):
-                    return ErrorResponse(code=2101, data=None, msg=code_package_serializer.error_messages)
+                    return ErrorResponse(code=2001, data=None, msg=code_package_serializer.error_messages)
                 code_package_serializer.save()
                 print("码包信息ID", code_package_serializer.instance.id)
                 code_package_import_check.delay(code_package_serializer.instance.id)
