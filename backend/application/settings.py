@@ -422,5 +422,27 @@ TENANT_EXCLUSIVE_APPS = [
 # from dvadmin_upgrade_center.settings import *    # 升级中心
 from dvadmin_celery.settings import *  # celery 异步任务
 from dvadmin_tenants.settings import *  # 租户
+
 # ...
 # ********** 一键导入插件配置结束 **********
+
+# celery 队列配置
+CELERY_QUEUES = {
+    "default": {
+        "exchange": "default",
+        "exchange_type": "direct",
+        "routing_key": "default.#"
+    },
+    "task_1": {
+        "exchange": "task_1",
+        "exchange_type": "direct",
+        "routing_key": "task_1.#"
+    }
+}
+CELERY_ROUTES = {
+    'kfm_apps.carton_manage.code_manage.code_package_import_check': {
+        "queue": "task_1",
+        "routing_key": "task_1.#"
+    },
+    '*': {'queue': 'default', 'routing_key': 'default'},
+}
