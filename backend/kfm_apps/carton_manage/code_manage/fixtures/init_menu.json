@@ -13,7 +13,7 @@
     "visible": true,
     "children": [
       {
-        "name": "码包导入",
+        "name": "码包订单",
         "icon": "qrcode",
         "sort": 1,
         "is_link": false,
