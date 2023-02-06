@@ -7,9 +7,10 @@
       :before-close="handleClose"
   >
     <template #header>
-      <h4>
-        <el-tag>当前角色:超管</el-tag>
-      </h4>
+      <el-button-group>
+        <el-button size="mini" plain type="primary">当前角色:{{editedRoleInfo.name}}</el-button>
+        <el-button size="mini" type="primary" @click="onSaveAuth">保存授权</el-button>
+      </el-button-group>
     </template>
     <div style="padding: 1em">
     <el-row :gutter="10">
@@ -22,10 +23,8 @@
                    highlight-current
                    :expand-on-click-node="false"
                    :check-on-click-node="true"
-                   :lazy="true"
-                   :load="loadMenuNone"
                    :props="defaultProps"
-                   @node-click="menuNodeClick"
+                   @current-change="menuNodeClick"
           />
         </el-card>
       </el-col>
@@ -34,7 +33,6 @@
           <template #header>
             <div class="card-header">
               <span>页面授权</span>
-              <el-button size="small" type="primary">保存授权</el-button>
             </div>
           </template>
           <div>
@@ -84,9 +82,8 @@
       <el-dialog v-model="dialogFormVisible" title="配置按钮权限">
         <el-form :model="buttonForm" :rules="buttonRules" label-width="120px">
           <el-form-item label="按钮">
-            <el-select v-model="buttonForm.name" placeholder="请选择按钮">
-              <el-option label="Zone No.1" value="shanghai" />
-              <el-option label="Zone No.2" value="beijing" />
+            <el-select v-model="buttonForm.name" placeholder="请选择按钮" @change="onChangeButton">
+              <el-option v-for="(item,index) in buttonOptions" :key="index" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="权限范围">
@@ -111,9 +108,9 @@
         </el-form>
         <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">
-          Confirm
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="onSaveButtonForm">
+          确定
         </el-button>
       </span>
         </template>
@@ -123,12 +120,16 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, defineExpose,reactive} from 'vue'
+import {ref, defineExpose,reactive,toRefs} from 'vue'
 import {ElMessageBox} from 'element-plus'
 import * as api from './api'
 import type {  FormRules } from 'element-plus'
-import type Node from 'element-plus/es/components/tree/src/model/node'
+import XEUtils from 'xe-utils'
+//抽屉是否显示
 const drawer = ref(false)
+//当前编辑的角色信息
+const editedRoleInfo = ref({})
+
 //抽屉关闭确认
 const handleClose = (done: () => void) => {
   ElMessageBox.confirm('您确定要关闭?', {
@@ -154,40 +155,44 @@ const defaultProps = {
 interface Tree {
   name: string
   children?: Tree[],
-  isLeaf:boolean
+  id:number
 }
 let menuData= ref<Tree>()
 //获取菜单
 const getMenuData = () => {
   api.GetMenu({}).then((res:any)=>{
     const {data} = res
-    menuData.value = data
+    const list = XEUtils.toArrayTree(data,{parentKey:"parent",strict:true})
+    menuData.value = list
   })
 }
-//懒加载菜单节点
-const loadMenuNone = (node: Node , resolve: (data: Tree[]) => void) => {
-  api.GetMenu({parent:node.id}).then((res:any)=>{
-    const {data} = res
-    resolve(data)
-  })
-}
+
 let isCatalog = ref(true)
+let buttonOptions = ref<[]>()
+let checkedMenuId = ref()
+//菜单节点点击事件
 const menuNodeClick=(node:any)=>{
   isCatalog.value = node.is_catalog
+  if(!node.is_catalog){
+    buttonOptions.value = []
+    checkedMenuId.value = node.id
+    api.GetMenuButton({menu:node.id}).then((res:any)=>{
+      const {data} = res
+      buttonOptions.value = data
+    })
+  }
+
 }
+const menuTree = ref()
 /*****菜单的配置项***/
 /***按钮授权的弹窗****/
+//是否显示新增表单
 const dialogFormVisible = ref(false)
-const deptOptions = [{
-  name:"dvadmin"
-}]
+//自定义部门数据
+const deptOptions = ref()
+//选中的部门数据
 const deptCheckedKeys=[]
-const dataScopeOptions=ref<[]>()
-const getDataScope = ()=>{
-  api.GetDataScope().then((res:any)=>{
-    dataScopeOptions.value = res.data
-  })
-}
+
 
 //按钮表单
 const buttonForm = reactive({
@@ -208,9 +213,22 @@ const buttonRules = reactive<FormRules>({
 //新增按钮
 const createBtnPermission = ()=>{
   dialogFormVisible.value = true
-  getDataScope()
 }
-//按钮表格
+//权限范围数据
+const dataScopeOptions=ref<[]>()
+//按钮值变化事件
+const onChangeButton = (val:any)=>{
+  dataScopeOptions.value = []
+  //获取权限值范围
+  api.GetDataScope({menu_button:val}).then((res:any)=>{
+    dataScopeOptions.value = res.data
+  })
+}
+//保存按钮表单
+const onSaveButtonForm = ()=>{
+  console.log(editedRoleInfo)
+}
+//按钮表格数据
 const buttonPermissionData: any[] = [
   {
     name: "查询",
@@ -235,7 +253,21 @@ const crudPermissionData: any[] = [
   }
 ]
 
-defineExpose({drawer,initGet})
+/**
+ * 保存授权
+ */
+const onSaveAuth = ()=>{
+  //选中的菜单
+  const checkedList = menuTree.value.getCheckedKeys()
+  //半选中的菜单
+  const halfCheckedList = menuTree.value.getHalfCheckedKeys()
+  //合并的菜单数据
+  const menuIdList = [...checkedList,...halfCheckedList]
+  console.log(menuIdList)
+}
+
+
+defineExpose({drawer,editedRoleInfo,initGet})
 </script>
 
 <style scoped>

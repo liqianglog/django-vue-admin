@@ -64,12 +64,9 @@ import { RouteRecordRaw } from 'vue-router';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { storeToRefs } from 'pinia';
 import { useRoutesList } from '/@/stores/routesList';
-import AddMenu from '/@/views/system/menu/component/addMenu.vue';
-import EditMenu from '/@/views/system/menu/component/editMenu.vue';
 
 export default defineComponent({
 	name: 'systemMenu',
-	components: { AddMenu, EditMenu },
 	setup() {
 		const stores = useRoutesList();
 		const { routesList } = storeToRefs(stores);

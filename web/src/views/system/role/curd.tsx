@@ -82,8 +82,10 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                             placement: "top",
                             content: "删除"
                         },
-                        click: () => {
+                        click: (context:any) => {
+                            const {row} = context
                         	rolePermission.value.drawer=true
+                            rolePermission.value.editedRoleInfo = row
                             rolePermission.value.initGet()
                         }
                     }

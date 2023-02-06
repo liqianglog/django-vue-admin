@@ -116,7 +116,7 @@ export default defineComponent({
 		};
 		const loginClick = async () => {
 			loginApi.login({ ...state.ruleForm, password: Md5.hashStr(state.ruleForm.password) }).then((ret: any) => {
-				Session.set('token', ret.data.access);
+			  Session.set('token', ret.data.access);
 				Cookies.set('username', ret.data.name);
 				if (!themeConfig.value.isRequestRoutes) {
 					// 前端控制路由，2、请注意执行顺序

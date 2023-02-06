@@ -201,6 +201,14 @@ class RoleMenuButtonPermission(CoreModel):
         verbose_name="关联角色",
         help_text="关联角色",
     )
+    menu = models.ForeignKey(
+        to="Menu",
+        db_constraint=False,
+        related_name="role_menu",
+        on_delete=models.CASCADE,
+        verbose_name="关联菜单",
+        help_text="关联菜单",
+    )
     menu_button = models.ForeignKey(
         to="MenuButton",
         db_constraint=False,
@@ -208,6 +216,8 @@ class RoleMenuButtonPermission(CoreModel):
         on_delete=models.CASCADE,
         verbose_name="关联菜单按钮",
         help_text="关联菜单按钮",
+        null=True,
+        blank=True
     )
     DATASCOPE_CHOICES = (
         (0, "仅本人数据权限"),
