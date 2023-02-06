@@ -1,4 +1,5 @@
 import datetime
+import functools
 import os
 
 import django
@@ -16,6 +17,33 @@ from utils.currency import des_encrypt_file, zip_compress_file, get_code_package
 from dvadmin_tenants.models import HistoryTemporaryCode, HistoryCodeInfo, Client
 
 
+def base_task_error():
+    """
+    celery 通用装饰器
+    :return:
+    """
+
+    def wraps(func):
+        @functools.wraps(func)
+        def wrapper(self, *args, **kwargs):
+            try:
+                return func(self, *args, **kwargs)
+            except Exception as exc:
+                code_package_obj = CodePackage.objects.get(id=kwargs.get('code_package_id'))
+                code_package_obj.write_log({
+                    "content": f"未知错误",
+                    "remark": f"错误信息:{exc}",
+                    "step": 9,
+                    "type": 'error'
+                })
+                raise
+
+        return wrapper
+
+    return wraps
+
+
+@base_task_error()
 @app.task
 def code_package_import_check(code_package_id):
     """
