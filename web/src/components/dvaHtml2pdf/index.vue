@@ -5,6 +5,7 @@
         type="success"
         round
         size="small"
+        v-if="downloadButtonShow"
         :style="downloadButtonStyle"
         @click="generateReport"
         :loading="downloadLoading"
@@ -14,6 +15,7 @@
         type="primary"
         round
         size="small"
+        v-if="previewButtonShow"
         style="position: fixed; right: 50px; bottom: 70px"
         @click="previewPdf"
         :loading="previewLoading"
@@ -61,27 +63,41 @@ export default {
       type: String,
       default: '北京信码新创科技有限公司 '
     },
-    downloadButtonStyle: { // 企业名称
+    // 是否显示下载按钮
+    downloadButtonShow: {
+      type: Boolean,
+      default: true
+    },
+    // 下载按钮样式
+    downloadButtonStyle: {
       type: Object,
-      default: () => {
+      default () {
         return {
           position: 'fixed', right: '50px', bottom: '30px'
         }
       }
     },
-    downloadButtonTitle: { // 企业名称
+    // 下载按钮标题
+    downloadButtonTitle: {
       type: String,
       default: '下载报告'
     },
-    previewButtonStyle: { // 企业名称
+    // 是否显示预览按钮
+    previewButtonShow: {
+      type: Boolean,
+      default: true
+    },
+    // 预览按钮样式
+    previewButtonStyle: {
       type: Object,
-      default: () => {
+      default () {
         return {
           position: 'fixed', right: '50px', bottom: '70px'
         }
       }
     },
-    previewButtonTitle: { // 企业名称
+    // 预览按钮标题
+    previewButtonTitle: {
       type: String,
       default: '预览报告'
     }
