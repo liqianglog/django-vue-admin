@@ -60,14 +60,36 @@ export const crudOptions = (vm) => {
           disabled: true
         }
       }, {
-        title: '相机编号',
-        key: 'no',
+        title: '生产工单号',
+        key: 'production_work_no',
         search: {
           disabled: true
         },
         type: 'input',
         form: {
           disabled: true
+        }
+      },
+      {
+        title: '码类型',
+        key: 'code_type',
+        width: 100,
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请选择码类型',
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'select',
+        dict: {
+          data: [
+            { value: 0, label: '外码' },
+            { value: 1, label: '内码' },
+            { value: 2, label: '外码+内码' }
+          ]
         }
       },
       {
@@ -82,7 +104,7 @@ export const crudOptions = (vm) => {
       },
       {
         title: '工厂名称',
-        key: 'factory_name',
+        key: 'cam_name',
         search: {
           disabled: true
         },
@@ -91,8 +113,28 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '产线名称',
-        key: 'prod_line_name',
+        title: '码包总数',
+        key: 'total_number',
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },
+      {
+        title: '识别成功数',
+        key: 'success_number',
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },
+      {
+        title: '识别错误数',
+        key: 'error_number',
         search: {
           disabled: true
         },

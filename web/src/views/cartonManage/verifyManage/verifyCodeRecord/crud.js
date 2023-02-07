@@ -60,8 +60,8 @@ export const crudOptions = (vm) => {
           disabled: true
         }
       }, {
-        title: '相机编号',
-        key: 'no',
+        title: '码内容',
+        key: 'code_content',
         search: {
           disabled: true
         },
@@ -71,8 +71,30 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '设备名称',
-        key: 'device_name',
+        title: '码类型',
+        key: 'code_type',
+        width: 100,
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请选择码类型',
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'select',
+        dict: {
+          data: [
+            { value: 0, label: '外码' },
+            { value: 1, label: '内码' },
+            { value: 2, label: '外码+内码' }
+          ]
+        }
+      },
+      {
+        title: '采集时间',
+        key: 'ac_time',
         search: {
           disabled: true
         },
@@ -81,8 +103,8 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '工厂名称',
-        key: 'factory_name',
+        title: '重码次数',
+        key: 'rep_code_number',
         search: {
           disabled: true
         },
@@ -91,8 +113,19 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '产线名称',
-        key: 'prod_line_name',
+        title: '问题码类型',
+        key: 'error_type',
+        type: 'select',
+        dict: {
+          data: [
+            { value: 0, label: '未识别' },
+            { value: 1, label: '正常' },
+            { value: 2, label: '码不存在' },
+            { value: 3, label: '本码包重码' },
+            { value: 4, label: '历史码重码' },
+            { value: 5, label: '非生产工单码' }
+          ]
+        },
         search: {
           disabled: true
         },

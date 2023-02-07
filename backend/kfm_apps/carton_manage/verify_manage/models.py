@@ -34,7 +34,7 @@ class BackHaulFile(CoreModel):
                                verbose_name="关联相机", help_text="关联相机")
     total_number = models.IntegerField(default=0, blank=True, help_text="码总数", verbose_name="码总数")
     success_number  = models.IntegerField(default=0, blank=True, help_text="识别成功数", verbose_name="识别成功数")
-    error_number  = models.IntegerField(default=0, blank=True, help_text="识别成功数", verbose_name="识别成功数")
+    error_number  = models.IntegerField(default=0, blank=True, help_text="识别错误数", verbose_name="识别错误数")
     file_position = models.CharField(max_length=255, blank=True, null=True, help_text="码包存放位置",
                                      verbose_name="码包存放位置")
     file_md5 = models.CharField(max_length=255, blank=True, null=True, help_text="文件MD5", verbose_name="文件MD5")
