@@ -86,7 +86,7 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
         如果不是超级管理员,则进入下一步权限判断
         """
         print(api)
-        print(RoleMenuButtonPermission.objects.filter(menu_button__api__icontains=api))
+        print(RoleMenuButtonPermission.objects.filter(menu_button__api__iregex=api,menu_button__method=method))
         if request.user.is_superuser == 0:
             # 0. 获取用户的部门id，没有部门则返回空
             user_dept_id = getattr(request.user, "dept_id", None)
