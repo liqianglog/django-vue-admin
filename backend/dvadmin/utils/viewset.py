@@ -37,13 +37,13 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
     update_serializer_class = None
     filter_fields = '__all__'
     search_fields = ()
-    extra_filter_backends = [DataLevelPermissionsFilter]
+    extra_filter_class = [DataLevelPermissionsFilter]
     permission_classes = [CustomPermission]
     import_field_dict = {}
     export_field_label = {}
 
     def filter_queryset(self, queryset):
-        for backend in set(set(self.filter_backends) | set(self.extra_filter_backends or [])):
+        for backend in set(set(self.filter_backends) | set(self.extra_filter_class or [])):
             queryset = backend().filter_queryset(self.request, queryset, self)
         return queryset
 

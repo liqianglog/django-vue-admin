@@ -56,4 +56,4 @@ class MenuButtonViewSet(CustomModelViewSet):
     serializer_class = MenuButtonSerializer
     create_serializer_class = MenuButtonCreateUpdateSerializer
     update_serializer_class = MenuButtonCreateUpdateSerializer
-    extra_filter_backends = []
+    extra_filter_class = []

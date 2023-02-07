@@ -160,7 +160,7 @@ class MessageCenterViewSet(CustomModelViewSet):
     queryset = MessageCenter.objects.order_by('create_datetime')
     serializer_class = MessageCenterSerializer
     create_serializer_class = MessageCenterCreateSerializer
-    extra_filter_backends = []
+    extra_filter_class = []
 
     def get_queryset(self):
         if self.action == 'list':

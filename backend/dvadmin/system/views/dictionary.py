@@ -92,7 +92,7 @@ class DictionaryViewSet(CustomModelViewSet):
     """
     queryset = Dictionary.objects.all()
     serializer_class = DictionarySerializer
-    extra_filter_backends = []
+    extra_filter_class = []
     search_fields = ['label']
 
 

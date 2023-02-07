@@ -33,4 +33,4 @@ class LoginLogViewSet(CustomModelViewSet):
     """
     queryset = LoginLog.objects.all()
     serializer_class = LoginLogSerializer
-    extra_filter_backends = []
+    extra_filter_class = []

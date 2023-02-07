@@ -44,4 +44,4 @@ class AreaViewSet(CustomModelViewSet):
     """
     queryset = Area.objects.all()
     serializer_class = AreaSerializer
-    extra_filter_backends = []
+    extra_filter_class = []

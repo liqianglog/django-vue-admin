@@ -85,8 +85,6 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
         判断是否为超级管理员:
         如果不是超级管理员,则进入下一步权限判断
         """
-        print(api)
-        print(RoleMenuButtonPermission.objects.filter(menu_button__api__iregex=api,menu_button__method=method))
         if request.user.is_superuser == 0:
             # 0. 获取用户的部门id，没有部门则返回空
             user_dept_id = getattr(request.user, "dept_id", None)
@@ -107,11 +105,21 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
             # (2, "本部门数据权限"),
             # (3, "全部数据权限"),
             # (4, "自定数据权限")
-            role_list = request.user.role.filter(status=1).values("admin", "data_range")
+            replace_str = re.compile('\d')
+            re_api = replace_str.sub('{id}', api)
+            role_id_list = request.user.role.values_list('id', flat=True)
+            role_permission_list=RoleMenuButtonPermission.objects.filter(
+                role__in=role_id_list,
+                role__status=1,
+                menu_button__api=re_api,
+                menu_button__method=method).values(
+                'data_range',
+                role_admin=F('role__admin')
+            )
             dataScope_list = []  # 权限范围列表
-            for ele in role_list:
+            for ele in role_permission_list:
                 # 判断用户是否为超级管理员角色/如果拥有[全部数据权限]则返回所有数据
-                if 3 == ele.get("data_range") or ele.get("admin") == True:
+                if 3 == ele.get("data_range") or ele.get("role_admin") == True:
                     return queryset
                 dataScope_list.append(ele.get("data_range"))
             dataScope_list = list(set(dataScope_list))

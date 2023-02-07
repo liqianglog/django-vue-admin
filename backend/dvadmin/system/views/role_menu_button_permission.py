@@ -61,7 +61,7 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
     serializer_class = RoleMenuButtonPermissionSerializer
     create_serializer_class = RoleMenuButtonPermissionCreateUpdateSerializer
     update_serializer_class = RoleMenuButtonPermissionCreateUpdateSerializer
-    extra_filter_backends = []
+    extra_filter_class = []
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
     def role_get_menu(self, request):
@@ -191,7 +191,7 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
             role_id = params.get('role', None)
             if role_id is None:
                 return ErrorResponse(msg="未获取到参数")
-            queryset = RoleMenuButtonPermission.objects.filter(role=role_id,menu=menu_id).values(
+            queryset = RoleMenuButtonPermission.objects.filter(role=role_id,menu_button__menu=menu_id).values(
                 'data_range',
                 'menu_button'
             )

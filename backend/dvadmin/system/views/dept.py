@@ -134,7 +134,7 @@ class DeptViewSet(CustomModelViewSet):
     update_serializer_class = DeptCreateUpdateSerializer
     filter_fields = ['name', 'id', 'parent']
     search_fields = []
-    # extra_filter_backends = []
+    # extra_filter_class = []
     import_serializer_class = DeptImportSerializer
     import_field_dict = {
         "name": "部门名称",
@@ -182,7 +182,7 @@ class DeptViewSet(CustomModelViewSet):
         return DetailResponse(data=queryset, msg="获取成功")
 
 
-    @action(methods=["GET"], detail=False, permission_classes=[AnonymousUserPermission])
+    @action(methods=["GET"], detail=False, permission_classes=[AnonymousUserPermission],extra_filter_class=[])
     def all_dept(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
