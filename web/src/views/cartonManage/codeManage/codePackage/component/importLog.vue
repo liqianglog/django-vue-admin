@@ -72,6 +72,25 @@
         </li>
       </ul>
       <navTitle>导入日志</navTitle>
+      <table class="statistics_table">
+        <thead>
+        <tr>
+          <th width="200">校验内容</th>
+          <th width="200">校验结果</th>
+          <th width="200">校验时间</th>
+          <th width="200">其他说明</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item,index) in JSON.parse(objData.import_log)" :key="index">
+          <td width="200">{{item.content}}</td>
+          <td width="200" style="text-align: center">{{item.result}}</td>
+          <td width="200" style="text-align: center">{{item.timestamp}}</td>
+          <td width="200" style="text-align: center">{{item.remark}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <br>
     </div>
   </el-drawer>
 </template>
@@ -129,59 +148,6 @@ export default {
 </script>
 
 <style lang="scss" scope>
-.tabtop13 {
-  margin-top: 13px;
-}
-.tabtop13 td {
-  background-color: #ffffff;
-  height: 25px;
-  line-height: 150%;
-}
-.font-center {
-  text-align: center;
-}
-.btbg {
-  background: #e9faff !important;
-}
-.btbg1 {
-  background: #f2fbfe !important;
-}
-.btbg2 {
-  background: #f3f3f3 !important;
-}
-.biaoti {
-  font-family: 微软雅黑;
-  font-size: 26px;
-  font-weight: bold;
-  border-bottom: 1px dashed #cccccc;
-  color: #255e95;
-}
-.titfont {
-  font-family: 微软雅黑;
-  font-size: 16px;
-  font-weight: bold;
-  color: #255e95;
-  background-color: #e9faff;
-}
-.tabtxt2 {
-  font-family: 微软雅黑;
-  font-size: 14px;
-  font-weight: bold;
-  text-align: right;
-  padding-right: 10px;
-  color: #327cd1;
-}
-.tabtxt3 {
-  font-family: 微软雅黑;
-  font-size: 14px;
-  padding-left: 15px;
-  color: #000;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  line-height: 20px;
-}
-
-
 .overview_info {
   li {
     list-style: none;
@@ -196,4 +162,28 @@ export default {
   }
 }
 
+::v-deep .statistics_table {
+  //text-align: center;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  margin-right: 10px;
+  width: 100%;
+}
+::v-deep .statistics_table tbody tr {
+  border-bottom: 1px solid #ebebeb;
+  font-size: 0.8em;
+  text-align: center;
+}
+::v-deep .statistics_table thead {
+  border-top: 1px solid #ebebeb;
+  border-bottom: 1px solid #ebebeb;
+  font-size: 1em;
+}
+::v-deep .statistics_table td,
+::v-deep .statistics_table th {
+  height: 40px;
+  text-align: left;
+}
 </style>
