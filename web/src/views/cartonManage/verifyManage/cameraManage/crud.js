@@ -1,8 +1,3 @@
-import { BUTTON_STATUS_NUMBER } from '@/config/button'
-import { request } from '@/api/service'
-import { urlPrefix as factoryInfoUrlPrefix } from '../factoryInfo/api'
-import util from '@/libs/util'
-
 export const crudOptions = (vm) => {
   return {
     pageOptions: {
