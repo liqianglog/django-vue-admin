@@ -116,9 +116,8 @@ export const crudOptions = (vm) => {
         type: 'select',
         dict: {
           data: [
-            { value: 0, label: '外码' },
-            { value: 1, label: '内码' },
-            { value: 2, label: '外码+内码' }
+            { value: 0, label: '内码' },
+            { value: 1, label: '外码' }
           ]
         }
       },
@@ -153,14 +152,14 @@ export const crudOptions = (vm) => {
         type: 'input'
       },
       {
-        title: '重码码类型',
+        title: '重码类型',
         key: 'repetition_type',
         width: 100,
         fixed: 'right',
         search: {
           disabled: false,
           component: {
-            placeholder: '请选择重码码类型',
+            placeholder: '请选择重码类型',
             props: {
               clearable: true
             }

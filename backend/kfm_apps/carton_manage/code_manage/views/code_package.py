@@ -12,7 +12,7 @@ from basics_manage.models import CodePackageTemplate
 from dvadmin.utils.json_response import ErrorResponse, SuccessResponse, DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
-from carton_manage.code_manage.models import CodePackage
+from carton_manage.code_manage.models import CodePackage, CodeRepetitionRecord
 from utils.currency import unzip_compress_file
 import os
 from utils.currency import get_code_package_import_zip_path, check_zip_is_encrypted, file_now_datetime, zip_is_txt, \
@@ -201,26 +201,30 @@ class CodePackageViewSet(CustomModelViewSet):
             return DetailResponse(data=_CodePackage.import_log)
 
     @action(methods=['get'], detail=True, permission_classes=[])
-    def import_report(self,request,pk):
+    def import_report(self, request, pk):
         """导入报告"""
         _CodePackage = CodePackage.objects.filter(id=pk).first()
         if _CodePackage is None:
             return ErrorResponse(msg="未查询到码包")
         else:
+            # 获取所有重码记录数据
+            repetition_data = CodeRepetitionRecord.objects.filter(code_package_id=pk).values('code_content', 'code_type',
+                                                                           'create_datetime')
             data = {
-                "no":_CodePackage.no,
-                "order_id":_CodePackage.order_id,
-                "zip_name":_CodePackage.zip_name,
-                "total_number":_CodePackage.total_number,
-                "code_type":_CodePackage.get_code_type_display(),
-                "product_name":_CodePackage.product_name,
-                "arrival_factory":_CodePackage.arrival_factory,
-                "import_start_datetime":_CodePackage.import_start_datetime,
-                "import_end_datetime":_CodePackage.import_end_datetime,
-                "import_run_time":_CodePackage.import_run_time,
-                "import_log":_CodePackage.import_log,
-                "char_length":_CodePackage.code_package_template.char_length,
-                "fields":_CodePackage.code_package_template.fields,
+                "no": _CodePackage.no,
+                "order_id": _CodePackage.order_id,
+                "zip_name": _CodePackage.zip_name,
+                "total_number": _CodePackage.total_number,
+                "code_type": _CodePackage.get_code_type_display(),
+                "product_name": _CodePackage.product_name,
+                "arrival_factory": _CodePackage.arrival_factory,
+                "import_start_datetime": _CodePackage.import_start_datetime,
+                "import_end_datetime": _CodePackage.import_end_datetime,
+                "import_run_time": _CodePackage.import_run_time,
+                "import_log": _CodePackage.import_log,
+                "repetition_data": repetition_data,
+                "char_length": _CodePackage.code_package_template.char_length,
+                "fields": _CodePackage.code_package_template.fields,
                 "w_url_prefix": _CodePackage.code_package_template.w_url_prefix,
                 "n_url_prefix": _CodePackage.code_package_template.n_url_prefix
             }
