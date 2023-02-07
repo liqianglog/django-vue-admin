@@ -20,7 +20,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django_filters.utils import get_model_field
 from rest_framework.filters import BaseFilterBackend
 
-from dvadmin.system.models import Dept, ApiWhiteList
+from dvadmin.system.models import Dept, ApiWhiteList, RoleMenuButtonPermission
 
 
 def get_dept(dept_id: int, dept_all_list=None, dept_list=None):
@@ -85,6 +85,8 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
         判断是否为超级管理员:
         如果不是超级管理员,则进入下一步权限判断
         """
+        print(api)
+        print(RoleMenuButtonPermission.objects.filter(menu_button__api__icontains=api))
         if request.user.is_superuser == 0:
             # 0. 获取用户的部门id，没有部门则返回空
             user_dept_id = getattr(request.user, "dept_id", None)

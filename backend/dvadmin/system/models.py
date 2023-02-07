@@ -191,12 +191,11 @@ class MenuButton(CoreModel):
         verbose_name_plural = verbose_name
         ordering = ("-name",)
 
-
-class RoleMenuButtonPermission(CoreModel):
+class RoleMenuPermission(CoreModel):
     role = models.ForeignKey(
         to="Role",
         db_constraint=False,
-        related_name="role_menu_button",
+        related_name="role_menu",
         on_delete=models.CASCADE,
         verbose_name="关联角色",
         help_text="关联角色",
@@ -208,6 +207,21 @@ class RoleMenuButtonPermission(CoreModel):
         on_delete=models.CASCADE,
         verbose_name="关联菜单",
         help_text="关联菜单",
+    )
+    class Meta:
+        db_table = table_prefix + "role_menu_permission"
+        verbose_name = "角色菜单权限表"
+        verbose_name_plural = verbose_name
+        ordering = ("-create_datetime",)
+
+class RoleMenuButtonPermission(CoreModel):
+    role = models.ForeignKey(
+        to="Role",
+        db_constraint=False,
+        related_name="role_menu_button",
+        on_delete=models.CASCADE,
+        verbose_name="关联角色",
+        help_text="关联角色",
     )
     menu_button = models.ForeignKey(
         to="MenuButton",
@@ -232,7 +246,7 @@ class RoleMenuButtonPermission(CoreModel):
                                   help_text="数据权限-关联部门")
     class Meta:
         db_table = table_prefix + "role_menu_button_permission"
-        verbose_name = "角色菜单权限表"
+        verbose_name = "角色按钮权限表"
         verbose_name_plural = verbose_name
         ordering = ("-create_datetime",)
 
