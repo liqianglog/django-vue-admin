@@ -135,3 +135,18 @@ class CodePackageTemplate(CoreModel):
         verbose_name = '码包模板'
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
+
+
+class CodePackageFormat(CoreModel):
+    no = models.CharField(max_length=100, unique=True, help_text="编号", verbose_name="编号")
+    separator = models.CharField(max_length=20, blank=True, default=",", help_text="分隔符", verbose_name="分隔符")
+    fields = models.IntegerField(default=0, blank=True, help_text="字段数", verbose_name="字段数")
+    char_length = models.IntegerField(default=0, blank=True, help_text="字符长度(不含换行)", verbose_name="字符长度")
+    line_feed = models.IntegerField(choices=LINE_FEED, help_text="换行符", verbose_name="换行符")
+    code_position = models.IntegerField(default=0, help_text="码字段位置", verbose_name="码字段位置")
+    time_position = models.IntegerField(default=0, help_text="时间字段位置", verbose_name="时间字段位置")
+    class Meta:
+        db_table = table_prefix + "code_package_format"
+        verbose_name = '检测回传码包格式'
+        verbose_name_plural = verbose_name
+        ordering = ('-create_datetime',)
