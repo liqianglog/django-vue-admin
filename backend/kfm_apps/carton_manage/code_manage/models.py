@@ -82,7 +82,7 @@ class CodePackage(CoreModel):
     def __str__(self):
         return str(self.no)
 
-    def write_log(self, obj: dict):
+    def write_log(self, obj: dict, package_repetition_number=None, database_repetition_number=None):
         """
         写入日志
         :param obj:  {
@@ -127,7 +127,12 @@ class CodePackage(CoreModel):
                 shutil.move(target_file_path.replace('.zip', '.zip.des'), to_file)
                 # 把no重新进行命名
                 code_package_obj.no = f"{code_package_obj.no}_{date_strf_time}"
-
+            # 本码包重码数量
+            if package_repetition_number:
+                code_package_obj.package_repetition_number = package_repetition_number
+            # 历史码包重码数量
+            if database_repetition_number:
+                code_package_obj.database_repetition_number = database_repetition_number
             if code_package_obj.import_start_datetime:
                 import_end_datetime = datetime.datetime.now()
                 code_package_obj.import_end_datetime = import_end_datetime

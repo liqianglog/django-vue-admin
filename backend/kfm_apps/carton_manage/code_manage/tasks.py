@@ -126,7 +126,8 @@ def code_package_import_check(code_package_id):
         if code_package_template_obj.code_type in [0, 2]:  # 外码
             # 2.5.外码内容长度
             print(1, readline_list)
-            if len(readline_list[code_package_template_obj.w_field_position].split(os.sep)[-1]) != code_package_template_obj.w_url_length:
+            if len(readline_list[code_package_template_obj.w_field_position].split(os.sep)[
+                       -1]) != code_package_template_obj.w_url_length:
                 code_package_obj.write_log({
                     "content": '规则验证-外码内容长度',
                     "remark": old_readline,
@@ -137,7 +138,8 @@ def code_package_import_check(code_package_id):
             code_package_obj.write_log({"content": f"规则验证-外码内容长度", "step": 2.5})
         if code_package_template_obj.code_type in [1, 2]:  # 内码
             # 2.6.内码内容长度
-            if len(readline_list[code_package_template_obj.n_field_position].split(os.sep)[-1]) != code_package_template_obj.n_url_length:
+            if len(readline_list[code_package_template_obj.n_field_position].split(os.sep)[
+                       -1]) != code_package_template_obj.n_url_length:
                 code_package_obj.write_log({
                     "content": '规则验证-内码内容长度',
                     "remark": old_readline,
@@ -226,12 +228,13 @@ def code_package_import_check(code_package_id):
                 ))
         CodeRepetitionRecord.objects.bulk_create(error_data_list)
         _HistoryTemporaryCode.delete()
+
         code_package_obj.write_log({
             "content": f'本码包查重',
             "remark": f"发现重码数{len(error_data_list)}个",
             "step": 3,
             "type": 'error'
-        })
+        }, package_repetition_number=len(error_data_list))
         return
     code_package_obj.write_log({"content": '本码包查重', "step": 3})
     # 4.历史重码校验
@@ -246,7 +249,7 @@ def code_package_import_check(code_package_id):
                 "remark": '历史码数据中发现大量重复码,重复数量超过1000,请检查码包是否重复导入!',
                 "step": 4,
                 "type": 'error'
-            })
+            }, database_repetition_number=1001)
             _HistoryTemporaryCode.delete()
             return
         duplicate_list = []
@@ -272,7 +275,7 @@ def code_package_import_check(code_package_id):
             "remark": f'历史码包重复码校验失败，发现重码数{len(duplicate_list)}个',
             "step": 4,
             "type": 'error'
-        })
+        }, database_repetition_number=len(duplicate_list))
         return
     code_package_obj.write_log({"content": '历史查重', "step": 4})
     # 5.数据入库到ck中

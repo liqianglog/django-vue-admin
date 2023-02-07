@@ -11,7 +11,7 @@
         }}
       </el-tag>
     </div>
-    <dva-html2pdf :filename="String(options.no) + '码包订单导入报告'">
+    <dva-html2pdf :filename="String(options.no) + '码包订单导入报告'" :company="'供应商: '+ info.tenant_name">
       <div style="margin: 10px;z-index: -1">
         <h1 style="font-size: 24px;text-align: center;margin-bottom: 20px;color: #000;">码包订单导入报告</h1>
         <el-row :gutter="20" style="margin-bottom: 10px;">
@@ -29,7 +29,7 @@
                   </el-col>
                   <el-col :span="8">
                     <div class="title">历史码包重码数</div>
-                    <div class="content">{{ options.database_repetition_number }}</div>
+                    <div class="content">{{ options.database_repetition_number > 1000? '1000+' : options.database_repetition_number }}</div>
                   </el-col>
                 </el-row>
                 <br>
@@ -84,18 +84,18 @@
                     <span>{{ objData.zip_name }} </span>
                   </li>
                   <li>
-                    <span class="item_title">订单编号：</span>
-                    <span>{{ objData.order_id }} </span>
+                    <span class="item_title">到货工厂：</span>
+                    <span>{{ objData.arrival_factory }} </span>
                   </li>
                   <li>
                     <el-row :gutter="20" style="margin-bottom: 10px;">
                       <el-col :span="12">
-                        <span class="item_title">产品名称：</span>
-                        <span>{{ objData.product_name }} </span>
+                        <span class="item_title">订单编号：</span>
+                        <span>{{ objData.order_id }} </span>
                       </el-col>
                       <el-col :span="12">
-                        <span class="item_title">到货工厂：</span>
-                        <span>{{ objData.arrival_factory }} </span>
+                        <span class="item_title">产品名称：</span>
+                        <span>{{ objData.product_name }} </span>
                       </el-col>
                     </el-row>
                   </li>
@@ -140,7 +140,7 @@
             </el-card>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
+        <el-row :gutter="20" style="margin-bottom: 10px;">
           <el-col :span="24">
             <el-card class="box-card-details">
               <div>
@@ -173,6 +173,37 @@
             </el-card>
           </el-col>
         </el-row>
+        <div class="html2pdf__page-break" v-if="objData.repetition_data.length > 0"/>
+        <el-row :gutter="20" v-if="objData.repetition_data.length > 0">
+          <el-col :span="24">
+            <el-card class="box-card-details">
+              <div>
+                <navTitle>重码记录</navTitle>
+                <table class="statistics_table">
+                  <thead>
+                  <tr>
+                    <th width="260">重码内容</th>
+                    <th width="100" style="text-align: center">码类型</th>
+                    <th width="180" style="text-align: center">重码时间</th>
+                    <th width="20" style="text-align: center"></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr v-for="(item,index) in objData.repetition_data" :key="index"
+                      :style="{'border-bottom': objData.repetition_data.length === index+1 ?'none':''}">
+                    <td width="260">{{ item.code_content }}</td>
+                    <td width="100" style="text-align: center;">
+                      <el-tag size="mini">{{ {0: '内码', 1: '外码'}[item.code_type] }}</el-tag>
+                    </td>
+                    <td width="180" style="text-align: center">{{ formatDatetime(item.create_datetime) }}</td>
+                    <td width="20" style="text-align: center"></td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
       </div>
     </dva-html2pdf>
   </el-drawer>
@@ -182,8 +213,12 @@
 import * as api from '../api'
 import dayjs from 'dayjs'
 import navTitle from './navTitle'
+import { mapState } from 'vuex'
 
 export default {
+  computed: {
+    ...mapState('d2admin/user', ['info'])
+  },
   components: {
     navTitle
   },
@@ -201,6 +236,7 @@ export default {
         import_end_datetime: null,
         import_run_time: null,
         import_log: null,
+        repetition_data: [],
         char_length: null,
         fields: null,
         w_url_prefix: null,
