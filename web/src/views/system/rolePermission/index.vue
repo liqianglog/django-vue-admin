@@ -8,90 +8,99 @@
   >
     <template #header>
       <el-button-group>
-        <el-button size="mini" plain type="primary">当前角色:{{editedRoleInfo.name}}</el-button>
+        <el-button size="mini" plain type="primary">当前角色:{{ editedRoleInfo.name }}</el-button>
         <el-button size="mini" type="primary" @click="onSaveAuth">保存授权</el-button>
       </el-button-group>
     </template>
     <div style="padding: 1em">
-    <el-row :gutter="10">
-      <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="6">
-        <el-card header="页面菜单">
-          <el-tree :data="menuData"
-                   ref="menuTree"
-                   show-checkbox
-                   node-key="id"
-                   highlight-current
-                   :expand-on-click-node="false"
-                   :check-on-click-node="true"
-                   :props="defaultProps"
-                   @current-change="menuNodeClick"
-          />
-        </el-card>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="16" :lg="18" :xl="18">
-        <el-card v-if="!isCatalog">
-          <template #header>
-            <div class="card-header">
-              <span>页面授权</span>
+      <el-row :gutter="10">
+        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="6">
+          <el-card header="页面菜单">
+            <el-tree :data="menuData"
+                     ref="menuTree"
+                     show-checkbox
+                     node-key="id"
+                     highlight-current
+                     :expand-on-click-node="false"
+                     :check-on-click-node="true"
+                     :props="defaultProps"
+                     @node-click="menuNodeClick"
+            />
+          </el-card>
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="16" :lg="18" :xl="18">
+          <el-card v-if="isBtnPermissionShow">
+            <template #header>
+              <div class="card-header">
+                <span>页面授权</span>
+              </div>
+            </template>
+            <div>
+              <el-divider content-position="left">按钮授权</el-divider>
+              <el-button type="primary" size="small" style="margin-bottom: 0.5em" @click="createBtnPermission">新增
+              </el-button>
+              <el-table size="small" :data="buttonPermissionData" border style="width: 100%">
+                <el-table-column prop="menu_button" label="权限名称" width="100">
+                  <template #default="scope">
+                    <div>{{formatMenuBtn(scope.row.menu_button)}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="data_range" label="权限范围" width="140">
+                  <template #default="scope">
+                    <div>{{formatDataRange(scope.row.data_range)}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="dept" label="权限涉及部门"/>
+                <el-table-column fixed="right" label="操作" width="120">
+                  <template #default>
+                    <el-button type="danger" size="small">删除</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
             </div>
-          </template>
-          <div>
-            <el-divider content-position="left">按钮授权</el-divider>
-            <el-button type="primary" size="small" style="margin-bottom: 0.5em" @click="createBtnPermission">新增</el-button>
-            <el-table size="small" :data="buttonPermissionData" border style="width: 100%">
-              <el-table-column prop="name" label="权限名称" width="100"/>
-              <el-table-column prop="datarange" label="权限范围" width="100"/>
-              <el-table-column prop="dept" label="权限涉及部门"/>
-              <el-table-column fixed="right" label="操作" width="120">
-                <template #default>
-                  <el-button type="danger" size="small">删除</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
 
 
-<!--          <el-divider content-position="left">字段授权</el-divider>-->
-<!--          <el-table size="small" :data="crudPermissionData" border style="width: 100%">-->
-<!--            <el-table-column prop="field" label="字段"></el-table-column>-->
-<!--            <el-table-column prop="table" label="列表显示">-->
-<!--              <template #default="scope">-->
-<!--                <div>-->
-<!--                  <el-switch size="mini" v-model="scope.row.table"/>-->
-<!--                </div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--            <el-table-column prop="view" label="表单查看">-->
-<!--              <template #default="scope">-->
-<!--                <div>-->
-<!--                  <el-switch size="mini" v-model="scope.row.view"/>-->
-<!--                </div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--            <el-table-column prop="edit" label="表单编辑">-->
-<!--              <template #default="scope">-->
-<!--                <div>-->
-<!--                  <el-switch size="mini" v-model="scope.row.edit"/>-->
-<!--                </div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--          </el-table>-->
-        </el-card>
-      </el-col>
-    </el-row>
-      <el-dialog v-model="dialogFormVisible" title="配置按钮权限">
+            <!--          <el-divider content-position="left">字段授权</el-divider>-->
+            <!--          <el-table size="small" :data="crudPermissionData" border style="width: 100%">-->
+            <!--            <el-table-column prop="field" label="字段"></el-table-column>-->
+            <!--            <el-table-column prop="table" label="列表显示">-->
+            <!--              <template #default="scope">-->
+            <!--                <div>-->
+            <!--                  <el-switch size="mini" v-model="scope.row.table"/>-->
+            <!--                </div>-->
+            <!--              </template>-->
+            <!--            </el-table-column>-->
+            <!--            <el-table-column prop="view" label="表单查看">-->
+            <!--              <template #default="scope">-->
+            <!--                <div>-->
+            <!--                  <el-switch size="mini" v-model="scope.row.view"/>-->
+            <!--                </div>-->
+            <!--              </template>-->
+            <!--            </el-table-column>-->
+            <!--            <el-table-column prop="edit" label="表单编辑">-->
+            <!--              <template #default="scope">-->
+            <!--                <div>-->
+            <!--                  <el-switch size="mini" v-model="scope.row.edit"/>-->
+            <!--                </div>-->
+            <!--              </template>-->
+            <!--            </el-table-column>-->
+            <!--          </el-table>-->
+          </el-card>
+        </el-col>
+      </el-row>
+      <el-dialog v-model="dialogFormVisible" width="400px" title="配置按钮权限">
         <el-form :model="buttonForm" :rules="buttonRules" label-width="120px">
-          <el-form-item label="按钮">
-            <el-select v-model="buttonForm.name" placeholder="请选择按钮" @change="onChangeButton">
-              <el-option v-for="(item,index) in buttonOptions" :key="index" :label="item.name" :value="item.id" />
+          <el-form-item label="按钮" prop="menu_button">
+            <el-select v-model="buttonForm.menu_button" placeholder="请选择按钮" @change="onChangeButton">
+              <el-option v-for="(item,index) in buttonOptions" :key="index" :label="item.name" :value="item.id"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="权限范围">
+          <el-form-item label="权限范围" prop="data_range">
             <el-select v-model="buttonForm.data_range" placeholder="请选择按钮">
-              <el-option v-for="(item,index) in dataScopeOptions" :key="index" :label="item.label" :value="item.value" />
+              <el-option v-for="(item,index) in dataScopeOptions" :key="index" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="数据部门"  v-show="buttonForm.data_range === 4">
+          <el-form-item label="数据部门" prop="dept" v-show="buttonForm.data_range === 4">
             <div class="dept-tree">
               <el-tree
                   :data="deptOptions"
@@ -120,10 +129,10 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, defineExpose,reactive,toRefs} from 'vue'
+import {ref, defineExpose, reactive, toRefs} from 'vue'
 import {ElMessageBox} from 'element-plus'
 import * as api from './api'
-import type {  FormRules } from 'element-plus'
+import type {FormRules} from 'element-plus'
 import XEUtils from 'xe-utils'
 //抽屉是否显示
 const drawer = ref(false)
@@ -149,36 +158,41 @@ const handleClose = (done: () => void) => {
 const defaultProps = {
   children: 'children',
   label: 'name',
-  isLeaf:'hasChild'
+  isLeaf: 'hasChild'
 }
 
 interface Tree {
   name: string
   children?: Tree[],
-  id:number
+  id: number
 }
-let menuData= ref<Tree>()
+
+let menuData = ref<Tree>()
 //获取菜单
 const getMenuData = () => {
-  api.GetMenu({}).then((res:any)=>{
+  api.GetMenu({}).then((res: any) => {
     const {data} = res
-    const list = XEUtils.toArrayTree(data,{parentKey:"parent",strict:true})
+    const list = XEUtils.toArrayTree(data, {parentKey: "parent", strict: true})
     menuData.value = list
   })
 }
 
-let isCatalog = ref(true)
+let isBtnPermissionShow = ref(false)
 let buttonOptions = ref<[]>()
-let checkedMenuId = ref()
+let editedMenuInfo = ref()
 //菜单节点点击事件
-const menuNodeClick=(node:any)=>{
-  isCatalog.value = node.is_catalog
-  if(!node.is_catalog){
+const menuNodeClick = (node: any, obj: any) => {
+  isBtnPermissionShow.value = obj.checked && !node.is_catalog
+  if (!node.is_catalog) {
     buttonOptions.value = []
-    checkedMenuId.value = node.id
-    api.GetMenuButton({menu:node.id}).then((res:any)=>{
+    editedMenuInfo.value = node
+    api.GetMenuButton({menu: node.id}).then((res: any) => {
       const {data} = res
       buttonOptions.value = data
+    })
+    api.getObj({menu: node.id,role:editedRoleInfo.value.id}).then((res:any)=>{
+      const {data} = res
+      buttonPermissionData.value = data
     })
   }
 
@@ -191,83 +205,120 @@ const dialogFormVisible = ref(false)
 //自定义部门数据
 const deptOptions = ref()
 //选中的部门数据
-const deptCheckedKeys=[]
-
-
+const deptCheckedKeys = []
 //按钮表单
 const buttonForm = reactive({
-  menu_button:'',
-  role:'',
-  data_range:'',
-  dept:[]
+  menu_button: null,
+  role: null,
+  menu:null,
+  data_range: null,
+  dept: []
 })
+//按钮表格数据
+let buttonPermissionData = ref([])
 //按钮表单验证
 const buttonRules = reactive<FormRules>({
-  name:[
-    { required: true, message: '必填项' }
+  menu_button: [
+    {required: true, message: '必填项'}
   ],
-  data_range:[
-    { required: true, message: '必填项' }
-  ]
+  data_range: [
+    {required: true, message: '必填项'}
+  ],
+  dept: [
+    {required: true, message: '必填项'}
+  ],
 })
 //新增按钮
-const createBtnPermission = ()=>{
+const createBtnPermission = () => {
   dialogFormVisible.value = true
+  buttonForm.menu_button = null
+  buttonForm.menu = null
+  buttonForm.role = null
+  buttonForm.data_range = null
+  buttonForm.dept = []
 }
 //权限范围数据
-const dataScopeOptions=ref<[]>()
+const dataScopeOptions = ref<[]>()
 //按钮值变化事件
-const onChangeButton = (val:any)=>{
+const onChangeButton = (val: any) => {
   dataScopeOptions.value = []
   //获取权限值范围
-  api.GetDataScope({menu_button:val}).then((res:any)=>{
+  api.GetDataScope({menu_button: val}).then((res: any) => {
     dataScopeOptions.value = res.data
   })
 }
-//保存按钮表单
-const onSaveButtonForm = ()=>{
-  console.log(editedRoleInfo)
+//过滤按钮名称
+const formatMenuBtn = (val:any)=>{
+  let obj:any = buttonOptions.value?.find((item:any)=>{
+    return item.id===val
+  })
+  return obj?obj.name:null
 }
-//按钮表格数据
-const buttonPermissionData: any[] = [
-  {
-    name: "查询",
-    datarange: 1,
-    dept: ""
-  }
-]
+//过滤权限范围
+const formatDataRange = (val:any)=>{
+  let obj:any = [
+    {
+      "value": 0,
+      "label": '仅本人数据权限'
+    },
+    {
+      "value": 1,
+      "label": '本部门及以下数据权限'
+    },
+    {
+      "value": 2,
+      "label": '本部门数据权限'
+    },
+    {
+      "value": 3,
+      "label": '全部数据权限'
+    },
+    {
+      "value": 4,
+      "label": '自定义数据权限'
+    }
+  ].find((item:any)=>{
+    return item.value===val
+  })
+  return obj?obj.label:null
+}
+//保存按钮表单
+const onSaveButtonForm = () => {
+  //console.log(editedRoleInfo)
+  const {id:roleId} = editedRoleInfo.value
+  const {id:menuId} = editedMenuInfo.value
+  const form = Object.assign({},buttonForm)
+  form.role = roleId
+  form.menu = menuId
+  console.log(form)
+  api.CreateObj(form).then(res=>{
+    buttonPermissionData.value.push(form)
+    dialogFormVisible.value = false
+  })
+
+}
+
 /***按钮授权的弹窗****/
 //初始化数据
-const initGet = ()=>{
+const initGet = () => {
   getMenuData()
 }
-
-
-//字段权限
-const crudPermissionData: any[] = [
-  {
-    field: "name",
-    table: true,
-    view: true,
-    edit: true
-  }
-]
 
 /**
  * 保存授权
  */
-const onSaveAuth = ()=>{
+const onSaveAuth = () => {
   //选中的菜单
   const checkedList = menuTree.value.getCheckedKeys()
   //半选中的菜单
   const halfCheckedList = menuTree.value.getHalfCheckedKeys()
   //合并的菜单数据
-  const menuIdList = [...checkedList,...halfCheckedList]
+  const menuIdList = [...checkedList, ...halfCheckedList]
   console.log(menuIdList)
 }
 
 
-defineExpose({drawer,editedRoleInfo,initGet})
+defineExpose({drawer, editedRoleInfo, initGet})
 </script>
 
 <style scoped>
@@ -276,6 +327,7 @@ defineExpose({drawer,editedRoleInfo,initGet})
   justify-content: space-between;
   align-items: center;
 }
+
 .dept-tree::-webkit-scrollbar {
   display: none; /* Chrome Safari */
 }

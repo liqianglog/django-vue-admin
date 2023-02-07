@@ -181,3 +181,19 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
                     return DetailResponse(data=data)
         return ErrorResponse(msg="参数错误")
 
+    @action(methods=['get'],detail=False)
+    def menu_to_button(self,request):
+        params = request.query_params
+        if params:
+            menu_id = params.get('menu',None)
+            if menu_id is None:
+                return ErrorResponse(msg="未获取到参数")
+            role_id = params.get('role', None)
+            if role_id is None:
+                return ErrorResponse(msg="未获取到参数")
+            queryset = RoleMenuButtonPermission.objects.filter(role=role_id,menu=menu_id).values(
+                'data_range',
+                'menu_button'
+            )
+            return DetailResponse(data=queryset)
+        return ErrorResponse(msg="未获取到参数")

@@ -1,69 +1,26 @@
 import {CrudOptions, AddReq, DelReq, EditReq, dict, CrudExpose} from '@fast-crud/fast-crud';
 import _ from 'lodash-es';
+import * as api from "./api";
 interface CreateCrudOptionsTypes {
     crudOptions: CrudOptions;
 }
 
 //此处为crudOptions配置
 export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExpose: CrudExpose,rolePermission:any}): CreateCrudOptionsTypes {
-    //本地模拟后台crud接口方法 ----开始
-    const records = [
-        {
-            id: 1,
-            modifier_name: '超级管理员',
-            creator_name: '超级管理员',
-            create_datetime: '2022-04-08 11:02:22',
-            update_datetime: '2022-05-31 02:09:00',
-            description: null,
-            modifier: '1',
-            dept_belong_id: '1',
-            name: '管理员',
-            key: 'admin',
-            sort: 1,
-            status: true,
-            admin: true,
-            data_range: 3,
-            remark: null,
-            creator: 1,
-            dept: [],
-            menu: [1, 2, 10, 20, 7, 8, 11, 16, 17, 5, 13, 15, 4, 18, 19, 3, 9],
-            permission: [
-                53, 4, 8, 13, 18, 32, 37, 42, 45, 49, 55, 2, 6, 11, 16, 21, 26, 30, 35, 40, 52, 1, 7, 12, 17, 22, 27, 31, 36, 41, 46, 50, 54, 3, 9, 14, 19,
-                23, 25, 33, 38, 43, 47, 48, 5, 10, 15, 20, 24, 28, 34, 39, 44, 51, 29,
-            ],
-        },
-    ];
+
     const pageRequest = async (query: any) => {
-        return {
-            records,
-            currentPage: 1,
-            pageSize: 20,
-            total: records.length,
-        };
+        return await api.GetList(query);
     };
-    const editRequest = async (req: EditReq) => {
-        const target = _.find(records, (item) => {
-            return req.row.id === item.id;
-        });
-        _.merge(target, req.form);
-        return target;
+    const editRequest = async ({ form, row }: EditReq) => {
+        form.id = row.id;
+        return await api.UpdateObj(form);
     };
-    const delRequest = async (req: DelReq) => {
-        _.remove(records, (item) => {
-            return item.id === req.row.id;
-        });
+    const delRequest = async ({ row }: DelReq) => {
+        return await api.DelObj(row.id);
     };
-
-    const addRequest = async (req: AddReq) => {
-        const maxRecord = _.maxBy(records, (item) => {
-            return item.id;
-        });
-        req.form.id = (maxRecord?.id || 0) + 1;
-        records.push(req.form);
-        return req.form;
+    const addRequest = async ({ form }: AddReq) => {
+        return await api.AddObj(form);
     };
-    //本地模拟后台crud接口方法 ----结束
-
 
     return {
         crudOptions: {

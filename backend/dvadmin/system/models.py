@@ -228,7 +228,7 @@ class RoleMenuButtonPermission(CoreModel):
     )
     data_range = models.IntegerField(default=0, choices=DATASCOPE_CHOICES, verbose_name="数据权限范围",
                                      help_text="数据权限范围")
-    dept = models.ManyToManyField(to="Dept", verbose_name="数据权限-关联部门", db_constraint=False,
+    dept = models.ManyToManyField(to="Dept",blank=True,null=True,verbose_name="数据权限-关联部门", db_constraint=False,
                                   help_text="数据权限-关联部门")
     class Meta:
         db_table = table_prefix + "role_menu_button_permission"

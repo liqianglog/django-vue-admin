@@ -49,3 +49,28 @@ export function GetDataScopeDept () {
         params: {}
     })
 }
+
+/***
+ * 新增权限
+ * @param data
+ * @constructor
+ */
+export function CreateObj(data:any) {
+    return request({
+        url: '/api/system/role_menu_button_permission/',
+        method: 'post',
+        data:data
+    });
+}
+
+/***
+ * 根据菜单获取菜单下按钮
+ * @param params
+ */
+export function getObj(params:any) {
+    return request({
+        url: '/api/system/role_menu_button_permission/menu_to_button/',
+        method: 'get',
+        params:params
+    });
+}
