@@ -101,7 +101,7 @@ def code_package_import_check(code_package_id):
                 "type": 'error'
             })
             return "规则验证-整体字符长度校验失败"
-        code_package_obj.write_log({"content": f"规则验证-整体字符长度", "step": 2.1})
+        code_package_obj.write_log({"content": f"规则验证-整体字符长度", "step": 2.2})
         # 2.3.分隔符
         readline_list = readline.split(code_package_template_obj.separator)
         if len(readline_list) <= 1:

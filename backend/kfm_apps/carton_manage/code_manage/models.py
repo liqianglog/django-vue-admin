@@ -94,6 +94,8 @@ class CodePackage(CoreModel):
         """
         if not obj.get('timestamp', None):
             obj['timestamp'] = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+        if not obj.get('remark', None):
+            obj['remark'] = '-'
         if not obj.get('type', None):
             obj['type'] = 'success'
         obj['result'] = '校验通过' if obj['type'] == 'success' else '校验失败'
