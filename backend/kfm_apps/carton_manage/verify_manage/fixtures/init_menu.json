@@ -1,1 +1,65 @@
-[]
+[
+  {
+    "name": "检测管理",
+    "icon": "cogs",
+    "sort": 5,
+    "is_link": false,
+    "is_catalog": true,
+    "web_path": "",
+    "component": "",
+    "component_name": "",
+    "status": true,
+    "cache": false,
+    "visible": true,
+    "children": [
+      {
+        "name": "相机管理",
+        "icon": "camera",
+        "sort": 1,
+        "is_link": false,
+        "is_catalog": false,
+        "web_path": "/cameraManage",
+        "component": "cartonManage/verifyManage/cameraManage/index",
+        "component_name": "cameraManage",
+        "status": true,
+        "cache": false,
+        "visible": true,
+        "children": [],
+        "menu_button": [
+          {
+            "name": "查询",
+            "value": "Search",
+            "api": "/api/carton/verify_manage/camera_manage/",
+            "method": 0
+          },
+          {
+            "name": "详情",
+            "value": "Retrieve",
+            "api": "/api/carton/verify_manage/camera_manage/{id}/",
+            "method": 0
+          },
+          {
+            "name": "新增",
+            "value": "Create",
+            "api": "/api/carton/verify_manage/camera_manage/",
+            "method": 1
+          },
+          {
+            "name": "编辑",
+            "value": "Update",
+            "api": "/api/carton/verify_manage/camera_manage/{id}/",
+            "method": 2
+          },
+          {
+            "name": "删除",
+            "value": "Delete",
+            "api": "/api/carton/verify_manage/camrea_manage/{id}/",
+            "method": 3
+          }
+        ]
+      }
+    ],
+    "menu_button": []
+  }
+]
+
