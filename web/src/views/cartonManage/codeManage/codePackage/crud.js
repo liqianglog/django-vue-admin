@@ -49,7 +49,10 @@ export const crudOptions = (vm) => {
           text: '导入报告',
           size: 'small',
           type: 'warning',
-          emit: 'onImportLog'
+          emit: 'onImportLog',
+          disabled (_, form) {
+            return !(form.validate_status === 3 || form.validate_status === 4)
+          }
         }
       ]
     },
