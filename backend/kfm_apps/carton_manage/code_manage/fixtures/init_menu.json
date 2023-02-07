@@ -29,32 +29,44 @@
           {
             "name": "查询",
             "value": "Search",
-            "api": "/api/basics_manage/factory_info/",
+            "api": "/api/carton/code_manage/code_package/",
             "method": 0
           },
           {
             "name": "详情",
             "value": "Retrieve",
-            "api": "/api/basics_manage/factory_info/{id}/",
+            "api": "/api/carton/code_manage/code_package/{id}/",
             "method": 0
           },
           {
             "name": "新增",
             "value": "Create",
-            "api": "/api/basics_manage/factory_info/",
+            "api": "/api/carton/code_manage/code_package/",
             "method": 1
           },
           {
             "name": "编辑",
             "value": "Update",
-            "api": "/api/basics_manage/factory_info/{id}/",
+            "api": "/api/carton/code_manage/code_package/{id}/",
             "method": 2
           },
           {
             "name": "删除",
             "value": "Delete",
-            "api": "/api/basics_manage/factory_info/{id}/",
+            "api": "/api/carton/code_manage/code_package/{id}/",
             "method": 3
+          },
+          {
+            "name": "导入日志",
+            "value": "ImportLog",
+            "api": "/api/carton/code_manage/code_package/{id}/view_log/",
+            "method": 0
+          },
+          {
+            "name": "导入报告",
+            "value": "ImportReport",
+            "api": "/api/carton/code_manage/code_package/{id}/import_report/",
+            "method": 0
           }
         ]
       },
