@@ -62,8 +62,9 @@ export const crudOptions = (vm) => {
         key: 'production_work_no',
         minWidth: 200,
         search: {
-          disabled: true,
+          disabled: false,
           component: {
+            placeholder: '请输入生产工单号',
             props: {
               clearable: true
             }
@@ -78,6 +79,7 @@ export const crudOptions = (vm) => {
         search: {
           disabled: true,
           component: {
+            placeholder: '请输入码包订单号',
             props: {
               clearable: true
             }
