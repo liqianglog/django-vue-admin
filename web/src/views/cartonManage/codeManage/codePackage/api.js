@@ -1,5 +1,5 @@
-
 import { request } from '@/api/service'
+
 export const urlPrefix = 'api/carton/code_manage/code_package/'
 
 export function GetList (query) {
@@ -36,6 +36,7 @@ export function UpdateObj (obj) {
     data: obj
   })
 }
+
 export function DelObj (id) {
   return request({
     url: urlPrefix + id + '/',
@@ -56,6 +57,16 @@ export function viewLog (params) {
   })
 }
 
+/**
+ * 获取码包详情
+ */
+export function getCodePackage (params) {
+  return request({
+    url: 'api/production/code_package/',
+    method: 'get',
+    params: params
+  })
+}
 
 /**
  * 获取导入报告

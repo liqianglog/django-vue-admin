@@ -7,7 +7,15 @@
       @onOrderLog="onOrderLog"
       @onImportLog="onImportLog"
     >
+
       <div slot="header">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="全部" name="0"></el-tab-pane>
+          <el-tab-pane label="校验成功" name="4"></el-tab-pane>
+          <el-tab-pane label="校验失败" name="3"></el-tab-pane>
+          <el-tab-pane label="待校验" name="1"></el-tab-pane>
+          <el-tab-pane label="校验中" name="2"></el-tab-pane>
+        </el-tabs>
         <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"/>
         <el-button-group>
           <el-button size="small" type="primary" v-permission="'Create'" @click="addRow"><i class="el-icon-plus"/> 新增
@@ -42,14 +50,21 @@ export default {
   data () {
     return {
       is_encrypted: false,
-      selectRow: {}
+      selectRow: {},
+      activeName: '0'
     }
   },
   methods: {
     getCrudOptions () {
       return crudOptions(this)
     },
+    handleClick () {
+      this.doRefresh({ from: 'load' })
+    },
     pageRequest (query) {
+      if (this.activeName !== '0') {
+        query.validate_status = this.activeName
+      }
       return api.GetList(query)
     },
     addRequest (row) {

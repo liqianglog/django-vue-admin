@@ -251,7 +251,7 @@ export const crudOptions = (vm) => {
           disabled: false
         },
         type: 'select',
-        width: 120,
+        width: 100,
         dict: {
           url: '/api/basics_manage/code_package_template/',
           label: 'no',
@@ -316,7 +316,24 @@ export const crudOptions = (vm) => {
       {
         title: '码包总数',
         key: 'total_number',
-        type: 'input',
+        type: 'number',
+        width: 120,
+        form: {
+          disabled: true
+        }
+      }, {
+        title: '本码包重码数',
+        key: 'package_repetition_number',
+        type: 'number',
+        width: 100,
+        form: {
+          disabled: true
+        }
+      },
+      {
+        title: '历史码包重码数',
+        key: 'database_repetition_number',
+        type: 'number',
         width: 120,
         form: {
           disabled: true
@@ -371,24 +388,6 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '码包重码数',
-        key: 'package_repetition_number',
-        type: 'input',
-        width: 100,
-        form: {
-          disabled: true
-        }
-      },
-      {
-        title: '数据库重码数',
-        key: 'database_repetition_number',
-        type: 'input',
-        width: 120,
-        form: {
-          disabled: true
-        }
-      },
-      {
         title: '校验状态',
         key: 'validate_status',
         type: 'select',
@@ -403,7 +402,7 @@ export const crudOptions = (vm) => {
           ]
         },
         search: {
-          disabled: false,
+          disabled: true,
           component: {
             placeholder: '请选择校验状态'
           }
@@ -411,9 +410,28 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
+      },
+      {
+        title: '检测完成时间',
+        key: 'import_end_datetime',
+        width: 160,
+        type: 'datetime',
+        form: {
+          disabled: true
+        }
+      },
+      {
+        title: '检测耗时(秒)',
+        key: 'import_run_time',
+        width: 100,
+        type: 'number',
+        form: {
+          disabled: true
+        }
       }
     ].concat(vm.commonEndColumns({
       create_datetime: { showTable: true },
+      update_datetime: { showTable: false },
       dept_belong_id: { showForm: false, showTable: false }
     }))
   }
