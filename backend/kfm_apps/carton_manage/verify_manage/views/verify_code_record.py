@@ -9,9 +9,6 @@ class VerifyCodeRecordSerializer(CustomModelSerializer):
     """
    校验码记录-序列化器
     """
-    device_name = serializers.CharField(source='device.name',read_only=True)
-    prod_line_name = serializers.CharField(source='device.production_line.name', read_only=True)
-    factory_name = serializers.CharField(source='device.production_line.belong_to_factory.name', read_only=True)
     class Meta:
         model = VerifyCodeRecord
         fields = "__all__"

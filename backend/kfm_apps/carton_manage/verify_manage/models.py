@@ -66,21 +66,10 @@ class VerifyCodeRecord(CoreModel):
     rep_code_number = models.IntegerField(null=True,blank=True,default=0,verbose_name="重码次数",help_text="重码次数")
     error_type = models.IntegerField(choices=ERROR_TYPE, default=1, blank=True, help_text="问题码类型",
                                     verbose_name="问题码类型")
+    rep_code = models.ForeignKey('VerifyCodeRecord',db_constraint=False,on_delete=models.PROTECT,verbose_name="关联被重复码",help_text="关联被重复码",null=True,blank=True)
 
     class Meta:
         db_table = table_prefix + "verify_code_record"
         verbose_name = '校验码记录'
-        verbose_name_plural = verbose_name
-        ordering = ('-create_datetime',)
-
-class ErrorCodeRecord(CoreModel):
-    verify_code_record = models.ForeignKey(VerifyCodeRecord, db_constraint=False, on_delete=models.PROTECT,
-                                       related_name="error_code_verify", help_text="关联校验码记录",
-                                       verbose_name="关联校验码记录")
-    ac_time = models.DateTimeField(auto_now_add=True,null=True, blank=True,verbose_name="采集时间", help_text="采集时间")
-
-    class Meta:
-        db_table = table_prefix + "error_code_record"
-        verbose_name = '错误码记录'
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
