@@ -26,7 +26,7 @@ export default {
                         //请参考文档http://fast-crud.docmirror.cn/api/crud-options/request.html
                         transformQuery: ({ page, form, sort }: any) => {
                             //转换为你pageRequest所需要的请求参数结构
-                            return { page, form, sort };
+                            return { page: page.currentPage, limit: page.pageSize, ...form };
                         },
                         transformRes: ({ res }: any) => {
                             //将pageRequest的返回数据，转换为fast-crud所需要的格式

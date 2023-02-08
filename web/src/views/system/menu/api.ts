@@ -6,12 +6,12 @@ export function GetList(query: PageQuery) {
 	return request({
 		url: apiPrefix,
 		method: 'get',
-		data: query,
+		params: query,
 	});
 }
 export function GetObj(id: InfoReq) {
 	return request({
-		url: apiPrefix + id,
+		url: apiPrefix + id+'/',
 		method: 'get',
 	});
 }
