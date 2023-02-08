@@ -82,7 +82,7 @@ export const createCrudOptions = function ({ crudExpose,menuButtonRef }: { crudE
                             }
                             return false
                         }),
-                        click: (context:any):void => {
+                        click:(context:any):void => {
                             const {row} = context
                             menuButtonRef.value.drawer=true
                             menuButtonRef.value.selectOptions = row

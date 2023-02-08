@@ -1,25 +1,30 @@
 import {CrudOptions, AddReq, DelReq, EditReq, dict, CrudExpose} from '@fast-crud/fast-crud';
 import _ from 'lodash-es';
 import * as api from "./api";
-import { dictionary } from '/@/utils/dictionary';
+import {dictionary} from '/@/utils/dictionary';
+
 interface CreateCrudOptionsTypes {
     crudOptions: CrudOptions;
 }
-import { request } from '/@/utils/service';
+
+import {request} from '/@/utils/service';
 //此处为crudOptions配置
-export const createCrudOptions = function ({crudExpose,selectOptions}: {crudExpose: CrudExpose,selectOptions:any}): CreateCrudOptionsTypes {
+export const createCrudOptions = function ({
+                                               crudExpose,
+                                               selectOptions
+                                           }: { crudExpose: CrudExpose, selectOptions: any }): CreateCrudOptionsTypes {
 
     const pageRequest = async (query: any) => {
-        return await api.GetList({...query,menu:selectOptions.value.id});
+        return await api.GetList({ menu: selectOptions.value.id});
     };
-    const editRequest = async ({ form, row }: EditReq) => {
+    const editRequest = async ({form, row}: EditReq) => {
         form.id = row.id;
         return await api.UpdateObj(form);
     };
-    const delRequest = async ({ row }: DelReq) => {
+    const delRequest = async ({row}: DelReq) => {
         return await api.DelObj(row.id);
     };
-    const addRequest = async ({ form }: AddReq) => {
+    const addRequest = async ({form}: AddReq) => {
         return await api.AddObj(form);
     };
     return {
@@ -78,18 +83,30 @@ export const createCrudOptions = function ({crudExpose,selectOptions}: {crudExpo
                     title: '权限名称',
                     type: 'dict-select',
                     search: {show: true},
-                    dict:dict({
-                        data:dictionary('system_button')
+                    dict: dict({
+                        data: dictionary('system_button')
                     }),
                     column: {
                         minWidth: 120,
                         sortable: true,
                     },
                     form: {
-                        rules: [{required: true, message: '角色名称必填'}],
+                        rules: [{required: true, message: '权限名称必填'}],
                         component: {
-                            placeholder: '输入角色名称搜索',
+                            placeholder: '输入权限名称搜索',
+                            props: {
+                                clearable: true,
+                                allowCreate: true,
+                                filterable: true,
+
+                            }
                         },
+                        helper: {
+                            render (h) {
+                                return (< el-alert title="可手动输入不在列表中的新值" type="warning" description="比较常用的建议放在字典管理中"/>
+                                )
+                            }
+                        }
                     },
                 },
                 value: {
@@ -103,37 +120,46 @@ export const createCrudOptions = function ({crudExpose,selectOptions}: {crudExpo
                     form: {
                         rules: [{required: true, message: '权限标识必填'}],
                         placeholder: '输入权限标识',
+                        helper: {
+                            render (h) {
+                                return (< el-alert title="用于前端按钮权限的判断展示" type="warning" description="使用方法：vm.hasPermissions(权限值)"/>
+                                )
+                            }
+                        }
                     },
+
                 },
                 method: {
                     title: '请求方式',
                     search: {show: false},
                     type: 'dict-select',
                     column: {
-                        width: 100,
+                        width: 120,
                         sortable: true,
                     },
                     dict: dict({
-                        data:[
-                            { label: 'GET', value: 0 },
-                            { label: 'POST', value: 1,color:'success' },
-                            { label: 'PUT', value: 2 },
-                            { label: 'DELETE', value: 3 ,color: 'danger'}
+                        data: [
+                            {label: 'GET', value: 0},
+                            {label: 'POST', value: 1, color: 'success'},
+                            {label: 'PUT', value: 2, color: 'warning'},
+                            {label: 'DELETE', value: 3, color: 'danger'}
                         ]
-                    })
+                    }),
+                    form:{
+                        rules: [{required: true, message: '必填项'}],
+                    }
                 },
                 api: {
                     title: '接口地址',
-                    minWidth:200,
                     search: {show: false},
                     type: 'dict-select',
                     dict: dict({
-                        getData(){
-                            return request({ url: '/swagger.json' }).then((res:any) => {
+                        getData() {
+                            return request({url: '/swagger.json'}).then((res: any) => {
                                 const ret = Object.keys(res.paths)
                                 const data = []
                                 for (const item of ret) {
-                                    const obj:any = {}
+                                    const obj: any = {}
                                     obj.label = item
                                     obj.value = item
                                     data.push(obj)
@@ -143,81 +169,26 @@ export const createCrudOptions = function ({crudExpose,selectOptions}: {crudExpo
                         }
                     }),
                     column: {
-                        width: 130,
+                        minWidth: 200,
                         sortable: true,
                     },
                     form: {
-                        value: false,
-                    },
-                },
-                status: {
-                    title: '状态',
-                    search: {show: true},
-                    type: 'dict-radio',
-                    dict: dict({
-                        data: [
-                            {
-                                label: '启用',
-                                value: true,
-                                color: 'success',
-                            },
-                            {
-                                label: '禁用',
-                                value: false,
-                                color: 'danger',
-                            },
-                        ],
-                    }),
-                    column: {
-                        width: 90,
-                        sortable: true,
-                    },
-                    form: {
-                        value: true,
-                    },
-                },
-                update_datetime: {
-                    title: '更新时间',
-                    type: 'text',
-                    search: {show: false},
-                    column: {
-                        width: 170,
-                        sortable: true,
-                    },
-                    form: {
-                        show: false,
-                        component: {
-                            placeholder: '输入关键词搜索',
+                        rules: [{required: true, message: '必填项'}],
+                        component:{
+                          props:{
+                              allowCreate: true,
+                              filterable: true,
+                              clearable: true
+                          }
                         },
+                        helper: {
+                            render (h) {
+                                return (< el-alert title="请正确填写，以免请求时被拦截。匹配单例使用正则,例如:/api/xx/.*?/" type="warning" />
+                                )
+                            }
+                        }
                     },
-                },
-                create_datetime: {
-                    title: '创建时间',
-                    type: 'text',
-                    search: {show: false},
-                    column: {
-                        sortable: true,
-                        width: 170,
-                    },
-                    form: {
-                        show: false,
-                        component: {
-                            placeholder: '输入关键词搜索',
-                        },
-                    },
-                },
-
-                description: {
-                    title: '备注',
-                    type: 'textarea',
-                    search: {show: false},
-                    form: {
-                        component: {
-                            maxlength: 200,
-                            placeholder: '输入备注',
-                        },
-                    },
-                },
+                }
             },
         },
     };
