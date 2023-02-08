@@ -42,7 +42,10 @@ export const crudOptions = (vm) => {
           text: '导入日志',
           size: 'small',
           type: 'primary',
-          emit: 'onOrderLog'
+          emit: 'onOrderLog',
+          disabled (_, form) {
+            return !vm.hasPermissions('ImportLog') && form.validate_status === 4
+          }
         },
         {
           thin: true,
@@ -51,7 +54,7 @@ export const crudOptions = (vm) => {
           type: 'warning',
           emit: 'onImportLog',
           disabled (_, form) {
-            return !(form.validate_status === 3 || form.validate_status === 4)
+            return !(form.validate_status === 3 || form.validate_status === 4) && !vm.hasPermissions('ImportReport')
           }
         }
       ]
