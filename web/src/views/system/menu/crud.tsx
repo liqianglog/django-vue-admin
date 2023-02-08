@@ -2,6 +2,8 @@ import * as api from "./api";
 import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions, } from "@fast-crud/fast-crud";
 import { dictionary } from "/@/utils/dictionary";
 import iconSelector from '/@/components/iconSelector/index.vue'
+import {useCompute} from '@fast-crud/fast-crud'
+const {compute} = useCompute()
 interface CreateCrudOptionsTypes {
     crudOptions: CrudOptions;
 }
@@ -74,6 +76,12 @@ export const createCrudOptions = function ({ crudExpose,menuButtonRef }: { crudE
                             placement: "top",
                             content: "按钮配置"
                         },
+                        show:compute(({row}:any)=>{
+                            if (row.web_path && !row.is_link) {
+                                return true
+                            }
+                            return false
+                        }),
                         click: (context:any):void => {
                             const {row} = context
                             menuButtonRef.value.drawer=true
