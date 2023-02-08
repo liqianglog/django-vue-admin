@@ -23,7 +23,7 @@ class RoleMenuButtonPermissionSerializer(CustomModelSerializer):
 
     class Meta:
         model = RoleMenuButtonPermission
-        fields = ['id', 'name', 'value', 'api', 'method']
+        fields = "__all__"
         read_only_fields = ["id"]
 
 
@@ -34,7 +34,7 @@ class RoleMenuButtonPermissionInitSerializer(CustomModelSerializer):
 
     class Meta:
         model = RoleMenuButtonPermission
-        fields = ['id', 'name', 'value', 'api', 'method', 'menu']
+        fields = "__all__"
         read_only_fields = ["id"]
 
 class RoleMenuButtonPermissionCreateUpdateSerializer(CustomModelSerializer):

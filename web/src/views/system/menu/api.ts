@@ -6,7 +6,7 @@ export function GetList(query: PageQuery) {
 	return request({
 		url: apiPrefix,
 		method: 'get',
-		params: query,
+		params: query
 	});
 }
 export function GetObj(id: InfoReq) {

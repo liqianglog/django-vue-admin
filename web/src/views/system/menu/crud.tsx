@@ -1,15 +1,12 @@
 import * as api from "./api";
 import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions, } from "@fast-crud/fast-crud";
-import { apiPrefix as menuPrefix } from './api'
-import { request } from "/@/utils/service";
-import XEUtils from "xe-utils";
 import { dictionary } from "/@/utils/dictionary";
 import iconSelector from '/@/components/iconSelector/index.vue'
 interface CreateCrudOptionsTypes {
     crudOptions: CrudOptions;
 }
 
-export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExpose }): CreateCrudOptionsTypes {
+export const createCrudOptions = function ({ crudExpose,menuButtonRef }: { crudExpose: CrudExpose,menuButtonRef:any }): CreateCrudOptionsTypes {
     //验证路由地址
     const validateWebPath = (rule: string, value: string, callback: Function) => {
         const isLink = crudExpose.getFormData().is_link
@@ -26,10 +23,8 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
         }
     }
 
-
-
     const pageRequest = async (query: PageQuery) => {
-        return await api.GetList(query);
+        return await api.GetList({});
     };
     const editRequest = async ({ form, row }: EditReq) => {
         form.id = row.id;
@@ -41,6 +36,18 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
     const addRequest = async ({ form }: AddReq) => {
         return await api.AddObj(form);
     };
+
+    /**
+     * 懒加载
+     * @param row
+     * @returns {Promise<unknown>}
+     */
+    const loadContentMethod = (tree:any, treeNode:any, resolve:any)=>{
+        api.GetList({ parent: tree.id }).then((res:any) => {
+            resolve(res.data)
+        })
+    }
+
     return {
         crudOptions: {
             request: {
@@ -49,21 +56,49 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                 editRequest,
                 delRequest
             },
+            pagination:{
+              show:false
+            },
+            table:{
+                rowKey:'id',
+                lazy:true,
+                load:loadContentMethod,
+                treeProps:{children: 'children', hasChildren: 'hasChild'}
+            },
+            rowHandle: {
+                buttons: {
+                    custom: {
+                        text: "按钮配置",
+                        type:'warning',
+                        tooltip: {
+                            placement: "top",
+                            content: "按钮配置"
+                        },
+                        click: (context:any):void => {
+                            const {row} = context
+                            menuButtonRef.value.drawer=true
+                            menuButtonRef.value.selectOptions = row
+                            menuButtonRef.value.initGet()
+
+                        }
+                    }
+                },
+            },
             columns: {
                 _index: {
                     title: '序号',
                     form: { show: false },
                     column: {
-                        //type: 'index',
+                        type: 'index',
                         align: 'center',
-                        width: '70px',
+                        width: '80px',
                         columnSetDisabled: true, //禁止在列设置中选择
-                        formatter: (context) => {
-                            //计算序号,你可以自定义计算规则，此处为翻页累加
-                            let index = context.index ?? 1;
-                            let pagination = crudExpose.crudBinding.value.pagination;
-                            return ((pagination.currentPage ?? 1) - 1) * pagination.pageSize + index + 1;
-                        },
+                        // formatter: (context) => {
+                        //     //计算序号,你可以自定义计算规则，此处为翻页累加
+                        //     let index = context.index ?? 1;
+                        //     let pagination = crudExpose.crudBinding.value.pagination;
+                        //     return ((pagination.currentPage ?? 1) - 1) * pagination.pageSize + index + 1;
+                        // },
                     },
                 },
                 search: {
@@ -89,46 +124,46 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                         }
                     },
                 },
-                parent: {
-                    title: '父级菜单',
-                    column: {
-                        show: false
-                    },
-                    type: 'dict-cascader',
-                    dict: dict({
-                        url: menuPrefix,
-                        value: "id",
-                        label: "name",
-                        children: "children",
-                        isTree: true,
-                        getData: async ({ url }: { url: string }) => {
-                            return request({
-                                url: url,
-                                params: { limit: 999, status: 1, is_catalog: 1 },
-                            }).then((ret: any) => {
-                                const responseData = ret.data;
-                                const result = XEUtils.toArrayTree(responseData, {
-                                    parentKey: "parent",
-                                    strict: true,
-                                });
-                                return [{ id: null, name: "根节点", children: result }];
-                            });
-                        }
-                    }),
-                    form: {
-                        component: {
-                            filterable: true,
-                            placeholder: '请选择父级菜单',
-                            props: {
-                                props: {
-                                    checkStrictly: true,
-                                    value: "id",
-                                    label: "name",
-                                }
-                            }
-                        },
-                    }
-                },
+                // parent: {
+                //     title: '父级菜单',
+                //     column: {
+                //         show: false
+                //     },
+                //     type: 'dict-cascader',
+                //     dict: dict({
+                //         url: menuPrefix,
+                //         value: "id",
+                //         label: "name",
+                //         children: "children",
+                //         isTree: true,
+                //         getData: async ({ url }: { url: string }) => {
+                //             return request({
+                //                 url: url,
+                //                 params: { limit: 100, status: 1, is_catalog: 1 },
+                //             }).then((ret: any) => {
+                //                 const responseData = ret.data;
+                //                 const result = XEUtils.toArrayTree(responseData, {
+                //                     parentKey: "parent",
+                //                     strict: true,
+                //                 });
+                //                 return [{ id: null, name: "根节点", children: result }];
+                //             });
+                //         }
+                //     }),
+                //     form: {
+                //         component: {
+                //             filterable: true,
+                //             placeholder: '请选择父级菜单',
+                //             props: {
+                //                 props: {
+                //                     checkStrictly: true,
+                //                     value: "id",
+                //                     label: "name",
+                //                 }
+                //             }
+                //         },
+                //     }
+                // },
                 name: {
                     title: '菜单名称',
                     search: {

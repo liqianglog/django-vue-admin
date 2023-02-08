@@ -33,7 +33,7 @@ function createService() {
       // 根据 code 进行判断
       if (code === undefined) {
         // 如果没有 code 代表这不是项目后端开发的接口
-        errorCreate(`非标准返回：${dataAxios}， ${response.config.url}`);
+        errorCreate(`非标准返回：${dataAxios}， ${response.config.url}`,false);
         return dataAxios;
       } else {
         // 有 code 代表这是一个后端接口 可以进行进一步的判断
