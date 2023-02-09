@@ -2,6 +2,7 @@ import mimetypes
 import os
 import posixpath
 import re
+from _pydecimal import Decimal
 from wsgiref.util import FileWrapper
 
 from django.http import HttpResponseBadRequest, HttpResponseNotModified, StreamingHttpResponse
@@ -13,6 +14,7 @@ from rest_framework.decorators import action
 from carton_manage.verify_manage.models import BackHaulFile
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
+from utils.currency import  get_back_haul_file_path
 
 
 class BackHaulFileSerializer(CustomModelSerializer):
@@ -22,6 +24,17 @@ class BackHaulFileSerializer(CustomModelSerializer):
     device_name = serializers.CharField(source='device.name',read_only=True)
     prod_line_name = serializers.CharField(source='device.production_line.name', read_only=True)
     factory_name = serializers.CharField(source='device.production_line.belong_to_factory.name', read_only=True)
+    success_rate = serializers.SerializerMethodField(help_text="识别成功率")
+
+    def get_success_rate(self, instance):
+        total_number = instance.total_number
+        success_number = instance.success_number
+        if total_number==0:
+            return 0
+        else:
+            rate = success_number/ total_number
+            return Decimal(rate).quantize(Decimal('0.00'))
+
     class Meta:
         model = BackHaulFile
         fields = "__all__"
@@ -58,9 +71,8 @@ class BackHaulFileViewSet(CustomModelViewSet):
             ret["STATUS-CODE"] = 400
             return ret
         # 防止目录遍历漏洞
-        path = posixpath.normpath(
-            os.path.join(kwargs.get('tenant_name'), kwargs.get('day'), kwargs.get('file_name'))).lstrip('/')
-        fullpath = safe_join('kfm_code_file/code_package_txt_file', path)
+        file_position = _BackHaulFile.file_position
+        fullpath = os.path.join(get_back_haul_file_path(), file_position)
         if os.path.isdir(fullpath):
             ret = HttpResponseBadRequest('这里不允许使用目录索引')
             ret["STATUS-CODE"] = 400

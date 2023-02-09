@@ -4,6 +4,7 @@
         ref="d2Crud"
         v-bind="_crudProps"
         v-on="_crudListeners"
+        @onDownload="onDownload"
     >
       <div slot="header">
         <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
@@ -48,6 +49,16 @@ export default {
     },
     delRequest (row) {
       return api.DelObj(row.id)
+    },
+    onDownload ({row}) {
+      const that = this
+      that.$confirm('是否确认导出所有数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
+        return api.Download(row)
+      })
     }
   }
 }
