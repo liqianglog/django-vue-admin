@@ -87,32 +87,38 @@
           {
             "name": "查询",
             "value": "Search",
-            "api": "/api/basics_manage/production_line/",
+            "api": "/api/carton/code_manage/code_repetition_record/",
             "method": 0
           },
           {
             "name": "详情",
             "value": "Retrieve",
-            "api": "/api/basics_manage/production_line/{id}/",
+            "api": "/api/carton/code_manage/code_repetition_record/{id}/",
             "method": 0
           },
           {
             "name": "新增",
             "value": "Create",
-            "api": "/api/basics_manage/production_line/",
+            "api": "/api/carton/code_manage/code_repetition_record/",
             "method": 1
           },
           {
             "name": "编辑",
             "value": "Update",
-            "api": "/api/basics_manage/production_line/{id}/",
+            "api": "/api/carton/code_manage/code_repetition_record/{id}/",
             "method": 2
           },
           {
             "name": "删除",
             "value": "Delete",
-            "api": "/api/basics_manage/production_line/{id}/",
+            "api": "/api/carton/code_manage/code_repetition_record/{id}/",
             "method": 3
+          },
+          {
+            "name": "导出",
+            "value": "Export",
+            "api": "/api/carton/code_manage/code_repetition_record/export_data/",
+            "method": 0
           }
         ]
       }

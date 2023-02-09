@@ -32,20 +32,7 @@ class IpcProductionWorkSerializer(CustomModelSerializer):
 
     class Meta:
         model = ProductionWork
-        fields = [
-            'package_template_no',
-            "char_length",
-            "fields",
-            "separator",
-            "line_feed",
-            "code_type",
-            "w_url_prefix",
-            "w_url_length",
-            "w_field_position",
-            "n_url_prefix",
-            "n_url_length",
-            "n_field_position",
-        ]
+        fields = "__all__"
         read_only_fields = ["id"]
 
 
