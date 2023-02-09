@@ -188,44 +188,6 @@ def unzip_compress_file(source_file_path, target_file_path, is_rm=False, pwd=Non
     return True
 
 
-def zip_package_split(file_path, unpack_list):
-    """
-    zip 拆包
-    :param file_path:
-    :param unpack_list:
-    :return:
-    """
-    order_file_path = get_order_import_path()
-    flag = 0  # 计数
-    digit = 1  # 文件数
-    data = ""
-    file_paths = []
-    with zipfile.ZipFile(os.path.join(order_file_path, file_path)) as zip:
-        with zip.open(zip.namelist()[0]) as file:
-            for line in file:
-                flag += 1
-                data += line.decode()
-                if flag == unpack_list[digit - 1]:
-                    txt_file_path = file_path.replace('.zip', f'_{digit}.txt')
-
-                    with open(os.path.join(order_file_path, txt_file_path), "w") as new_f:
-                        new_f.write(data)
-                    zip_file_url = txt_file_path.replace('.txt', '.zip')
-                    # 进行zip 压缩
-                    zip_compress_file(os.path.join(order_file_path, txt_file_path),
-                                      os.path.join(order_file_path, zip_file_url))
-                    # 删除txt 文件
-                    os.remove(os.path.join(order_file_path, txt_file_path))
-                    file_paths.append(zip_file_url)
-                    flag = 0
-                    digit += 1
-                    data = ""
-                    if len(unpack_list) < digit:
-                        break
-
-    return file_paths
-
-
 def get_code_package_import_zip_path():
     """
     码包订单导入zip文件路径
@@ -260,6 +222,27 @@ def get_code_package_import_fail_path():
         os.makedirs(path)
     return path
 
+def get_back_haul_file_path():
+    """
+    获取回传文件路径
+    :return:
+    """
+    from django.db import connection
+    path = os.path.join(BASE_DIR, 'kfm_code_file', 'back_haul_file', connection.tenant.schema_name)
+    if not os.path.exists(path):  # 文件夹不存在则创建
+        os.makedirs(path)
+    return path
+def get_back_haul_file_des_crypt_path():
+    """
+    获取回传文件路径
+    :return:
+    """
+    from django.db import connection
+    path = os.path.join(BASE_DIR, 'kfm_code_file', 'back_haul_file_descrypt', connection.tenant.schema_name)
+    if not os.path.exists(path):  # 文件夹不存在则创建
+        os.makedirs(path)
+    return path
+
 
 def check_zip_is_encrypted(file: str) -> bool:
     '''
@@ -275,29 +258,6 @@ def check_zip_is_encrypted(file: str) -> bool:
         else:
             return False
 
-
-def get_production_order_zip_path():
-    """
-    生产工单文件汇总后 zip 目录
-    :return:
-    """
-    from django.db import connection
-    path = os.path.join(BASE_DIR, PRODUCTION_ORDER_ZIP_PATH, connection.tenant.schema_name)
-    if not os.path.exists(path):  # 文件夹不存在则创建
-        os.makedirs(path)
-    return path
-
-
-def get_production_order_file_path():
-    """
-    生产订单上传文件路径
-    :return:
-    """
-    from django.db import connection
-    path = os.path.join(BASE_DIR, PRODUCTION_ORDER_FILE_PATH, connection.tenant.schema_name)
-    if not os.path.exists(path):  # 文件夹不存在则创建
-        os.makedirs(path)
-    return path
 
 
 def des_encrypt_file(file_path, secret_key: str):

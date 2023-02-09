@@ -34,6 +34,13 @@ class ProductionWork(CoreModel):
     status = models.IntegerField(choices=WORK_STATUS, default=0, blank=True, help_text="生产状态",
                                  verbose_name="生产状态")
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        super().save(force_insert, force_update, using, update_fields)
+        if force_insert:
+            # 创建 检测端校验码记录 分区表
+            from carton_manage.verify_manage.models import VerifyCodeRecord
+            VerifyCodeRecord.add_list_partition(self.no)
+
     class Meta:
         db_table = table_prefix + "production_work"
         verbose_name = '生产工单'
