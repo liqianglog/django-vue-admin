@@ -21,7 +21,19 @@ export const crudOptions = (vm) => {
       },
       width: 140,
       edit: false,
-      remove: false
+      remove: false,
+      custom:[
+        {
+          thin: true,
+          text: '下载文件',
+          size: 'small',
+          type: 'primary',
+          emit: 'onDownload',
+          disabled (_, form) {
+            return !vm.hasPermissions('Download')
+          }
+        }
+      ]
     },
     viewOptions: {
       componentType: 'row'
@@ -86,9 +98,9 @@ export const crudOptions = (vm) => {
         type: 'select',
         dict: {
           data: [
-            { value: 0, label: '外码' },
-            { value: 1, label: '内码' },
-            { value: 2, label: '外码+内码' }
+            { value: 0, label: '内码' },
+            { value: 1, label: '外码' },
+            { value: 2, label: '未知' }
           ]
         }
       },
@@ -130,6 +142,14 @@ export const crudOptions = (vm) => {
         },
         form: {
           disabled: true
+        }
+      },
+      {
+        title: '识别成功率',
+        key: 'success_rate',
+        type: 'number',
+        component: {
+          name: 'table-progress'
         }
       },
       {

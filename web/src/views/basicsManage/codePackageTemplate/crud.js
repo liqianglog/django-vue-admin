@@ -199,6 +199,12 @@ export const crudOptions = (vm) => {
           ],
           itemProps: {
             class: { yxtInput: true }
+          },
+          helper: {
+            render (h) {
+              return (< el-alert type="warning" description="文本中对字段进行分隔的符号"/>
+              )
+            }
           }
         }
       }, {
@@ -221,6 +227,12 @@ export const crudOptions = (vm) => {
           ],
           itemProps: {
             class: { yxtInput: true }
+          },
+          helper: {
+            render (h) {
+              return (< el-alert type="warning" description="文本中每行结尾所使用的符号"/>
+              )
+            }
           }
         }
       }, {
@@ -240,6 +252,12 @@ export const crudOptions = (vm) => {
           ],
           itemProps: {
             class: { yxtInput: true }
+          },
+          helper: {
+            render (h) {
+              return (< el-alert type="warning" description="文本中每行通过分隔符分隔后的数量"/>
+              )
+            }
           }
         }
       }, {
@@ -259,6 +277,12 @@ export const crudOptions = (vm) => {
           ],
           itemProps: {
             class: { yxtInput: true }
+          },
+          helper: {
+            render (h) {
+              return (< el-alert type="warning" description="文本中每行不包含换行符的字符长度"/>
+              )
+            }
           }
         }
       }, {
@@ -327,10 +351,16 @@ export const crudOptions = (vm) => {
           },
           itemProps: {
             class: { yxtInput: true }
+          },
+          helper: {
+            render (h) {
+              return (< el-alert type="warning" description="文本中每行最后一个 '/' 后所有字符长度,默认从0开始"/>
+              )
+            }
           }
         }
       }, {
-        title: '外码内容长度',
+        title: '内码内容长度',
         key: 'n_url_length',
         type: 'number',
         width: 100,
@@ -347,6 +377,12 @@ export const crudOptions = (vm) => {
           },
           itemProps: {
             class: { yxtInput: true }
+          },
+          helper: {
+            render (h) {
+              return (< el-alert type="warning" description="文本中每行最后一个 '/' 后所有字符长度,默认从0开始"/>
+              )
+            }
           }
         }
       }, {
@@ -366,6 +402,12 @@ export const crudOptions = (vm) => {
           },
           itemProps: {
             class: { yxtInput: true }
+          },
+          helper: {
+            render (h) {
+              return (< el-alert type="warning" description="外码所占字段数的下标位置,默认从0开始"/>
+              )
+            }
           }
         }
       }, {
@@ -385,6 +427,12 @@ export const crudOptions = (vm) => {
           },
           itemProps: {
             class: { yxtInput: true }
+          },
+          helper: {
+            render (h) {
+              return (< el-alert type="warning" description="内码所占字段数的下标位置,默认从0开始"/>
+              )
+            }
           }
         }
       }

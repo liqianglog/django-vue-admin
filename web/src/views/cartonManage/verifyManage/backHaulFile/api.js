@@ -1,4 +1,4 @@
-import { request } from '@/api/service'
+import { downloadFile, request } from '@/api/service'
 
 export const urlPrefix = '/api/carton/verify_manage/back_haul_file/'
 
@@ -38,5 +38,19 @@ export function DelObj (id) {
     url: urlPrefix + id + '/',
     method: 'delete',
     data: { id }
+  })
+}
+
+/***
+ * 文件下载
+ * @param params
+ * @constructor
+ */
+export function Download (params) {
+  return downloadFile({
+    url: urlPrefix + params.id + '/download_file/',
+    params: {},
+    method: 'get',
+    filename: `工单${params.production_work_no}回传文件`
   })
 }
