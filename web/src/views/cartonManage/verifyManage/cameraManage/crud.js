@@ -99,6 +99,29 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
+      },
+      {
+        title: '总码数',
+        key: 'total_number',
+        type: 'number'
+      },
+      {
+        title: '识别成功数',
+        key: 'success_number',
+        type: 'number'
+      },
+      {
+        title: '识别失败数',
+        key: 'error_number',
+        type: 'number'
+      },
+      {
+        title: '成功采集率',
+        key: 'success_rate',
+        type: 'number',
+        component: {
+          name: 'table-progress'
+        }
       }
     ]
   }
