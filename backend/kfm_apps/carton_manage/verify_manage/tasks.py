@@ -15,7 +15,7 @@ from carton_manage.verify_manage.models import BackHaulFile, VerifyCodeRecord
 from django_tenants.utils import schema_context
 
 
-# @app.task
+@app.task
 def back_haul_file_check(back_haul_file_id):
     """
     回传文件校验
