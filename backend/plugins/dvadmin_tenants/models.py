@@ -130,6 +130,8 @@ class HistoryCodeInfo(ClusterModel):
                     "package_id": ele.split('\t')[3],
                 }
         return result_data
+
+    @classmethod
     def select_data_all(cls, code_list: list):
         """
         全表查询码是否存在
@@ -145,7 +147,7 @@ class HistoryCodeInfo(ClusterModel):
         sql = f"""SELECT
         code,code_type,tenant_id,package_id
         FROM {cls.db.db_name}.{cls.get_base_all_model().table_name()}
-        WHERE code IN {code_list}'
+        WHERE code IN {code_list}
         ORDER BY {order_by} ASC
         """
         result_data = {}

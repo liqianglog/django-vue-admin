@@ -1,4 +1,5 @@
 import os
+import shutil
 import zipfile
 from shutil import copyfile
 
@@ -44,24 +45,26 @@ def back_haul_file_check(back_haul_file_id):
                 for ele in myfile.readlines():
                     line_data = ele.decode('utf-8').replace('\n' if code_package_format_obj.line_feed == 0 else '\r\n',
                                                             '')
+                    if not line_data:
+                        continue
                     code_content = line_data.split(code_package_format_obj.separator)[
                         code_package_format_obj.code_position]
                     ac_time = line_data.split(code_package_format_obj.separator)[code_package_format_obj.time_position]
                     # 2.1 把所有的数据存入一个大字典中
-                    if code_content == '000000':
+                    if code_content != '000000':
                         data_dict[md5_value(code_content)] = {"code_content": code_content, "ac_time": ac_time}
                     else:
                         unrecognized_dict[code_content] = ac_time  # 未识别数据
 
     # 2.2 在ck中查询所有数据
     package_id = back_haul_file_obj.production_work.code_package_id
-    ck_verify_code_data = VerifyCodeRecord.ck_verify_code(data=data_dict,package_id=package_id)
+    ck_verify_code_data = VerifyCodeRecord.ck_verify_code(data=data_dict, package_id=package_id)
     # 3. 保存记录到校验码记录表中
     verify_code_record_list = []
     production_work_no = back_haul_file_obj.production_work.no
 
     # 3.0 未识别码入库
-    for code_content,ac_time in unrecognized_dict.items():
+    for code_content, ac_time in unrecognized_dict.items():
         verify_code_record_list.append(VerifyCodeRecord(**{
             "production_work_no": production_work_no,
             "back_haul_file": back_haul_file_obj,
@@ -155,7 +158,8 @@ def back_haul_file_check(back_haul_file_id):
     VerifyCodeRecord.objects.bulk_create(verify_code_record_list)
     # 4. 更新识别后的结果到回传文件管理表中
     back_haul_file_obj.update_result(back_haul_file_obj.id)
-
+    # 5. 删除解密后的文件
+    shutil.rmtree(os.path.join(get_back_haul_file_des_crypt_path(), file_position.split(os.sep)[0]))
 
 
 if __name__ == '__main__':

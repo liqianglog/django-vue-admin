@@ -204,7 +204,7 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase, Cor
                 error_type_4[md5_value] = error_type_1[md5_value]
                 del error_type_1[md5_value]
         # 5. 检测本数据data中是否有重码 (3)
-        repeat_data = dict(filter(lambda x: x[0] > 1, Counter(data.keys()).items()))
+        repeat_data = dict(filter(lambda x: x[1] > 1, Counter(data.keys()).items()))
         error_type_3 = {}
         if repeat_data:
             for md5_value, count in repeat_data.items():

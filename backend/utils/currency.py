@@ -234,7 +234,7 @@ def get_back_haul_file_path():
     return path
 def get_back_haul_file_des_crypt_path():
     """
-    获取回传文件路径
+    获取回传文件加密后路径
     :return:
     """
     from django.db import connection
