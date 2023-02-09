@@ -1,6 +1,7 @@
 import datetime
 import functools
 import os
+import shutil
 
 import django
 from django.db import connection
@@ -13,7 +14,8 @@ from django_tenants.utils import schema_context
 
 from application.celery import app
 from carton_manage.code_manage.models import CodePackage, CodeRepetitionRecord
-from utils.currency import des_encrypt_file, zip_compress_file, get_code_package_import_txt_path, md5_file, md5_value
+from utils.currency import des_encrypt_file, zip_compress_file, get_code_package_import_txt_path, md5_file, md5_value, \
+    get_code_package_import_zip_path
 from dvadmin_tenants.models import HistoryTemporaryCode, HistoryCodeInfo, Client
 
 
@@ -285,12 +287,21 @@ def code_package_import_check(code_package_id):
     target_file_path = source_file_path.replace('.txt', '.zip')
     zip_compress_file(source_file_path, target_file_path, is_rm=True)
     des_encrypt_file(target_file_path, settings.ENCRYPTION_KEY_ID[code_package_obj.key_id])
+    # 移动文件到对应zip目录
     os.rename(target_file_path, target_file_path.replace('.zip', '.zip.des'))
+    to_file = os.path.join(get_code_package_import_zip_path(),
+                           code_package_obj.file_position.replace('.txt', '.zip.des'))
+    if not os.path.exists(os.path.join(get_code_package_import_zip_path(),
+                                       *code_package_obj.file_position.split(os.sep)[:-1])):  # 文件夹不存在则创建
+        os.makedirs(
+            os.path.join(get_code_package_import_zip_path(), *code_package_obj.file_position.split(os.sep)[:-1]))
+    shutil.move(target_file_path.replace('.zip', '.zip.des'), to_file)
+
     code_package_obj = CodePackage.objects.get(id=code_package_id)
     code_package_obj.file_position = code_package_obj.file_position.replace('.txt', '.zip.des')
     code_package_obj.validate_status = 4
     code_package_obj.des_file_md5 = md5_file(
-        os.path.join(get_code_package_import_txt_path(), code_package_obj.file_position))
+        os.path.join(get_code_package_import_zip_path(), code_package_obj.file_position))
     code_package_obj.save()
     code_package_obj.write_log({"content": '全部校验', "step": 5})
 

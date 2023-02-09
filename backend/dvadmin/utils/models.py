@@ -9,11 +9,18 @@
 import uuid
 
 from django.apps import apps
-from django.db import models
+from django.db import models, connection, ProgrammingError
 from django.db.models import QuerySet
+from datetime import date, timedelta
 
 from application import settings
 table_prefix = settings.TABLE_PREFIX  # 数据库表名前缀
+
+def get_month_range(start_day, end_day):
+    months = (end_day.year - start_day.year) * 12 + end_day.month - start_day.month
+    month_range = ['%s-%s-01' % (start_day.year + mon // 12, str(mon % 12 + 1).zfill(2))
+                   for mon in range(start_day.month - 1, start_day.month + months)]
+    return month_range
 
 
 class SoftDeleteQuerySet(QuerySet):
@@ -86,6 +93,95 @@ class CoreModel(models.Model):
         verbose_name_plural = verbose_name
 
 
+class AddPostgresPartitionedBase:
+    """
+    pgsql表分表基类
+    """
+
+    @classmethod
+    def add_hash_partition(cls, number=36):
+        """
+        创建分区表
+        :return:
+        """
+        if cls.PartitioningMeta.method != 'hash':
+            raise ProgrammingError("表分区错误，无法进行分区")
+        for item in range(number):
+            try:
+                connection.schema_editor().add_hash_partition(
+                    model=cls,
+                    name="_" + str(item),
+                    modulus=number,
+                    remainder=item,
+                )
+            except ProgrammingError as e:
+                print(f"{cls.__name__}分表失败：" + str(e).rstrip('\n'))
+        return
+
+    @classmethod
+    def add_range_day_partition(cls, day=7):
+        """
+        按照创建时间"天"分表
+        :return:
+        """
+        if cls.PartitioningMeta.method != 'range':
+            raise ProgrammingError("表分区错误，无法进行分区")
+        day_before = date.today().strftime("%Y-%m-%d")
+        for index in range(day):
+            try:
+                day_following = (date.today() + timedelta(days=index + 1)).strftime("%Y-%m-%d")
+                connection.schema_editor().add_range_partition(
+                    model=cls,
+                    name=f"{day_before}_{day_following}",
+                    from_values=day_before,
+                    to_values=day_following,
+                )
+                day_before = day_following
+            except ProgrammingError as e:
+                print(f"{cls.__name__}分表失败：" + str(e).rstrip('\n'))
+        return
+
+    @classmethod
+    def add_range_month_partition(cls, start_date, end_date):
+        """
+        按照创建时间"月"分表
+        :return:
+        """
+        if cls.PartitioningMeta.method != 'range':
+            raise ProgrammingError("表分区错误，无法进行分区")
+        range_month_partition_list = get_month_range(start_date, end_date)
+        for index, ele in enumerate(range_month_partition_list):
+            if index == 0:
+                continue
+            try:
+                connection.schema_editor().add_range_partition(
+                    model=cls,
+                    name=f"{range_month_partition_list[index - 1][:-3]}_{ele[:-3]}",
+                    from_values=range_month_partition_list[index - 1],
+                    to_values=ele,
+                )
+            except ProgrammingError as e:
+                print(f"{cls.__name__}分表失败：" + str(e).rstrip('\n'))
+        return
+
+    @classmethod
+    def add_list_partition(cls, unique_value):
+        """
+        按照某个值进行分区
+        :param unique_value:
+        :return:
+        """
+        if cls.PartitioningMeta.method != 'list':
+            raise ProgrammingError("表分区错误，无法进行分区")
+        try:
+            connection.schema_editor().add_list_partition(
+                model=cls,
+                name=f"_{unique_value}",
+                values=[unique_value],
+            )
+        except ProgrammingError as e:
+            print(f"{cls.__name__}分表失败：" + str(e).rstrip('\n'))
+        return
 
 
 def get_all_models_objects(model_name=None):
