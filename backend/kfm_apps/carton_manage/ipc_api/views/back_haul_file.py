@@ -96,10 +96,9 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
         # 3. 发行到异步任务中，进行异步处理
         new_zipfile_md5 = md5_file(file_path)
         if new_zipfile_md5 != zipfile_md5:
-            if production_work_obj is None:
-                ret = HttpResponseBadRequest('文件错误，与上传MD5值不符')
-                ret["STATUS-CODE"] = 400
-                return ret
+            ret = HttpResponseBadRequest('文件错误，与上传MD5值不符')
+            ret["STATUS-CODE"] = 400
+            return ret
         # 更新相机管理内容
         cam_obj, _ = CameraManage.objects.get_or_create(
             no=cam_id, device_id=device,

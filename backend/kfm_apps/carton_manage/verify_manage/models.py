@@ -83,10 +83,11 @@ ERROR_TYPE = (
 )
 
 
-class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase, CoreModel):
+class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase):
     """
     使用分表
     """
+    id = models.BigAutoField(primary_key=True, help_text="Id", verbose_name="Id")
     production_work_no = models.CharField(max_length=200, help_text="生产工单编号", verbose_name="生产工单编号")
     back_haul_file = models.ForeignKey(BackHaulFile, db_constraint=False, on_delete=models.PROTECT,
                                        related_name="verify_code_bhfile", help_text="关联生产工单",
@@ -106,6 +107,10 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase, Cor
                                       verbose_name="被重码码包id")
     rep_tenant_id = models.CharField(max_length=200, null=True, blank=True, help_text="被重码生产工单编号",
                                      verbose_name="被重码生产工单编号")
+    update_datetime = models.DateTimeField(auto_now=True, null=True, blank=True, help_text="修改时间",
+                                           verbose_name="修改时间")
+    create_datetime = models.DateTimeField(auto_now_add=True, null=True, blank=True, help_text="创建时间",
+                                           verbose_name="创建时间")
 
     class Meta:
         db_table = table_prefix + "verify_code_record"
@@ -117,7 +122,7 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase, Cor
         ]
 
     @classmethod
-    def ck_verify_code(cls, data: dict, package_id):
+    def ck_verify_code(cls, data: dict, package_id, repeat_data_dict):
         """
         data:{
             md5_value: {
@@ -133,13 +138,14 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase, Cor
                         "package_id": xxx,
                     }
                 },
-                "error_type_3": { # 本检测包重码
-                    md5_value: {
+                "error_type_3": [ # 本检测包重码
+                    {
+                        "code_content_md5": md5_value,
                         "code_type": 0,  # 0 内码; 1 外码
                         "tenant_id": 100001,
                         "package_id": xxx
-                    }
-                },
+                    },
+                ],
                 "error_type_4": {  # 本生产工单重码
                     md5_value: {
                         "code_type": 0,  # 0 内码; 1 外码
@@ -197,29 +203,37 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase, Cor
         error_type_4 = {}
         production_work_obj = ProductionWork.objects.filter(code_package_id=package_id).first()
         verify_code_record_data = cls.objects.filter(production_work_no=production_work_obj.no,
+                                                     error_type=1,
                                                      code_content_md5__in=select_data).values_list('code_content_md5',
                                                                                                    flat=True)
         if verify_code_record_data:
             for md5_value in verify_code_record_data:
-                error_type_4[md5_value] = error_type_1[md5_value]
-                del error_type_1[md5_value]
+                error_type_4[md5_value] = error_type_1.pop(md5_value)
         # 5. 检测本数据data中是否有重码 (3)
-        repeat_data = dict(filter(lambda x: x[1] > 1, Counter(data.keys()).items()))
-        error_type_3 = {}
-        if repeat_data:
-            for md5_value, count in repeat_data.items():
+
+        error_type_3 = []
+        if repeat_data_dict:
+            for repeat_data in repeat_data_dict:
+                md5_value = repeat_data.get('code_content_md5')
                 if md5_value in error_type_1:  # 被重码-正常码包
-                    error_type_3[md5_value] = select_data[md5_value]
+                    data = select_data[md5_value]
+                    data['code_content_md5'] = md5_value
+                    error_type_3.append(data)
                 elif md5_value in error_type_2:  # 被重码-码不存在
-                    error_type_3[md5_value] = {
+                    error_type_3.append({
+                        "code_content_md5": md5_value,
                         "code_type": 3,  # 0 内码; 1 外码; 3 未知
                         "tenant_id": tenant_id,
                         "package_id": package_id
-                    }
+                    })
                 elif md5_value in error_type_4:
-                    error_type_3[md5_value] = error_type_4[md5_value]
+                    data = error_type_4[md5_value]
+                    data['code_content_md5'] = md5_value
+                    error_type_3.append(data)
                 elif md5_value in error_type_5:
-                    error_type_3[md5_value] = error_type_5[md5_value]
+                    data = error_type_5[md5_value]
+                    data['code_content_md5'] = md5_value
+                    error_type_3.append(data)
 
         return {
             "error_type_1": error_type_1,  # 正常码包

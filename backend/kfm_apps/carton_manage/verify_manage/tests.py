@@ -74,10 +74,10 @@ if __name__ == '__main__':
     # 2. 生成存在未识别
     unrecognized_numer = 0
     # 3. 生成本检测包重码
-    repeat = 0
-    same_repeat = 1  # 同一个码重码次数
+    repeat = 3
+    same_repeat = 3  # 同一个码重码次数
     # 4. 生成码不存在
-    invalid_number = 0
+    invalid_number = 10
     # 5. 生成本生产工单重码
     this_production_order_code = []
     # 6. 生成非本生产工单码
