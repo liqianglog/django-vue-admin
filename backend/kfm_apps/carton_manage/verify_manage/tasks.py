@@ -119,7 +119,6 @@ def back_haul_file_check(back_haul_file_id):
     for code_content_md5, value in ck_verify_code_data.get('error_type_3').items():
         code_content = data_dict[code_content_md5].get('code_content')
         code_type = value.get('code_type')
-        rep_code_id = value.get('rep_code_id')
         ac_time = data_dict[code_content_md5].get('ac_time')
         verify_code_record_list.append(VerifyCodeRecord(**{
             "production_work_no": production_work_no,
@@ -155,7 +154,6 @@ def back_haul_file_check(back_haul_file_id):
     for code_content_md5, value in ck_verify_code_data.get('error_type_5').items():
         code_content = data_dict[code_content_md5].get('code_content')
         code_type = value.get('code_type')
-        rep_code_id = value.get('rep_code_id')
         rep_package_id = value.get('rep_package_id')
         rep_tenant_id = value.get('rep_tenant_id')
         ac_time = data_dict[code_content_md5].get('ac_time')
@@ -167,7 +165,6 @@ def back_haul_file_check(back_haul_file_id):
             "code_type": code_type,
             "ac_time": ac_time,
             "error_type": 5,
-            "rep_code_id": rep_code_id,
             "rep_package_id": rep_package_id,
             "rep_tenant_id": rep_tenant_id,
         }))

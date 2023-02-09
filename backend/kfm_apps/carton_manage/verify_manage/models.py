@@ -1,4 +1,6 @@
-from django.db import models
+from collections import Counter
+
+from django.db import models, connection
 from psqlextra.indexes import UniqueIndex
 from psqlextra.models import PostgresPartitionedModel
 from psqlextra.types import PostgresPartitioningMethod
@@ -6,7 +8,7 @@ from psqlextra.types import PostgresPartitioningMethod
 from basics_manage.models import DeviceManage, CodePackageFormat
 from carton_manage.production_manage.models import ProductionWork
 from dvadmin.utils.models import CoreModel, AddPostgresPartitionedBase
-from dvadmin_tenants.models import HistoryCodeInfo
+from dvadmin_tenants.models import HistoryCodeInfo, Client
 
 table_prefix = "carton_"
 CODE_TYPE_STATUS = (
@@ -49,6 +51,7 @@ class BackHaulFile(CoreModel):
     code_package_format = models.ForeignKey(CodePackageFormat, db_constraint=False,
                                             related_name='bhfile_code_package_format', on_delete=models.CASCADE,
                                             verbose_name="关联码包回传格式", help_text="关联码包回传格式")
+
     @classmethod
     def update_result(cls, back_haul_file_id):
         obj = cls.objects.get(id=back_haul_file_id)
@@ -90,9 +93,12 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase, Cor
                                    help_text="采集时间")
     error_type = models.IntegerField(choices=ERROR_TYPE, default=1, blank=True, help_text="问题码类型",
                                      verbose_name="问题码类型")
-    rep_code_id = models.CharField(max_length=200, help_text="关联被重复码id", verbose_name="关联被重复码id")
-    rep_package_id = models.CharField(max_length=200, help_text="被重码码包id", verbose_name="被重码码包id")
-    rep_tenant_id = models.CharField(max_length=200, help_text="被重码生产工单编号", verbose_name="被重码生产工单编号")
+    rep_code_id = models.CharField(max_length=200, null=True, blank=True, help_text="关联被重复码id",
+                                   verbose_name="关联被重复码id")
+    rep_package_id = models.CharField(max_length=200, null=True, blank=True, help_text="被重码码包id",
+                                      verbose_name="被重码码包id")
+    rep_tenant_id = models.CharField(max_length=200, null=True, blank=True, help_text="被重码生产工单编号",
+                                     verbose_name="被重码生产工单编号")
 
     class Meta:
         db_table = table_prefix + "verify_code_record"
@@ -157,20 +163,63 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase, Cor
                 "error_type_4": {},  # 本生产工单重码
                 "error_type_5": {},  # 非本生产工单码
             }
-        # 1. 检测本数据data中是否有重码 (3)
         _HistoryCodeInfo = HistoryCodeInfo.set_db()
-        select_data = _HistoryCodeInfo.select_data_duplicate(data.keys(), package_id)
-        # 2. 查询不在本码包中的码 (5)
-        # 3. 不在本码包中返回的值，重新进行ck全表查询，判断是否全局存在 (2)
+        select_data = _HistoryCodeInfo.select_data_duplicate(list(set(data.keys())), package_id)
+        # 1. 正常码包返回 (1)
+        error_type_1 = select_data
+        error_type_2 = {}
+        error_type_5 = {}
+        tenant_id = Client.objects.get(schema_name=connection.tenant.schema_name).id
+        # 2. 查询不在本码包中的码,进行ck全表查询,如果码存在则属于非本生产工单码 (5)
+        not_this_code = list(set(data.keys()) - set(select_data.keys()))
+        if not_this_code:
+            not_this_code_data = _HistoryCodeInfo.select_data_all(not_this_code)
+            for md5_value, value in not_this_code_data.items():
+                error_type_5[md5_value] = {
+                    "code_type": value.get('code_type'),  # 0 内码; 1 外码
+                    "tenant_id": tenant_id,
+                    "package_id": package_id,
+                    "rep_package_id": value.get('package_id'),
+                    "rep_tenant_id": value.get('tenant_id'),
+                }
+            # 3. 不存在则为码不存在 (2)
+            not_exist = list(set(not_this_code) - set(not_this_code_data.keys()))
+            for md5_value in not_exist:
+                error_type_2[md5_value] = {}
         # 4. 通过 verify_code_record 表查询本生产工单中是否有重码 (4)
-        # 5. 剩余正常码包返回 (1)
+        error_type_4 = {}
+        production_work_obj = ProductionWork.objects.filter(code_package_id=package_id).first()
+        verify_code_record_data = cls.objects.filter(production_work_no=production_work_obj.no,
+                                                     code_content_md5__in=select_data).values_list('code_content_md5',
+                                                                                                   flat=True)
+        if verify_code_record_data:
+            for md5_value in verify_code_record_data:
+                error_type_4[md5_value] = error_type_1[md5_value]
+                del error_type_1[md5_value]
+        # 5. 检测本数据data中是否有重码 (3)
+        repeat_data = dict(filter(lambda x: x[0] > 1, Counter(data.keys()).items()))
+        error_type_3 = {}
+        if repeat_data:
+            for md5_value, count in repeat_data.items():
+                if md5_value in error_type_1:  # 被重码-正常码包
+                    error_type_3[md5_value] = select_data[md5_value]
+                elif md5_value in error_type_2:  # 被重码-码不存在
+                    error_type_3[md5_value] = {
+                        "code_type": 3,  # 0 内码; 1 外码; 3 未知
+                        "tenant_id": tenant_id,
+                        "package_id": package_id
+                    }
+                elif md5_value in error_type_4:
+                    error_type_3[md5_value] = error_type_4[md5_value]
+                elif md5_value in error_type_5:
+                    error_type_3[md5_value] = error_type_5[md5_value]
 
         return {
-            "error_type_1": {},  # 正常码包
-            "error_type_2": {},  # 码不存在
-            "error_type_3": {},  # 本检测包重码
-            "error_type_4": {},  # 本生产工单重码
-            "error_type_5": {},  # 非本生产工单码
+            "error_type_1": error_type_1,  # 正常码包
+            "error_type_2": error_type_2,  # 码不存在
+            "error_type_3": error_type_3,  # 本检测包重码
+            "error_type_4": error_type_4,  # 本生产工单重码
+            "error_type_5": error_type_5,  # 非本生产工单码
         }
 
     class PartitioningMeta:
