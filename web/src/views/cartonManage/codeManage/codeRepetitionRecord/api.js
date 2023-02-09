@@ -1,4 +1,4 @@
-import { request } from '@/api/service'
+import { downloadFile, request } from '@/api/service'
 
 export const urlPrefix = 'api/carton/code_manage/code_repetition_record/'
 
@@ -38,5 +38,17 @@ export function DelObj (id) {
     url: urlPrefix + id + '/',
     method: 'delete',
     data: { id }
+  })
+}
+
+/**
+ * 导出
+ * @param params
+ */
+export function exportData (params) {
+  return downloadFile({
+    url: urlPrefix + 'export_data/',
+    params: params,
+    method: 'get'
   })
 }
