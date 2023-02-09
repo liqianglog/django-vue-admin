@@ -52,24 +52,7 @@ def back_haul_file_check(back_haul_file_id):
                         data_dict[md5_value(code_content)] = {"code_content": code_content, "ac_time": ac_time}
                     else:
                         unrecognized_dict[code_content] = ac_time  # 未识别数据
-                    # 2.2 查询当前码是否存在ck中
-                    # 2.3 查询当前生产工单码
-                    # error_code_content = ''
-                    # error_type = 1
-                    # rep_code_id = None
-                    # if code_content == '000000':
-                    #     error_type = 0
-                    #     error_code_content = code_content
-                    # verify_code_record_list.append(VerifyCodeRecord(**{
-                    #     "production_work_no": production_work_no,
-                    #     "back_haul_file": back_haul_file_obj,
-                    #     "code_content_md5": md5_value(code_content),
-                    #     "error_code_content": error_code_content,
-                    #     "code_type": code_type,
-                    #     "ac_time": ac_time,
-                    #     "error_type": error_type,
-                    #     "rep_code_id": rep_code_id
-                    # }))
+
     # 2.2 在ck中查询所有数据
     package_id = back_haul_file_obj.production_work.code_package_id
     ck_verify_code_data = VerifyCodeRecord.ck_verify_code(data=data_dict,package_id=package_id)

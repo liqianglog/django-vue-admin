@@ -1,6 +1,7 @@
 from collections import Counter
 
 from django.db import models, connection
+from django.db.models import Count, Q
 from psqlextra.indexes import UniqueIndex
 from psqlextra.models import PostgresPartitionedModel
 from psqlextra.types import PostgresPartitioningMethod
@@ -54,10 +55,16 @@ class BackHaulFile(CoreModel):
 
     @classmethod
     def update_result(cls, back_haul_file_id):
-        obj = cls.objects.get(id=back_haul_file_id)
-        VerifyCodeRecord.objects.filter(production_work_no=obj.production_work.no)
-        pass
-        # TODO 更新回传文件内容
+        back_haul_file_obj = cls.objects.get(id=back_haul_file_id)
+        verify_code_record_data = VerifyCodeRecord.objects.filter(
+            production_work_no=back_haul_file_obj.production_work.no).aggregate(
+            total_number=Count('id'),
+            success_number=Count('id', filter=Q(error_type=1))
+        )
+        back_haul_file_obj.total_number = verify_code_record_data.get('total_number') or 0
+        back_haul_file_obj.success_number = verify_code_record_data.get('success_number') or 0
+        back_haul_file_obj.error_number = back_haul_file_obj.total_number - back_haul_file_obj.success_number
+        back_haul_file_obj.save()
 
     class Meta:
         db_table = table_prefix + "back_haul_file"
