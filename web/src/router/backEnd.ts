@@ -11,6 +11,7 @@ import { useRoutesList } from '/@/stores/routesList';
 import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
 import { useMenuApi } from '/@/api/menu/index';
 import { handleMenu } from '../utils/menu';
+import {BtnPermissionStore} from "/@/plugin/permission/store.permission";
 
 const menuApi = useMenuApi();
 
@@ -102,6 +103,8 @@ export async function setAddRoute() {
  * @returns 返回后端路由菜单数据
  */
 export function getBackEndControlRoutes() {
+	//获取所有的按钮权限
+	BtnPermissionStore().getBtnPermissionStore();
 	return menuApi.getSystemMenu();
 }
 

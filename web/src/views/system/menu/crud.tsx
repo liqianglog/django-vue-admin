@@ -3,12 +3,14 @@ import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions, } fr
 import { dictionary } from "/@/utils/dictionary";
 import iconSelector from '/@/components/iconSelector/index.vue'
 import {useCompute} from '@fast-crud/fast-crud'
+import {inject} from 'vue'
 const {compute} = useCompute()
 interface CreateCrudOptionsTypes {
     crudOptions: CrudOptions;
 }
 
 export const createCrudOptions = function ({ crudExpose,menuButtonRef }: { crudExpose: CrudExpose,menuButtonRef:any }): CreateCrudOptionsTypes {
+    const hasPermissions = inject('$hasPermissions')
     //验证路由地址
     const validateWebPath = (rule: string, value: string, callback: Function) => {
         const isLink = crudExpose.getFormData().is_link
@@ -67,6 +69,13 @@ export const createCrudOptions = function ({ crudExpose,menuButtonRef }: { crudE
                 load:loadContentMethod,
                 treeProps:{children: 'children', hasChildren: 'hasChild'}
             },
+            actionbar: {
+                buttons: {
+                    add: {
+                        show: hasPermissions('Menu:Create')
+                    }
+                }
+            },
             rowHandle: {
                 buttons: {
                     custom: {
@@ -77,10 +86,11 @@ export const createCrudOptions = function ({ crudExpose,menuButtonRef }: { crudE
                             content: "按钮配置"
                         },
                         show:compute(({row}:any)=>{
-                            if (row.web_path && !row.is_link) {
-                                return true
+                             if (row.web_path && !row.is_link) {
+                                return true && hasPermissions()
                             }
                             return false
+
                         }),
                         click:(context:any):void => {
                             const {row} = context

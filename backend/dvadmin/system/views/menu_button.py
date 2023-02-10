@@ -72,7 +72,7 @@ class MenuButtonViewSet(CustomModelViewSet):
         is_superuser = request.user.is_superuser
         is_admin = request.user.role.values_list('admin', flat=True)
         if is_superuser or True in is_admin:
-            queryset = MenuButton.objects.values_list('menu_button__value',flat=True)
+            queryset = MenuButton.objects.values_list('value',flat=True)
         else:
             role_id = request.user.role.values_list('id', flat=True)
             queryset = RoleMenuButtonPermission.objects.filter(role__in=role_id).values_list('menu_button__value',flat=True).distinct()
