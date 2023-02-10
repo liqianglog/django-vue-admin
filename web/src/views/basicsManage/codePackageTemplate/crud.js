@@ -187,11 +187,12 @@ export const crudOptions = (vm) => {
         },
         width: 70,
         type: 'input',
-        // dict: {
-        //   data: [{ label: ',', value: ',' }, { label: '竖线', value: '|' }, { label: '分号', value: ';' }]
-        // },
         form: {
           component: {
+            dict: {
+              data: [{ label: ',', value: ',' }, { label: '|', value: '|' }, { label: ';', value: ';' }]
+            },
+            name: 'dict-select',
             span: 12
           },
           rules: [

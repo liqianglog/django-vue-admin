@@ -40,7 +40,7 @@ export const crudOptions = (vm) => {
       componentType: 'row'
     },
     formOptions: {
-      width:'500px',
+      width: '500px',
       defaultSpan: 24 // 默认的表单 span
     },
     indexRow: { // 或者直接传true,不显示title，不居中
@@ -114,12 +114,13 @@ export const crudOptions = (vm) => {
         },
         minWidth: 70,
         type: 'input',
-        // dict: {
-        //   data: [{ label: ',', value: ',' }, { label: '竖线', value: '|' }, { label: '分号', value: ';' }]
-        // },
         form: {
           component: {
-            placeholder: '分隔符',
+            dict: {
+              data: [{ label: '无', value: '无' }, { label: ',', value: ',' }, { label: '|', value: '|' }, { label: ';', value: ';' }]
+            },
+            name: 'dict-select',
+            placeholder: '分隔符'
           },
           rules: [
             { required: true, message: '分隔符不能为空', trigger: 'blur' }
