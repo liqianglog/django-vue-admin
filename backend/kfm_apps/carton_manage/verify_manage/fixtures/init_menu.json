@@ -59,9 +59,43 @@
         ]
       },
       {
+        "name": "检测工单",
+        "icon": "cogs",
+        "sort": 2,
+        "is_link": false,
+        "is_catalog": false,
+        "web_path": "/verifyWorkOrder",
+        "component": "cartonManage/verifyManage/verifyWorkOrder/index",
+        "component_name": "verifyWorkOrder",
+        "status": true,
+        "cache": false,
+        "visible": true,
+        "children": [],
+        "menu_button": [
+          {
+            "name": "查询",
+            "value": "Search",
+            "api": "/api/carton/verify_manage/verify_work_order/",
+            "method": 0
+          },
+          {
+            "name": "详情",
+            "value": "Retrieve",
+            "api": "/api/carton/verify_manage/verify_work_order/{id}/",
+            "method": 0
+          },
+          {
+            "name": "删除",
+            "value": "Delete",
+            "api": "/api/carton/verify_manage/verify_work_order/{id}/",
+            "method": 3
+          }
+        ]
+      },
+      {
         "name": "回传文件管理",
         "icon": "file-excel-o",
-        "sort": 2,
+        "sort": 3,
         "is_link": false,
         "is_catalog": false,
         "web_path": "/backHaulFile",
@@ -107,7 +141,7 @@
       {
         "name": "校验码记录",
         "icon": "qrcode",
-        "sort": 3,
+        "sort": 4,
         "is_link": false,
         "is_catalog": false,
         "web_path": "/verifyCodeRecord",
