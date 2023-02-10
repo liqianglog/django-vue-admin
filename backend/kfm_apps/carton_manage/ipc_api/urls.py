@@ -16,6 +16,8 @@ urlpatterns = [
          CodePackageViewSet.as_view({'post': 'download_code_package_file'})),
     # 检测端文件回传
     path(r'check/data_upload/', IpcBackHaulFileViewSet.as_view({'post': 'data_upload'})),
+    # 检测端状态更新
+    path(r'check/verify_status_change/', IpcBackHaulFileViewSet.as_view({'post': 'verify_status_change'})),
 
 ]
 urlpatterns += url.urls

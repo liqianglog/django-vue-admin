@@ -44,7 +44,6 @@ def make_zip(secret_key, code_number=1000, unrecognized_numer=0, repeat=0, same_
                         break
                     code = readline.replace('\n', '').split(',')[1]
                     for ele in range(same_repeat):
-                        print(111)
                         f.write(f'{code},{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}\n')
             # 生成无效码
             if invalid_number:
