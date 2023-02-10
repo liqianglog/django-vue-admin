@@ -1,13 +1,13 @@
 [
     {
         "name": "系统管理",
-        "icon": "cog",
+        "icon": "iconfont icon-xitongshezhi",
         "sort": 1,
         "is_link": false,
         "is_catalog": true,
         "web_path": "",
-        "component": "",
-        "component_name": "",
+        "component": "layout/routerView/parent",
+        "component_name": "menu",
         "status": true,
         "cache": false,
         "visible": true,
@@ -15,17 +15,17 @@
         "children": [
             {
                 "name": "菜单管理",
-                "icon": "navicon",
+                "icon": "iconfont icon-caidan",
                 "sort": 1,
                 "is_link": false,
                 "is_catalog": false,
                 "web_path": "/menu",
-                "component": "system/menu",
+                "component": "system/menu/index",
                 "component_name": "menu",
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 277,
+                "parent": 19,
                 "children": [],
                 "menu_button": [
                     {
@@ -72,7 +72,7 @@
                 "status": true,
                 "cache": false,
                 "visible": false,
-                "parent": 277,
+                "parent": 19,
                 "children": [],
                 "menu_button": [
                     {
@@ -103,7 +103,7 @@
             },
             {
                 "name": "部门管理",
-                "icon": "bank",
+                "icon": "ele-OfficeBuilding",
                 "sort": 3,
                 "is_link": false,
                 "is_catalog": false,
@@ -113,7 +113,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 277,
+                "parent": 19,
                 "children": [],
                 "menu_button": [
                     {
@@ -150,7 +150,7 @@
             },
             {
                 "name": "角色管理",
-                "icon": "address-book",
+                "icon": "ele-ColdDrink",
                 "sort": 4,
                 "is_link": false,
                 "is_catalog": false,
@@ -160,7 +160,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 277,
+                "parent": 19,
                 "children": [],
                 "menu_button": [
                     {
@@ -203,7 +203,7 @@
             },
             {
                 "name": "用户管理",
-                "icon": "users",
+                "icon": "iconfont icon-icon-",
                 "sort": 6,
                 "is_link": false,
                 "is_catalog": false,
@@ -213,7 +213,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 277,
+                "parent": 19,
                 "children": [],
                 "menu_button": [
                     {
@@ -274,7 +274,7 @@
             },
             {
                 "name": "消息中心",
-                "icon": "bullhorn",
+                "icon": "iconfont icon-xiaoxizhongxin",
                 "sort": 7,
                 "is_link": false,
                 "is_catalog": false,
@@ -284,7 +284,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 277,
+                "parent": 19,
                 "children": [],
                 "menu_button": [
                     {
@@ -321,7 +321,7 @@
             },
             {
                 "name": "接口白名单",
-                "icon": "compass",
+                "icon": "ele-SetUp",
                 "sort": 8,
                 "is_link": false,
                 "is_catalog": false,
@@ -331,7 +331,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 277,
+                "parent": 19,
                 "children": [],
                 "menu_button": [
                     {
@@ -371,13 +371,13 @@
     },
     {
         "name": "常规配置",
-        "icon": "cogs",
+        "icon": "iconfont icon-configure",
         "sort": 2,
         "is_link": false,
         "is_catalog": true,
         "web_path": "",
-        "component": "",
-        "component_name": "",
+        "component": "layout/routerView/parent",
+        "component_name": "config",
         "status": true,
         "cache": false,
         "visible": true,
@@ -385,7 +385,7 @@
         "children": [
             {
                 "name": "系统配置",
-                "icon": "desktop",
+                "icon": "iconfont icon-system",
                 "sort": 0,
                 "is_link": false,
                 "is_catalog": false,
@@ -395,7 +395,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 285,
+                "parent": 27,
                 "children": [],
                 "menu_button": [
                     {
@@ -432,7 +432,7 @@
             },
             {
                 "name": "字典管理",
-                "icon": "book",
+                "icon": "iconfont icon-dict",
                 "sort": 1,
                 "is_link": false,
                 "is_catalog": false,
@@ -442,7 +442,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 285,
+                "parent": 27,
                 "children": [],
                 "menu_button": [
                     {
@@ -479,7 +479,7 @@
             },
             {
                 "name": "地区管理",
-                "icon": "map",
+                "icon": "iconfont icon-Area",
                 "sort": 2,
                 "is_link": false,
                 "is_catalog": false,
@@ -489,7 +489,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 285,
+                "parent": 27,
                 "children": [],
                 "menu_button": [
                     {
@@ -526,7 +526,7 @@
             },
             {
                 "name": "附件管理",
-                "icon": "file-text-o",
+                "icon": "iconfont icon-file",
                 "sort": 3,
                 "is_link": false,
                 "is_catalog": false,
@@ -536,7 +536,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 285,
+                "parent": 27,
                 "children": [],
                 "menu_button": [
                     {
@@ -570,13 +570,13 @@
     },
     {
         "name": "日志管理",
-        "icon": "book",
+        "icon": "iconfont icon-rizhi",
         "sort": 3,
         "is_link": false,
         "is_catalog": true,
-        "web_path": "",
-        "component": "",
-        "component_name": "",
+        "web_path": "/log",
+        "component": "layout/routerView/parent",
+        "component_name": "log",
         "status": true,
         "cache": false,
         "visible": true,
@@ -584,7 +584,7 @@
         "children": [
             {
                 "name": "登录日志",
-                "icon": "file-text",
+                "icon": "iconfont icon-guanlidenglurizhi",
                 "sort": 1,
                 "is_link": false,
                 "is_catalog": false,
@@ -594,7 +594,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 290,
+                "parent": 32,
                 "children": [],
                 "menu_button": [
                     {
@@ -613,7 +613,7 @@
             },
             {
                 "name": "操作日志",
-                "icon": "file-code-o",
+                "icon": "iconfont icon-caozuorizhi",
                 "sort": 2,
                 "is_link": false,
                 "is_catalog": false,
@@ -623,7 +623,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 290,
+                "parent": 32,
                 "children": [],
                 "menu_button": [
                     {
@@ -639,40 +639,8 @@
                         "method": 0
                     }
                 ]
-            },
-            {
-                "name": "前端错误日志",
-                "icon": "bug",
-                "sort": 4,
-                "is_link": false,
-                "is_catalog": false,
-                "web_path": "/frontendLog",
-                "component": "system/log/frontendLog/index",
-                "component_name": "frontendLog",
-                "status": true,
-                "cache": false,
-                "visible": true,
-                "parent": 290,
-                "children": [],
-                "menu_button": []
             }
         ],
-        "menu_button": []
-    },
-    {
-        "name": "DVAdmin官网",
-        "icon": "external-link",
-        "sort": 4,
-        "is_link": true,
-        "is_catalog": false,
-        "web_path": "https://django-vue-admin.com",
-        "component": "",
-        "component_name": "",
-        "status": true,
-        "cache": false,
-        "visible": true,
-        "parent": null,
-        "children": [],
         "menu_button": []
     }
 ]
