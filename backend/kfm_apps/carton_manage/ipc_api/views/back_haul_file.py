@@ -13,10 +13,11 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 
 from basics_manage.models import CodePackageFormat
+from carton_manage.ipc_api.views.production_work_status_record import IpcProductionWorkStatusRecordCreateSerializer
 from carton_manage.production_manage.models import ProductionWork
 from carton_manage.verify_manage.models import BackHaulFile, CameraManage
 from carton_manage.verify_manage.tasks import back_haul_file_check
-from dvadmin.utils.json_response import DetailResponse
+from dvadmin.utils.json_response import DetailResponse, ErrorResponse
 from dvadmin.utils.request_util import get_request_ip
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -115,6 +116,7 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
             "file_position": os.path.join(work_no, cam_id, file_name),
             "file_md5": zipfile_md5,
             "key_id": key_id,
+            "file_name": file_name,
             "code_package_format": code_package_format_obj.id
 
         }
@@ -124,3 +126,48 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
         # 进行异步校验
         back_haul_file_check.delay(back_haul_file_id=serializer.data.get('id'))
         return DetailResponse(data=None, msg="上传成功")
+
+    def verify_status_change(self, request):
+        # 生产工单变化
+        data = request.data
+        work_no = data.get('work_no', None)
+        verify_status = data.get('verify_status', None)
+        if work_no is None:
+            return ErrorResponse(msg="未获取到生产工单号")
+        production_work_instance = ProductionWork.objects.filter(no=work_no).first()
+        if production_work_instance is None:
+            return ErrorResponse(msg="未查询到生产工单号")
+        if verify_status is None:
+            return ErrorResponse(msg="未获取到检测状态")
+        production_work_instance.verify_status = verify_status
+        production_work_instance.save()
+        # *************加入生产状态记录***************#
+        create_data = {
+            "production_work": production_work_instance.id,
+            "status": verify_status,
+            "status_type": 1
+        }
+        serializer = IpcProductionWorkStatusRecordCreateSerializer(data=create_data, many=False)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        # *************加入生产状态记录***************#
+        return DetailResponse(msg="更新成功")
+
+    def check_file_upload_all(self, request):
+        """
+        检测端校验文件是否全部已上传
+        """
+        data = request.data
+        file_list = data.get('file_list', [])
+        work_no = data.get('work_no', None)
+        if work_no is None:
+            return ErrorResponse(msg="未获取到生产工单号")
+        if not file_list:
+            return ErrorResponse(msg="文件列表不能为空")
+        db_file_list = BackHaulFile.objects.filter(production_work__no=work_no, file_name__in=file_list).values_list(
+            'file_name', flat=True)
+        # 未上传的文件列表
+        not_upload_file_list = list(set(file_list) - set(db_file_list))
+
+        return DetailResponse(data={"not_upload_file_list": not_upload_file_list}, msg="获取成功")
