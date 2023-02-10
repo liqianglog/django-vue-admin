@@ -1,4 +1,4 @@
-import request from '/@/utils/request';
+import { request } from "/@/utils/service";
 
 /**
  * 后端控制菜单模拟json，路径在 https://gitee.com/lyt-top/vue-next-admin-images/tree/master/menu
@@ -8,6 +8,13 @@ import request from '/@/utils/request';
  */
 export function useMenuApi() {
 	return {
+		getSystemMenu: (params?: object) => {
+			return request({
+				url: '/api/system/menu/web_router/',
+				method: 'get',
+				params,
+			});
+		},
 		getMenuAdmin: (params?: object) => {
 			return request({
 				url: '/gitee/lyt-top/vue-next-admin-images/raw/master/menu/adminMenu.json',
