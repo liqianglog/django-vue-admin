@@ -5,6 +5,7 @@
         v-bind="_crudProps"
         v-on="_crudListeners"
         @onStatusLog="onStatusLog"
+        @onErrorCode="onErrorCode"
     >
       <div slot="header">
         <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
@@ -19,7 +20,8 @@
 
       </div>
     </d2-crud-x>
-<statusLog ref="statusLog"></statusLog>
+<BackHaulFile ref="backHaulFileRef"></BackHaulFile>
+  <ErrorCode ref="errorCodeRef"></ErrorCode>
   </d2-container>
 </template>
 
@@ -27,12 +29,14 @@
 import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
-import statusLog from './components/backHaulFile'
+import BackHaulFile from './components/backHaulFile/backHaulFile'
+import ErrorCode from './components/errorCode/errorCode'
 export default {
   name: 'verifyWorkOrder',
   mixins: [d2CrudPlus.crud],
   components: {
-    statusLog
+    BackHaulFile,
+    ErrorCode
   },
   data () {
     return {
@@ -56,8 +60,12 @@ export default {
     },
     // 生产状态日志
     onStatusLog ({ row }) {
-      this.$refs.statusLog.options = row
-      this.$refs.statusLog.drawer = true
+      this.$refs.backHaulFileRef.options = row
+      this.$refs.backHaulFileRef.drawer = true
+    },
+    onErrorCode({row}){
+      this.$refs.errorCodeRef.options = row
+      this.$refs.errorCodeRef.drawer = true
     }
   }
 }

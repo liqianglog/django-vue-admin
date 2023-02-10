@@ -14,7 +14,7 @@ export const crudOptions = (vm) => {
 
     },
     rowHandle: {
-      width: 120,
+      width: 240,
       fixed: 'right',
       view: false,
       edit: false,
@@ -22,10 +22,17 @@ export const crudOptions = (vm) => {
       custom: [
         {
           thin: true,
-          text: '检测文件记录',
+          text: '回传文件记录',
           size: 'small',
           type: 'primary',
           emit: 'onStatusLog'
+        },
+        {
+          thin: true,
+          text: '问题码记录',
+          size: 'small',
+          type: 'warning',
+          emit: 'onErrorCode'
         }
       ]
     },
