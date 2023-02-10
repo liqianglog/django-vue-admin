@@ -116,6 +116,7 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
             "file_position": os.path.join(work_no, cam_id, file_name),
             "file_md5": zipfile_md5,
             "key_id": key_id,
+            "file_name": file_name,
             "code_package_format": code_package_format_obj.id
 
         }
@@ -152,3 +153,21 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
 
         # *************加入生产状态记录***************#
         return DetailResponse(msg="更新成功")
+
+    def check_file_upload_all(self, request):
+        """
+        检测端校验文件是否全部已上传
+        """
+        data = request.data
+        file_list = data.get('file_list', [])
+        work_no = data.get('work_no', None)
+        if work_no is None:
+            return ErrorResponse(msg="未获取到生产工单号")
+        if not file_list:
+            return ErrorResponse(msg="文件列表不能为空")
+        db_file_list = BackHaulFile.objects.filter(production_work__no=work_no, file_name__in=file_list).values_list(
+            'file_name', flat=True)
+        # 未上传的文件列表
+        not_upload_file_list = list(set(file_list) - set(db_file_list))
+
+        return DetailResponse(data={"not_upload_file_list": not_upload_file_list}, msg="获取成功")
