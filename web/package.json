@@ -1,8 +1,7 @@
 {
-  "name": "vue-next-admin",
+  "name": "django-vue-admin-web",
   "version": "2.2.0",
-  "description": "vue3 vite next admin template",
-  "author": "lyt_20201208",
+  "description": "django-vue-admin 全栈快速开发后台管理系统前端",
   "license": "MIT",
   "scripts": {
     "dev": "vite --force",
@@ -76,11 +75,9 @@
   "keywords": [
     "vue",
     "vue3",
-    "vuejs/vue-next",
-    "element-ui",
     "element-plus",
-    "vue-next-admin",
-    "next-admin"
+    "django",
+    "django-restframework"
   ],
   "repository": {
     "type": "git",
