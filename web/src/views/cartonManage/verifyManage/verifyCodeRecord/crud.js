@@ -132,6 +132,73 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
+      },
+      {
+        title: '相机编号',
+        key: 'camera_no',
+        width: 160,
+        type: 'input',
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请输入生产设备',
+            props: {
+              clearable: true
+            }
+          }
+        }
+      },
+      {
+        title: '生产工厂',
+        key: 'factory_info_name',
+        width: 180,
+        search: {
+          disabled: false,
+          component: {
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'input',
+        form: {
+          itemProps: {
+            class: { yxtInput: true }
+          },
+          component: {
+            placeholder: '请输入生产工厂'
+          }
+        }
+      },
+      {
+        title: '生产产线',
+        key: 'production_line_name',
+        width: 160,
+        type: 'input',
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请输入生产产线',
+            props: {
+              clearable: true
+            }
+          }
+        }
+      },
+      {
+        title: '生产设备',
+        key: 'device_name',
+        width: 160,
+        type: 'input',
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请输入生产设备',
+            props: {
+              clearable: true
+            }
+          }
+        }
       }
     ]
   }
