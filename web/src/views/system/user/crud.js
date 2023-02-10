@@ -9,8 +9,8 @@ export const crudOptions = (vm) => {
     },
     options: {
       height: '100%',
-      tableType: 'vxe-table',
-      rowKey: true,
+     // tableType: 'vxe-table',
+      //rowKey: true,
       rowId: 'id'
     },
     selectionRow: {
@@ -149,6 +149,7 @@ export const crudOptions = (vm) => {
       {
         title: '姓名',
         key: 'name',
+        sortable: 'custom',
         minWidth: 90,
         search: {
           disabled: false

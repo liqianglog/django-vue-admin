@@ -62,7 +62,15 @@ Vue.use(d2CrudPlus, {
         page: { // page接口返回的数据结构配置，
           request: {
             current: 'page',
-            size: 'limit'
+            size: 'limit',
+            orderAsc (query, value) {
+              const field = query.orderProp
+              if (value) {
+                query.ordering = field
+              } else {
+                query.ordering = `-${field}`
+              }
+            }
           },
           response: {
             current: 'page', // 当前页码 ret.data.current
