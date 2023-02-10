@@ -175,7 +175,7 @@ class MenuButton(CoreModel):
         help_text="关联菜单",
     )
     name = models.CharField(max_length=64, verbose_name="名称", help_text="名称")
-    value = models.CharField(max_length=64, verbose_name="权限值", help_text="权限值")
+    value = models.CharField(unique=True,max_length=64, verbose_name="权限值", help_text="权限值")
     api = models.CharField(max_length=200, verbose_name="接口地址", help_text="接口地址")
     METHOD_CHOICES = (
         (0, "GET"),

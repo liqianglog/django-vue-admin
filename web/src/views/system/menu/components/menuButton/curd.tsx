@@ -81,11 +81,8 @@ export const createCrudOptions = function ({
                 },
                 name: {
                     title: '权限名称',
-                    type: 'dict-select',
+                    type: 'text',
                     search: {show: true},
-                    dict: dict({
-                        data: dictionary('system_button')
-                    }),
                     column: {
                         minWidth: 120,
                         sortable: true,
@@ -103,7 +100,7 @@ export const createCrudOptions = function ({
                         },
                         helper: {
                             render (h) {
-                                return (< el-alert title="可手动输入不在列表中的新值" type="warning" description="比较常用的建议放在字典管理中"/>
+                                return (< el-alert title="手动输入" type="warning" description="页面中按钮的名称或者自定义一个名称"/>
                                 )
                             }
                         }
@@ -122,7 +119,7 @@ export const createCrudOptions = function ({
                         placeholder: '输入权限标识',
                         helper: {
                             render (h) {
-                                return (< el-alert title="用于前端按钮权限的判断展示" type="warning" description="使用方法：vm.hasPermissions(权限值)"/>
+                                return (< el-alert title="唯一值" type="warning" description="用于判断前端按钮权限或接口权限"/>
                                 )
                             }
                         }

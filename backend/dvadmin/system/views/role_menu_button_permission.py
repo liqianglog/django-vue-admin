@@ -71,8 +71,8 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
         if is_superuser or True in is_admin:
             queryset = Menu.objects.filter(status=1).values('id','name','parent','is_catalog')
         else:
-            role_id = request.user.role.id
-            queryset = RoleMenuButtonPermission.objects.filter(role=role_id).values(id=F('menu__id'),name=F('menu__name'),parent=F('menu__parent'),is_catalog=F('menu__is_catalog'))
+            role_id = request.user.role.values_list('id',flat=True)
+            queryset = RoleMenuButtonPermission.objects.filter(role__in=role_id).values(id=F('menu__id'),name=F('menu__name'),parent=F('menu__parent'),is_catalog=F('menu__is_catalog'))
         return DetailResponse(data=queryset)
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
@@ -183,6 +183,11 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
 
     @action(methods=['get'],detail=False)
     def menu_to_button(self,request):
+        """
+        根据菜单获取按钮
+        :param request:
+        :return:
+        """
         params = request.query_params
         if params:
             menu_id = params.get('menu',None)

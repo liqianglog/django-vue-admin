@@ -128,25 +128,12 @@ class WebRouterSerializer(CustomModelSerializer):
     """
     path = serializers.CharField(source="web_path")
     title = serializers.CharField(source="name")
-    menuPermission = serializers.SerializerMethodField(read_only=True)
 
-    def get_menuPermission(self, instance):
-        # 判断是否是超级管理员
-        if self.request.user.is_superuser:
-            return instance.menuPermission.values_list('value', flat=True)
-        else:
-            # 根据当前角色获取权限按钮id集合
-            permissionIds = self.request.user.role.values_list('permission', flat=True)
-            queryset = instance.menuPermission.filter(id__in=permissionIds, menu=instance.id).values_list('value', flat=True)
-            if queryset:
-                return queryset
-            else:
-                return None
 
     class Meta:
         model = Menu
         fields = ('id', 'parent', 'icon', 'sort', 'path', 'name', 'title', 'is_link', 'is_catalog', 'web_path', 'component',
-        'component_name', 'cache', 'visible', 'menuPermission')
+        'component_name', 'cache', 'visible')
         read_only_fields = ["id"]
 
 
