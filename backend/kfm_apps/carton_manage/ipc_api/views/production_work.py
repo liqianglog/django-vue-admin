@@ -159,7 +159,8 @@ class ProductionWorkViewSet(CustomModelViewSet):
         if _ProductionWork is None:
             return ErrorResponse(msg="未查询到生产工单号")
         # 进行校验
-        duplicate_data = HistoryCodeInfo.set_db().select_data_duplicate(code_list, package_id=_ProductionWork.code_package_id)
+        duplicate_data = HistoryCodeInfo.set_db().select_data_duplicate(code_list,
+                                                                        package_id=_ProductionWork.code_package_id)
         if len(duplicate_data) != len(code_list):
             result = 0
         else:
@@ -173,8 +174,11 @@ class ProductionWorkViewSet(CustomModelViewSet):
         serializer = IpcProductionWorkVerifyRecordCreateSerializer(data=create_data, many=False)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        if result == 0:
+            print(f"码包校验失败,在本工单中只查找到{len(duplicate_data)}个存在数据")
+            return ErrorResponse(code=4000, msg="数据异常,非本次生产工单码数据")
         # *************加入检测记录***************#
-        return DetailResponse(msg=f"码包校验失败,在本工单中只查找到{len(duplicate_data)}个存在数据" if result == 0 else "码包校验正常")
+        return DetailResponse(msg="码包校验正常")
 
     @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated])
     def change(self, request):
@@ -207,7 +211,7 @@ class ProductionWorkViewSet(CustomModelViewSet):
                 serializer = IpcProductionWorkStatusRecordCreateSerializer(data=create_data, many=False)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
-                #修改生产设备状态
+                # 修改生产设备状态
                 device = request.user.device_id
                 if work_status in [2]:
                     DeviceManage.objects.filter(id=device).update(production_status=1)
