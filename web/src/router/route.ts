@@ -47,10 +47,10 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 				},
 			},
 			{
-				path: '/config',
+				path: '/system',
 				name: 'system',
 				component: () => import('/@/layout/routerView/parent.vue'),
-				redirect: '/system/menu',
+				redirect: '/system',
 				meta: {
 					title: 'message.router.system',
 					isLink: '',
