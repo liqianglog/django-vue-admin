@@ -66,9 +66,6 @@ class RoleCreateUpdateSerializer(CustomModelSerializer):
         if not is_superuser:
             self.validated_data.pop('admin')
         data = super().save(**kwargs)
-        data.dept.set(self.initial_data.get('dept', []))
-        data.menu.set(self.initial_data.get('menu', []))
-        data.permission.set(self.initial_data.get('permission', []))
         return data
 
     class Meta:

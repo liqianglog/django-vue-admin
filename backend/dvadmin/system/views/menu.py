@@ -9,7 +9,7 @@
 from rest_framework import serializers
 from rest_framework.decorators import action
 
-from dvadmin.system.models import Menu, MenuButton
+from dvadmin.system.models import Menu, MenuButton, RoleMenuPermission
 from dvadmin.system.views.menu_button import MenuButtonInitSerializer
 from dvadmin.utils.json_response import SuccessResponse
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -160,8 +160,9 @@ class MenuViewSet(CustomModelViewSet):
         user = request.user
         queryset = self.queryset.filter(status=1)
         if not user.is_superuser:
-            menuIds = user.role.values_list('menu__id', flat=True)
-            queryset = Menu.objects.filter(id__in=menuIds, status=1)
+            role_list = user.role.values_list('id', flat=True)
+            menu_list = RoleMenuPermission.objects.filter(role__in=role_list).values_list('menu_id')
+            queryset = Menu.objects.filter(id__in=menu_list)
         serializer = WebRouterSerializer(queryset, many=True, request=request)
         data = serializer.data
         return SuccessResponse(data=data, total=len(data), msg="获取成功")

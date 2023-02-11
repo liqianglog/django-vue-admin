@@ -10,7 +10,7 @@ from django.db.models import F
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
-from dvadmin.system.models import RoleMenuButtonPermission, Menu, MenuButton
+from dvadmin.system.models import RoleMenuButtonPermission, Menu, MenuButton, Dept
 from dvadmin.utils.json_response import DetailResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -77,7 +77,11 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
     def role_menu_get_button(self,request):
-        """根据角色和菜单获取菜单下的按钮"""
+        """
+        当前用户角色和菜单获取可下拉选项的按钮:角色授权页面使用
+        :param request:
+        :return:
+        """
         params = request.query_params
         if params:
             menu_id = params.get('menu',None)
@@ -87,8 +91,8 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
                 if is_superuser or True in is_admin:
                     queryset = MenuButton.objects.filter(menu=menu_id).values('id', 'name')
                 else:
-                    role_id = request.user.role.id
-                    queryset = RoleMenuButtonPermission.objects.filter(role=role_id,menu=menu_id).values(
+                    role_list = request.user.role.values_list('id',flat=True)
+                    queryset = RoleMenuButtonPermission.objects.filter(role_in=role_list,menu_button__menu=menu_id).values(
                         id=F('menu_button__id'),
                         name=F('menu_button__name')
                     )
@@ -97,6 +101,11 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
     def data_scope(self, request):
+        """
+        获取数据权限范围:角色授权页面使用
+        :param request:
+        :return:
+        """
         is_superuser = request.user.is_superuser
         if is_superuser:
             data = [
@@ -181,10 +190,40 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
                     return DetailResponse(data=data)
         return ErrorResponse(msg="参数错误")
 
-    @action(methods=['get'],detail=False)
+    @action(methods=['get'], detail=False, permission_classes=[IsAuthenticated])
+    def role_to_dept_all(self, request):
+        """
+        当前用户角色下所能授权的部门:角色授权页面使用
+        :param request:
+        :return:
+        """
+        params = request.query_params
+        is_superuser = request.user.is_superuser
+        is_admin = request.user.role.values_list('admin', flat=True)
+        if is_superuser or True in is_admin:
+            queryset = Dept.objects.values('id','name','parent')
+            return DetailResponse(data=queryset)
+        else:
+            if params:
+                menu_button = params.get('menu_button')
+                if menu_button is None:
+                    return ErrorResponse(msg="参数错误")
+                role_list = request.user.role.values_list('id', flat=True)
+                queryset = RoleMenuButtonPermission.objects.filter(role_in=role_list,menu_button=None).values(
+                    id=F('dept__id'),
+                    name=F('dept__name'),
+                    parent=F('dept__parent')
+                )
+                return DetailResponse(data=queryset)
+            else:
+                return ErrorResponse(msg="参数错误")
+
+
+
+    @action(methods=['get'],detail=False,permission_classes=[IsAuthenticated])
     def menu_to_button(self,request):
         """
-        根据菜单获取按钮
+        根据所选择菜单获取已配置的按钮/接口权限:角色授权页面使用
         :param request:
         :return:
         """
@@ -197,6 +236,7 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
             if role_id is None:
                 return ErrorResponse(msg="未获取到参数")
             queryset = RoleMenuButtonPermission.objects.filter(role=role_id,menu_button__menu=menu_id).values(
+                'id',
                 'data_range',
                 'menu_button'
             )

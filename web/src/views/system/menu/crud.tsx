@@ -4,13 +4,14 @@ import { dictionary } from "/@/utils/dictionary";
 import iconSelector from '/@/components/iconSelector/index.vue'
 import {useCompute} from '@fast-crud/fast-crud'
 import {inject} from 'vue'
+import {functions} from "lodash-es";
 const {compute} = useCompute()
 interface CreateCrudOptionsTypes {
     crudOptions: CrudOptions;
 }
 
 export const createCrudOptions = function ({ crudExpose,menuButtonRef }: { crudExpose: CrudExpose,menuButtonRef:any }): CreateCrudOptionsTypes {
-    const hasPermissions = inject('$hasPermissions')
+    const hasPermissions:any = inject('$hasPermissions')
     //验证路由地址
     const validateWebPath = (rule: string, value: string, callback: Function) => {
         const isLink = crudExpose.getFormData().is_link

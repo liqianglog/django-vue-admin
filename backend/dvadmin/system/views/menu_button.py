@@ -8,6 +8,7 @@
 """
 from django.db.models import F
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 from dvadmin.system.models import MenuButton, RoleMenuButtonPermission
 from dvadmin.utils.json_response import DetailResponse
@@ -62,7 +63,7 @@ class MenuButtonViewSet(CustomModelViewSet):
     update_serializer_class = MenuButtonCreateUpdateSerializer
     extra_filter_class = []
 
-    @action(methods=['get'],detail=False)
+    @action(methods=['get'],detail=False,permission_classes=[IsAuthenticated])
     def menu_button_all_permission(self,request):
         """
         获取所有的按钮权限

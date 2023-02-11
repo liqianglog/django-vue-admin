@@ -12,6 +12,20 @@ export function GetMenu(params:any) {
     });
 }
 
+/***
+ * 新增权限
+ * @param data
+ * @constructor
+ */
+export function SaveMenuPermission(data:any) {
+    return request({
+        url: '/api/system/role_menu_permission/save_auth/',
+        method: 'post',
+        data:data
+    });
+}
+
+
 /**
  * 获取菜单下的按钮
  * @param params
@@ -24,6 +38,9 @@ export function GetMenuButton(params:any) {
         params:params
     });
 }
+
+
+
 
 
 /***
@@ -42,11 +59,11 @@ export function GetDataScope (params:any={}) {
  * 获取权限部门
  * @constructor
  */
-export function GetDataScopeDept () {
+export function GetDataScopeDept (params:any) {
     return request({
-        url: '/api/system/role/data_scope_dept/',
+        url: '/api/system/role_menu_button_permission/role_to_dept_all/',
         method: 'get',
-        params: {}
+        params: params
     })
 }
 
@@ -55,7 +72,7 @@ export function GetDataScopeDept () {
  * @param data
  * @constructor
  */
-export function CreateObj(data:any) {
+export function CreatePermission(data:any) {
     return request({
         url: '/api/system/role_menu_button_permission/',
         method: 'post',
@@ -74,3 +91,17 @@ export function getObj(params:any) {
         params:params
     });
 }
+
+/**
+ * 删除按钮权限
+ * @param data
+ * @constructor
+ */
+export function DeletePermission(data:any) {
+    return request({
+        url: `/api/system/role_menu_button_permission/${data.id}/`,
+        method: 'delete',
+        data:{}
+    });
+}
+
