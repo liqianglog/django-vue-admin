@@ -109,12 +109,12 @@ class BackHaulFile(CoreModel):
 
     @classmethod
     def update_result(cls, back_haul_file_id):
-        back_haul_file_obj = cls.objects.get(id=back_haul_file_id)
         verify_code_record_data = VerifyCodeRecord.objects.filter(
-            verify_work_no=back_haul_file_obj.verify_work_order.no).aggregate(
+            back_haul_file_id=back_haul_file_id).aggregate(
             total_number=Count('id'),
             success_number=Count('id', filter=Q(error_type=1))
         )
+        back_haul_file_obj = cls.objects.get(id=back_haul_file_id)
         back_haul_file_obj.total_number = verify_code_record_data.get('total_number') or 0
         back_haul_file_obj.success_number = verify_code_record_data.get('success_number') or 0
         back_haul_file_obj.error_number = back_haul_file_obj.total_number - back_haul_file_obj.success_number
