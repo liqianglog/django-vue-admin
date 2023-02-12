@@ -161,13 +161,14 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
             serializer = VerifyWorkOrderCreateSerializer(data=data, request=request)
             serializer.is_valid(raise_exception=True)
             serializer.save()
+            verify_work_order_instance = serializer
         if verify_status is None:
             return ErrorResponse(msg="未获取到检测状态")
         verify_work_order_instance.verify_status = verify_status
         verify_work_order_instance.save()
         # *************加入生产状态记录***************#
         create_data = {
-            "production_work": verify_work_order_instance.id,
+            "verify_work_order": verify_work_order_instance.id,
             "status": verify_status
         }
         serializer = IpcVerifyWorkOrderStatusRecordCreateSerializer(data=create_data, many=False)
