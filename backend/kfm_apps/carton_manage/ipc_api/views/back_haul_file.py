@@ -12,11 +12,13 @@ from django.views.static import was_modified_since
 from rest_framework import serializers
 from rest_framework.decorators import action
 
-from basics_manage.models import CodePackageFormat
+from basics_manage.models import CodePackageFormat, DeviceManage
 from carton_manage.ipc_api.views.production_work_status_record import IpcProductionWorkStatusRecordCreateSerializer
+from carton_manage.ipc_api.views.verify_work_order_status_record import IpcVerifyWorkOrderStatusRecordCreateSerializer
 from carton_manage.production_manage.models import ProductionWork
-from carton_manage.verify_manage.models import BackHaulFile, CameraManage
+from carton_manage.verify_manage.models import BackHaulFile, CameraManage, VerifyWorkOrder
 from carton_manage.verify_manage.tasks import back_haul_file_check
+from carton_manage.verify_manage.views.verify_work_order import VerifyWorkOrderCreateSerializer
 from dvadmin.utils.json_response import DetailResponse, ErrorResponse
 from dvadmin.utils.request_util import get_request_ip
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -56,39 +58,51 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
     permission_classes = [DeviceManagePermission]
 
     def data_upload(self, request, *args, **kwargs):
-        work_no = request.META.get('HTTP_WORK_NO', '').strip()
+        verify_no = request.META.get('HTTP_VERIFY_NO', '').strip()
         file_name = request.META.get('HTTP_FILENAME', '').strip()
         dataformat = request.META.get('HTTP_DATAFORMAT', '').strip()  # 模板格式
         cam_id = request.META.get('HTTP_CAMID', '').strip()  # 相机ID
         zipfile_md5 = request.META.get('HTTP_ZIPFILEMD5', '').strip()  # zip文件md5
         key_id = request.META.get('HTTP_KEYID', '').strip()  # zip文件md5
 
-        if work_no is None:
-            ret = HttpResponseBadRequest('未获取到生产工单号')
+        if verify_no is None:
+            ret = HttpResponseBadRequest('未获取到检测生产工单号')
             ret["STATUS-CODE"] = 400
             return ret
         device = request.user.device_id
-        production_work_obj = ProductionWork.objects.filter(no=work_no, device__id=device).first()
-        if production_work_obj is None:
-            ret = HttpResponseBadRequest('非当前设备的生产工单')
-            ret["STATUS-CODE"] = 400
-            return ret
+        verify_work_order_obj = VerifyWorkOrder.objects.filter(no=verify_no).first()
+        if verify_work_order_obj:
+            if verify_work_order_obj.device_id != device:
+                ret = HttpResponseBadRequest('非当前设备的检测生产工单')
+                ret["STATUS-CODE"] = 400
+                return ret
+        else:
+            # 创建检测生产工单
+            device_manage_obj = DeviceManage.objects.filter(id=device).first()
+            data = {
+                "no": verify_no,
+                "production_work_no": None,
+                "device": device,
+                "production_line": device_manage_obj.production_line.id,
+                "factory_info": device_manage_obj.production_line.belong_to_factory.id,
+            }
+            serializer = VerifyWorkOrderCreateSerializer(data=data, request=request)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
 
         code_package_format_obj = CodePackageFormat.objects.filter(no=dataformat).first()
         if not code_package_format_obj:
             ret = HttpResponseBadRequest('检测回传码包格式不存在')
             ret["STATUS-CODE"] = 400
             return ret
-
         # 获取保存文件目录
-        path = posixpath.normpath(os.path.join(get_back_haul_file_path(), work_no, cam_id))
+        path = posixpath.normpath(os.path.join(get_back_haul_file_path(), verify_no, cam_id))
         file_path = posixpath.normpath(os.path.join(path, file_name))
         if not os.path.exists(path):  # 文件夹不存在则创建
             os.makedirs(path)
         # 保存文件
         file = request.FILES.get('file')
-        # file_split = os.path.splitext(str(file))
-        # print(file_split)
         with open(file_path, 'wb') as fp:  # 写文件
             for i in file.chunks():
                 fp.write(i)
@@ -110,10 +124,10 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
             })
         # 保存数据到上传记录中
         data = {
-            "production_work": production_work_obj.id,
+            "verify_work_no": verify_work_order_obj.no,
             "device": device,
             "cam": cam_obj.id,
-            "file_position": os.path.join(work_no, cam_id, file_name),
+            "file_position": os.path.join(verify_no, cam_id, file_name),
             "file_md5": zipfile_md5,
             "key_id": key_id,
             "file_name": file_name,
@@ -130,28 +144,39 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
     def verify_status_change(self, request):
         # 生产工单变化
         data = request.data
-        work_no = data.get('work_no', None)
+        verify_no = data.get('verify_no', None)
         verify_status = data.get('verify_status', None)
-        if work_no is None:
-            return ErrorResponse(msg="未获取到生产工单号")
-        production_work_instance = ProductionWork.objects.filter(no=work_no).first()
-        if production_work_instance is None:
-            return ErrorResponse(msg="未查询到生产工单号")
+        if verify_no is None:
+            return ErrorResponse(msg="未获取到检测生产工单号")
+        verify_work_order_instance = VerifyWorkOrder.objects.filter(no=verify_no).first()
+        device = request.user.device_id
+        if verify_work_order_instance is None:
+            # 创建检测生产工单
+            device_manage_obj = DeviceManage.objects.filter(id=device).first()
+            data = {
+                "no": verify_no,
+                "production_work_no": None,
+                "device": device,
+                "production_line": device_manage_obj.production_line.id,
+                "factory_info": device_manage_obj.production_line.belong_to_factory.id,
+            }
+            serializer = VerifyWorkOrderCreateSerializer(data=data, request=request)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
         if verify_status is None:
             return ErrorResponse(msg="未获取到检测状态")
-        production_work_instance.verify_status = verify_status
-        production_work_instance.save()
+        verify_work_order_instance.verify_status = verify_status
+        verify_work_order_instance.save()
         # *************加入生产状态记录***************#
         create_data = {
-            "production_work": production_work_instance.id,
-            "status": verify_status,
-            "status_type": 1
+            "production_work": verify_work_order_instance.id,
+            "status": verify_status
         }
-        serializer = IpcProductionWorkStatusRecordCreateSerializer(data=create_data, many=False)
+        serializer = IpcVerifyWorkOrderStatusRecordCreateSerializer(data=create_data, many=False)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        # *************加入生产状态记录***************#
+        # *************加入检测状态记录表***************#
         return DetailResponse(msg="更新成功")
 
     def check_file_upload_all(self, request):
@@ -160,12 +185,12 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
         """
         data = request.data
         file_list = data.get('file_list', [])
-        work_no = data.get('work_no', None)
-        if work_no is None:
+        verify_no = data.get('verify_no', None)
+        if verify_no is None:
             return ErrorResponse(msg="未获取到生产工单号")
         if not file_list:
             return ErrorResponse(msg="文件列表不能为空")
-        db_file_list = BackHaulFile.objects.filter(production_work__no=work_no, file_name__in=file_list).values_list(
+        db_file_list = BackHaulFile.objects.filter(verify_work_order=verify_no, file_name__in=file_list).values_list(
             'file_name', flat=True)
         # 未上传的文件列表
         not_upload_file_list = list(set(file_list) - set(db_file_list))

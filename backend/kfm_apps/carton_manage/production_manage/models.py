@@ -15,14 +15,6 @@ WORK_STATUS = (
     (6, "码包下载成功"),
 )
 
-VERIFY_STATUS = (
-    (0, "待检测"),
-    (1, "待检测"),
-    (2, "检测中"),
-    (3, "暂停中"),
-    (4, "检测结束"),
-    (5, "检测异常")
-)
 
 
 class ProductionWork(CoreModel):
@@ -43,15 +35,6 @@ class ProductionWork(CoreModel):
                                                verbose_name="最后打印时间")
     status = models.IntegerField(choices=WORK_STATUS, default=0, blank=True, help_text="生产状态",
                                  verbose_name="生产状态")
-    verify_status = models.IntegerField(choices=VERIFY_STATUS, default=0, blank=True, help_text="检测状态",
-                                        verbose_name="检测状态")
-
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        super().save(force_insert, force_update, using, update_fields)
-        if force_insert:
-            # 创建 检测端校验码记录 分区表
-            from carton_manage.verify_manage.models import VerifyCodeRecord
-            VerifyCodeRecord.add_list_partition(self.no)
 
     class Meta:
         db_table = table_prefix + "production_work"
@@ -61,18 +44,12 @@ class ProductionWork(CoreModel):
 
 
 class ProductionWorkStatusRecord(models.Model):
-    WORK_STATUS_TYPE = (
-        (0, "生产工单"),
-        (1, "检测工单"),
-    )
 
     production_work = models.ForeignKey(ProductionWork, db_constraint=False, on_delete=models.PROTECT,
                                         related_name="status_record_prod_work", help_text="关联生产工单",
                                         verbose_name="关联生产工单")
     status = models.IntegerField(choices=WORK_STATUS, default=0, blank=True, help_text="生产状态",
                                  verbose_name="生产状态")
-    status_type = models.IntegerField(choices=WORK_STATUS_TYPE, default=0, blank=True, help_text="生产状态类型",
-                                      verbose_name="生产状态类型")
     print_position = models.IntegerField(default=0, blank=True, help_text="打印位置", verbose_name="打印位置")
     record_datetime = models.DateTimeField(auto_now_add=True, blank=True, verbose_name="记录时间", help_text="记录时间")
 

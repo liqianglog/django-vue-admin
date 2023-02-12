@@ -6,7 +6,7 @@ from psqlextra.indexes import UniqueIndex
 from psqlextra.models import PostgresPartitionedModel
 from psqlextra.types import PostgresPartitioningMethod
 
-from basics_manage.models import DeviceManage, CodePackageFormat
+from basics_manage.models import DeviceManage, CodePackageFormat, ProductionLine, FactoryInfo
 from carton_manage.production_manage.models import ProductionWork
 from dvadmin.utils.models import CoreModel, AddPostgresPartitionedBase
 from dvadmin_tenants.models import HistoryCodeInfo, Client
@@ -31,10 +31,62 @@ class CameraManage(CoreModel):
         ordering = ('-create_datetime',)
 
 
+VERIFY_STATUS = (
+    # (0, "待检测"),
+    (1, "待检测"),
+    (2, "检测中"),
+    (3, "暂停中"),
+    (4, "检测结束"),
+    (5, "检测异常")
+)
+
+
+class VerifyWorkOrder(CoreModel):
+    no = models.CharField(max_length=200, help_text="工单编号", verbose_name="工单编号")
+    production_work_no = models.ForeignKey(ProductionWork, db_constraint=False, on_delete=models.PROTECT,
+                                           blank=True, null=True,
+                                           help_text="关联生产工单", verbose_name="关联生产工单")
+
+    device = models.ForeignKey(DeviceManage, db_constraint=False, on_delete=models.CASCADE, related_name="prod_device",
+                               help_text="关联设备", verbose_name="关联设备")
+    production_line = models.ForeignKey(ProductionLine, db_constraint=False, on_delete=models.PROTECT,
+                                        related_name="prod_production_line", help_text="关联产线",
+                                        verbose_name="关联产线")
+    factory_info = models.ForeignKey(FactoryInfo, db_constraint=False, on_delete=models.PROTECT,
+                                     related_name="prod_factory", help_text="关联工厂", verbose_name="关联工厂")
+    status = models.IntegerField(choices=VERIFY_STATUS, default=0, blank=True, help_text="检测状态",
+                                 verbose_name="检测状态")
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        super().save(force_insert, force_update, using, update_fields)
+        if force_insert:
+            # 创建 检测端校验码记录 分区表
+            VerifyCodeRecord.add_list_partition(self.no)
+
+    class Meta:
+        db_table = table_prefix + "verify_work_order"
+        verbose_name = '检测工单'
+        verbose_name_plural = verbose_name
+        ordering = ('-create_datetime',)
+
+
+class VerifyWorkOrderStatusRecord(models.Model):
+    verify_work_order = models.ForeignKey(VerifyWorkOrder, db_constraint=False, on_delete=models.PROTECT,
+                                          help_text="关联检测工单", verbose_name="关联检测工单")
+    status = models.IntegerField(choices=VERIFY_STATUS, default=1, blank=True, help_text="检测状态",
+                                 verbose_name="检测状态")
+    record_datetime = models.DateTimeField(auto_now_add=True, blank=True, verbose_name="记录时间", help_text="记录时间")
+
+    class Meta:
+        db_table = table_prefix + "verify_work_order_status_record"
+        verbose_name = '检测工单状态记录'
+        verbose_name_plural = verbose_name
+
+
 class BackHaulFile(CoreModel):
-    production_work = models.ForeignKey(ProductionWork, db_constraint=False, on_delete=models.PROTECT,
-                                        related_name="bhfile_prod_work", help_text="关联生产工单",
-                                        verbose_name="关联生产工单")
+    verify_work_order = models.ForeignKey(VerifyWorkOrder, db_constraint=False, on_delete=models.PROTECT,
+                                          related_name="verify_work_order", help_text="关联检测工单",
+                                          verbose_name="关联检测工单")
     code_type = models.IntegerField(choices=CODE_TYPE_STATUS, default=3, blank=True, help_text="码类型",
                                     verbose_name="码类型")
     device = models.ForeignKey(DeviceManage, db_constraint=False, related_name='bhfile_device',
@@ -48,7 +100,7 @@ class BackHaulFile(CoreModel):
     file_position = models.CharField(max_length=255, blank=True, null=True, help_text="码包存放位置",
                                      verbose_name="码包存放位置")
     file_name = models.CharField(max_length=255, blank=True, null=True, help_text="文件名称",
-                                     verbose_name="文件名称")
+                                 verbose_name="文件名称")
     file_md5 = models.CharField(max_length=255, blank=True, null=True, help_text="文件MD5", verbose_name="文件MD5")
     key_id = models.IntegerField(default=0, blank=True, help_text="加密ID索引", verbose_name="加密ID索引")
     code_package_format = models.ForeignKey(CodePackageFormat, db_constraint=False,
@@ -90,7 +142,7 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase):
     使用分表
     """
     id = models.BigAutoField(primary_key=True, help_text="Id", verbose_name="Id")
-    production_work_no = models.CharField(max_length=200, help_text="生产工单编号", verbose_name="生产工单编号")
+    verify_work_no = models.CharField(max_length=200, help_text="检测工单编号", verbose_name="检测工单编号")
     back_haul_file = models.ForeignKey(BackHaulFile, db_constraint=False, on_delete=models.PROTECT,
                                        related_name="verify_code_bhfile", help_text="关联生产工单",
                                        verbose_name="关联回传文件管理")
@@ -120,7 +172,7 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase):
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
         indexes = [
-            UniqueIndex(fields=['production_work_no', 'create_datetime']),
+            UniqueIndex(fields=['verify_work_no', 'create_datetime']),
         ]
 
     @classmethod
@@ -203,8 +255,8 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase):
                 error_type_2[md5_value] = {}
         # 4. 通过 verify_code_record 表查询本生产工单中是否有重码 (4)
         error_type_4 = {}
-        production_work_obj = ProductionWork.objects.filter(code_package_id=package_id).first()
-        verify_code_record_data = cls.objects.filter(production_work_no=production_work_obj.no,
+        verify_work_order_obj = VerifyWorkOrder.objects.filter(production_work_no__code_package_id=package_id).first()
+        verify_code_record_data = cls.objects.filter(verify_work_no=verify_work_order_obj.no,
                                                      error_type=1,
                                                      code_content_md5__in=select_data).values_list('code_content_md5',
                                                                                                    flat=True)
