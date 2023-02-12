@@ -172,7 +172,7 @@ class ProductionWorkViewSet(CustomModelViewSet):
         create_data = {
             "production_work": _ProductionWork.id,
             "code_list": code_list,
-            "result": 0,
+            "result": result,
         }
         serializer = IpcProductionWorkVerifyRecordCreateSerializer(data=create_data, many=False)
         serializer.is_valid(raise_exception=True)
