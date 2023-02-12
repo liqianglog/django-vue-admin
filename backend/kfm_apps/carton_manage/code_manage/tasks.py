@@ -80,25 +80,22 @@ def code_package_import_check(code_package_id):
     code_package_template_obj = code_package_obj.code_package_template
     with open(source_file_path) as file:
         readline = file.readline()
-        old_readline = readline
         # 2.1.校验换行符
         if (code_package_template_obj.line_feed == 1 and not readline.endswith(
                 '\r\n')) or code_package_template_obj.line_feed == 0 and readline.endswith('\r\n'):  # 回车换行
             # 换行符校验失败
             code_package_obj.write_log({
                 "content": '规则验证-换行符',
-                "remark": old_readline,
                 "step": 2.1,
                 "type": 'error',
             })
             return "规则验证-换行符校验失败"
         code_package_obj.write_log({"content": f"规则验证-换行符", "step": 2.1})
         # 2.2.校验整体字符长度
-        readline = old_readline.replace('\r\n', '').replace('\n', '')
+        readline = readline.replace('\r\n', '').replace('\n', '')
         if len(readline) != code_package_template_obj.char_length:
             code_package_obj.write_log({
                 "content": '规则验证-整体字符长度',
-                "remark": old_readline,
                 "step": 2.2,
                 "type": 'error'
             })
@@ -109,7 +106,6 @@ def code_package_import_check(code_package_id):
         if len(readline_list) <= 1:
             code_package_obj.write_log({
                 "content": '规则验证-分隔符',
-                "remark": old_readline,
                 "step": 2.3,
                 "type": 'error'
             })
@@ -119,7 +115,6 @@ def code_package_import_check(code_package_id):
         if len(readline_list) != code_package_template_obj.fields:
             code_package_obj.write_log({
                 "content": '规则验证-字段数',
-                "remark": old_readline,
                 "step": 2.4,
                 "type": 'error'
             })
@@ -132,7 +127,6 @@ def code_package_import_check(code_package_id):
                        -1]) != code_package_template_obj.w_url_length:
                 code_package_obj.write_log({
                     "content": '规则验证-外码内容长度',
-                    "remark": old_readline,
                     "step": 2.5,
                     "type": 'error'
                 })
@@ -144,7 +138,6 @@ def code_package_import_check(code_package_id):
                        -1]) != code_package_template_obj.n_url_length:
                 code_package_obj.write_log({
                     "content": '规则验证-内码内容长度',
-                    "remark": old_readline,
                     "step": 2.6,
                     "type": 'error'
                 })
@@ -156,7 +149,6 @@ def code_package_import_check(code_package_id):
             if not w_url.startswith(code_package_template_obj.w_url_prefix):
                 code_package_obj.write_log({
                     "content": '规则验证-外码网址',
-                    "remark": old_readline,
                     "step": 2.7,
                     "type": 'error'
                 })
@@ -168,7 +160,6 @@ def code_package_import_check(code_package_id):
             if not n_url.startswith(code_package_template_obj.n_url_prefix):
                 code_package_obj.write_log({
                     "content": '规则验证-内码网址',
-                    "remark": old_readline,
                     "step": 2.8,
                     "type": 'error'
                 })

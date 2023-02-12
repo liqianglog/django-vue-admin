@@ -102,10 +102,8 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
         if not os.path.exists(path):  # 文件夹不存在则创建
             os.makedirs(path)
         # 保存文件
-        file = request.FILES.get('file')
         with open(file_path, 'wb') as fp:  # 写文件
-            for i in file.chunks():
-                fp.write(i)
+            fp.write(request.body)
         # 1. 校验MD5值
         # 2. 保存数据到上传记录中
         # 3. 发行到异步任务中，进行异步处理

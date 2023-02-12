@@ -10,7 +10,6 @@ def get_click_house_pool(db_name: str = None, timeout: int = 120):
     :return:
     """
     db_name = f'{settings.CLICK_HOUSE_DB_PREFIX}_{db_name}'
-    print(1,db_name)
     if db_name in settings.HISTORY_CLICK_HOUSE_DB_POOLS:
         return settings.HISTORY_CLICK_HOUSE_DB_POOLS[db_name]
     pool = Database(db_name,

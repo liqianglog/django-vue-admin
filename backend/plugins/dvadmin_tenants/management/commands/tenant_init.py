@@ -5,7 +5,7 @@ from django.db import connection
 from django_tenants.utils import get_tenant_model, tenant_context
 
 from application import settings
-from dvadmin_tenants.models import Client
+from dvadmin_tenants.models import Client, HistoryCodeInfo
 
 logger = logging.getLogger(__name__)
 
@@ -69,4 +69,5 @@ Initialize(reset={self.reset},app="{app}").run()
             print(f"[{tenant.name}] 开始执行初始化数据！")
             with tenant_context(tenant):
                 self.run()
+                HistoryCodeInfo.set_db().create_table()
             print(f"[{tenant.name}] 完成数据初始化！")

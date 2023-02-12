@@ -19,6 +19,7 @@ from dvadmin.utils.request_util import get_request_ip
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 from carton_manage.code_manage.models import CodePackage
+from utils.currency import get_code_package_import_zip_path
 from utils.permission import DeviceManagePermission
 
 
@@ -95,15 +96,15 @@ class CodePackageViewSet(CustomModelViewSet):
             ret["STATUS-CODE"] = 400
             return ret
         device = request.user.device_id
-        _ProductionWork = ProductionWork.objects.filter(no=work_no,device__id=device).first()
+        _ProductionWork = ProductionWork.objects.filter(no=work_no, device__id=device).first()
         if _ProductionWork is None:
             ret = HttpResponseBadRequest('非当前设备的生产工单')
             ret["STATUS-CODE"] = 400
             return ret
         # 防止目录遍历漏洞
         path = posixpath.normpath(
-            os.path.join(kwargs.get('tenant_name'), kwargs.get('day'), kwargs.get('file_name'))).lstrip('/')
-        fullpath = safe_join('kfm_code_file/code_package_txt_file', path)
+            os.path.join(kwargs.get('day'), kwargs.get('file_name'))).lstrip('/')
+        fullpath = safe_join(get_code_package_import_zip_path(), path)
         if os.path.isdir(fullpath):
             ret = HttpResponseBadRequest('这里不允许使用目录索引')
             ret["STATUS-CODE"] = 400
