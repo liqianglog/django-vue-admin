@@ -89,6 +89,7 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
             serializer = VerifyWorkOrderCreateSerializer(data=data, request=request)
             serializer.is_valid(raise_exception=True)
             serializer.save()
+            verify_work_order_obj = serializer
 
 
         code_package_format_obj = CodePackageFormat.objects.filter(no=dataformat).first()
