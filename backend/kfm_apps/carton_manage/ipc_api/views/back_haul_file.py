@@ -122,7 +122,7 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
             })
         # 保存数据到上传记录中
         data = {
-            "verify_work_no": verify_work_order_obj.no,
+            "verify_work_order": verify_work_order_obj.id,
             "device": device,
             "cam": cam_obj.id,
             "file_position": os.path.join(verify_no, cam_id, file_name),

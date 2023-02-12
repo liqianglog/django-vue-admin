@@ -24,7 +24,7 @@ class VerifyWorkOrderSerializer(CustomModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        _BackHaulFile = BackHaulFile.objects.filter(verify_work_order_id=instance.id).annotate(
+        _BackHaulFile = BackHaulFile.objects.filter(verify_work_order_id=instance.id).aggregate(
             total_num=Coalesce(Sum('total_number'), 0, output_field=IntegerField()),
             success_num=Coalesce(Sum('success_number'), 0, output_field=IntegerField()),
             error_num=Coalesce(Sum('error_number'), 0, output_field=IntegerField())

@@ -23,7 +23,7 @@ class CameraManageSerializer(CustomModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         device = instance.device.id
-        _BackHaulFile = BackHaulFile.objects.filter(device=device).annotate(
+        _BackHaulFile = BackHaulFile.objects.filter(device=device).aggregate(
             total_num = Coalesce(Sum('total_number'),0,output_field=IntegerField()),
             success_num=Coalesce(Sum('success_number'),0,output_field=IntegerField()),
             error_num=Coalesce(Sum('error_number'),0,output_field=IntegerField())
@@ -35,8 +35,8 @@ class CameraManageSerializer(CustomModelSerializer):
             if _BackHaulFile.get('total_num')==0:
                 data['success_rate'] = 0
             else:
-                rate = _BackHaulFile.get('success_num') / _BackHaulFile.get('total_num')
-                data['success_rate'] = Decimal(rate).quantize(Decimal('0.00'))
+                rate = _BackHaulFile.get('success_num') / _BackHaulFile.get('total_num') * 100
+                data['success_rate'] = str(Decimal(rate).quantize(Decimal('0.00')))
         else:
             data['total_number'] = 0
             data['success_number'] = 0

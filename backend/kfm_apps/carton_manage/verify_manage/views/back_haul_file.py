@@ -32,8 +32,8 @@ class BackHaulFileSerializer(CustomModelSerializer):
         if total_number==0:
             return 0
         else:
-            rate = success_number/ total_number
-            return Decimal(rate).quantize(Decimal('0.00'))
+            rate = success_number/ total_number * 100
+            return str(Decimal(rate).quantize(Decimal('0.00')))
 
     class Meta:
         model = BackHaulFile

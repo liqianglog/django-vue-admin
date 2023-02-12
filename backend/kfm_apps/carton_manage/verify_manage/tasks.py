@@ -86,7 +86,7 @@ def back_haul_file_check(back_haul_file_id):
     production_work_no = back_haul_file_obj.verify_work_order.production_work_no or None
     package_id = None
     if not production_work_no:
-        result_data = HistoryCodeInfo.select_data_all([first_line_code_content])
+        result_data = HistoryCodeInfo.set_db().select_data_all([first_line_code_content])
         if not result_data:
             # 5. 删除解密后的文件
             shutil.rmtree(os.path.join(get_back_haul_file_des_crypt_path(), file_position.split(os.sep)[0]))
