@@ -22,6 +22,7 @@
 	--next-bg-topBarColor: var(--next-color-bar) !important;
 	--next-bg-menuBar: var(--next-color-disabled) !important;
 	--next-bg-menuBarColor: var(--next-color-bar) !important;
+	--next-bg-menuBarActiveColor: var(--next-color-hover-rgba) !important;
 	--next-bg-columnsMenuBar: var(--next-color-disabled) !important;
 	--next-bg-columnsMenuBarColor: var(--next-color-bar) !important;
 	--next-border-color-light: var(--next-border-black) !important;
@@ -58,6 +59,7 @@
 	--el-fill-color-light: var(--next-color-hover-rgba) !important;
 	--el-bg-color-overlay: var(--el-color-primary-light-9) !important;
 	--el-mask-color: rgb(42 42 42 / 80%);
+	--el-fill-color-lighter: var(--next-color-hover-rgba) !important;
 
 	// button
 	.el-button {
@@ -167,6 +169,12 @@
 	.el-pagination.is-background .el-pager li {
 		background-color: var(--next-bg-color);
 	}
+	/*深色模式时分页高亮问题*/
+	.el-pagination.is-background .btn-next.is-active,
+	.el-pagination.is-background .btn-prev.is-active,
+	.el-pagination.is-background .el-pager li.is-active {
+		color: var(--next-color-white) !important;
+	}
 
 	// radio
 	.el-radio-button:not(.is-active) .el-radio-button__inner {
@@ -232,5 +240,10 @@
 		.layout-navbars-tagsview-ul-li:hover {
 			border-color: var(--el-border-color-lighter) !important;
 		}
+	}
+
+	// loading
+	.el-loading-mask {
+		background-color: var(--next-bg-main) !important;
 	}
 }
