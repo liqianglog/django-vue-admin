@@ -1,8 +1,8 @@
-<div align="center">django-vue-admin:web </div>
+<div align="center">django-vue3-admin:web </div>
 
 #### 🌈 介绍
 
-基于 vue3.x + CompositionAPI + typescript + vite + element plus + vue-router-next + next.vuex，适配手机、平板、pc 的后台开源免费模板，希望减少工作量，帮助大家实现快速开发。
+django-vue3-admin，基于 vue3 + CompositionAPI + typescript + vite + element plus, 是一款全栈，快速，开源的后台管理系统！
 
 #### 🏭 环境支持
 
