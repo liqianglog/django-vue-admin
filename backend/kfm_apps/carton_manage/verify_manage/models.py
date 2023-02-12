@@ -47,13 +47,13 @@ class VerifyWorkOrder(CoreModel):
                                            blank=True, null=True,
                                            help_text="关联生产工单", verbose_name="关联生产工单")
 
-    device = models.ForeignKey(DeviceManage, db_constraint=False, on_delete=models.CASCADE, related_name="prod_device",
-                               help_text="关联设备", verbose_name="关联设备")
+    device = models.ForeignKey(DeviceManage, db_constraint=False, on_delete=models.CASCADE,
+                               related_name="verify_device", help_text="关联设备", verbose_name="关联设备")
     production_line = models.ForeignKey(ProductionLine, db_constraint=False, on_delete=models.PROTECT,
-                                        related_name="prod_production_line", help_text="关联产线",
+                                        related_name="verify_production_line", help_text="关联产线",
                                         verbose_name="关联产线")
     factory_info = models.ForeignKey(FactoryInfo, db_constraint=False, on_delete=models.PROTECT,
-                                     related_name="prod_factory", help_text="关联工厂", verbose_name="关联工厂")
+                                     related_name="verify_factory", help_text="关联工厂", verbose_name="关联工厂")
     status = models.IntegerField(choices=VERIFY_STATUS, default=0, blank=True, help_text="检测状态",
                                  verbose_name="检测状态")
 
