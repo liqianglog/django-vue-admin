@@ -185,11 +185,11 @@ class MenuViewSet(CustomModelViewSet):
         parent = params.get('parent', None)
         if params:
             if parent:
-                queryset = self.queryset.filter(status=1, parent=parent)
+                queryset = self.queryset.filter(parent=parent)
             else:
-                queryset = self.queryset.filter(status=1)
+                queryset = self.queryset
         else:
-            queryset = self.queryset.filter(status=1, parent__isnull=True)
+            queryset = self.queryset.filter(parent__isnull=True)
         queryset = self.filter_queryset(queryset)
         serializer = MenuSerializer(queryset, many=True, request=request)
         data = serializer.data
