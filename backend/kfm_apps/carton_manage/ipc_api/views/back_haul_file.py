@@ -189,7 +189,7 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
             return ErrorResponse(msg="未获取到生产工单号")
         if not file_list:
             return ErrorResponse(msg="文件列表不能为空")
-        db_file_list = BackHaulFile.objects.filter(verify_work_order=verify_no, file_name__in=file_list).values_list(
+        db_file_list = BackHaulFile.objects.filter(verify_work_order__no=verify_no, file_name__in=file_list).values_list(
             'file_name', flat=True)
         # 未上传的文件列表
         not_upload_file_list = list(set(file_list) - set(db_file_list))
