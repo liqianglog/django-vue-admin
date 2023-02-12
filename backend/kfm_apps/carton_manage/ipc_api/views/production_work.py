@@ -22,6 +22,7 @@ from dvadmin.utils.viewset import CustomModelViewSet
 from carton_manage.code_manage.models import CodePackage
 from carton_manage.production_manage.models import ProductionWork
 from dvadmin_tenants.models import Client, Domain, HistoryCodeInfo
+from utils.permission import DeviceManagePermission
 
 
 class IpcProductionWorkSerializer(CustomModelSerializer):
@@ -105,6 +106,8 @@ class ProductionWorkViewSet(CustomModelViewSet):
     serializer_class = IpcProductionWorkSerializer
     create_serializer_class = IpcProductionWorkCreateSerializer
     update_serializer_class = IpcProductionWorkUpdateSerializer
+    extra_filter_backends = []
+    permission_classes = [DeviceManagePermission]
 
     @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated])
     def bind_code_package(self, request, *args, **kwargs):

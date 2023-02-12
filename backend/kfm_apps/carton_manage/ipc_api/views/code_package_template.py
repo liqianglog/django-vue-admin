@@ -7,6 +7,7 @@ from dvadmin.utils.json_response import DetailResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 from basics_manage.models import CodePackageTemplate
+from utils.permission import DeviceManagePermission
 
 
 class IpcCodePackageTemplateSerializer(CustomModelSerializer):
@@ -15,28 +16,29 @@ class IpcCodePackageTemplateSerializer(CustomModelSerializer):
     """
     package_template_no = serializers.CharField(source="no", read_only=True)
 
-    def to_representation(self,instance):
+    def to_representation(self, instance):
         result = {
-            'package_template_no':instance.no,
-            "char_length":instance.char_length,
-            "fields":instance.fields,
-            "separator":instance.separator,
-            "line_feed":instance.line_feed,
-            "code_type":instance.code_type
+            'package_template_no': instance.no,
+            "char_length": instance.char_length,
+            "fields": instance.fields,
+            "separator": instance.separator,
+            "line_feed": instance.line_feed,
+            "code_type": instance.code_type
         }
         code_type = instance.code_type
-        if code_type==0:
-            result["w_url_prefix"]= instance.w_url_prefix
+        if code_type == 0:
+            result["w_url_prefix"] = instance.w_url_prefix
             result["w_url_length"] = instance.w_url_length
             result["w_field_position"] = instance.w_field_position
             return result
-        elif code_type==1:
+        elif code_type == 1:
             result["n_url_prefix"] = instance.n_url_prefix
             result["n_url_length"] = instance.n_url_length
             result["n_field_position"] = instance.n_field_position
             return result
         else:
             return super().to_representation(instance=instance)
+
     class Meta:
         model = CodePackageTemplate
         fields = [
@@ -85,14 +87,17 @@ class CodePackageTemplateViewSet(CustomModelViewSet):
     serializer_class = IpcCodePackageTemplateSerializer
     create_serializer_class = IpcCodePackageTemplateCreateSerializer
     update_serializer_class = IpcCodePackageTemplateUpdateSerializer
-    @action(methods=['post'],detail=False,permission_classes=[IsAuthenticated])
+    permission_classes = [DeviceManagePermission]
+    extra_filter_backends = []
+
+    @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated])
     def get_detail(self, request, *args, **kwargs):
         params = request.data
         package_template_no = params.get('package_template_no', None)
         if package_template_no is None:
             return ErrorResponse(msg="未获取到模板编号")
         else:
-            queryset =self.get_queryset().filter(no=package_template_no).first()
+            queryset = self.get_queryset().filter(no=package_template_no).first()
             if queryset is None:
                 return ErrorResponse(msg="模板编号不正确")
             serializer = IpcCodePackageTemplateSerializer(queryset, many=False)

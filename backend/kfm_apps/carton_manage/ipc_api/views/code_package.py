@@ -76,6 +76,7 @@ class CodePackageViewSet(CustomModelViewSet):
     create_serializer_class = IpcCodePackageCreateSerializer
     update_serializer_class = IpcCodePackageUpdateSerializer
     permission_classes = [DeviceManagePermission]
+    extra_filter_backends = []
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())

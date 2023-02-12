@@ -56,6 +56,7 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
     create_serializer_class = IpcBackHaulFileCreateSerializer
     update_serializer_class = IpcBackHaulFileUpdateSerializer
     permission_classes = [DeviceManagePermission]
+    extra_filter_backends = []
 
     def data_upload(self, request, *args, **kwargs):
         verify_no = request.META.get('HTTP_VERIFY_NO', '').strip()
