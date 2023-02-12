@@ -1,3 +1,4 @@
+import datetime
 import os
 import shutil
 import zipfile
@@ -51,10 +52,13 @@ def back_haul_file_check(back_haul_file_id):
                                                             '')
                     if not line_data:
                         continue
-                    # TODO 分隔符问题待修改
-                    code_content = line_data.split(code_package_format_obj.separator)[
-                        code_package_format_obj.code_position]
-                    ac_time = line_data.split(code_package_format_obj.separator)[code_package_format_obj.time_position]
+                    if code_package_format_obj.separator == '无':
+                        code_content = line_data
+                        ac_time = datetime.datetime.now()
+                    else:
+                        code_content = line_data.split(code_package_format_obj.separator)[
+                            code_package_format_obj.code_position]
+                        ac_time = line_data.split(code_package_format_obj.separator)[code_package_format_obj.time_position]
                     # 2.1 把所有的数据存入一个大字典中
                     if code_content != '000000':
                         code_content_md5 = md5_value(code_content)

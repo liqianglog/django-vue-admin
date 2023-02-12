@@ -86,7 +86,7 @@ class VerifyWorkOrderStatusRecord(models.Model):
 class BackHaulFile(CoreModel):
     verify_work_order = models.ForeignKey(VerifyWorkOrder, db_constraint=False, on_delete=models.PROTECT,
                                           related_name="verify_work_order", help_text="关联检测工单",
-                                          verbose_name="关联检测工单")
+                                          null=True, blank=True, verbose_name="关联检测工单")
     code_type = models.IntegerField(choices=CODE_TYPE_STATUS, default=3, blank=True, help_text="码类型",
                                     verbose_name="码类型")
     device = models.ForeignKey(DeviceManage, db_constraint=False, related_name='bhfile_device',
@@ -142,7 +142,8 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase):
     使用分表
     """
     id = models.BigAutoField(primary_key=True, help_text="Id", verbose_name="Id")
-    verify_work_no = models.CharField(max_length=200, help_text="检测工单编号", verbose_name="检测工单编号")
+    verify_work_no = models.CharField(max_length=200, null=True, blank=True, help_text="检测工单编号",
+                                      verbose_name="检测工单编号")
     back_haul_file = models.ForeignKey(BackHaulFile, db_constraint=False, on_delete=models.PROTECT,
                                        related_name="verify_code_bhfile", help_text="关联生产工单",
                                        verbose_name="关联回传文件管理")
@@ -299,4 +300,4 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase):
 
     class PartitioningMeta:
         method = PostgresPartitioningMethod.LIST
-        key = ["production_work_no"]
+        key = ["verify_work_no"]
