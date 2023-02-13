@@ -16,9 +16,6 @@ class CameraManageSerializer(CustomModelSerializer):
     device_name = serializers.CharField(source='device.name',read_only=True)
     prod_line_name = serializers.CharField(source='device.production_line.name', read_only=True)
     factory_name = serializers.CharField(source='device.production_line.belong_to_factory.name', read_only=True)
-    # total_number = serializers.SerializerMethodField(help_text='识别码总数')
-    # success_number = serializers.SerializerMethodField(help_text='识别成功数')
-    # error_number = serializers.SerializerMethodField(help_text='识别失败数')
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
