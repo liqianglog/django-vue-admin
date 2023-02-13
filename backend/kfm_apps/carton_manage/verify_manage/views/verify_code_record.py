@@ -15,6 +15,11 @@ class VerifyCodeRecordSerializer(CustomModelSerializer):
     factory_info_name = serializers.CharField(source="back_haul_file.device.production_line.factory_info.name", read_only=True,default="")
     production_line_name = serializers.CharField(source="back_haul_file.device.production_line.name", read_only=True,default="")
     device_name = serializers.CharField(source="back_haul_file.device.name", read_only=True,default="")
+    code_package_no = serializers.CharField(source="back_haul_file.verify_work_order.production_work_no.code_package.no", read_only=True,default="")
+    production_work_no = serializers.CharField(
+        source="back_haul_file.verify_work_order.production_work_no.no", read_only=True, default="")
+    file_name = serializers.CharField(
+        source="back_haul_file.file_name", read_only=True, default="")
 
     class Meta:
         model = VerifyCodeRecord
