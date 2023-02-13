@@ -181,6 +181,12 @@
             "value": "Delete",
             "api": "/api/carton/verify_manage/verify_code_record/{id}/",
             "method": 3
+          },
+          {
+            "name": "导出",
+            "value": "Export",
+            "api": "/api/carton/verify_manage/verify_code_record/export_data/",
+            "method": 0
           }
         ]
       }
