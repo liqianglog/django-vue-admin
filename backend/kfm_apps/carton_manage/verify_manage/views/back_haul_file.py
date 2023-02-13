@@ -27,6 +27,7 @@ class BackHaulFileSerializer(CustomModelSerializer):
     prod_line_name = serializers.CharField(source='device.production_line.name', read_only=True)
     factory_name = serializers.CharField(source='device.production_line.belong_to_factory.name', read_only=True)
     success_rate = serializers.SerializerMethodField(help_text="识别成功率")
+    cam_no = serializers.CharField(source='cam.no', read_only=True)
 
     def get_success_rate(self, instance):
         total_number = instance.total_number
@@ -58,9 +59,6 @@ class BackHaulFileSerializer(CustomModelSerializer):
             data['prod_repetition_number'] = _VerifyCodeRecord.get('prod_repetition_num')
             data['prod_undfind_number'] = _VerifyCodeRecord.get('prod_undfind_num')
         else:
-            data['need_number'] = 0
-            data['success_number'] = 0
-            data['error_number'] = 0
             data['undfind_number'] = 0
             data['inexistence_number'] = 0
             data['self_repetition_number'] = 0

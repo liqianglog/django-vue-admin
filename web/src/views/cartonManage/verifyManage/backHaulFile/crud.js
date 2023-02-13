@@ -12,17 +12,12 @@ export const crudOptions = (vm) => {
 
     },
     rowHandle: {
-      view: {
-        thin: true,
-        text: '',
-        disabled () {
-          return !vm.hasPermissions('Retrieve')
-        }
-      },
-      width: 140,
+      width: 240,
+      fixed: 'right',
+      view: false,
       edit: false,
       remove: false,
-      custom:[
+      custom: [
         {
           thin: true,
           text: '下载文件',
@@ -32,6 +27,13 @@ export const crudOptions = (vm) => {
           disabled (_, form) {
             return !vm.hasPermissions('Download')
           }
+        },
+        {
+          thin: true,
+          text: '问题码记录',
+          size: 'small',
+          type: 'warning',
+          emit: 'onErrorCode'
         }
       ]
     },
@@ -72,8 +74,20 @@ export const crudOptions = (vm) => {
           disabled: true
         }
       }, {
-        title: '生产工单号',
+        title: '文件名称',
+        key: 'file_name',
+        minWidth: 120,
+        search: {
+          disabled: true
+        },
+        type: 'input',
+        form: {
+          disabled: true
+        }
+      },{
+        title: '赋码工单号',
         key: 'production_work_no',
+        minWidth: 120,
         search: {
           disabled: true
         },
@@ -107,6 +121,7 @@ export const crudOptions = (vm) => {
       {
         title: '设备名称',
         key: 'device_name',
+        minWidth: 120,
         search: {
           disabled: true
         },
@@ -115,8 +130,9 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '工厂名称',
-        key: 'cam_name',
+        title: '相机编号',
+        key: 'cam_no',
+        minWidth: 120,
         search: {
           disabled: true
         },
@@ -127,6 +143,7 @@ export const crudOptions = (vm) => {
       {
         title: '码包总数',
         key: 'total_number',
+        minWidth: 120,
         search: {
           disabled: true
         },
@@ -137,6 +154,7 @@ export const crudOptions = (vm) => {
       {
         title: '识别成功数',
         key: 'success_number',
+        minWidth: 120,
         search: {
           disabled: true
         },
@@ -148,6 +166,7 @@ export const crudOptions = (vm) => {
         title: '识别成功率',
         key: 'success_rate',
         type: 'number',
+        minWidth: 120,
         component: {
           name: 'table-progress'
         }
@@ -155,6 +174,7 @@ export const crudOptions = (vm) => {
       {
         title: '识别错误数',
         key: 'error_number',
+        minWidth: 120,
         search: {
           disabled: true
         },
@@ -172,7 +192,7 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
-      },{
+      }, {
         title: '不存在码数',
         key: 'inexistence_number',
         minWidth: 100,
@@ -182,7 +202,7 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
-      },{
+      }, {
         title: '本检测包重码数',
         key: 'self_repetition_number',
         minWidth: 140,

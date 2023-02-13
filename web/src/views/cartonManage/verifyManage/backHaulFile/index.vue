@@ -5,6 +5,7 @@
         v-bind="_crudProps"
         v-on="_crudListeners"
         @onDownload="onDownload"
+        @onErrorCode="onErrorCode"
     >
       <div slot="header">
         <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
@@ -19,7 +20,7 @@
 
       </div>
     </d2-crud-x>
-
+    <ErrorCode ref="errorCodeRef"></ErrorCode>
   </d2-container>
 </template>
 
@@ -27,9 +28,13 @@
 import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
+import ErrorCode from './components/errorCode/errorCode'
 export default {
   name: 'backHaulFile',
   mixins: [d2CrudPlus.crud],
+  components:{
+    ErrorCode
+  },
   data () {
     return {
     }
@@ -59,6 +64,10 @@ export default {
       }).then(function () {
         return api.Download(row)
       })
+    },
+    onErrorCode({row}){
+      this.$refs.errorCodeRef.options = row
+      this.$refs.errorCodeRef.drawer = true
     }
   }
 }
