@@ -12,16 +12,20 @@ export const crudOptions = (vm) => {
 
     },
     rowHandle: {
-      view: {
-        thin: true,
-        text: '',
-        disabled () {
-          return !vm.hasPermissions('Retrieve')
-        }
-      },
       width: 140,
+      fixed: 'right',
+      view: false,
       edit: false,
-      remove: false
+      remove: false,
+      custom: [
+        {
+          thin: true,
+          text: '问题码记录',
+          size: 'small',
+          type: 'warning',
+          emit: 'onErrorCode'
+        }
+      ]
     },
     viewOptions: {
       componentType: 'row'
