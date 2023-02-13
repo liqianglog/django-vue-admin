@@ -46,7 +46,7 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
-      activeName:'9'
+      activeName: '9'
     }
   },
   methods: {

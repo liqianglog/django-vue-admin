@@ -19,6 +19,14 @@
         v-on="_crudListeners"
       >
         <div slot="header">
+          <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="全部" name="9"></el-tab-pane>
+            <el-tab-pane label="未识别" name="0"></el-tab-pane>
+            <el-tab-pane label="码不存在" name="2"></el-tab-pane>
+            <el-tab-pane label="本检测包重码" name="3"></el-tab-pane>
+            <el-tab-pane label="本生产工单重码" name="4"></el-tab-pane>
+            <el-tab-pane label="非本生产工单码" name="5"></el-tab-pane>
+          </el-tabs>
           <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
 <!--          <crud-toolbar :search.sync="crud.searchOptions.show"-->
 <!--                        :compact.sync="crud.pageOptions.compact"-->
@@ -41,6 +49,7 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
+      activeName: '9',
       drawer: false,
       title: '生产状态记录',
       options: {}
@@ -55,7 +64,13 @@ export default {
     getCrudOptions () {
       return crudOptions(this)
     },
+    handleClick () {
+      this.doRefresh({ from: 'load' })
+    },
     pageRequest (query) {
+      if (this.activeName !== '9') {
+        query.error_type = this.activeName
+      }
       return api.GetList({ ...query, production_work_no: this.options.no, exclude_success: true })
     }
   }

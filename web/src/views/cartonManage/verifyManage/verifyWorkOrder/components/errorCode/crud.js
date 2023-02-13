@@ -60,8 +60,21 @@ export const crudOptions = (vm) => {
           disabled: true
         }
       }, {
-        title: '码内容',
-        key: 'code_content',
+        title: '明码内容',
+        key: 'error_code_content',
+        minWidth: 200,
+        search: {
+          disabled: true
+        },
+        type: 'input',
+        form: {
+          disabled: true
+        }
+      },
+      {
+        title: 'MD5码内容',
+        key: 'code_content_md5',
+        minWidth: 200,
         search: {
           disabled: true
         },
@@ -95,16 +108,7 @@ export const crudOptions = (vm) => {
       {
         title: '采集时间',
         key: 'ac_time',
-        search: {
-          disabled: true
-        },
-        form: {
-          disabled: true
-        }
-      },
-      {
-        title: '重码次数',
-        key: 'rep_code_number',
+        width: 120,
         search: {
           disabled: true
         },
@@ -116,6 +120,7 @@ export const crudOptions = (vm) => {
         title: '问题码类型',
         key: 'error_type',
         type: 'select',
+        width: 120,
         dict: {
           data: [
             { value: 0, label: '未识别' },
@@ -131,6 +136,148 @@ export const crudOptions = (vm) => {
         },
         form: {
           disabled: true
+        }
+      },
+      {
+        title: '相机编号',
+        key: 'camera_no',
+        width: 160,
+        type: 'input',
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请输入',
+            props: {
+              clearable: true
+            }
+          }
+        }
+      },
+      {
+        title: '码包编号',
+        key: 'code_package_no',
+        width: 160,
+        type: 'input',
+        search: {
+          disabled: true,
+          component: {
+            placeholder: '请输入',
+            props: {
+              clearable: true
+            }
+          }
+        }
+      },
+      {
+        title: '生产工单',
+        key: 'production_work_no',
+        width: 160,
+        type: 'input',
+        search: {
+          disabled: true,
+          component: {
+            placeholder: '请输入',
+            props: {
+              clearable: true
+            }
+          }
+        }
+      },
+      {
+        title: '检测工单',
+        key: 'verify_work_order_no',
+        width: 160,
+        type: 'input',
+        search: {
+          disabled: true,
+          component: {
+            placeholder: '请输入',
+            props: {
+              clearable: true
+            }
+          }
+        }
+      },
+      {
+        title: '检测工单',
+        key: 'verify_work_no',
+        width: 160,
+        type: 'input',
+        search: {
+          disabled: true,
+          component: {
+            placeholder: '请输入',
+            props: {
+              clearable: true
+            }
+          }
+        }
+      },
+      {
+        title: '回传文件名称',
+        key: 'file_name',
+        width: 160,
+        type: 'input',
+        search: {
+          disabled: true,
+          component: {
+            placeholder: '请输入',
+            props: {
+              clearable: true
+            }
+          }
+        }
+      },
+      {
+        title: '生产工厂',
+        key: 'factory_info_name',
+        width: 180,
+        search: {
+          disabled: false,
+          component: {
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'input',
+        form: {
+          itemProps: {
+            class: { yxtInput: true }
+          },
+          component: {
+            placeholder: '请输入生产工厂'
+          }
+        }
+      },
+      {
+        title: '生产产线',
+        key: 'production_line_name',
+        width: 160,
+        type: 'input',
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请输入生产产线',
+            props: {
+              clearable: true
+            }
+          }
+        }
+      },
+      {
+        title: '生产设备',
+        key: 'device_name',
+        width: 160,
+        type: 'input',
+        search: {
+          disabled: false,
+          component: {
+            placeholder: '请输入生产设备',
+            props: {
+              clearable: true
+            }
+          }
         }
       }
     ]
