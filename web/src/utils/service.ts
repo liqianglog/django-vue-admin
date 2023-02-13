@@ -5,12 +5,20 @@ import { errorLog, errorCreate } from "./tools.ts";
 // import { env } from "/src/utils/util.env";
 // import { useUserStore } from "../store/modules/user";
 import { Local, Session } from '/@/utils/storage';
+import qs from "qs";
 /**
  * @description 创建请求实例
  */
 function createService() {
   // 创建一个 axios 实例
-  const service = axios.create();
+  const service = axios.create({
+    timeout: 20000,
+      paramsSerializer: {
+        serialize(params) {
+          return qs.stringify(params, { allowDots: true });
+        },
+      },
+  });
   // 请求拦截
   service.interceptors.request.use(
     (config) => config,
