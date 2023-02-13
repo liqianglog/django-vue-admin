@@ -31,6 +31,20 @@ class VerifyCodeRecordCreateUpdateSerializer(CustomModelSerializer):
         model = VerifyCodeRecord
         fields = '__all__'
 
+class VerifyCodeRecordExportSerializer(CustomModelSerializer):
+    """
+   校验码记录导出-序列化器
+    """
+    camera_no = serializers.CharField(source='back_haul_file.cam.no',read_only=True,default="")
+    factory_info_name = serializers.CharField(source="back_haul_file.device.production_line.factory_info.name", read_only=True,default="")
+    production_line_name = serializers.CharField(source="back_haul_file.device.production_line.name", read_only=True,default="")
+    device_name = serializers.CharField(source="back_haul_file.device.name", read_only=True,default="")
+    code_type_label = serializers.CharField(source='get_code_type_display',read_only=True)
+    error_type_label = serializers.CharField(source='get_error_type_display', read_only=True)
+    class Meta:
+        model = VerifyCodeRecord
+        fields = "__all__"
+        read_only_fields = ["id"]
 
 class VerifyCodeRecordFilterSet(FilterSet):
     camera_no = django_filters.CharFilter(field_name='back_haul_file__cam__no', lookup_expr="icontains")
@@ -50,7 +64,18 @@ class VerifyCodeRecordViewSet(CustomModelViewSet):
     serializer_class = VerifyCodeRecordSerializer
     create_serializer_class = VerifyCodeRecordCreateUpdateSerializer
     update_serializer_class = VerifyCodeRecordCreateUpdateSerializer
+    export_serializer_class = VerifyCodeRecordExportSerializer
     filter_class = VerifyCodeRecordFilterSet
+    export_field_label = {
+        "code_content_md5": "码内容",
+        "code_type_label": "码类型",
+        "ac_time": "采集时间",
+        "error_type_label": "问题码类型",
+        "camera_no": "相机编号",
+        "factory_info_name": "生产工厂",
+        "production_line_name": "生产产线",
+        "device_name": "生产设备",
+    }
 
     def get_queryset(self):
         params = self.request.query_params

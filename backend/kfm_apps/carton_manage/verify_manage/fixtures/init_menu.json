@@ -139,7 +139,7 @@
         ]
       },
       {
-        "name": "校验码记录",
+        "name": "问题码记录",
         "icon": "qrcode",
         "sort": 4,
         "is_link": false,
