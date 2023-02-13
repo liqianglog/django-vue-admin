@@ -169,6 +169,23 @@ export const crudOptions = (vm) => {
         }
       },
       {
+        title: '检测相机',
+        key: 'camera_no',
+        minWidth: 100,
+        search: {
+          disabled: false,
+          component: {
+            props: {
+              placeholder: '请输入',
+              clearable: true
+            }
+          }
+        },
+        form: {
+          disabled: true
+        }
+      },
+      {
         title: '码包总数',
         key: 'total_number',
         minWidth: 100,

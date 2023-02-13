@@ -23,6 +23,7 @@ class VerifyWorkOrderSerializer(CustomModelSerializer):
     arrival_factory = serializers.CharField(source='production_work_no.code_package.arrival_factory', read_only=True)
     code_package_no = serializers.CharField(source='production_work_no.code_package.no', read_only=True)
     production_work_no = serializers.CharField(source='production_work_no.no', read_only=True)
+    camera_no = serializers.CharField(source='verify_work_order.cam.no', read_only=True)
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -89,6 +90,7 @@ class VerifyWorkOrderFilterSet(FilterSet):
     factory_info_name = django_filters.CharFilter(field_name="factory_info__name", lookup_expr="icontains")
     production_line_name = django_filters.CharFilter(field_name="production_line__name", lookup_expr="icontains")
     device_name = django_filters.CharFilter(field_name="device__name", lookup_expr="icontains")
+    camera_no = django_filters.CharFilter(field_name='verify_work_order__cam__no', lookup_expr="icontains")
 
     class Meta:
         model = VerifyWorkOrder
