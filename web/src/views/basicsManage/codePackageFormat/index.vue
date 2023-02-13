@@ -30,6 +30,7 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
+      showAcTime: true
     }
   },
   methods: {

@@ -117,7 +117,10 @@ export const crudOptions = (vm) => {
         form: {
           component: {
             dict: {
-              data: [{ label: '无', value: '无' }, { label: ',', value: ',' }, { label: '|', value: '|' }, { label: ';', value: ';' }]
+              data: [{ label: '无', value: '无' }, { label: ',', value: ',' }, { label: '|', value: '|' }, {
+                label: ';',
+                value: ';'
+              }]
             },
             name: 'dict-select',
             placeholder: '分隔符'
@@ -125,6 +128,13 @@ export const crudOptions = (vm) => {
           rules: [
             { required: true, message: '分隔符不能为空', trigger: 'blur' }
           ],
+          valueChange (key, value) {
+            if (value === '无') {
+              vm.showAcTime = false
+            } else {
+              vm.showAcTime = true
+            }
+          },
           itemProps: {
             class: { yxtInput: true }
           },
@@ -236,6 +246,9 @@ export const crudOptions = (vm) => {
             { required: true, message: '时间字段位置不能为空', trigger: 'blur' }
           ],
           component: {
+            show () {
+              return vm.showAcTime
+            },
             placeholder: '时间字段位置',
             props: {
               min: 0

@@ -62,6 +62,7 @@ export const crudOptions = (vm) => {
       }, {
         title: '相机编号',
         key: 'no',
+        minWidth: 100,
         search: {
           disabled: true
         },
@@ -73,6 +74,7 @@ export const crudOptions = (vm) => {
       {
         title: '设备名称',
         key: 'device_name',
+        minWidth: 100,
         search: {
           disabled: true
         },
@@ -83,6 +85,7 @@ export const crudOptions = (vm) => {
       {
         title: '工厂名称',
         key: 'factory_name',
+        minWidth: 100,
         search: {
           disabled: true
         },
@@ -93,6 +96,7 @@ export const crudOptions = (vm) => {
       {
         title: '产线名称',
         key: 'prod_line_name',
+        minWidth: 100,
         search: {
           disabled: true
         },
@@ -103,26 +107,84 @@ export const crudOptions = (vm) => {
       {
         title: '总码数',
         key: 'total_number',
-        type: 'number'
+        type: 'number',
+        minWidth: 100,
       },
       {
         title: '识别成功数',
         key: 'success_number',
-        type: 'number'
-      },
-      {
-        title: '识别失败数',
-        key: 'error_number',
-        type: 'number'
+        type: 'number',
+        minWidth: 100,
       },
       {
         title: '成功采集率',
         key: 'success_rate',
         type: 'number',
+        minWidth: 160,
         component: {
           name: 'table-progress'
         }
+      },
+      {
+        title: '识别失败数',
+        key: 'error_number',
+        type: 'number',
+        minWidth: 100,
+      },
+      {
+        title: '未识别码数',
+        key: 'undfind_number',
+        minWidth: 100,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },{
+        title: '不存在码数',
+        key: 'inexistence_number',
+        minWidth: 100,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },{
+        title: '本检测包重码数',
+        key: 'self_repetition_number',
+        minWidth: 140,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },
+      {
+        title: '本生产工单重码数',
+        key: 'prod_repetition_number',
+        minWidth: 140,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },
+      {
+        title: '非本生产工单码数',
+        key: 'prod_undfind_number',
+        minWidth: 140,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
       }
+
     ]
   }
 }

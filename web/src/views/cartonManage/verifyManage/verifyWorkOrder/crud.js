@@ -82,38 +82,8 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '生产工单号',
-        key: 'no',
-        minWidth: 200,
-        search: {
-          disabled: true,
-          component: {
-            props: {
-              clearable: true
-            }
-          }
-        },
-        type: 'input',
-        form: {
-          rules: [
-            { required: true, message: '工厂编号不能为空', trigger: 'blur' }
-          ],
-          component: {
-            placeholder: '请输入工厂编号'
-          },
-          itemProps: {
-            class: { yxtInput: true }
-          },
-          valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
-            if (mode === 'add') {
-              form.code = util.autoShortCreateCode()
-            }
-          },
-          valueChangeImmediate: true
-        }
-      }, {
-        title: '生产订单号',
-        key: 'order_id',
+        title: '码包编号',
+        key: 'code_package_no',
         minWidth: 200,
         search: {
           disabled: false,
@@ -129,11 +99,73 @@ export const crudOptions = (vm) => {
             { required: true, message: '不能为空', trigger: 'blur' }
           ],
           component: {
-            placeholder: '请输入生产订单号'
+            placeholder: '请输入'
           },
           itemProps: {
             class: { yxtInput: true }
           }
+        }
+      },
+      {
+        title: '赋码工单号',
+        key: 'production_work_no',
+        minWidth: 200,
+        search: {
+          disabled: true,
+          component: {
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'input',
+        form: {
+          rules: [
+            { required: true, message: '不能为空', trigger: 'blur' }
+          ],
+          component: {
+            placeholder: '请输入'
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          },
+          valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
+            if (mode === 'add') {
+              form.code = util.autoShortCreateCode()
+            }
+          },
+          valueChangeImmediate: true
+        }
+      },
+      {
+        title: '检测工单号',
+        key: 'no',
+        minWidth: 200,
+        search: {
+          disabled: true,
+          component: {
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'input',
+        form: {
+          rules: [
+            { required: true, message: '不能为空', trigger: 'blur' }
+          ],
+          component: {
+            placeholder: '请输入'
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          },
+          valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
+            if (mode === 'add') {
+              form.code = util.autoShortCreateCode()
+            }
+          },
+          valueChangeImmediate: true
         }
       },
       {
@@ -190,7 +222,60 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
-      }, {
+      },
+      {
+        title: '未识别码数',
+        key: 'undfind_number',
+        minWidth: 100,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },{
+        title: '不存在码数',
+        key: 'inexistence_number',
+        minWidth: 100,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },{
+        title: '本检测包重码数',
+        key: 'self_repetition_number',
+        minWidth: 140,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },
+      {
+        title: '本生产工单重码数',
+        key: 'prod_repetition_number',
+        minWidth: 140,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },
+      {
+        title: '非本生产工单码数',
+        key: 'prod_undfind_number',
+        minWidth: 140,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },{
         title: '产品名称',
         key: 'product_name',
         minWidth: 100,

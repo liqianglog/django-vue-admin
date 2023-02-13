@@ -156,6 +156,9 @@ class ImportSerializerMixin:
 
     @action(methods=['get'],detail=False)
     def update_template(self,request):
+        """
+        批量更新模板下载
+        """
         queryset = self.filter_queryset(self.get_queryset())
         assert self.import_field_dict, "'%s' 请配置对应的导入模板字段。" % self.__class__.__name__
         assert self.import_serializer_class, "'%s' 请配置对应的导入序列化器。" % self.__class__.__name__

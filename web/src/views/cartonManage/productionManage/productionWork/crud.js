@@ -268,7 +268,8 @@ export const crudOptions = (vm) => {
             { value: 2, label: '生产中' },
             { value: 3, label: '暂停中' },
             { value: 4, label: '结束生产' },
-            { value: 5, label: '工单异常' }
+            { value: 5, label: '工单异常' },
+            { value: 6, label: '码包下载成功' }
           ]
         },
         form: {
