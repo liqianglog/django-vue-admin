@@ -1,10 +1,11 @@
 // 引入fast-crud
-import { FastCrud } from '@fast-crud/fast-crud';
+import { FastCrud, useTypes } from '@fast-crud/fast-crud';
+const { getType } = useTypes();
 import '@fast-crud/fast-crud/dist/style.css';
 import { setLogger } from '@fast-crud/fast-crud';
 // element
 import ui from '@fast-crud/ui-element';
-import { request } from '/@/utils/service.ts';
+import { request } from '/@/utils/service';
 
 export default {
 	async install(app: any, options: any) {
@@ -52,5 +53,10 @@ export default {
 			},
 		});
 		setLogger({ level: 'error' });
+		// 设置自动染色
+		const dictComponentList = ['dict-cascader', 'dict-checkbox', 'dict-radio', 'dict-select', 'dict-switch', 'dict-tree'];
+		dictComponentList.forEach((val) => {
+			getType(val).column.component.color = 'auto';
+		});
 	},
 };
