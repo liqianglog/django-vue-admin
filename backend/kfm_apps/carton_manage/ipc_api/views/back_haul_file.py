@@ -90,7 +90,7 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
             serializer = VerifyWorkOrderCreateSerializer(data=data, request=request)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            verify_work_order_obj = serializer
+            verify_work_order_obj = serializer.instance
 
 
         code_package_format_obj = CodePackageFormat.objects.filter(no=dataformat).first()
@@ -163,7 +163,7 @@ class IpcBackHaulFileViewSet(CustomModelViewSet):
             serializer = VerifyWorkOrderCreateSerializer(data=data, request=request)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            verify_work_order_instance = serializer
+            verify_work_order_instance = serializer.instance
         if verify_status is None:
             return ErrorResponse(msg="未获取到检测状态")
         verify_work_order_instance.verify_status = verify_status
