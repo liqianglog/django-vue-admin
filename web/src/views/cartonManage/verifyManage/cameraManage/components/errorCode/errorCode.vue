@@ -6,7 +6,7 @@
     :size="1200"
   >
     <div slot="title">
-      <span>生产工单</span>
+      <span>相机编号</span>
       <el-tag size="small" style="margin-left: 10px">{{
           options.no
         }}</el-tag>
@@ -71,7 +71,7 @@ export default {
       if (this.activeName !== '9') {
         query.error_type = this.activeName
       }
-      return api.GetList({ ...query, production_work_no: this.options.no, exclude_success: true })
+      return api.GetList({ ...query, camera_no: this.options.no, exclude_success: true })
     }
   }
 }

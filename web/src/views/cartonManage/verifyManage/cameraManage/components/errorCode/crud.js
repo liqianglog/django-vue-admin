@@ -133,7 +133,7 @@ export const crudOptions = (vm) => {
         width: 160,
         type: 'input',
         search: {
-          disabled: false,
+          disabled: true,
           component: {
             placeholder: '请输入',
             props: {
