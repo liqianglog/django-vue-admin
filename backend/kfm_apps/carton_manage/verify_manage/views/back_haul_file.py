@@ -5,13 +5,15 @@ import re
 from _pydecimal import Decimal
 from wsgiref.util import FileWrapper
 
+from django.db.models import IntegerField, Sum, Q
+from django.db.models.functions import Coalesce
 from django.http import HttpResponseBadRequest, HttpResponseNotModified, StreamingHttpResponse
 from django.utils._os import safe_join
 from django.views.static import was_modified_since
 from rest_framework import serializers
 from rest_framework.decorators import action
 
-from carton_manage.verify_manage.models import BackHaulFile
+from carton_manage.verify_manage.models import BackHaulFile, VerifyCodeRecord
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 from utils.currency import  get_back_haul_file_path
@@ -34,6 +36,37 @@ class BackHaulFileSerializer(CustomModelSerializer):
         else:
             rate = success_number/ total_number * 100
             return str(Decimal(rate).quantize(Decimal('0.00')))
+
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        _VerifyCodeRecord = VerifyCodeRecord.objects.filter(back_haul_file=instance.id).aggregate(
+            undfind_num = Coalesce(Sum('error_number',filter=Q(error_type__in=[0])), 0, output_field=IntegerField()),
+            inexistence_num = Coalesce(Sum('error_number', filter=Q(error_type__in=[2])), 0,
+                               output_field=IntegerField()),
+            self_repetition_num=Coalesce(Sum('error_number', filter=Q(error_type__in=[3])), 0,
+                                     output_field=IntegerField()),
+            prod_repetition_num=Coalesce(Sum('error_number', filter=Q(error_type__in=[4])), 0,
+                                         output_field=IntegerField()),
+            prod_undfind_num=Coalesce(Sum('error_number', filter=Q(error_type__in=[5])), 0,
+                                         output_field=IntegerField()),
+        )
+        if _VerifyCodeRecord:
+            data['undfind_number'] = _VerifyCodeRecord.get('undfind_num')
+            data['inexistence_number'] = _VerifyCodeRecord.get('inexistence_num')
+            data['self_repetition_number'] = _VerifyCodeRecord.get('self_repetition_num')
+            data['prod_repetition_number'] = _VerifyCodeRecord.get('prod_repetition_num')
+            data['prod_undfind_number'] = _VerifyCodeRecord.get('prod_undfind_num')
+        else:
+            data['need_number'] = 0
+            data['success_number'] = 0
+            data['error_number'] = 0
+            data['undfind_number'] = 0
+            data['inexistence_number'] = 0
+            data['self_repetition_number'] = 0
+            data['prod_repetition_number'] = 0
+            data['prod_undfind_number'] = 0
+        return data
 
     class Meta:
         model = BackHaulFile

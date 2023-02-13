@@ -100,7 +100,7 @@
         "is_catalog": false,
         "web_path": "/backHaulFile",
         "component": "cartonManage/verifyManage/backHaulFile/index",
-        "component_name": "cameraManage",
+        "component_name": "backHaulFile",
         "status": true,
         "cache": false,
         "visible": true,
@@ -135,6 +135,12 @@
             "value": "Delete",
             "api": "/api/carton/verify_manage/back_haul_file/{id}/",
             "method": 3
+          },
+          {
+            "name": "下载文件",
+            "value": "Download",
+            "api": "/api/carton/verify_manage/back_haul_file/{id}/download_file/",
+            "method": 0
           }
         ]
       },

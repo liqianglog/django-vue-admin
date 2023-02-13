@@ -161,6 +161,59 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
+      },
+      {
+        title: '未识别码数',
+        key: 'undfind_number',
+        minWidth: 100,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },{
+        title: '不存在码数',
+        key: 'inexistence_number',
+        minWidth: 100,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },{
+        title: '本检测包重码数',
+        key: 'self_repetition_number',
+        minWidth: 140,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },
+      {
+        title: '本生产工单重码数',
+        key: 'prod_repetition_number',
+        minWidth: 140,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },
+      {
+        title: '非本生产工单码数',
+        key: 'prod_undfind_number',
+        minWidth: 140,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
       }
     ]
   }
