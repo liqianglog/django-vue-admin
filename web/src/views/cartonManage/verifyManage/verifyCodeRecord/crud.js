@@ -61,7 +61,7 @@ export const crudOptions = (vm) => {
         }
       }, {
         title: '码内容',
-        key: 'code_content',
+        key: 'code_content_md5',
         search: {
           disabled: true
         },
@@ -95,16 +95,6 @@ export const crudOptions = (vm) => {
       {
         title: '采集时间',
         key: 'ac_time',
-        search: {
-          disabled: true
-        },
-        form: {
-          disabled: true
-        }
-      },
-      {
-        title: '重码次数',
-        key: 'rep_code_number',
         search: {
           disabled: true
         },

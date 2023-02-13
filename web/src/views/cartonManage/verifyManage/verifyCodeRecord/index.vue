@@ -9,6 +9,13 @@
         <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
         <el-button-group>
 <!--          <el-button size="small" type="primary" v-permission="'Create'" @click="addRow"><i class="el-icon-plus"/> 新增</el-button>-->
+          <el-button
+            size="small"
+            type="warning"
+            @click="onExport"
+            v-permission="'Export'"
+          ><i class="el-icon-download" /> 导出
+          </el-button>
         </el-button-group>
         <crud-toolbar :search.sync="crud.searchOptions.show"
                       :compact.sync="crud.pageOptions.compact"
@@ -48,6 +55,17 @@ export default {
     },
     delRequest (row) {
       return api.DelObj(row.id)
+    },
+    onExport () {
+      const that = this
+      that.$confirm('是否确认导出所有数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
+        const query = that.getSearch().getForm()
+        return api.exportData({ ...query })
+      })
     }
   }
 }
