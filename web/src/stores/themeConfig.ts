@@ -36,7 +36,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 * 菜单设置
 			 */
 			// 默认菜单导航背景颜色
-			menuBar: '#545c64',
+			menuBar: '#334054',
 			// 默认菜单导航字体颜色
 			menuBarColor: '#eaeaea',
 			// 默认菜单高亮背景色
@@ -48,7 +48,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 * 分栏设置
 			 */
 			// 默认分栏菜单背景颜色
-			columnsMenuBar: '#545c64',
+			columnsMenuBar: '#334054',
 			// 默认分栏菜单字体颜色
 			columnsMenuBarColor: '#e6e6e6',
 			// 是否开启分栏菜单背景颜色渐变
