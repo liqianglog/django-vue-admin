@@ -87,7 +87,7 @@ class BackHaulFile(CoreModel):
     verify_work_order = models.ForeignKey(VerifyWorkOrder, db_constraint=False, on_delete=models.PROTECT,
                                           related_name="verify_work_order", help_text="关联检测工单",
                                           null=True, blank=True, verbose_name="关联检测工单")
-    code_type = models.IntegerField(choices=CODE_TYPE_STATUS, default=3, blank=True, help_text="码类型",
+    code_type = models.IntegerField(choices=CODE_TYPE_STATUS, default=2, blank=True, help_text="码类型",
                                     verbose_name="码类型")
     device = models.ForeignKey(DeviceManage, db_constraint=False, related_name='bhfile_device',
                                on_delete=models.CASCADE,

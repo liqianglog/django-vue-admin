@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from decimal import Decimal
 
 import django_filters
 from django.db.models import Sum, IntegerField, Q
@@ -23,23 +24,24 @@ class VerifyWorkOrderSerializer(CustomModelSerializer):
     arrival_factory = serializers.CharField(source='production_work_no.code_package.arrival_factory', read_only=True)
     code_package_no = serializers.CharField(source='production_work_no.code_package.no', read_only=True)
     production_work_no = serializers.CharField(source='production_work_no.no', read_only=True)
-    camera_no = serializers.CharField(source='verify_work_order.cam.no', read_only=True)
 
-    def to_representation(self, instance):
+    def to_representation(self, instance: VerifyWorkOrder):
         data = super().to_representation(instance)
+        print(data)
         _BackHaulFile = BackHaulFile.objects.filter(verify_work_order_id=instance.id).aggregate(
             total_num=Coalesce(Sum('total_number'), 0, output_field=IntegerField()),
             success_num=Coalesce(Sum('success_number'), 0, output_field=IntegerField()),
             error_num=Coalesce(Sum('error_number'), 0, output_field=IntegerField()),
-            undfind_num = Coalesce(Sum('error_number',filter=Q(verify_code_bhfile__error_type__in=[0])), 0, output_field=IntegerField()),
-            inexistence_num = Coalesce(Sum('error_number', filter=Q(verify_code_bhfile__error_type__in=[2])), 0,
-                               output_field=IntegerField()),
-            self_repetition_num=Coalesce(Sum('error_number', filter=Q(verify_code_bhfile__error_type__in=[3])), 0,
+            undfind_num=Coalesce(Sum('error_number', filter=Q(verify_code_bhfile__error_type__in=[0])), 0,
+                                 output_field=IntegerField()),
+            inexistence_num=Coalesce(Sum('error_number', filter=Q(verify_code_bhfile__error_type__in=[2])), 0,
                                      output_field=IntegerField()),
+            self_repetition_num=Coalesce(Sum('error_number', filter=Q(verify_code_bhfile__error_type__in=[3])), 0,
+                                         output_field=IntegerField()),
             prod_repetition_num=Coalesce(Sum('error_number', filter=Q(verify_code_bhfile__error_type__in=[4])), 0,
                                          output_field=IntegerField()),
             prod_undfind_num=Coalesce(Sum('error_number', filter=Q(verify_code_bhfile__error_type__in=[5])), 0,
-                                         output_field=IntegerField()),
+                                      output_field=IntegerField()),
         )
         if _BackHaulFile:
             data['need_number'] = _BackHaulFile.get('total_num')
@@ -59,6 +61,13 @@ class VerifyWorkOrderSerializer(CustomModelSerializer):
             data['self_repetition_number'] = 0
             data['prod_repetition_number'] = 0
             data['prod_undfind_number'] = 0
+        total_number = data['need_number']
+        success_number = data['success_number']
+        if total_number == 0:
+            data['success_rate'] = 0
+        else:
+            rate = success_number / total_number * 100
+            data['success_rate'] = str(Decimal(rate).quantize(Decimal('0.00')))
         return data
 
     class Meta:
@@ -71,6 +80,7 @@ class VerifyWorkOrderCreateSerializer(CustomModelSerializer):
     """
     检测工单管理-新增序列化器
     """
+
     class Meta:
         model = VerifyWorkOrder
         fields = "__all__"
@@ -86,11 +96,11 @@ class VerifyWorkOrderUpdateSerializer(CustomModelSerializer):
         model = VerifyWorkOrder
         fields = '__all__'
 
+
 class VerifyWorkOrderFilterSet(FilterSet):
     factory_info_name = django_filters.CharFilter(field_name="factory_info__name", lookup_expr="icontains")
     production_line_name = django_filters.CharFilter(field_name="production_line__name", lookup_expr="icontains")
     device_name = django_filters.CharFilter(field_name="device__name", lookup_expr="icontains")
-    camera_no = django_filters.CharFilter(field_name='verify_work_order__cam__no', lookup_expr="icontains")
 
     class Meta:
         model = VerifyWorkOrder

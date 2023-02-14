@@ -11,18 +11,7 @@ export const crudOptions = (vm) => {
       highlightCurrentRow: false
 
     },
-    rowHandle: {
-      view: {
-        thin: true,
-        text: '',
-        disabled () {
-          return !vm.hasPermissions('Retrieve')
-        }
-      },
-      width: 140,
-      edit: false,
-      remove: false
-    },
+    rowHandle: false,
     viewOptions: {
       componentType: 'row'
     },
@@ -106,20 +95,10 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '采集时间',
-        key: 'ac_time',
-        width: 120,
-        search: {
-          disabled: true
-        },
-        form: {
-          disabled: true
-        }
-      },
-      {
         title: '问题码类型',
         key: 'error_type',
         type: 'select',
+        fixed: 'right',
         width: 120,
         dict: {
           data: [
@@ -139,12 +118,24 @@ export const crudOptions = (vm) => {
         }
       },
       {
+        title: '采集时间',
+        key: 'ac_time',
+        fixed: 'right',
+        width: 150,
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
+      },
+      {
         title: '相机编号',
         key: 'camera_no',
-        width: 160,
+        width: 100,
         type: 'input',
         search: {
-          disabled: false,
+          disabled: true,
           component: {
             placeholder: '请输入',
             props: {
@@ -156,7 +147,7 @@ export const crudOptions = (vm) => {
       {
         title: '码包编号',
         key: 'code_package_no',
-        width: 160,
+        width: 200,
         type: 'input',
         search: {
           disabled: true,
@@ -171,22 +162,7 @@ export const crudOptions = (vm) => {
       {
         title: '生产工单',
         key: 'production_work_no',
-        width: 160,
-        type: 'input',
-        search: {
-          disabled: true,
-          component: {
-            placeholder: '请输入',
-            props: {
-              clearable: true
-            }
-          }
-        }
-      },
-      {
-        title: '检测工单',
-        key: 'verify_work_order_no',
-        width: 160,
+        width: 180,
         type: 'input',
         search: {
           disabled: true,
@@ -201,7 +177,7 @@ export const crudOptions = (vm) => {
       {
         title: '检测工单',
         key: 'verify_work_no',
-        width: 160,
+        width: 180,
         type: 'input',
         search: {
           disabled: true,
@@ -216,7 +192,7 @@ export const crudOptions = (vm) => {
       {
         title: '回传文件名称',
         key: 'file_name',
-        width: 160,
+        width: 200,
         type: 'input',
         search: {
           disabled: true,

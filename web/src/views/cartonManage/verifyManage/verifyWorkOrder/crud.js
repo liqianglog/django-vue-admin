@@ -169,23 +169,6 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '检测相机',
-        key: 'camera_no',
-        minWidth: 100,
-        search: {
-          disabled: false,
-          component: {
-            placeholder: '请输入检测相机',
-            props: {
-              clearable: true
-            }
-          }
-        },
-        form: {
-          disabled: true
-        }
-      },
-      {
         title: '码包总数',
         key: 'total_number',
         minWidth: 100,
@@ -230,14 +213,12 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '识别错误数',
-        key: 'error_number',
-        minWidth: 100,
-        search: {
-          disabled: true
-        },
-        form: {
-          disabled: true
+        title: '识别成功率',
+        key: 'success_rate',
+        type: 'number',
+        minWidth: 140,
+        component: {
+          name: 'table-progress'
         }
       },
       {
