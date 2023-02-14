@@ -1,7 +1,9 @@
 from _pydecimal import Decimal
 
+import django_filters
 from django.db.models import Sum, IntegerField, Q
 from django.db.models.functions import Coalesce
+from django_filters.rest_framework import FilterSet
 from rest_framework import serializers
 
 from carton_manage.verify_manage.models import CameraManage, BackHaulFile
@@ -75,6 +77,14 @@ class CameraManageCreateUpdateSerializer(CustomModelSerializer):
         model = CameraManage
         fields = '__all__'
 
+class CameraManageFilterSet(FilterSet):
+    factory_name = django_filters.CharFilter(field_name="device__production_line__belong_to_factory__name", lookup_expr="icontains")
+    prod_line_name = django_filters.CharFilter(field_name="device__production_line__name", lookup_expr="icontains")
+    device_name = django_filters.CharFilter(field_name="device__name", lookup_expr="icontains")
+
+    class Meta:
+        model = CameraManage
+        fields = '__all__'
 
 class CameraManageViewSet(CustomModelViewSet):
     """
@@ -84,4 +94,5 @@ class CameraManageViewSet(CustomModelViewSet):
     serializer_class = CameraManageSerializer
     create_serializer_class = CameraManageCreateUpdateSerializer
     update_serializer_class = CameraManageCreateUpdateSerializer
+    filter_class = CameraManageFilterSet
     search_fields = ['no']

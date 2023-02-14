@@ -201,6 +201,30 @@ export const crudOptions = (vm) => {
             }
           }
         }
+      }, {
+        title: '文件密码',
+        key: 'pwd',
+        show: false,
+        type: 'input',
+        form: {
+          rules: [ // 表单校验规则
+            {
+              required: true,
+              message: '必填项'
+            }
+          ],
+          component: {
+            placeholder: '请输入',
+            span: 24,
+            showPassword: true,
+            props: {
+              clearable: true
+            },
+            show (context) {
+              return vm.is_encrypted
+            }
+          }
+        }
       },
       {
         title: '产品名称',
@@ -292,31 +316,6 @@ export const crudOptions = (vm) => {
             })
           },
           valueChangeImmediate: true // 是否在打开对话框后触发一次valueChange事件
-        }
-      },
-      {
-        title: '文件密码',
-        key: 'pwd',
-        show: false,
-        type: 'input',
-        form: {
-          rules: [ // 表单校验规则
-            {
-              required: true,
-              message: '必填项'
-            }
-          ],
-          component: {
-            placeholder: '请输入',
-            span: 24,
-            showPassword: true,
-            props: {
-              clearable: true
-            },
-            show (context) {
-              return vm.is_encrypted
-            }
-          }
         }
       },
       {

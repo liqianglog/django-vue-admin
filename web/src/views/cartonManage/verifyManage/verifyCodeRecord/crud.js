@@ -99,9 +99,9 @@ export const crudOptions = (vm) => {
         type: 'select',
         dict: {
           data: [
-            { value: 0, label: '外码' },
-            { value: 1, label: '内码' },
-            { value: 2, label: '外码+内码' }
+            { value: 0, label: '内码' },
+            { value: 1, label: '外码' },
+            { value: 2, label: '未知' }
           ]
         }
       },
@@ -126,9 +126,9 @@ export const crudOptions = (vm) => {
             { value: 0, label: '未识别' },
             { value: 1, label: '正常' },
             { value: 2, label: '码不存在' },
-            { value: 3, label: '本码包重码' },
-            { value: 4, label: '历史码重码' },
-            { value: 5, label: '非生产工单码' }
+            { value: 3, label: '本检测包重码' },
+            { value: 4, label: '本生产工单重码' },
+            { value: 5, label: '非本生产工单码' }
           ]
         },
         search: {
