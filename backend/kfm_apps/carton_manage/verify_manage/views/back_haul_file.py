@@ -5,7 +5,7 @@ import re
 from _pydecimal import Decimal
 from wsgiref.util import FileWrapper
 
-from django.db.models import IntegerField, Sum, Q
+from django.db.models import IntegerField, Sum, Q, Count
 from django.db.models.functions import Coalesce
 from django.http import HttpResponseBadRequest, HttpResponseNotModified, StreamingHttpResponse
 from django.utils._os import safe_join
@@ -42,14 +42,14 @@ class BackHaulFileSerializer(CustomModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         _VerifyCodeRecord = VerifyCodeRecord.objects.filter(back_haul_file=instance.id).aggregate(
-            undfind_num = Coalesce(Sum('error_number',filter=Q(error_type__in=[0])), 0, output_field=IntegerField()),
-            inexistence_num = Coalesce(Sum('error_number', filter=Q(error_type__in=[2])), 0,
+            undfind_num = Coalesce(Count('error_code_content',filter=Q(error_type__in=[0])), 0, output_field=IntegerField()),
+            inexistence_num = Coalesce(Count('error_code_content', filter=Q(error_type__in=[2])), 0,
                                output_field=IntegerField()),
-            self_repetition_num=Coalesce(Sum('error_number', filter=Q(error_type__in=[3])), 0,
+            self_repetition_num=Coalesce(Count('error_code_content', filter=Q(error_type__in=[3])), 0,
                                      output_field=IntegerField()),
-            prod_repetition_num=Coalesce(Sum('error_number', filter=Q(error_type__in=[4])), 0,
+            prod_repetition_num=Coalesce(Count('error_code_content', filter=Q(error_type__in=[4])), 0,
                                          output_field=IntegerField()),
-            prod_undfind_num=Coalesce(Sum('error_number', filter=Q(error_type__in=[5])), 0,
+            prod_undfind_num=Coalesce(Count('error_code_content', filter=Q(error_type__in=[5])), 0,
                                          output_field=IntegerField()),
         )
         if _VerifyCodeRecord:
