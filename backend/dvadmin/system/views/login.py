@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from captcha.views import CaptchaStore, captcha_image
 from django.contrib import auth
 from django.contrib.auth import login
+from django.contrib.auth.hashers import make_password, check_password
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 from drf_yasg import openapi
@@ -108,7 +109,7 @@ class LoginView(TokenObtainPairView):
         except:
             return DetailResponse(msg='该账号未注册')
         # 获得用户后，校验密码并签发token
-        if not user.check_password(password):
+        if check_password(password,user.password):
             return DetailResponse(msg='密码错误')
         result = {
            "name":user.name,

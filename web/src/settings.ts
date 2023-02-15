@@ -6,7 +6,9 @@ import { setLogger } from '@fast-crud/fast-crud';
 // element
 import ui from '@fast-crud/ui-element';
 import { request } from '/@/utils/service';
-
+//扩展包
+import {FsExtendsEditor} from "@fast-crud/fast-extends";
+import "@fast-crud/fast-extends/dist/style.css";
 export default {
 	async install(app: any, options: any) {
 		// 先安装ui
@@ -52,6 +54,12 @@ export default {
 				};
 			},
 		});
+		//富文本
+		app.use(FsExtendsEditor,{
+			wangEditor:{
+				width:300,
+			}
+		})
 		setLogger({ level: 'error' });
 		// 设置自动染色
 		const dictComponentList = ['dict-cascader', 'dict-checkbox', 'dict-radio', 'dict-select', 'dict-switch', 'dict-tree'];
