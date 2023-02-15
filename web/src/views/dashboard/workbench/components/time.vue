@@ -8,29 +8,30 @@
 </template>
 
 <script>
-	export default {
-		title: "时钟",
-		icon: "el-icon-clock",
-		description: "演示部件效果",
-		data() {
-			return {
-				time: '',
-				day: ''
-			}
-		},
-		mounted() {
-			this.showTime()
-			setInterval(()=>{
-				this.showTime()
-			},1000)
-		},
-		methods: {
-			showTime(){
-				this.time = this.$TOOL.dateFormat(new Date(), 'hh:mm:ss')
-				this.day = this.$TOOL.dateFormat(new Date(), 'yyyy年MM月dd日')
-			}
-		}
-	}
+import dayjs from 'dayjs'
+export default {
+  title: '时钟',
+  icon: 'el-icon-alarm-clock',
+  description: '演示部件效果',
+  data () {
+    return {
+      time: '',
+      day: ''
+    }
+  },
+  mounted () {
+    this.showTime()
+    setInterval(() => {
+      this.showTime()
+    }, 1000)
+  },
+  methods: {
+    showTime () {
+      this.time = dayjs(new Date(), 'hh:mm:ss')
+      this.day = dayjs(new Date(), 'yyyy年MM月dd日')
+    }
+  }
+}
 </script>
 
 <style scoped>

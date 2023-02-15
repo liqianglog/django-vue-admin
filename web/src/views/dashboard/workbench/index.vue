@@ -20,21 +20,19 @@
               <el-col v-for="(item, index) in grid.layout" v-bind:key="index" :md="item" :xs="24">
                 <draggable v-model="grid.copmsList[index]" animation="200" handle=".customize-overlay" group="people"
                            item-key="com" dragClass="aaaaa" force-fallback fallbackOnBody class="draggable-box">
-                  <span v-for="(element,eleIndex) in grid.copmsList[index]" :key="eleIndex">
-                  <div class="widgets-item">
+                  <template v-for="(element,eleIndex) in grid.copmsList[index]">
+                  <div class="widgets-item"  :key="eleIndex">
                       1-{{element}}
                       <component :is="allComps[element]"></component>
                       <div v-if="customizing" class="customize-overlay">
                         <el-button class="close" type="danger" plain icon="el-icon-close" size="small"
                                    @click="remove(element)"></el-button>
                         <label>
-                          <el-icon>
-                            <component :is="allComps[element].icon"/>
-                          </el-icon>
+                          <i :class="allComps[element].icon"></i>
                           {{ allComps[element].title }}</label>
                       </div>
                     </div>
-                  </span>
+                  </template>
                 </draggable>
 
               </el-col>
@@ -149,6 +147,9 @@ export default {
     this.$emit('on-mounted')
   },
   computed: {
+    element() {
+      return element
+    },
     allCompsList () {
       var allCompsList = []
       for (var key in this.allComps) {
@@ -319,7 +320,7 @@ export default {
 }
 
 .customizing .widgets-wrapper .draggable-box {
-  border: 1px dashed var(--el-color-primary);
+  border: 1px dashed #409EFF;
   padding: 15px;
 }
 
@@ -348,7 +349,7 @@ export default {
 }
 
 .customize-overlay label {
-  background: var(--el-color-primary);
+  background: #409EFF;
   color: #fff;
   height: 40px;
   padding: 0 30px;
@@ -372,7 +373,7 @@ export default {
 }
 
 .customize-overlay .close:focus, .customize-overlay .close:hover {
-  background: var(--el-button-hover-color);
+  background: #76B1F9;
 }
 
 .widgets-list {
@@ -430,7 +431,7 @@ export default {
 .selectLayout-item {
   width: 60px;
   height: 60px;
-  border: 2px solid var(--el-border-color-light);
+  border: 2px solid #EBEEF5;
   padding: 5px;
   cursor: pointer;
   margin-right: 15px;
@@ -438,7 +439,7 @@ export default {
 
 .selectLayout-item span {
   display: block;
-  background: var(--el-border-color-light);
+  background: #EBEEF5;
   height: 46px;
 }
 
@@ -457,15 +458,15 @@ export default {
 }
 
 .selectLayout-item:hover {
-  border-color: var(--el-color-primary);
+  border-color: #409EFF;
 }
 
 .selectLayout-item.active {
-  border-color: var(--el-color-primary);
+  border-color: #409EFF;
 }
 
 .selectLayout-item.active span {
-  background: var(--el-color-primary);
+  background: #409EFF;
 }
 
 .dark {
