@@ -169,28 +169,11 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '检测相机',
-        key: 'camera_no',
-        minWidth: 100,
-        search: {
-          disabled: false,
-          component: {
-            props: {
-              placeholder: '请输入',
-              clearable: true
-            }
-          }
-        },
-        form: {
-          disabled: true
-        }
-      },
-      {
         title: '码包总数',
         key: 'total_number',
         minWidth: 100,
         search: {
-          disabled: false,
+          disabled: true,
           component: {
             props: {
               clearable: true
@@ -230,14 +213,12 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '识别错误数',
-        key: 'error_number',
-        minWidth: 100,
-        search: {
-          disabled: true
-        },
-        form: {
-          disabled: true
+        title: '识别成功率',
+        key: 'success_rate',
+        type: 'number',
+        minWidth: 140,
+        component: {
+          name: 'table-progress'
         }
       },
       {
@@ -250,7 +231,7 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
-      },{
+      }, {
         title: '不存在码数',
         key: 'inexistence_number',
         minWidth: 100,
@@ -260,7 +241,7 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
-      },{
+      }, {
         title: '本检测包重码数',
         key: 'self_repetition_number',
         minWidth: 140,
@@ -292,7 +273,7 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
-      },{
+      }, {
         title: '产品名称',
         key: 'product_name',
         minWidth: 100,
@@ -351,6 +332,38 @@ export const crudOptions = (vm) => {
             props: {
               clearable: true
             }
+          }
+        }
+      },
+      {
+        title: '检测状态',
+        key: 'status',
+        fixed: 'right',
+        search: {
+          disabled: false
+        },
+        width: 100,
+        type: 'radio',
+        dict: {
+          data: [
+            { value: 0, label: '待检测' },
+            { value: 1, label: '待检测' },
+            { value: 2, label: '检测中' },
+            { value: 3, label: '暂停中' },
+            { value: 4, label: '检测结束' },
+            { value: 5, label: '检测异常' }
+          ]
+        },
+        form: {
+          value: 1,
+          component: {
+            span: 12
+          },
+          rules: [
+            { required: true, message: '状态不能为空', trigger: 'blur' }
+          ],
+          itemProps: {
+            class: { yxtInput: true }
           }
         }
       }

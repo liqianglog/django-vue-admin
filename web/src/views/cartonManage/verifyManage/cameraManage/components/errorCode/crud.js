@@ -88,16 +88,28 @@ export const crudOptions = (vm) => {
         type: 'select',
         dict: {
           data: [
-            { value: 0, label: '外码' },
-            { value: 1, label: '内码' },
-            { value: 2, label: '外码+内码' }
+            { value: 0, label: '内码' },
+            { value: 1, label: '外码' },
+            { value: 2, label: '未知' }
           ]
         }
       },
       {
-        title: '采集时间',
-        key: 'ac_time',
+        title: '问题码类型',
+        key: 'error_type',
+        type: 'select',
+        fixed: 'right',
         width: 120,
+        dict: {
+          data: [
+            { value: 0, label: '未识别' },
+            { value: 1, label: '正常' },
+            { value: 2, label: '码不存在' },
+            { value: 3, label: '本检测包重码' },
+            { value: 4, label: '本生产工单重码' },
+            { value: 5, label: '非本生产工单码' }
+          ]
+        },
         search: {
           disabled: true
         },
@@ -106,20 +118,10 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '问题码类型',
-        key: 'error_type',
-        type: 'select',
-        width: 120,
-        dict: {
-          data: [
-            { value: 0, label: '未识别' },
-            { value: 1, label: '正常' },
-            { value: 2, label: '码不存在' },
-            { value: 3, label: '本码包重码' },
-            { value: 4, label: '历史码重码' },
-            { value: 5, label: '非生产工单码' }
-          ]
-        },
+        title: '采集时间',
+        key: 'ac_time',
+        fixed: 'right',
+        width: 150,
         search: {
           disabled: true
         },
@@ -130,7 +132,7 @@ export const crudOptions = (vm) => {
       {
         title: '相机编号',
         key: 'camera_no',
-        width: 160,
+        width: 100,
         type: 'input',
         search: {
           disabled: true,
@@ -145,7 +147,7 @@ export const crudOptions = (vm) => {
       {
         title: '码包编号',
         key: 'code_package_no',
-        width: 160,
+        width: 200,
         type: 'input',
         search: {
           disabled: true,
@@ -160,22 +162,7 @@ export const crudOptions = (vm) => {
       {
         title: '生产工单',
         key: 'production_work_no',
-        width: 160,
-        type: 'input',
-        search: {
-          disabled: true,
-          component: {
-            placeholder: '请输入',
-            props: {
-              clearable: true
-            }
-          }
-        }
-      },
-      {
-        title: '检测工单',
-        key: 'verify_work_order_no',
-        width: 160,
+        width: 180,
         type: 'input',
         search: {
           disabled: true,
@@ -190,7 +177,7 @@ export const crudOptions = (vm) => {
       {
         title: '检测工单',
         key: 'verify_work_no',
-        width: 160,
+        width: 180,
         type: 'input',
         search: {
           disabled: true,
@@ -205,7 +192,7 @@ export const crudOptions = (vm) => {
       {
         title: '回传文件名称',
         key: 'file_name',
-        width: 160,
+        width: 200,
         type: 'input',
         search: {
           disabled: true,

@@ -54,7 +54,7 @@ class VerifyWorkOrder(CoreModel):
                                         verbose_name="关联产线")
     factory_info = models.ForeignKey(FactoryInfo, db_constraint=False, on_delete=models.PROTECT,
                                      related_name="verify_factory", help_text="关联工厂", verbose_name="关联工厂")
-    status = models.IntegerField(choices=VERIFY_STATUS, default=0, blank=True, help_text="检测状态",
+    status = models.IntegerField(choices=VERIFY_STATUS, default=1, blank=True, help_text="检测状态",
                                  verbose_name="检测状态")
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
@@ -87,7 +87,7 @@ class BackHaulFile(CoreModel):
     verify_work_order = models.ForeignKey(VerifyWorkOrder, db_constraint=False, on_delete=models.PROTECT,
                                           related_name="verify_work_order", help_text="关联检测工单",
                                           null=True, blank=True, verbose_name="关联检测工单")
-    code_type = models.IntegerField(choices=CODE_TYPE_STATUS, default=3, blank=True, help_text="码类型",
+    code_type = models.IntegerField(choices=CODE_TYPE_STATUS, default=2, blank=True, help_text="码类型",
                                     verbose_name="码类型")
     device = models.ForeignKey(DeviceManage, db_constraint=False, related_name='bhfile_device',
                                on_delete=models.CASCADE,

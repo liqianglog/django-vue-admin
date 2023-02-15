@@ -12,8 +12,8 @@ class VerifyCodeRecordSerializer(CustomModelSerializer):
    校验码记录-序列化器
     """
     camera_no = serializers.CharField(source='back_haul_file.cam.no',read_only=True,default="")
-    factory_info_name = serializers.CharField(source="back_haul_file.device.production_line.factory_info.name", read_only=True,default="")
-    production_line_name = serializers.CharField(source="back_haul_file.device.production_line.name", read_only=True,default="")
+    factory_info_name = serializers.CharField(source="back_haul_file.verify_work_order.factory_info.name", read_only=True,default="")
+    production_line_name = serializers.CharField(source="back_haul_file.verify_work_order.production_line.name", read_only=True,default="")
     device_name = serializers.CharField(source="back_haul_file.device.name", read_only=True,default="")
     code_package_no = serializers.CharField(source="back_haul_file.verify_work_order.production_work_no.code_package.no", read_only=True,default="")
     production_work_no = serializers.CharField(
@@ -53,8 +53,8 @@ class VerifyCodeRecordExportSerializer(CustomModelSerializer):
 
 class VerifyCodeRecordFilterSet(FilterSet):
     camera_no = django_filters.CharFilter(field_name='back_haul_file__cam__no', lookup_expr="icontains")
-    factory_info_name = django_filters.CharFilter(field_name="back_haul_file__device__production_line__factory_info__name", lookup_expr="icontains")
-    production_line_name = django_filters.CharFilter(field_name="back_haul_file__device__production_line__name", lookup_expr="icontains")
+    factory_info_name = django_filters.CharFilter(field_name="back_haul_file__verify_work_order__factory_info__name", lookup_expr="icontains")
+    production_line_name = django_filters.CharFilter(field_name="back_haul_file__verify_work_order__production_line__name", lookup_expr="icontains")
     device_name = django_filters.CharFilter(field_name="back_haul_file__device__name", lookup_expr="icontains")
 
     class Meta:

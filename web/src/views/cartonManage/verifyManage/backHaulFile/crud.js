@@ -76,7 +76,7 @@ export const crudOptions = (vm) => {
       }, {
         title: '文件名称',
         key: 'file_name',
-        minWidth: 120,
+        minWidth: 220,
         search: {
           disabled: true
         },
@@ -84,10 +84,10 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
-      },{
+      }, {
         title: '赋码工单号',
         key: 'production_work_no',
-        minWidth: 120,
+        minWidth: 180,
         search: {
           disabled: true
         },
@@ -166,7 +166,7 @@ export const crudOptions = (vm) => {
         title: '识别成功率',
         key: 'success_rate',
         type: 'number',
-        minWidth: 120,
+        minWidth: 140,
         component: {
           name: 'table-progress'
         }

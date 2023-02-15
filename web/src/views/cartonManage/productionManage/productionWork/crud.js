@@ -167,9 +167,9 @@ export const crudOptions = (vm) => {
       {
         title: '码包总数',
         key: 'total_number',
-        minWidth: 200,
+        minWidth: 160,
         search: {
-          disabled: false,
+          disabled: true,
           component: {
             props: {
               clearable: true
@@ -193,12 +193,12 @@ export const crudOptions = (vm) => {
       }, {
         title: '产品名称',
         key: 'product_name',
-        minWidth: 100,
+        minWidth: 180,
         type: 'input'
       }, {
         title: '到货工厂',
         key: 'arrival_factory',
-        minWidth: 100,
+        minWidth: 180,
         type: 'input'
       }, {
         title: '生产工厂',

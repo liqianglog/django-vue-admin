@@ -11,8 +11,8 @@ from dvadmin_tenants.models import Client
 table_prefix = "carton_"
 
 STATUS_CHOICES = (
-    (0, "失效"),
-    (1, "有效"),
+    (0, "启动"),
+    (1, "禁用"),
 )
 
 
