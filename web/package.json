@@ -47,6 +47,7 @@
     "vue-infinite-scroll": "^2.0.2",
     "vue-router": "^3.6.5",
     "vue-splitpane": "^1.0.6",
+    "vuedraggable": "^2.24.3",
     "vuex": "^3.1.2",
     "vxe-table": "^3.3.2",
     "xe-utils": "^3.2.1"
