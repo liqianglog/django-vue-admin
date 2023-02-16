@@ -43,6 +43,11 @@ export default {
   title: '欢迎',
   icon: 'el-icon-present',
   description: '项目特色以及文档链接',
+  height: 5,
+  width: 8,
+  maxH: 1,
+  maxW: Infinity,
+  isResizable: true,
   data () {
     return {}
   },

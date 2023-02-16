@@ -12,9 +12,14 @@ export default {
   icon: 'el-icon-monitor',
   description: '码包订单总数',
   name: 'cpOrderTotal',
+  height: 5,
+  width: 8,
+  maxH: 1,
+  maxW: Infinity,
+  isResizable: true,
   data () {
     return {
-      order_total:50
+      order_total: 50
     }
   }
 }

@@ -1,18 +1,24 @@
 <template>
-	<el-card shadow="hover" header="时钟" class="item-background">
-		<div class="time">
-			<h2>{{ time }}</h2>
-			<p>{{ day }}</p>
-		</div>
-	</el-card>
+  <el-card shadow="hover" header="时钟" class="item-background">
+    <div class="time">
+      <h2>{{ time }}</h2>
+      <p>{{ day }}</p>
+    </div>
+  </el-card>
 </template>
 
 <script>
 import dayjs from 'dayjs'
+
 export default {
   title: '时钟',
   icon: 'el-icon-alarm-clock',
   description: '演示部件效果',
+  height: 5,
+  width: 8,
+  maxH: 1,
+  maxW: Infinity,
+  isResizable: true,
   data () {
     return {
       time: '',
@@ -35,7 +41,18 @@ export default {
 </script>
 
 <style scoped>
-	.item-background {background: linear-gradient(to right, #8E54E9, #4776E6);color: #fff;}
-	.time h2 {font-size: 40px;}
-	.time p {font-size: 14px;margin-top: 13px;opacity: 0.7;}
+.item-background {
+  background: linear-gradient(to right, #8E54E9, #4776E6);
+  color: #fff;
+}
+
+.time h2 {
+  font-size: 40px;
+}
+
+.time p {
+  font-size: 14px;
+  margin-top: 13px;
+  opacity: 0.7;
+}
 </style>

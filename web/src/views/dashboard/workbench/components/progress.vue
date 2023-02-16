@@ -17,6 +17,11 @@ export default {
   title: '进度环',
   icon: 'el-icon-odometer',
   description: '进度环原子组件演示',
+  height: 5,
+  width: 8,
+  maxH: 1,
+  maxW: Infinity,
+  isResizable: true,
   data () {
     return {}
   }

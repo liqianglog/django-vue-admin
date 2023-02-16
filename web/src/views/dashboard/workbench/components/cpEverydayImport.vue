@@ -12,9 +12,14 @@ export default {
   icon: 'el-icon-monitor',
   description: '每日码包导入数',
   name: 'cpEverydayImport',
+  height: 5,
+  width: 8,
+  maxH: 1,
+  maxW: Infinity,
+  isResizable: true,
   data () {
     return {
-      myChart:null
+      myChart: null
     }
   },
   methods: {
@@ -40,7 +45,7 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28,29,30]
+          data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
         },
         yAxis: {
           type: 'value'
@@ -59,9 +64,9 @@ export default {
             areaStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                 { offset: 0, color: '#fe9a8bb3' },
-                { offset: 1, color: '#fe9a8b03' },
-              ]),
-            },
+                { offset: 1, color: '#fe9a8b03' }
+              ])
+            }
           },
           {
             name: '校验成功数',
@@ -73,9 +78,9 @@ export default {
             areaStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                 { offset: 0, color: '#9E87FFb3' },
-                { offset: 1, color: '#9E87FF03' },
-              ]),
-            },
+                { offset: 1, color: '#9E87FF03' }
+              ])
+            }
           }
         ]
       }

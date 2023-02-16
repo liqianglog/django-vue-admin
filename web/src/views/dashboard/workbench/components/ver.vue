@@ -17,6 +17,11 @@ export default {
   title: '版本信息',
   icon: 'el-icon-monitor',
   description: '当前项目版本信息',
+  height: 5,
+  width: 8,
+  maxH: 1,
+  maxW: Infinity,
+  isResizable: true,
   data () {
     return {
       ver: 'loading...'
@@ -27,7 +32,7 @@ export default {
   },
   methods: {
     async getVer () {
-     this.ver = 'v1.1'
+      this.ver = 'v1.1'
     },
     golog () {
       window.open('https://gitee.com/lolicode/scui/releases')
