@@ -14,6 +14,11 @@ export default {
   title: '关于项目',
   icon: 'el-icon-setting',
   description: '点个星星支持一下',
+  height: 5,
+  width: 8,
+  maxH: 1,
+  maxW: Infinity,
+  isResizable: true,
   data () {
     return {}
   }
@@ -23,7 +28,5 @@ export default {
 <style scoped>
 .item-background p {
   color: #999;
-  margin-top: 10px;
-  line-height: 1.8;
 }
 </style>
