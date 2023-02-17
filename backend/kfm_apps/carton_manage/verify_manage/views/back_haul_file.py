@@ -4,6 +4,7 @@ import posixpath
 import re
 from _pydecimal import Decimal
 from wsgiref.util import FileWrapper
+from urllib.parse import quote
 
 from django.db.models import IntegerField, Sum, Q, Count
 from django.db.models.functions import Coalesce
@@ -117,4 +118,5 @@ class BackHaulFileViewSet(CustomModelViewSet):
             response['Content-Length'] = str(size)
             response['Accept-Ranges'] = 'bytes'
             response["STATUS-CODE"] = 200
+            response["content-disposition"] = f'attachment;filename={quote(str(f"{_BackHaulFile.file_name}"))}'
             return response
