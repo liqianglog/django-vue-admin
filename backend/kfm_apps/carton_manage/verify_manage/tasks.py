@@ -5,6 +5,8 @@ import zipfile
 from shutil import copyfile
 
 import django
+from django.core.cache import cache
+from django.db import connection
 
 from carton_manage.code_manage.models import CodePackage
 from dvadmin_tenants.models import HistoryCodeInfo
@@ -119,106 +121,108 @@ def back_haul_file_check(back_haul_file_id):
     # 2.2 在ck中查询所有数据
     if not package_id:
         package_id = back_haul_file_obj.verify_work_order.production_work_no.code_package_id
-    ck_verify_code_data = VerifyCodeRecord.ck_verify_code(data=data_dict, package_id=package_id,
-                                                          repeat_data_dict=repeat_data_dict)
-    # 3. 保存记录到校验码记录表中
-    verify_code_record_list = []
-    verify_work_no = back_haul_file_obj.verify_work_order.no
-    # 3.0 未识别码入库
-    for ac_time in unrecognized_list:
-        verify_code_record_list.append(VerifyCodeRecord(**{
-            "verify_work_no": verify_work_no,
-            "back_haul_file": back_haul_file_obj,
-            "code_content_md5": md5_value('000000'),
-            "error_code_content": '000000',
-            "code_type": 2,
-            "ac_time": ac_time,
-            "error_type": 0,
-        }))
-    # 3.1 正常码入库
-    for code_content_md5, value in ck_verify_code_data.get('error_type_1').items():
-        code_type = value.get('code_type')
-        ac_time = data_dict[code_content_md5].get('ac_time')
-        # code_content = data_dict[code_content_md5].get('code_content')
-        verify_code_record_list.append(VerifyCodeRecord(**{
-            "verify_work_no": verify_work_no,
-            "back_haul_file": back_haul_file_obj,
-            "code_content_md5": code_content_md5,
-            "code_type": code_type,
-            "ac_time": ac_time,
-            "error_type": 1,
-        }))
-    # 3.2 码不存在
-    for code_content_md5, value in ck_verify_code_data.get('error_type_2').items():
-        code_content = data_dict[code_content_md5].get('code_content')
-        ac_time = data_dict[code_content_md5].get('ac_time')
-        verify_code_record_list.append(VerifyCodeRecord(**{
-            "verify_work_no": verify_work_no,
-            "back_haul_file": back_haul_file_obj,
-            "code_content_md5": code_content_md5,
-            "error_code_content": code_content,
-            "code_type": 2,
-            "ac_time": ac_time,
-            "error_type": 2,
-        }))
+    # 添加redis 锁，进行校验
+    with cache.lock(key=f"back_haul_file_check_{connection.tenant.schema_name}"):
+        ck_verify_code_data = VerifyCodeRecord.ck_verify_code(data=data_dict, package_id=package_id,
+                                                              repeat_data_dict=repeat_data_dict)
+        # 3. 保存记录到校验码记录表中
+        verify_code_record_list = []
+        verify_work_no = back_haul_file_obj.verify_work_order.no
+        # 3.0 未识别码入库
+        for ac_time in unrecognized_list:
+            verify_code_record_list.append(VerifyCodeRecord(**{
+                "verify_work_no": verify_work_no,
+                "back_haul_file": back_haul_file_obj,
+                "code_content_md5": md5_value('000000'),
+                "error_code_content": '000000',
+                "code_type": 2,
+                "ac_time": ac_time,
+                "error_type": 0,
+            }))
+        # 3.1 正常码入库
+        for code_content_md5, value in ck_verify_code_data.get('error_type_1').items():
+            code_type = value.get('code_type')
+            ac_time = data_dict[code_content_md5].get('ac_time')
+            # code_content = data_dict[code_content_md5].get('code_content')
+            verify_code_record_list.append(VerifyCodeRecord(**{
+                "verify_work_no": verify_work_no,
+                "back_haul_file": back_haul_file_obj,
+                "code_content_md5": code_content_md5,
+                "code_type": code_type,
+                "ac_time": ac_time,
+                "error_type": 1,
+            }))
+        # 3.2 码不存在
+        for code_content_md5, value in ck_verify_code_data.get('error_type_2').items():
+            code_content = data_dict[code_content_md5].get('code_content')
+            ac_time = data_dict[code_content_md5].get('ac_time')
+            verify_code_record_list.append(VerifyCodeRecord(**{
+                "verify_work_no": verify_work_no,
+                "back_haul_file": back_haul_file_obj,
+                "code_content_md5": code_content_md5,
+                "error_code_content": code_content,
+                "code_type": 2,
+                "ac_time": ac_time,
+                "error_type": 2,
+            }))
 
-    # 3.3 本检测包重码
-    for data in ck_verify_code_data.get('error_type_3'):
-        code_content_md5 = data.get('code_content_md5')
-        code_content = data_dict[code_content_md5].get('code_content')
-        ac_time = data_dict[code_content_md5].get('ac_time')
-        verify_code_record_list.append(VerifyCodeRecord(**{
-            "verify_work_no": verify_work_no,
-            "back_haul_file": back_haul_file_obj,
-            "code_content_md5": code_content_md5,
-            "error_code_content": code_content,
-            "code_type": data.get('code_type'),
-            "ac_time": ac_time,
-            "error_type": 3,
-        }))
+        # 3.3 本检测包重码
+        for data in ck_verify_code_data.get('error_type_3'):
+            code_content_md5 = data.get('code_content_md5')
+            code_content = data_dict[code_content_md5].get('code_content')
+            ac_time = data_dict[code_content_md5].get('ac_time')
+            verify_code_record_list.append(VerifyCodeRecord(**{
+                "verify_work_no": verify_work_no,
+                "back_haul_file": back_haul_file_obj,
+                "code_content_md5": code_content_md5,
+                "error_code_content": code_content,
+                "code_type": data.get('code_type'),
+                "ac_time": ac_time,
+                "error_type": 3,
+            }))
 
-    # 3.4 本生产工单重码
-    for code_content_md5, value in ck_verify_code_data.get('error_type_4').items():
-        code_content = data_dict[code_content_md5].get('code_content')
-        code_type = value.get('code_type')
-        rep_code_id = value.get('rep_code_id')
-        rep_package_id = value.get('rep_package_id')
-        rep_tenant_id = value.get('rep_tenant_id')
-        ac_time = data_dict[code_content_md5].get('ac_time')
-        verify_code_record_list.append(VerifyCodeRecord(**{
-            "verify_work_no": verify_work_no,
-            "back_haul_file": back_haul_file_obj,
-            "code_content_md5": code_content_md5,
-            "error_code_content": code_content,
-            "code_type": code_type,
-            "ac_time": ac_time,
-            "error_type": 4,
-            "rep_code_id": rep_code_id,
-            "rep_package_id": rep_package_id,
-            "rep_tenant_id": rep_tenant_id,
-        }))
-    # 3.5 非本生产工单码
-    for code_content_md5, value in ck_verify_code_data.get('error_type_5').items():
-        code_content = data_dict[code_content_md5].get('code_content')
-        code_type = value.get('code_type')
-        rep_package_id = value.get('rep_package_id')
-        rep_tenant_id = value.get('rep_tenant_id')
-        ac_time = data_dict[code_content_md5].get('ac_time')
-        verify_code_record_list.append(VerifyCodeRecord(**{
-            "verify_work_no": verify_work_no,
-            "back_haul_file": back_haul_file_obj,
-            "code_content_md5": code_content_md5,
-            "error_code_content": code_content,
-            "code_type": code_type,
-            "ac_time": ac_time,
-            "error_type": 5,
-            "rep_package_id": rep_package_id,
-            "rep_tenant_id": rep_tenant_id,
-        }))
+        # 3.4 本生产工单重码
+        for code_content_md5, value in ck_verify_code_data.get('error_type_4').items():
+            code_content = data_dict[code_content_md5].get('code_content')
+            code_type = value.get('code_type')
+            rep_code_id = value.get('rep_code_id')
+            rep_package_id = value.get('rep_package_id')
+            rep_tenant_id = value.get('rep_tenant_id')
+            ac_time = data_dict[code_content_md5].get('ac_time')
+            verify_code_record_list.append(VerifyCodeRecord(**{
+                "verify_work_no": verify_work_no,
+                "back_haul_file": back_haul_file_obj,
+                "code_content_md5": code_content_md5,
+                "error_code_content": code_content,
+                "code_type": code_type,
+                "ac_time": ac_time,
+                "error_type": 4,
+                "rep_code_id": rep_code_id,
+                "rep_package_id": rep_package_id,
+                "rep_tenant_id": rep_tenant_id,
+            }))
+        # 3.5 非本生产工单码
+        for code_content_md5, value in ck_verify_code_data.get('error_type_5').items():
+            code_content = data_dict[code_content_md5].get('code_content')
+            code_type = value.get('code_type')
+            rep_package_id = value.get('rep_package_id')
+            rep_tenant_id = value.get('rep_tenant_id')
+            ac_time = data_dict[code_content_md5].get('ac_time')
+            verify_code_record_list.append(VerifyCodeRecord(**{
+                "verify_work_no": verify_work_no,
+                "back_haul_file": back_haul_file_obj,
+                "code_content_md5": code_content_md5,
+                "error_code_content": code_content,
+                "code_type": code_type,
+                "ac_time": ac_time,
+                "error_type": 5,
+                "rep_package_id": rep_package_id,
+                "rep_tenant_id": rep_tenant_id,
+            }))
 
-    VerifyCodeRecord.objects.bulk_create(verify_code_record_list)
-    # 4. 更新识别后的结果到回传文件管理表中
-    back_haul_file_obj.update_result(back_haul_file_obj.id)
+        VerifyCodeRecord.objects.bulk_create(verify_code_record_list)
+        # 4. 更新识别后的结果到回传文件管理表中
+        back_haul_file_obj.update_result(back_haul_file_obj.id)
     # 5. 删除解密后的文件
     shutil.rmtree(os.path.join(get_back_haul_file_des_crypt_path(), file_position.split(os.sep)[0]))
     back_haul_file_obj = BackHaulFile.objects.get(id=back_haul_file_id)
