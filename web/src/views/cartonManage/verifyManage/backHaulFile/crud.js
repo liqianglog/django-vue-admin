@@ -230,6 +230,35 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
+      },
+      {
+        title: '检测状态',
+        key: 'status',
+        fixed: 'right',
+        search: {
+          disabled: false
+        },
+        width: 100,
+        type: 'select',
+        dict: {
+          data: [
+            { value: 1, label: '待检测' },
+            { value: 2, label: '检测中' },
+            { value: 3, label: '检测通过' },
+            { value: 4, label: '检测失败' }
+          ]
+        },
+        form: {
+          component: {
+            span: 12
+          },
+          rules: [
+            { required: true, message: '状态不能为空', trigger: 'blur' }
+          ],
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        }
       }
     ].concat(vm.commonEndColumns({
       update_datetime: { showTable: false },
