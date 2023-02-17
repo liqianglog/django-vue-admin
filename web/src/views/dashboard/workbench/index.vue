@@ -18,11 +18,13 @@
             </div>
             <grid-layout :layout.sync="layout"
                          :col-num="24"
-                         :row-height="30"
+                         :row-height="10"
                          :is-draggable="customizing"
-                         :is-resizable="false"
-                         :vertical-compact="true"
+                         :vertical-compact="false"
                          :use-css-transforms="true"
+                         :use-row-transforms="true"
+                         :autoSize="true"
+                         :preventCollision="true"
             >
               <grid-item v-for="(item, index) in layout"
                          :static="item.static"
@@ -32,6 +34,7 @@
                          :h="item.h"
                          :i="item.i"
                          :key="index"
+                         :isResizable="false"
               >
                 <component :is="allComps[item.element]"></component>
                 <div v-if="customizing" class="customize-overlay">
@@ -43,26 +46,6 @@
                 </div>
               </grid-item>
             </grid-layout>
-            <!--            <el-row :gutter="15">-->
-            <!--              <el-col v-for="(item, index) in grid.layout" v-bind:key="index" :md="item" :xs="24">-->
-            <!--                <draggable v-model="grid.copmsList[index]" animation="200" handle=".customize-overlay" group="people"-->
-            <!--                           item-key="com" dragClass="aaaaa" force-fallback fallbackOnBody class="draggable-box">-->
-            <!--                  <template v-for="(element,eleIndex) in grid.copmsList[index]">-->
-            <!--                  <div class="widgets-item"  :key="eleIndex">-->
-            <!--                      <component :is="allComps[element]"></component>-->
-            <!--                      <div v-if="customizing" class="customize-overlay">-->
-            <!--                        <el-button class="close" type="danger" plain icon="el-icon-close" size="small"-->
-            <!--                                   @click="remove(element)"></el-button>-->
-            <!--                        <label>-->
-            <!--                          <i :class="allComps[element].icon"></i>-->
-            <!--                          {{ allComps[element].title }}</label>-->
-            <!--                      </div>-->
-            <!--                    </div>-->
-            <!--                  </template>-->
-            <!--                </draggable>-->
-
-            <!--              </el-col>-->
-            <!--            </el-row>-->
           </div>
         </div>
       </div>
@@ -88,9 +71,7 @@
               </div>
               <div v-for="item in myCompsList" :key="item.title" class="widgets-list-item">
                 <div class="item-logo">
-                  <el-icon>
-                    <component :is="item.icon"/>
-                  </el-icon>
+                  <i :class="item.icon"></i>
                 </div>
                 <div class="item-info">
                   <h2>{{ item.title }}</h2>
@@ -108,6 +89,7 @@
         </el-container>
       </div>
     </div>
+
   </d2-container>
 </template>
 
@@ -123,7 +105,7 @@ export default {
     GridLayout: VueGridLayout.GridLayout,
     GridItem: VueGridLayout.GridItem
   },
-  data () {
+  data() {
     return {
       customizing: false,
       allComps: allComps,
@@ -147,14 +129,14 @@ export default {
       ]
     }
   },
-  created () {
+  created() {
     this.layout = JSON.parse(util.cookies.get('grid-layout') || JSON.stringify(this.defaultLayout))
   },
-  mounted () {
+  mounted() {
     this.$emit('on-mounted')
   },
   computed: {
-    allCompsList () {
+    allCompsList() {
       var allCompsList = []
       for (var key in this.allComps) {
         allCompsList.push({
@@ -171,16 +153,16 @@ export default {
       }
       return allCompsList
     },
-    myCompsList () {
+    myCompsList() {
       return this.allCompsList
     },
-    nowCompsList () {
+    nowCompsList() {
       return this.allCompsList
     }
   },
   methods: {
     // 开启自定义
-    custom () {
+    custom() {
       this.customizing = true
       const oldWidth = this.$refs.widgets.offsetWidth
       this.$nextTick(() => {
@@ -189,10 +171,10 @@ export default {
       })
     },
     // 设置布局
-    setLayout (layout) {
+    setLayout(layout) {
       // 暂定
     },
-    getLayoutElementNumber (elementName) {
+    getLayoutElementNumber(elementName) {
       var index = 0
       this.layout.map(res => {
         if (elementName === res.element) {
@@ -202,7 +184,7 @@ export default {
       return index + 1
     },
     // 追加
-    push (item) {
+    push(item) {
       console.log(1, item)
       this.layout.push({
         x: 6,
@@ -217,25 +199,25 @@ export default {
       })
     },
     // 删除组件
-    remove (index) {
+    remove(index) {
       this.layout.splice(index, 1)
     },
     // 保存
-    save () {
+    save() {
       console.log(this.layout)
       this.customizing = false
       this.$refs.widgets.style.removeProperty('transform')
       util.cookies.set('grid-layout', this.layout)
     },
     // 恢复默认
-    backDefaul () {
+    backDefaul() {
       this.customizing = false
       this.$refs.widgets.style.removeProperty('transform')
       this.layout = JSON.parse(JSON.stringify(this.defaultLayout))
       util.cookies.remove('grid-layout')
     },
     // 关闭
-    close () {
+    close() {
       this.customizing = false
       this.$refs.widgets.style.removeProperty('transform')
     }
@@ -497,7 +479,7 @@ export default {
   }
 }
 
-.customizing{
+.customizing {
   .vue-grid-layout {
     background: #eee;
   }

@@ -12,7 +12,7 @@ export default {
   icon: 'el-icon-monitor',
   description: '码包重码数对比',
   name: 'cpRepeatPie',
-  height: 5,
+  height: 400,
   width: 8,
   maxH: 1,
   maxW: Infinity,
