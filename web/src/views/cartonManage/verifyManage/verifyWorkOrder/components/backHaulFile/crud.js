@@ -119,6 +119,7 @@ export const crudOptions = (vm) => {
         title: '码包总数',
         key: 'total_number',
         minWidth: 120,
+        type: 'number',
         search: {
           disabled: true
         },
@@ -130,6 +131,7 @@ export const crudOptions = (vm) => {
         title: '识别成功数',
         key: 'success_number',
         minWidth: 120,
+        type: 'number',
         search: {
           disabled: true
         },
@@ -151,6 +153,7 @@ export const crudOptions = (vm) => {
         title: '未识别码数',
         key: 'unrecognized_num',
         minWidth: 100,
+        type: 'number',
         search: {
           disabled: true
         },
@@ -161,6 +164,7 @@ export const crudOptions = (vm) => {
         title: '不存在码数',
         key: 'code_not_exist_num',
         minWidth: 100,
+        type: 'number',
         search: {
           disabled: true
         },
@@ -171,6 +175,7 @@ export const crudOptions = (vm) => {
         title: '本检测包重码数',
         key: 'self_repetition_num',
         minWidth: 140,
+        type: 'number',
         search: {
           disabled: true
         },
@@ -182,6 +187,7 @@ export const crudOptions = (vm) => {
         title: '本生产工单重码数',
         key: 'prod_repetition_num',
         minWidth: 140,
+        type: 'number',
         search: {
           disabled: true
         },
@@ -193,6 +199,7 @@ export const crudOptions = (vm) => {
         title: '非本生产工单码数',
         key: 'prod_wrong_num',
         minWidth: 140,
+        type: 'number',
         search: {
           disabled: true
         },
