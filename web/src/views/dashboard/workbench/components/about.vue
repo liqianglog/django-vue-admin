@@ -14,7 +14,7 @@ export default {
   title: '关于项目',
   icon: 'el-icon-setting',
   description: '点个星星支持一下',
-  height: 5,
+  height: 20,
   width: 8,
   maxH: 1,
   maxW: Infinity,
