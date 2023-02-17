@@ -97,6 +97,14 @@ class BackHaulFile(CoreModel):
     total_number = models.IntegerField(default=0, blank=True, help_text="码总数", verbose_name="码总数")
     success_number = models.IntegerField(default=0, blank=True, help_text="识别成功数", verbose_name="识别成功数")
     error_number = models.IntegerField(default=0, blank=True, help_text="识别错误数", verbose_name="识别错误数")
+    unrecognized_num = models.IntegerField(default=0, blank=True, help_text="码未识别数", verbose_name="识别错误数")
+    code_not_exist_num = models.IntegerField(default=0, blank=True, help_text="码不存在数", verbose_name="码不存在数")
+    self_repetition_num = models.IntegerField(default=0, blank=True, help_text="本检测包重码数",
+                                              verbose_name="本检测包重码数")
+    prod_repetition_num = models.IntegerField(default=0, blank=True, help_text="本生产工单重码数",
+                                              verbose_name="本生产工单重码数")
+    prod_wrong_num = models.IntegerField(default=0, blank=True, help_text="非本生产工单码数",
+                                         verbose_name="非本生产工单码数")
     file_position = models.CharField(max_length=255, blank=True, null=True, help_text="码包存放位置",
                                      verbose_name="码包存放位置")
     file_name = models.CharField(max_length=255, blank=True, null=True, help_text="文件名称",
@@ -112,11 +120,21 @@ class BackHaulFile(CoreModel):
         verify_code_record_data = VerifyCodeRecord.objects.filter(
             back_haul_file_id=back_haul_file_id).aggregate(
             total_number=Count('id'),
-            success_number=Count('id', filter=Q(error_type=1))
+            success_number=Count('id', filter=Q(error_type=1)),
+            unrecognized_num=Count('id', filter=Q(error_type=0)),
+            code_not_exist_num=Count('id', filter=Q(error_type=2)),
+            self_repetition_num=Count('id', filter=Q(error_type=3)),
+            prod_repetition_num=Count('id', filter=Q(error_type=4)),
+            prod_wrong_num=Count('id', filter=Q(error_type=5)),
         )
         back_haul_file_obj = cls.objects.get(id=back_haul_file_id)
         back_haul_file_obj.total_number = verify_code_record_data.get('total_number') or 0
         back_haul_file_obj.success_number = verify_code_record_data.get('success_number') or 0
+        back_haul_file_obj.unrecognized_num = verify_code_record_data.get('unrecognized_num') or 0
+        back_haul_file_obj.code_not_exist_num = verify_code_record_data.get('code_not_exist_num') or 0
+        back_haul_file_obj.self_repetition_num = verify_code_record_data.get('self_repetition_num') or 0
+        back_haul_file_obj.prod_repetition_num = verify_code_record_data.get('prod_repetition_num') or 0
+        back_haul_file_obj.prod_wrong_num = verify_code_record_data.get('prod_wrong_num') or 0
         back_haul_file_obj.error_number = back_haul_file_obj.total_number - back_haul_file_obj.success_number
         back_haul_file_obj.save()
 

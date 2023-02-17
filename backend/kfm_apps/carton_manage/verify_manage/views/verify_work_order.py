@@ -27,40 +27,16 @@ class VerifyWorkOrderSerializer(CustomModelSerializer):
 
     def to_representation(self, instance: VerifyWorkOrder):
         data = super().to_representation(instance)
-        print(data)
         _BackHaulFile = BackHaulFile.objects.filter(verify_work_order_id=instance.id).aggregate(
             total_num=Coalesce(Sum('total_number'), 0, output_field=IntegerField()),
             success_num=Coalesce(Sum('success_number'), 0, output_field=IntegerField()),
             error_num=Coalesce(Sum('error_number'), 0, output_field=IntegerField()),
-            undfind_num=Coalesce(Sum('error_number', filter=Q(verify_code_bhfile__error_type__in=[0])), 0,
-                                 output_field=IntegerField()),
-            inexistence_num=Coalesce(Sum('error_number', filter=Q(verify_code_bhfile__error_type__in=[2])), 0,
-                                     output_field=IntegerField()),
-            self_repetition_num=Coalesce(Sum('error_number', filter=Q(verify_code_bhfile__error_type__in=[3])), 0,
-                                         output_field=IntegerField()),
-            prod_repetition_num=Coalesce(Sum('error_number', filter=Q(verify_code_bhfile__error_type__in=[4])), 0,
-                                         output_field=IntegerField()),
-            prod_undfind_num=Coalesce(Sum('error_number', filter=Q(verify_code_bhfile__error_type__in=[5])), 0,
-                                      output_field=IntegerField()),
+            unrecognized_num=Coalesce(Sum('unrecognized_num'), 0, output_field=IntegerField()),
+            code_not_exist_num=Coalesce(Sum('code_not_exist_num'), 0, output_field=IntegerField()),
+            self_repetition_num=Coalesce(Sum('self_repetition_num'), 0, output_field=IntegerField()),
+            prod_repetition_num=Coalesce(Sum('prod_repetition_num'), 0, output_field=IntegerField()),
+            prod_wrong_num=Coalesce(Sum('prod_wrong_num'), 0, output_field=IntegerField()),
         )
-        if _BackHaulFile:
-            data['need_number'] = _BackHaulFile.get('total_num')
-            data['success_number'] = _BackHaulFile.get('success_num')
-            data['error_number'] = _BackHaulFile.get('error_num')
-            data['undfind_number'] = _BackHaulFile.get('undfind_num')
-            data['inexistence_number'] = _BackHaulFile.get('inexistence_num')
-            data['self_repetition_number'] = _BackHaulFile.get('self_repetition_num')
-            data['prod_repetition_number'] = _BackHaulFile.get('prod_repetition_num')
-            data['prod_undfind_number'] = _BackHaulFile.get('prod_undfind_num')
-        else:
-            data['need_number'] = 0
-            data['success_number'] = 0
-            data['error_number'] = 0
-            data['undfind_number'] = 0
-            data['inexistence_number'] = 0
-            data['self_repetition_number'] = 0
-            data['prod_repetition_number'] = 0
-            data['prod_undfind_number'] = 0
         total_number = data['need_number']
         success_number = data['success_number']
         if total_number == 0:
