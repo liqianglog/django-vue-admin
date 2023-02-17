@@ -12,7 +12,7 @@ export const crudOptions = (vm) => {
 
     },
     rowHandle: {
-      width: 140,
+      width: 110,
       fixed: 'right',
       view: false,
       edit: false,
@@ -125,10 +125,16 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '总码数',
-        key: 'total_number',
+        title: '识别码总数',
+        key: 'need_number',
+        minWidth: 100,
         type: 'number',
-        minWidth: 100
+        search: {
+          disabled: true
+        },
+        form: {
+          disabled: true
+        }
       },
       {
         title: '识别成功数',
@@ -146,14 +152,8 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '识别失败数',
-        key: 'error_number',
-        type: 'number',
-        minWidth: 100
-      },
-      {
         title: '未识别码数',
-        key: 'undfind_number',
+        key: 'unrecognized_num',
         minWidth: 100,
         type: 'number',
         search: {
@@ -164,7 +164,7 @@ export const crudOptions = (vm) => {
         }
       }, {
         title: '不存在码数',
-        key: 'inexistence_number',
+        key: 'code_not_exist_num',
         minWidth: 100,
         type: 'number',
         search: {
@@ -175,7 +175,7 @@ export const crudOptions = (vm) => {
         }
       }, {
         title: '本检测包重码数',
-        key: 'self_repetition_number',
+        key: 'self_repetition_num',
         minWidth: 140,
         type: 'number',
         search: {
@@ -187,7 +187,7 @@ export const crudOptions = (vm) => {
       },
       {
         title: '本生产工单重码数',
-        key: 'prod_repetition_number',
+        key: 'prod_repetition_num',
         minWidth: 140,
         type: 'number',
         search: {
@@ -199,7 +199,7 @@ export const crudOptions = (vm) => {
       },
       {
         title: '非本生产工单码数',
-        key: 'prod_undfind_number',
+        key: 'prod_wrong_num',
         minWidth: 140,
         type: 'number',
         search: {

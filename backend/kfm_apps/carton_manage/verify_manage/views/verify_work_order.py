@@ -28,21 +28,21 @@ class VerifyWorkOrderSerializer(CustomModelSerializer):
     def to_representation(self, instance: VerifyWorkOrder):
         data = super().to_representation(instance)
         _BackHaulFile = BackHaulFile.objects.filter(verify_work_order_id=instance.id).aggregate(
-            total_num=Coalesce(Sum('total_number'), 0, output_field=IntegerField()),
-            success_num=Coalesce(Sum('success_number'), 0, output_field=IntegerField()),
-            error_num=Coalesce(Sum('error_number'), 0, output_field=IntegerField()),
+            need_number=Coalesce(Sum('total_number'), 0, output_field=IntegerField()),
+            success_number=Coalesce(Sum('success_number'), 0, output_field=IntegerField()),
+            error_number=Coalesce(Sum('error_number'), 0, output_field=IntegerField()),
             unrecognized_num=Coalesce(Sum('unrecognized_num'), 0, output_field=IntegerField()),
             code_not_exist_num=Coalesce(Sum('code_not_exist_num'), 0, output_field=IntegerField()),
             self_repetition_num=Coalesce(Sum('self_repetition_num'), 0, output_field=IntegerField()),
             prod_repetition_num=Coalesce(Sum('prod_repetition_num'), 0, output_field=IntegerField()),
             prod_wrong_num=Coalesce(Sum('prod_wrong_num'), 0, output_field=IntegerField()),
         )
+        data = {**data, **_BackHaulFile}
         total_number = data['need_number']
-        success_number = data['success_number']
         if total_number == 0:
-            data['success_rate'] = 0
+            data['success_rate'] = '0'
         else:
-            rate = success_number / total_number * 100
+            rate = data['success_number'] / total_number * 100
             data['success_rate'] = str(Decimal(rate).quantize(Decimal('0.00')))
         return data
 

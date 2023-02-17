@@ -11,7 +11,7 @@ export default {
   props: {
     // 接收row.xxx的值
     value: {
-      type: Number || String,
+      type: String || Number,
       required: false
     }
   },
@@ -35,7 +35,7 @@ export default {
   methods: {
     setValue (value) {
       // 在这里对 传入的value值做处理
-      this.currentValue = String(this.value)
+      this.currentValue = Number(this.value)
       // 根据值的key 递归获取对应的名称
     },
     setColor () {
@@ -47,8 +47,8 @@ export default {
         return '#67C23A'
       }
     },
-    format(percentage) {
-      return `${percentage}%`;
+    format (percentage) {
+      return `${percentage}%`
     }
   }
 }

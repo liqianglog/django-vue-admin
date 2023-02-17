@@ -11,25 +11,7 @@ export const crudOptions = (vm) => {
       highlightCurrentRow: false
 
     },
-    rowHandle: {
-      width: 120,
-      fixed: 'right',
-      view: false,
-      edit: false,
-      remove: false,
-      custom: [
-        {
-          thin: true,
-          text: '下载文件',
-          size: 'small',
-          type: 'primary',
-          emit: 'onDownload',
-          disabled (_, form) {
-            return !vm.hasPermissions('Download')
-          }
-        }
-      ]
-    },
+    rowHandle: false,
     viewOptions: {
       componentType: 'row'
     },
@@ -69,7 +51,7 @@ export const crudOptions = (vm) => {
       }, {
         title: '文件名称',
         key: 'file_name',
-        minWidth: 220,
+        minWidth: 250,
         search: {
           disabled: true
         },
@@ -159,6 +141,7 @@ export const crudOptions = (vm) => {
         title: '识别成功率',
         key: 'success_rate',
         type: 'number',
+        fixed: 'right',
         minWidth: 140,
         component: {
           name: 'table-progress'
@@ -166,7 +149,7 @@ export const crudOptions = (vm) => {
       },
       {
         title: '未识别码数',
-        key: 'undfind_number',
+        key: 'unrecognized_num',
         minWidth: 100,
         search: {
           disabled: true
@@ -176,7 +159,7 @@ export const crudOptions = (vm) => {
         }
       }, {
         title: '不存在码数',
-        key: 'inexistence_number',
+        key: 'code_not_exist_num',
         minWidth: 100,
         search: {
           disabled: true
@@ -186,7 +169,7 @@ export const crudOptions = (vm) => {
         }
       }, {
         title: '本检测包重码数',
-        key: 'self_repetition_number',
+        key: 'self_repetition_num',
         minWidth: 140,
         search: {
           disabled: true
@@ -197,7 +180,7 @@ export const crudOptions = (vm) => {
       },
       {
         title: '本生产工单重码数',
-        key: 'prod_repetition_number',
+        key: 'prod_repetition_num',
         minWidth: 140,
         search: {
           disabled: true
@@ -208,7 +191,7 @@ export const crudOptions = (vm) => {
       },
       {
         title: '非本生产工单码数',
-        key: 'prod_undfind_number',
+        key: 'prod_wrong_num',
         minWidth: 140,
         search: {
           disabled: true
@@ -217,6 +200,9 @@ export const crudOptions = (vm) => {
           disabled: true
         }
       }
-    ]
+    ].concat(vm.commonEndColumns({
+      update_datetime: { showTable: false },
+      dept_belong_id: { showForm: false, showTable: false }
+    }))
   }
 }
