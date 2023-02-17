@@ -199,6 +199,37 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
+      },
+      {
+        title: '检测状态',
+        key: 'status',
+        fixed: 'right',
+        search: {
+          disabled: false
+        },
+        width: 170,
+        type: 'select',
+        dict: {
+          data: [
+            { value: 1, label: '待检测', color: 'primary' },
+            { value: 2, label: '检测中', color: 'warning' },
+            { value: 3, label: '检测通过', color: 'success' },
+            { value: 4, label: '检测失败,首行内容为空', color: 'danger' },
+            { value: 5, label: '检测失败,首行码未查询到', color: 'danger' },
+            { value: 6, label: '检测失败,首行码非该租户码', color: 'danger' }
+          ]
+        },
+        form: {
+          component: {
+            span: 12
+          },
+          rules: [
+            { required: true, message: '状态不能为空', trigger: 'blur' }
+          ],
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        }
       }
     ].concat(vm.commonEndColumns({
       update_datetime: { showTable: false },

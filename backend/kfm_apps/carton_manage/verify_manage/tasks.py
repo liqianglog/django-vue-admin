@@ -60,7 +60,8 @@ def back_haul_file_check(back_haul_file_id):
                     else:
                         code_content = line_data.split(code_package_format_obj.separator)[
                             code_package_format_obj.code_position]
-                        ac_time = line_data.split(code_package_format_obj.separator)[code_package_format_obj.time_position]
+                        ac_time = line_data.split(code_package_format_obj.separator)[
+                            code_package_format_obj.time_position]
                     # 2.1 把所有的数据存入一个大字典中
                     if code_content != '000000':
                         code_content_md5 = md5_value(code_content)
@@ -100,6 +101,7 @@ def back_haul_file_check(back_haul_file_id):
             back_haul_file_obj.save()
             return "首行码未查询到"
         package_id = result_data[first_line_code_content].get('package_id')
+        code_type = result_data[first_line_code_content].get('code_type')
         production_work_obj = ProductionWork.objects.filter(code_package_id=package_id).first()
         if not production_work_obj:
             # 5. 删除解密后的文件
@@ -108,6 +110,8 @@ def back_haul_file_check(back_haul_file_id):
             back_haul_file_obj.status = 6
             back_haul_file_obj.save()
             return "首行码非该租户码"
+        back_haul_file_obj.code_type = 0 if code_type == '0' else 1
+        back_haul_file_obj.save()
         # 保存对应生产工单到该检测工单中
         back_haul_file_obj.verify_work_order.production_work_no = production_work_obj
         back_haul_file_obj.verify_work_order.save()
@@ -220,6 +224,7 @@ def back_haul_file_check(back_haul_file_id):
     back_haul_file_obj = BackHaulFile.objects.get(id=back_haul_file_id)
     back_haul_file_obj.status = 3
     back_haul_file_obj.save()
+
 
 if __name__ == '__main__':
     with schema_context("demo"):

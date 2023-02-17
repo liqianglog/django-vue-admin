@@ -238,14 +238,16 @@ export const crudOptions = (vm) => {
         search: {
           disabled: false
         },
-        width: 100,
+        width: 170,
         type: 'select',
         dict: {
           data: [
-            { value: 1, label: '待检测' },
-            { value: 2, label: '检测中' },
-            { value: 3, label: '检测通过' },
-            { value: 4, label: '检测失败' }
+            { value: 1, label: '待检测', color: 'primary' },
+            { value: 2, label: '检测中', color: 'warning' },
+            { value: 3, label: '检测通过', color: 'success' },
+            { value: 4, label: '检测失败,首行内容为空', color: 'danger' },
+            { value: 5, label: '检测失败,首行码未查询到', color: 'danger' },
+            { value: 6, label: '检测失败,首行码非该租户码', color: 'danger' }
           ]
         },
         form: {
