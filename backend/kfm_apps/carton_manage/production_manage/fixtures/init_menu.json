@@ -55,6 +55,12 @@
             "value": "Delete",
             "api": "/api/carton/production_manage/production_work/{id}/",
             "method": 3
+          },
+          {
+            "name": "生产报告",
+            "value": "ProductionReport",
+            "api": "/api/carton/production_manage/production_work/{id}/production_report/",
+            "method": 0
           }
         ]
       },
