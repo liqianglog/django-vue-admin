@@ -18,11 +18,11 @@ export function GetObj(id: InfoReq) {
 
 export function AddObj(obj: AddReq) {
     console.log(20,obj)
-    // return request({
-    //     url: apiPrefix,
-    //     method: 'post',
-    //     data: obj,
-    // });
+    return request({
+        url: apiPrefix,
+        method: 'post',
+        data: obj,
+    });
 }
 
 export function UpdateObj(obj: EditReq) {

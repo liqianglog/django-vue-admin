@@ -1,4 +1,5 @@
 <template>
+  <div>{{props.modelValue}}</div>
   <el-select popper-class="popperClass" class="tableSelector" :multiple="props.tableConfig.isMultiple"
              @remove-tag="removeTag" v-model="data" placeholder="请选择" @visible-change="visibleChange">
     <template #empty>
@@ -10,6 +11,7 @@
           </template>
         </el-input>
         <el-table
+            ref="tableRef"
             :data="tableData"
             size="mini"
             border
@@ -42,7 +44,7 @@
 import {defineProps, onMounted, reactive, ref, toRaw, watch} from 'vue'
 import {dict} from '@fast-crud/fast-crud'
 import XEUtils from "xe-utils";
-
+import qs from 'qs'
 const props = defineProps({
   modelValue: {},
   tableConfig: {
@@ -56,6 +58,8 @@ const props = defineProps({
   }
 } as any)
 const emit = defineEmits(['update:modelValue'])
+// tableRef
+const tableRef = ref()
 // template上使用data
 const data = ref()
 // 多选值
@@ -74,6 +78,9 @@ watch(multipleSelection, // 监听multipleSelection的变化，
     }, // 当multipleSelection值触发后，同步修改data.value的值
     {immediate: true} // 立即触发一次，给data赋值初始值
 )
+
+
+
 // 搜索值
 const search = ref(undefined)
 //表格数据
@@ -84,10 +91,6 @@ const pageConfig = reactive({
   limit: 10,
   total: 0
 })
-
-const removeTag = (val: any, aa: any) => {
-  console.log(val, aa)
-}
 
 /**
  * 表格多选
@@ -159,6 +162,22 @@ const handlePageChange = (page: any) => {
   pageConfig.page = page
   getDict()
 }
+
+const getDictByValue = async ()=>{
+  const url = props.tableConfig.url
+  const dicts = dict({url: url, params: {}})
+  await dicts.reloadDict()
+  const dictData = dicts.data
+  console.log(dictData)
+  return dictData
+}
+
+// 监听modelValue的变化，更新数据
+watch(()=>{
+  return props.modelValue
+},(value)=>{
+
+},{immediate: true})
 
 
 </script>
