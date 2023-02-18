@@ -223,15 +223,7 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                                 required: true,
                                 message: '必填项'
                             }
-                        ],
-                        itemProps: {
-                            class: {yxtInput: true}
-                        }
-                    },
-                    component: {
-                        name: 'manyToMany',
-                        valueBinding: 'dept_info',
-                        children: 'name'
+                        ]
                     }
                 },
                 content: {
@@ -249,9 +241,9 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                             }
                         ],
                         component: {
-                            disabled: compute(({form}) => {
-                                return form.disabled;
-                            }),
+                            // disabled: compute(({form}) => {
+                            //     return form.disabled;
+                            // }),
                             id: "1", // 当同一个页面有多个editor时，需要配置不同的id
                             config: {},
                             uploader: {
@@ -264,6 +256,6 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                     }
                 }
             }
-        },
+        }
     }
 }

@@ -158,7 +158,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 					{
 						path: '/system/configSystem',
 						name: 'configSystem',
-						component: () => import('/@/views/system/dic/index.vue'),
+						component: () => import('/@/views/system/dept/index.vue'),
 						meta: {
 							title: 'message.router.configSystem',
 							isLink: '',
