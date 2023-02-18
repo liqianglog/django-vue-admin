@@ -18,7 +18,7 @@ export default {
 			//i18n, //i18n配置，可选，默认使用中文，具体用法请看demo里的 src/i18n/index.js 文件
 			// 此处配置公共的dictRequest（字典请求）
 			async dictRequest({ dict }: any) {
-				return await request({ url: dict.url }); //根据dict的url，异步返回一个字典数组
+				return await request({ url: dict.url,params:dict.params || {} }); //根据dict的url，异步返回一个字典数组
 			},
 			//公共crud配置
 			commonOptions() {

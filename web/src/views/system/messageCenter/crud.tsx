@@ -4,6 +4,7 @@ import {request} from "/@/utils/service";
 import {dictionary} from "/@/utils/dictionary";
 import tableSelector from "/@/components/tableSelector/index.vue"
 import {shallowRef} from "vue";
+
 interface CreateCrudOptionsTypes {
     crudOptions: CrudOptions;
 }
@@ -35,7 +36,7 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                 id: {
                     title: 'id',
                     form: {
-                        show:false
+                        show: false
                     }
 
                 },
@@ -58,8 +59,8 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                 is_read: {
                     title: '是否已读',
                     type: 'dict-select',
-                    column:{
-                        show:false
+                    column: {
+                        show: false
                     },
                     dict: dict({
                         data: [
@@ -68,12 +69,12 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                         ]
                     }),
                     form: {
-                        show:false
+                        show: false
                     }
                 },
                 target_type: {
                     title: '目标类型',
-                    type: ['dict-radio','colspan'],
+                    type: ['dict-radio', 'colspan'],
                     width: 120,
                     // show() {
                     //     return vm.tabActivted === 'send'
@@ -104,32 +105,27 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                     },
                     width: 130,
                     disabled: true,
-                    dict: dict({
-                        cache: false,
-                        url: '/api/system/user/',
-                        value: 'id', // 数据字典中value字段的属性名
-                        label: 'name', // 数据字典中label字段的属性名
-                    }),
                     form: {
-                        component:{
+                        component: {
                             name: shallowRef(tableSelector),
                             vModel: "modelValue",
-                            label:'name',
-                            value:'date',
-                            tableConfig:{
-                                isMultiple:true,
-                                data:[{
-                                    date: '2016-05-03',
-                                    name: 'Tom',
-                                    address: 'No. 189, Grove St, Los Angeles',
-                                },{
-                                    date: '2016-05-01',
-                                    name: 'Tom',
-                                    address: 'No. 189, Grove St, Los Angeles',
-                                },]
+                            tableConfig: {
+                                url: '/api/system/user/',
+                                label: 'name',
+                                value: 'id',
+                                isMultiple: true,
+                                columns: [{
+                                    prop: 'name',
+                                    label: '用户名称',
+                                    width: 120
+                                }, {
+                                    prop: 'phone',
+                                    label: '用户电话',
+                                    width: 120
+                                }]
                             }
                         },
-                        show:compute(({ form })=>{
+                        show: compute(({form}) => {
                             return form.target_type === 0
                         }),
                         rules: [ // 表单校验规则
@@ -153,15 +149,26 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                     },
                     disabled: true,
                     width: 130,
-                    type: 'table-selector',
-                    dict: {
-                        cache: false,
-                        url: '/api/system/role/',
-                        value: 'id', // 数据字典中value字段的属性名
-                        label: 'name', // 数据字典中label字段的属性名
-                    },
                     form: {
-                        show:compute(({ form })=>{
+                        component: {
+                            name: shallowRef(tableSelector),
+                            vModel: "modelValue",
+                            tableConfig: {
+                                url: '/api/system/role/',
+                                label: 'name',
+                                value: 'id',
+                                isMultiple: true,
+                                columns: [{
+                                    prop: 'name',
+                                    label: '角色名称'
+                                },
+                                    {
+                                        prop: 'key',
+                                        label: '权限标识'
+                                    }]
+                            }
+                        },
+                        show: compute(({form}) => {
                             return form.target_type === 1
                         }),
                         rules: [ // 表单校验规则
@@ -184,17 +191,31 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                     },
                     width: 130,
                     type: 'table-selector',
-                    dict: {
-                        cache: false,
-                        url: '/api/system/dept/all_dept/',
-                        isTree: true,
-                        value: 'id', // 数据字典中value字段的属性名
-                        label: 'name', // 数据字典中label字段的属性名
-                        children: 'children', // 数据字典中children字段的属性名
-                    },
-                    disabled: true,
                     form: {
-                        show:compute(({ form })=>{
+                        component: {
+                            name: shallowRef(tableSelector),
+                            vModel: "modelValue",
+                            tableConfig: {
+                                url: '/api/system/dept/all_dept/',
+                                label: 'name',
+                                value: 'id',
+                                isTree: true,
+                                isMultiple: true,
+                                columns: [{
+                                    prop: 'name',
+                                    label: '部门名称'
+                                },
+                                {
+                                    prop: 'status_label',
+                                    label: '状态'
+                                },
+                                {
+                                    prop: 'parent_name',
+                                    label: '父级部门'
+                                }]
+                            }
+                        },
+                        show: compute(({form}) => {
                             return form.target_type === 2
                         }),
                         rules: [ // 表单校验规则
@@ -235,7 +256,7 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                             config: {},
                             uploader: {
                                 type: "form",
-                                buildUrl(res:any) {
+                                buildUrl(res: any) {
                                     return res.url;
                                 }
                             }
