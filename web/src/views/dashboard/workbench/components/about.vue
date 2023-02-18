@@ -1,5 +1,5 @@
 <template>
-  <el-card shadow="hover" header="关于项目" class="item-background">
+  <el-card  shadow="hover" header="关于项目" class="item-background">
     <p>高性能 / 精致 / 优雅。基于Vue3 + Element-Plus 的中后台前端解决方案，如果喜欢就点个星星支持一下。</p>
     <p>
       <a href='https://gitee.com/lolicode/scui' target="_blank">
@@ -10,14 +10,15 @@
 </template>
 
 <script>
+import '@/plugin/dragx'
 export default {
   title: '关于项目',
   icon: 'el-icon-setting',
   description: '点个星星支持一下',
-  height: 20,
+  height: 10,
   width: 8,
-  maxH: 1,
-  maxW: Infinity,
+  minH: 1,
+  minW: Infinity,
   isResizable: true,
   data () {
     return {}
