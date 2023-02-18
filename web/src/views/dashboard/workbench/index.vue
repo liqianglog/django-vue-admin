@@ -50,7 +50,6 @@
           :is-draggable="customizing"
           :vertical-compact="false"
           :use-css-transforms="true"
-          :use-row-transforms="true"
           :autoSize="true"
         >
           <grid-item v-for="(item, index) in layout"
@@ -262,12 +261,11 @@ export default {
         mouseInGrid = true
       }
       if (mouseInGrid === true) {
-        alert(height)
         this.layout.push({
-          x: 0,
-          y: 0, // puts it at the bottom
+          x: DragPos.x,
+          y: DragPos.y,
           w: width,
-          h: height/2,
+          h: height,
           i: this.getLayoutElementNumber(key),
           element: key
         })
