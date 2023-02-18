@@ -12,7 +12,7 @@ export const crudOptions = (vm) => {
 
     },
     rowHandle: {
-      width: 240,
+      width: 180,
       fixed: 'right',
       view: false,
       edit: false,
@@ -76,7 +76,7 @@ export const crudOptions = (vm) => {
       }, {
         title: '文件名称',
         key: 'file_name',
-        minWidth: 220,
+        minWidth: 250,
         search: {
           disabled: true
         },
@@ -144,6 +144,7 @@ export const crudOptions = (vm) => {
         title: '码包总数',
         key: 'total_number',
         minWidth: 120,
+        type: 'number',
         search: {
           disabled: true
         },
@@ -155,6 +156,7 @@ export const crudOptions = (vm) => {
         title: '识别成功数',
         key: 'success_number',
         minWidth: 120,
+        type: 'number',
         search: {
           disabled: true
         },
@@ -172,20 +174,10 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '识别错误数',
-        key: 'error_number',
-        minWidth: 120,
-        search: {
-          disabled: true
-        },
-        form: {
-          disabled: true
-        }
-      },
-      {
         title: '未识别码数',
-        key: 'undfind_number',
+        key: 'unrecognized_num',
         minWidth: 100,
+        type: 'number',
         search: {
           disabled: true
         },
@@ -194,8 +186,9 @@ export const crudOptions = (vm) => {
         }
       }, {
         title: '不存在码数',
-        key: 'inexistence_number',
+        key: 'code_not_exist_num',
         minWidth: 100,
+        type: 'number',
         search: {
           disabled: true
         },
@@ -204,8 +197,9 @@ export const crudOptions = (vm) => {
         }
       }, {
         title: '本检测包重码数',
-        key: 'self_repetition_number',
+        key: 'self_repetition_num',
         minWidth: 140,
+        type: 'number',
         search: {
           disabled: true
         },
@@ -215,8 +209,9 @@ export const crudOptions = (vm) => {
       },
       {
         title: '本生产工单重码数',
-        key: 'prod_repetition_number',
+        key: 'prod_repetition_num',
         minWidth: 140,
+        type: 'number',
         search: {
           disabled: true
         },
@@ -226,15 +221,50 @@ export const crudOptions = (vm) => {
       },
       {
         title: '非本生产工单码数',
-        key: 'prod_undfind_number',
+        key: 'prod_wrong_num',
         minWidth: 140,
+        type: 'number',
         search: {
           disabled: true
         },
         form: {
           disabled: true
         }
+      },
+      {
+        title: '检测状态',
+        key: 'status',
+        fixed: 'right',
+        search: {
+          disabled: false
+        },
+        width: 170,
+        type: 'select',
+        dict: {
+          data: [
+            { value: 1, label: '待检测', color: 'primary' },
+            { value: 2, label: '检测中', color: 'warning' },
+            { value: 3, label: '检测通过', color: 'success' },
+            { value: 4, label: '检测失败,首行内容为空', color: 'danger' },
+            { value: 5, label: '检测失败,首行码未查询到', color: 'danger' },
+            { value: 6, label: '检测失败,首行码非该租户码', color: 'danger' }
+          ]
+        },
+        form: {
+          component: {
+            span: 12
+          },
+          rules: [
+            { required: true, message: '状态不能为空', trigger: 'blur' }
+          ],
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        }
       }
-    ]
+    ].concat(vm.commonEndColumns({
+      update_datetime: { showTable: false },
+      dept_belong_id: { showForm: false, showTable: false }
+    }))
   }
 }

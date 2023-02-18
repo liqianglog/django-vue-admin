@@ -61,6 +61,8 @@ export default {
     }
   },
   methods: {
+    doLoad () {
+    },
     getCrudOptions () {
       return crudOptions(this)
     },

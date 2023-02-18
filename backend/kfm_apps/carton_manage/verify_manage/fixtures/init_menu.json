@@ -89,6 +89,12 @@
             "value": "Delete",
             "api": "/api/carton/verify_manage/verify_work_order/{id}/",
             "method": 3
+          },
+          {
+            "name": "检测报告",
+            "value": "VerifyReport",
+            "api": "/api/carton/verify_manage/verify_work_order/{id}/verify_report/",
+            "method": 0
           }
         ]
       },

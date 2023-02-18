@@ -84,6 +84,14 @@ class VerifyWorkOrderStatusRecord(models.Model):
 
 
 class BackHaulFile(CoreModel):
+    BACK_HAUL_FILE_VERIFY_STATUS = (
+        (1, "待检测"),
+        (2, "检测中"),
+        (3, "检测通过"),
+        (4, "检测失败,首行内容为空"),
+        (5, "检测失败,首行码未查询到"),
+        (6, "检测失败,首行码非该租户码")
+    )
     verify_work_order = models.ForeignKey(VerifyWorkOrder, db_constraint=False, on_delete=models.PROTECT,
                                           related_name="verify_work_order", help_text="关联检测工单",
                                           null=True, blank=True, verbose_name="关联检测工单")
@@ -114,6 +122,8 @@ class BackHaulFile(CoreModel):
     code_package_format = models.ForeignKey(CodePackageFormat, db_constraint=False,
                                             related_name='bhfile_code_package_format', on_delete=models.CASCADE,
                                             verbose_name="关联码包回传格式", help_text="关联码包回传格式")
+    status = models.IntegerField(choices=BACK_HAUL_FILE_VERIFY_STATUS, default=1, blank=True, help_text="文件检测状态",
+                                 verbose_name="文件检测状态")
 
     @classmethod
     def update_result(cls, back_haul_file_id):

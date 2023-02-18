@@ -4,6 +4,7 @@ import posixpath
 import re
 from _pydecimal import Decimal
 from wsgiref.util import FileWrapper
+from urllib.parse import quote
 
 from django.db.models import IntegerField, Sum, Q, Count
 from django.db.models.functions import Coalesce
@@ -16,14 +17,14 @@ from rest_framework.decorators import action
 from carton_manage.verify_manage.models import BackHaulFile, VerifyCodeRecord
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
-from utils.currency import  get_back_haul_file_path
+from utils.currency import get_back_haul_file_path
 
 
 class BackHaulFileSerializer(CustomModelSerializer):
     """
    回传文件管理-序列化器
     """
-    device_name = serializers.CharField(source='device.name',read_only=True)
+    device_name = serializers.CharField(source='device.name', read_only=True)
     prod_line_name = serializers.CharField(source='device.production_line.name', read_only=True)
     factory_name = serializers.CharField(source='device.production_line.belong_to_factory.name', read_only=True)
     success_rate = serializers.SerializerMethodField(help_text="识别成功率")
@@ -32,39 +33,11 @@ class BackHaulFileSerializer(CustomModelSerializer):
     def get_success_rate(self, instance):
         total_number = instance.total_number
         success_number = instance.success_number
-        if total_number==0:
-            return 0
+        if total_number == 0:
+            return '0'
         else:
-            rate = success_number/ total_number * 100
+            rate = success_number / total_number * 100
             return str(Decimal(rate).quantize(Decimal('0.00')))
-
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        _VerifyCodeRecord = VerifyCodeRecord.objects.filter(back_haul_file=instance.id).aggregate(
-            undfind_num = Coalesce(Count('error_code_content',filter=Q(error_type__in=[0])), 0, output_field=IntegerField()),
-            inexistence_num = Coalesce(Count('error_code_content', filter=Q(error_type__in=[2])), 0,
-                               output_field=IntegerField()),
-            self_repetition_num=Coalesce(Count('error_code_content', filter=Q(error_type__in=[3])), 0,
-                                     output_field=IntegerField()),
-            prod_repetition_num=Coalesce(Count('error_code_content', filter=Q(error_type__in=[4])), 0,
-                                         output_field=IntegerField()),
-            prod_undfind_num=Coalesce(Count('error_code_content', filter=Q(error_type__in=[5])), 0,
-                                         output_field=IntegerField()),
-        )
-        if _VerifyCodeRecord:
-            data['undfind_number'] = _VerifyCodeRecord.get('undfind_num')
-            data['inexistence_number'] = _VerifyCodeRecord.get('inexistence_num')
-            data['self_repetition_number'] = _VerifyCodeRecord.get('self_repetition_num')
-            data['prod_repetition_number'] = _VerifyCodeRecord.get('prod_repetition_num')
-            data['prod_undfind_number'] = _VerifyCodeRecord.get('prod_undfind_num')
-        else:
-            data['undfind_number'] = 0
-            data['inexistence_number'] = 0
-            data['self_repetition_number'] = 0
-            data['prod_repetition_number'] = 0
-            data['prod_undfind_number'] = 0
-        return data
 
     class Meta:
         model = BackHaulFile
@@ -91,7 +64,7 @@ class BackHaulFileViewSet(CustomModelViewSet):
     create_serializer_class = BackHaulFileCreateUpdateSerializer
     update_serializer_class = BackHaulFileCreateUpdateSerializer
 
-    @action(methods=['get'],detail=True)
+    @action(methods=['get'], detail=True)
     def download_file(self, request, pk, **kwargs):
         """
         # 基于django.views.static.serve实现，支持大文件的断点续传（暂停/继续下载）
@@ -145,4 +118,5 @@ class BackHaulFileViewSet(CustomModelViewSet):
             response['Content-Length'] = str(size)
             response['Accept-Ranges'] = 'bytes'
             response["STATUS-CODE"] = 200
+            response["content-disposition"] = f'attachment;filename={quote(str(f"{_BackHaulFile.file_name}"))}'
             return response
