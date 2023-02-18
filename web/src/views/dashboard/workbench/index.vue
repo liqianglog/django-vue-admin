@@ -174,7 +174,7 @@ export default {
       //   }
       // })
       // return index + 1
-      return elementName+this.layout.length
+      return elementName + this.layout.length
     },
     // 追加
     push (item) {
@@ -247,11 +247,10 @@ export default {
           DragPos.y = this.layout[index].y
         }
         if (mouseInGrid === false) {
-          this.$refs.gridlayout.dragEvent('dragend',this.getLayoutElementNumber(key) , new_pos.x, new_pos.y, 1, 1)
+          this.$refs.gridlayout.dragEvent('dragend', this.getLayoutElementNumber(key), new_pos.x, new_pos.y, 1, 1)
           this.layout = this.layout.filter(obj => obj.i !== this.getLayoutElementNumber(key))
         }
       }
-
     },
     onDragend (e, item) {
       const { key, width, height } = item
@@ -269,8 +268,8 @@ export default {
           i: this.getLayoutElementNumber(key),
           element: key
         })
-        this.$refs.gridlayout.dragEvent('dragend', this.getLayoutElementNumber(key) , DragPos.x, DragPos.y, 1, 1);
-        this.layout = this.layout.filter(obj => obj.i !== this.getLayoutElementNumber(key)  );
+        this.$refs.gridlayout.dragEvent('dragend', this.getLayoutElementNumber(key), DragPos.x, DragPos.y, 1, 1)
+        this.layout = this.layout.filter(obj => obj.i !== this.getLayoutElementNumber(key))
         // UNCOMMENT below if you want to add a grid-item
         /*
         this.layout.push({
