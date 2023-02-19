@@ -1,19 +1,20 @@
 <template>
 <el-card>
-  <div ref="cpRepeatPieRef" style="width: 100%;height: 400px">
+  <div  ref="cpRepeatPieRef" style="width: 100%;height: 400px">
   </div>
 </el-card>
 </template>
 
 <script>
 import * as echarts from 'echarts'
+import {EleResize} from "@/plugin/resize";
 export default {
   title: '码包重码数对比',
   icon: 'el-icon-monitor',
   description: '码包重码数对比',
   name: 'cpRepeatPie',
   height: 5,
-  width: 2,
+  width: 8,
   maxH: 1,
   maxW: Infinity,
   isResizable: true,
@@ -26,6 +27,9 @@ export default {
     initLine () {
       const echarDemo = this.$refs.cpRepeatPieRef
       this.myChart = echarts.init(echarDemo)
+      EleResize.on(echarDemo,()=>{
+        this.myChart.resize()
+      })
       const option = {
         title: {
           text: '码包重码数对比',
@@ -38,7 +42,7 @@ export default {
           orient: 'vertical',
           right: '0%',
           left: '65%',
-          top: 'center',
+          top: '0%',
           itemWidth: 14,
           itemHeight: 14,
           data: ['码包重码', '历史重码'],
