@@ -204,6 +204,9 @@ export const createCrudOptions = function ({ crudExpose,menuButtonRef }: { crudE
                             },
                             placeholder: '请输入菜单名称'
                         },
+                    },
+                    column:{
+                        width:180,
                     }
                 },
                 icon: {

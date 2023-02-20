@@ -11,6 +11,7 @@
 	"dependencies": {
 		"@element-plus/icons-vue": "^2.0.10",
 		"@fast-crud/fast-crud": "^1.9.0",
+		"@fast-crud/fast-extends": "^1.9.0",
 		"@fast-crud/ui-element": "^1.9.0",
 		"@vitejs/plugin-vue-jsx": "^3.0.0",
 		"@wangeditor/editor": "^5.1.23",

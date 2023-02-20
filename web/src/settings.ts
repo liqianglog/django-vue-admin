@@ -6,7 +6,9 @@ import { setLogger } from '@fast-crud/fast-crud';
 // element
 import ui from '@fast-crud/ui-element';
 import { request } from '/@/utils/service';
-
+//扩展包
+import {FsExtendsEditor} from "@fast-crud/fast-extends";
+import "@fast-crud/fast-extends/dist/style.css";
 export default {
 	async install(app: any, options: any) {
 		// 先安装ui
@@ -16,7 +18,7 @@ export default {
 			//i18n, //i18n配置，可选，默认使用中文，具体用法请看demo里的 src/i18n/index.js 文件
 			// 此处配置公共的dictRequest（字典请求）
 			async dictRequest({ dict }: any) {
-				return await request({ url: dict.url }); //根据dict的url，异步返回一个字典数组
+				return await request({ url: dict.url,params:dict.params || {} }); //根据dict的url，异步返回一个字典数组
 			},
 			//公共crud配置
 			commonOptions() {
@@ -52,6 +54,12 @@ export default {
 				};
 			},
 		});
+		//富文本
+		app.use(FsExtendsEditor,{
+			wangEditor:{
+				width:300,
+			}
+		})
 		setLogger({ level: 'error' });
 		// 设置自动染色
 		const dictComponentList = ['dict-cascader', 'dict-checkbox', 'dict-radio', 'dict-select', 'dict-switch', 'dict-tree'];
