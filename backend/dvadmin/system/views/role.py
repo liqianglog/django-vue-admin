@@ -31,20 +31,7 @@ class RoleSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-class RoleInitSerializer(CustomModelSerializer):
-    """
-    初始化获取数信息(用于生成初始化json文件)
-    """
 
-    class Meta:
-        model = Role
-        fields = ['name', 'key', 'sort', 'status', 'admin',
-                  'creator', 'dept_belong_id']
-        read_only_fields = ["id"]
-        extra_kwargs = {
-            'creator': {'write_only': True},
-            'dept_belong_id': {'write_only': True}
-        }
 
 
 class RoleCreateUpdateSerializer(CustomModelSerializer):

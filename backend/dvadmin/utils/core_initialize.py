@@ -33,6 +33,7 @@ class CoreInitialize:
         path_file = os.path.join(apps.get_app_config(self.app.split('.')[-1]).path, 'fixtures',
                                  f'init_{Serializer.Meta.model._meta.model_name}.json')
         if not os.path.isfile(path_file):
+            print("文件不存在，跳过初始化")
             return
         with open(path_file,encoding="utf-8") as f:
             for data in json.load(f):

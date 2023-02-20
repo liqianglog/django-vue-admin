@@ -5,20 +5,15 @@ import os
 import django
 from django.db.models import QuerySet
 
-from dvadmin.system.views.system_config import SystemConfigInitSerializer
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'application.settings')
 django.setup()
 from django.core.management.base import BaseCommand
 
 from application.settings import BASE_DIR
 from dvadmin.system.models import Menu, Users, Dept, Role, ApiWhiteList, Dictionary, SystemConfig
-from dvadmin.system.views.api_white_list import ApiWhiteListInitSerializer
-from dvadmin.system.views.dept import DeptInitSerializer
-from dvadmin.system.views.dictionary import DictionaryInitSerializer
-from dvadmin.system.views.menu import MenuInitSerializer
-from dvadmin.system.views.role import RoleInitSerializer
-from dvadmin.system.views.user import UsersInitSerializer
+from dvadmin.system.fixtures.initSerializer import UsersInitSerializer, DeptInitSerializer, RoleInitSerializer, \
+    MenuInitSerializer, ApiWhiteListInitSerializer, DictionaryInitSerializer, SystemConfigInitSerializer, \
+    RoleMenuInitSerializer, RoleMenuButtonInitSerializer
 
 logger = logging.getLogger(__name__)
 

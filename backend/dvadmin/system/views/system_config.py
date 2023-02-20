@@ -43,48 +43,6 @@ class SystemConfigCreateSerializer(CustomModelSerializer):
         return value
 
 
-class SystemConfigInitSerializer(CustomModelSerializer):
-    """
-    初始化获取数信息(用于生成初始化json文件)
-    """
-    children = serializers.SerializerMethodField()
-
-    def get_children(self, obj: SystemConfig):
-        data = []
-        instance = SystemConfig.objects.filter(parent_id=obj.id)
-        if instance:
-            serializer = SystemConfigInitSerializer(instance=instance, many=True)
-            data = serializer.data
-        return data
-
-    def save(self, **kwargs):
-        instance = super().save(**kwargs)
-        children = self.initial_data.get('children')
-        # 菜单表
-        if children:
-            for data in children:
-                data['parent'] = instance.id
-                filter_data = {
-                    "key": data['key'],
-                    "parent": data['parent']
-                }
-                instance_obj = SystemConfig.objects.filter(**filter_data).first()
-                if instance_obj and not self.initial_data.get('reset'):
-                    continue
-                serializer = SystemConfigInitSerializer(instance_obj, data=data, request=self.request)
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
-        return instance
-
-    class Meta:
-        model = SystemConfig
-        fields = ['parent', 'title', 'key', 'value', 'sort', 'status', 'data_options', 'form_item_type', 'rule',
-                  'placeholder', 'setting', 'creator', 'dept_belong_id', 'children']
-        read_only_fields = ["id"]
-        extra_kwargs = {
-            'creator': {'write_only': True},
-            'dept_belong_id': {'write_only': True}
-        }
 
 
 class SystemConfigSerializer(CustomModelSerializer):

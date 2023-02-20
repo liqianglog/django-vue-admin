@@ -30,31 +30,31 @@
                 "menu_button": [
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "menu:Search",
                         "api": "/api/system/menu/",
                         "method": 0
                     },
                     {
                         "name": "详情",
-                        "value": "Retrieve",
+                        "value": "menu:Retrieve",
                         "api": "/api/system/menu/{id}/",
                         "method": 0
                     },
                     {
                         "name": "新增",
-                        "value": "Create",
+                        "value": "menu:Create",
                         "api": "/api/system/menu/",
                         "method": 1
                     },
                     {
                         "name": "编辑",
-                        "value": "Update",
+                        "value": "menu:Update",
                         "api": "/api/system/menu/{id}/",
                         "method": 2
                     },
                     {
                         "name": "删除",
-                        "value": "Delete",
+                        "value": "menu:Delete",
                         "api": "/api/system/menu/{id}/",
                         "method": 3
                     }
@@ -77,25 +77,25 @@
                 "menu_button": [
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "menu_button:Search",
                         "api": "/api/system/menu_button/",
                         "method": 0
                     },
                     {
                         "name": "新增",
-                        "value": "Create",
+                        "value": "menu_button:Create",
                         "api": "/api/system/menu_button/",
                         "method": 1
                     },
                     {
                         "name": "编辑",
-                        "value": "Update",
+                        "value": "menu_button:Update",
                         "api": "/api/system/menu_button/{id}/",
                         "method": 2
                     },
                     {
                         "name": "删除",
-                        "value": "Delete",
+                        "value": "menu_button:Delete",
                         "api": "/api/system/menu_button/{id}/",
                         "method": 3
                     }
@@ -118,31 +118,31 @@
                 "menu_button": [
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "dept:Search",
                         "api": "/api/system/dept/",
                         "method": 0
                     },
                     {
                         "name": "详情",
-                        "value": "Retrieve",
+                        "value": "dept:Retrieve",
                         "api": "/api/system/dept/{id}/",
                         "method": 0
                     },
                     {
                         "name": "新增",
-                        "value": "Create",
+                        "value": "dept:Create",
                         "api": "/api/system/dept/",
                         "method": 1
                     },
                     {
                         "name": "编辑",
-                        "value": "Update",
+                        "value": "dept:Update",
                         "api": "/api/system/dept/{id}/",
                         "method": 2
                     },
                     {
                         "name": "删除",
-                        "value": "Delete",
+                        "value": "dept:Delete",
                         "api": "/api/system/dept/{id}/",
                         "method": 3
                     }
@@ -165,37 +165,37 @@
                 "menu_button": [
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "role:Search",
                         "api": "/api/system/role/",
                         "method": 0
                     },
                     {
                         "name": "详情",
-                        "value": "Retrieve",
+                        "value": "role:Retrieve",
                         "api": "/api/system/role/{id}/",
                         "method": 0
                     },
                     {
                         "name": "新增",
-                        "value": "Create",
+                        "value": "role:Create",
                         "api": "/api/system/role/",
                         "method": 1
                     },
                     {
                         "name": "编辑",
-                        "value": "Update",
+                        "value": "role:Update",
                         "api": "/api/system/role/{id}/",
                         "method": 2
                     },
                     {
                         "name": "保存",
-                        "value": "Save",
+                        "value": "role:Save",
                         "api": "/api/system/role/{id}/",
                         "method": 2
                     },
                     {
                         "name": "删除",
-                        "value": "Delete",
+                        "value": "role:Delete",
                         "api": "/api/system/role/{id}/",
                         "method": 3
                     }
@@ -218,55 +218,55 @@
                 "menu_button": [
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "user:Search",
                         "api": "/api/system/user/",
                         "method": 0
                     },
                     {
                         "name": "详情",
-                        "value": "Retrieve",
+                        "value": "user:Retrieve",
                         "api": "/api/system/user/{id}/",
                         "method": 0
                     },
                     {
                         "name": "新增",
-                        "value": "Create",
+                        "value": "user:Create",
                         "api": "/api/system/user/",
                         "method": 1
                     },
                     {
                         "name": "导出",
-                        "value": "Export",
+                        "value": "user:Export",
                         "api": "/api/system/user/export/",
                         "method": 1
                     },
                     {
                         "name": "导入",
-                        "value": "Import",
+                        "value": "user:Import",
                         "api": "/api/system/user/import/",
                         "method": 1
                     },
                     {
                         "name": "编辑",
-                        "value": "Update",
+                        "value": "user:Update",
                         "api": "/api/system/user/{id}/",
                         "method": 2
                     },
                     {
                         "name": "重设密码",
-                        "value": "ResetPassword",
+                        "value": "user:ResetPassword",
                         "api": "/api/system/user/{id}/reset_password/",
                         "method": 2
                     },
                     {
                         "name": "重置密码",
-                        "value": "DefaultPassword",
+                        "value": "user:DefaultPassword",
                         "api": "/api/system/user/{id}/reset_to_default_password/",
                         "method": 2
                     },
                     {
                         "name": "删除",
-                        "value": "Delete",
+                        "value": "user:Delete",
                         "api": "/api/system/user/{id}/",
                         "method": 3
                     }
@@ -289,31 +289,31 @@
                 "menu_button": [
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "menu:Search",
                         "api": "/api/system/message_center/",
                         "method": 0
                     },
                     {
                         "name": "详情",
-                        "value": "Retrieve",
+                        "value": "menu:Retrieve",
                         "api": "/api/system/message_center/{id}/",
                         "method": 0
                     },
                     {
                         "name": "新增",
-                        "value": "Create",
+                        "value": "menu:Create",
                         "api": "/api/system/message_center/",
                         "method": 1
                     },
                     {
                         "name": "编辑",
-                        "value": "Update",
+                        "value": "menu:Update",
                         "api": "/api/system/message_center/{id}/",
                         "method": 2
                     },
                     {
                         "name": "删除",
-                        "value": "Delete",
+                        "value": "menu:Delete",
                         "api": "/api/system/menu/{id}/",
                         "method": 3
                     }
@@ -336,31 +336,31 @@
                 "menu_button": [
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "api_white_list:Search",
                         "api": "/api/system/api_white_list/",
                         "method": 0
                     },
                     {
                         "name": "详情",
-                        "value": "Retrieve",
+                        "value": "api_white_list:Retrieve",
                         "api": "/api/system/api_white_list/{id}/",
                         "method": 0
                     },
                     {
                         "name": "新增",
-                        "value": "Create",
+                        "value": "api_white_list:Create",
                         "api": "/api/system/api_white_list/",
                         "method": 1
                     },
                     {
                         "name": "编辑",
-                        "value": "Update",
+                        "value": "api_white_list:Update",
                         "api": "/api/system/api_white_list/{id}/",
                         "method": 2
                     },
                     {
                         "name": "删除",
-                        "value": "Delete",
+                        "value": "api_white_list:Delete",
                         "api": "/api/system/api_white_list/{id}/",
                         "method": 3
                     }
@@ -400,31 +400,31 @@
                 "menu_button": [
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "system_config:Search",
                         "api": "/api/system/system_config/",
                         "method": 0
                     },
                     {
                         "name": "详情",
-                        "value": "Retrieve",
+                        "value": "system_config:Retrieve",
                         "api": "/api/system/system_config/{id}/",
                         "method": 0
                     },
                     {
                         "name": "新增",
-                        "value": "Create",
+                        "value": "system_config:Create",
                         "api": "/api/system/system_config/",
                         "method": 1
                     },
                     {
                         "name": "编辑",
-                        "value": "Update",
+                        "value": "system_config:Update",
                         "api": "/api/system/system_config/{id}/",
                         "method": 2
                     },
                     {
                         "name": "删除",
-                        "value": "Delete",
+                        "value": "system_config:Delete",
                         "api": "/api/system/system_config/{id}/",
                         "method": 3
                     }
@@ -447,31 +447,31 @@
                 "menu_button": [
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "dictionary:Search",
                         "api": "/api/system/dictionary/",
                         "method": 0
                     },
                     {
                         "name": "详情",
-                        "value": "Retrieve",
+                        "value": "dictionary:Retrieve",
                         "api": "/api/system/dictionary/{id}/",
                         "method": 0
                     },
                     {
                         "name": "新增",
-                        "value": "Create",
+                        "value": "dictionary:Create",
                         "api": "/api/system/dictionary/",
                         "method": 1
                     },
                     {
                         "name": "编辑",
-                        "value": "Update",
+                        "value": "dictionary:Update",
                         "api": "/api/system/dictionary/{id}/",
                         "method": 2
                     },
                     {
                         "name": "删除",
-                        "value": "Delete",
+                        "value": "dictionary:Delete",
                         "api": "/api/system/dictionary/{id}/",
                         "method": 3
                     }
@@ -494,31 +494,31 @@
                 "menu_button": [
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "area:Search",
                         "api": "/api/system/area/",
                         "method": 0
                     },
                     {
                         "name": "详情",
-                        "value": "Retrieve",
+                        "value": "area:Retrieve",
                         "api": "/api/system/area/{id}/",
                         "method": 0
                     },
                     {
                         "name": "新增",
-                        "value": "Create",
+                        "value": "area:Create",
                         "api": "/api/system/area/",
                         "method": 1
                     },
                     {
                         "name": "编辑",
-                        "value": "Update",
+                        "value": "area:Update",
                         "api": "/api/system/area/{id}/",
                         "method": 2
                     },
                     {
                         "name": "删除",
-                        "value": "Delete",
+                        "value": "area:Delete",
                         "api": "/api/system/area/{id}/",
                         "method": 3
                     }
@@ -541,25 +541,25 @@
                 "menu_button": [
                     {
                         "name": "详情",
-                        "value": "Retrieve",
+                        "value": "file:Retrieve",
                         "api": "/api/system/file/{id}/",
                         "method": 0
                     },
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "file:Search",
                         "api": "/api/system/file/",
                         "method": 0
                     },
                     {
                         "name": "编辑",
-                        "value": "Update",
+                        "value": "file:Update",
                         "api": "/api/system/file/{id}/",
                         "method": 1
                     },
                     {
                         "name": "删除",
-                        "value": "Delete",
+                        "value": "file:Delete",
                         "api": "/api/system/file/{id}/",
                         "method": 3
                     }
@@ -599,13 +599,13 @@
                 "menu_button": [
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "login_log:Search",
                         "api": "/api/system/login_log/",
                         "method": 0
                     },
                     {
                         "name": "详情",
-                        "value": "Retrieve",
+                        "value": "login_log:Retrieve",
                         "api": "/api/system/login_log/{id}/",
                         "method": 0
                     }
@@ -628,13 +628,13 @@
                 "menu_button": [
                     {
                         "name": "详情",
-                        "value": "Retrieve",
+                        "value": "operation_log:Retrieve",
                         "api": "/api/system/operation_log/{id}/",
                         "method": 0
                     },
                     {
                         "name": "查询",
-                        "value": "Search",
+                        "value": "operation_log:Search",
                         "api": "/api/system/operation_log/",
                         "method": 0
                     }
