@@ -1,18 +1,13 @@
 <template>
 	<fs-page>
-		<fs-crud ref="crudRef" v-bind="crudBinding">
-			<template #cell_url="scope">
-				<el-tag size="small">{{ scope.row.url }}</el-tag>
-			</template>
-		</fs-crud>
+		<fs-crud ref="crudRef" v-bind="crudBinding"> </fs-crud>
 	</fs-page>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useExpose, useCrud } from '@fast-crud/fast-crud';
-import { createCrudOptions } from './curd';
-
+import { createCrudOptions } from './crud';
 // crud组件的ref
 const crudRef = ref();
 // crud 配置的ref
@@ -23,8 +18,6 @@ const { crudExpose } = useExpose({ crudRef, crudBinding });
 const { crudOptions } = createCrudOptions({ crudExpose });
 // 初始化crud配置
 const { resetCrudOptions } = useCrud({ crudExpose, crudOptions });
-// 你可以调用此方法，重新初始化crud配置
-// resetCrudOptions(options)
 
 // 页面打开后获取列表数据
 onMounted(() => {
