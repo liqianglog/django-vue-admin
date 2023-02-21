@@ -40,7 +40,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 						formatter: (context) => {
 							//计算序号,你可以自定义计算规则，此处为翻页累加
 							let index = context.index ?? 1;
-							let pagination = crudExpose.crudBinding.value.pagination;
+							let pagination: any = crudExpose.crudBinding.value.pagination;
 							return ((pagination.currentPage ?? 1) - 1) * pagination.pageSize + index + 1;
 						},
 					},
