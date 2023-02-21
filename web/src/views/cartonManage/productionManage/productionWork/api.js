@@ -40,3 +40,14 @@ export function DelObj (id) {
     data: { id }
   })
 }
+/**
+ * 获取生产报告
+ * @param {*} params
+ * @returns
+ */
+export function getProductionReport (params) {
+  return request({
+    url: urlPrefix + params.id + '/production_report/',
+    method: 'get'
+  })
+}
