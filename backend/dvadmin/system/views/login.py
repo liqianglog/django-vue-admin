@@ -109,7 +109,7 @@ class LoginView(TokenObtainPairView):
         except:
             return DetailResponse(msg='该账号未注册')
         # 获得用户后，校验密码并签发token
-        if check_password(password,user.password):
+        if check_password(make_password(password),user.password):
             return DetailResponse(msg='密码错误')
         result = {
            "name":user.name,

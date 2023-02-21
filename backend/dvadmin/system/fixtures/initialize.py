@@ -3,17 +3,14 @@ import os
 
 import django
 
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "application.settings")
 django.setup()
 
-from dvadmin.system.views.user import UsersInitSerializer
-from dvadmin.system.views.menu import MenuInitSerializer
 from dvadmin.utils.core_initialize import CoreInitialize
-from dvadmin.system.views.role import RoleInitSerializer
-from dvadmin.system.views.api_white_list import ApiWhiteListInitSerializer
-from dvadmin.system.views.dept import DeptInitSerializer
-from dvadmin.system.views.dictionary import DictionaryInitSerializer
-from dvadmin.system.views.system_config import SystemConfigInitSerializer
+from dvadmin.system.fixtures.initSerializer import UsersInitSerializer, DeptInitSerializer, RoleInitSerializer, \
+    MenuInitSerializer, ApiWhiteListInitSerializer, DictionaryInitSerializer, SystemConfigInitSerializer, \
+    RoleMenuInitSerializer, RoleMenuButtonInitSerializer
 
 
 class Initialize(CoreInitialize):
@@ -42,6 +39,19 @@ class Initialize(CoreInitialize):
         """
         self.init_base(MenuInitSerializer, unique_fields=['name', 'web_path', 'component', 'component_name'])
 
+    def init_role_menu(self):
+        """
+        初始化角色菜单信息
+        """
+        self.init_base(RoleMenuInitSerializer, unique_fields=['role', 'menu'])
+
+    def init_role_menu_button(self):
+        """
+        初始化角色菜单按钮信息
+        """
+        self.init_base(RoleMenuButtonInitSerializer, unique_fields=['role', 'menu_button'])
+
+
     def init_api_white_list(self):
         """
         初始API白名单
@@ -65,6 +75,8 @@ class Initialize(CoreInitialize):
         self.init_role()
         self.init_users()
         self.init_menu()
+        self.init_role_menu()
+        self.init_role_menu_button()
         self.init_api_white_list()
         self.init_dictionary()
         self.init_system_config()
