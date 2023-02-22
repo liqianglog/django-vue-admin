@@ -40,7 +40,6 @@ class ProductionWork(CoreModel):
         db_table = table_prefix + "production_work"
         verbose_name = '生产工单'
         verbose_name_plural = verbose_name
-        ordering = ('-create_datetime',)
 
 
 class ProductionWorkStatusRecord(models.Model):

@@ -199,7 +199,6 @@ class VerifyCodeRecord(PostgresPartitionedModel, AddPostgresPartitionedBase):
         db_table = table_prefix + "verify_code_record"
         verbose_name = '校验码记录'
         verbose_name_plural = verbose_name
-        ordering = ('-create_datetime',)
         indexes = [
             UniqueIndex(fields=['verify_work_no', 'create_datetime']),
         ]

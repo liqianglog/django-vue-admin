@@ -7,15 +7,16 @@
 
 <script>
 import * as echarts from 'echarts'
+import { EleResize } from '@/plugin/resize'
 export default {
   title: '每日码包导入数',
   icon: 'el-icon-monitor',
   description: '每日码包导入数',
   name: 'cpEverydayImport',
-  height: 5,
-  width: 8,
-  maxH: 1,
-  maxW: Infinity,
+  height: 42,
+  width: 12,
+  minH: 42,
+  minW: 12,
   isResizable: true,
   data () {
     return {
@@ -26,6 +27,9 @@ export default {
     initLine () {
       const echarDemo = this.$refs.cpEverydayImportRef
       this.myChart = echarts.init(echarDemo)
+      EleResize.on(echarDemo, () => {
+        this.myChart.resize()
+      })
       const option = {
         title: {
           text: '当月每日码包导入数量'

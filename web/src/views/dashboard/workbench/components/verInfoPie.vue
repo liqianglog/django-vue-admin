@@ -1,6 +1,6 @@
 <template>
 <el-card>
-  <div  ref="cpRepeatPieRef" style="width: 100%;height: 400px">
+  <div  ref="verInfoPieRef" style="width: 100%;height: 400px">
   </div>
 </el-card>
 </template>
@@ -10,11 +10,11 @@ import * as echarts from 'echarts'
 import { EleResize } from '@/plugin/resize'
 import { request } from '@/api/service'
 export default {
-  title: '码包重码数对比',
+  title: '问题码占比情况',
   icon: 'el-icon-monitor',
-  description: '码包重码数对比',
-  name: 'cpRepeatPie',
-  height: 42,
+  description: '问题码占比情况',
+  name: 'verInfoPie',
+  height: 45,
   width: 8,
   minH: 40,
   minW: 8,
@@ -26,18 +26,18 @@ export default {
   },
   methods: {
     initLine () {
-      const echarDemo = this.$refs.cpRepeatPieRef
+      const echarDemo = this.$refs.verInfoPieRef
       this.myChart = echarts.init(echarDemo)
       EleResize.on(echarDemo, () => {
         this.myChart.resize()
       })
       request({
-        url: '/api/datav/index/code_package_repetition_pie/'
+        url: '/api/datav/index/verify_code_pie/'
       }).then(res => {
         const { data } = res
         const option = {
           title: {
-            text: '码包重码数对比',
+            text: '问题码占比情况',
             x: 'left',
             textStyle: { fontSize: '15', color: '#303133' }
           },
@@ -50,7 +50,7 @@ export default {
             top: '0%',
             itemWidth: 14,
             itemHeight: 14,
-            data: ['码包重码', '历史重码'],
+            data: data.name_list,
             textStyle: {
               rich: {
                 name: {
@@ -92,10 +92,7 @@ export default {
               labelLine: {
                 show: false
               },
-              data: [
-                { value: data.database_repetition_number, name: '历史重码' },
-                { value: data.package_repetition_number, name: '码包重码' }
-              ]
+              data: data.data
             }
           ]
         }
@@ -105,6 +102,13 @@ export default {
   },
   mounted () {
     this.initLine()
+    const echarDemo = this.$refs.verInfoPieRef
+    this.$nextTick(()=>{
+      EleResize.on(echarDemo, () => {
+        this.myChart.resize()
+      })
+    })
+
   }
 }
 </script>
