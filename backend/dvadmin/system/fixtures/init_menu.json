@@ -289,31 +289,31 @@
                 "menu_button": [
                     {
                         "name": "查询",
-                        "value": "menu:Search",
+                        "value": "messageCenter:Search",
                         "api": "/api/system/message_center/",
                         "method": 0
                     },
                     {
                         "name": "详情",
-                        "value": "menu:Retrieve",
+                        "value": "messageCenter:Retrieve",
                         "api": "/api/system/message_center/{id}/",
                         "method": 0
                     },
                     {
                         "name": "新增",
-                        "value": "menu:Create",
+                        "value": "messageCenter:Create",
                         "api": "/api/system/message_center/",
                         "method": 1
                     },
                     {
                         "name": "编辑",
-                        "value": "menu:Update",
+                        "value": "messageCenter:Update",
                         "api": "/api/system/message_center/{id}/",
                         "method": 2
                     },
                     {
                         "name": "删除",
-                        "value": "menu:Delete",
+                        "value": "messageCenter:Delete",
                         "api": "/api/system/menu/{id}/",
                         "method": 3
                     }
