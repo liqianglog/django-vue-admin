@@ -14,7 +14,7 @@ export const crudOptions = (vm) => {
 
     },
     rowHandle: {
-      width: 120,
+      width: 200,
       fixed: 'right',
       view: false,
       edit: false,
@@ -26,6 +26,17 @@ export const crudOptions = (vm) => {
           size: 'small',
           type: 'primary',
           emit: 'onStatusLog'
+        },
+        {
+          thin: true,
+          text: '生产报告',
+          size: 'small',
+          type: 'warning',
+          emit: 'onProductionReport',
+          disabled (_, form) {
+            // return !(form.status === 4 || form.status === 5) && !vm.hasPermissions('ImportReport')
+            return !vm.hasPermissions('ProductionReport')
+          }
         }
       ]
     },

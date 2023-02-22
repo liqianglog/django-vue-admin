@@ -5,6 +5,7 @@
         v-bind="_crudProps"
         v-on="_crudListeners"
         @onStatusLog="onStatusLog"
+        @onProductionReport="onProductionReport"
     >
       <div slot="header">
         <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
@@ -19,7 +20,8 @@
 
       </div>
     </d2-crud-x>
-<statusLog ref="statusLog"></statusLog>
+    <statusLog ref="statusLog"></statusLog>
+    <production-report ref="productionReport"></production-report>
   </d2-container>
 </template>
 
@@ -28,10 +30,12 @@ import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import statusLog from './components/productionWorkStatusRecord'
+import ProductionReport from '@/views/cartonManage/productionManage/productionWork/components/productionReport'
 export default {
   name: 'productionWork',
   mixins: [d2CrudPlus.crud],
   components: {
+    ProductionReport,
     statusLog
   },
   data () {
@@ -58,6 +62,12 @@ export default {
     onStatusLog ({ row }) {
       this.$refs.statusLog.options = row
       this.$refs.statusLog.drawer = true
+    },
+    // 生产报告
+    onProductionReport ({ row }) {
+      this.$refs.productionReport.options = row
+      this.$refs.productionReport.drawer = true
+      this.$refs.productionReport.getInit()
     }
   }
 }

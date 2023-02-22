@@ -18,7 +18,7 @@ from dvadmin.utils.json_response import DetailResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 from carton_manage.code_manage.models import CodePackage
-from carton_manage.production_manage.models import ProductionWork
+from carton_manage.production_manage.models import ProductionWork, ProductionWorkVerifyRecord
 from dvadmin_tenants.models import Client, Domain
 
 
@@ -28,11 +28,11 @@ class ProductionWorkSerializer(CustomModelSerializer):
     """
     factory_info_name = serializers.CharField(source="factory_info.name", read_only=True)
     production_line_name = serializers.CharField(source="production_line.name", read_only=True)
-    device_name= serializers.CharField(source="device.name", read_only=True)
-    total_number = serializers.IntegerField(source='code_package.total_number',read_only=True)
-    code_type = serializers.IntegerField(source='code_package.code_type',read_only=True)
-    product_name = serializers.CharField(source='code_package.product_name',read_only=True)
-    arrival_factory = serializers.CharField(source='code_package.arrival_factory',read_only=True)
+    device_name = serializers.CharField(source="device.name", read_only=True)
+    total_number = serializers.IntegerField(source='code_package.total_number', read_only=True)
+    code_type = serializers.IntegerField(source='code_package.code_type', read_only=True)
+    product_name = serializers.CharField(source='code_package.product_name', read_only=True)
+    arrival_factory = serializers.CharField(source='code_package.arrival_factory', read_only=True)
 
     class Meta:
         model = ProductionWork
@@ -44,6 +44,7 @@ class ProductionWorkCreateSerializer(CustomModelSerializer):
     """
     生产工单管理-新增序列化器
     """
+
     class Meta:
         model = ProductionWork
         fields = "__all__"
@@ -59,6 +60,7 @@ class ProductionWorkUpdateSerializer(CustomModelSerializer):
         model = ProductionWork
         fields = '__all__'
 
+
 class ProductionWorkFilterSet(FilterSet):
     factory_info_name = django_filters.CharFilter(field_name="factory_info__name", lookup_expr="icontains")
     production_line_name = django_filters.CharFilter(field_name="production_line__name", lookup_expr="icontains")
@@ -67,6 +69,8 @@ class ProductionWorkFilterSet(FilterSet):
     class Meta:
         model = ProductionWork
         fields = '__all__'
+
+
 
 class ProductionWorkViewSet(CustomModelViewSet):
     """
@@ -77,3 +81,27 @@ class ProductionWorkViewSet(CustomModelViewSet):
     create_serializer_class = ProductionWorkCreateSerializer
     update_serializer_class = ProductionWorkUpdateSerializer
     filter_class = ProductionWorkFilterSet
+
+    @action(methods=['get'], detail=True)
+    def production_report(self, request, pk):
+        """生产报告"""
+        _ProductionWork = ProductionWork.objects.filter(id=pk).first()
+        if _ProductionWork is None:
+            return ErrorResponse(msg="未查询到生产工单")
+        data = {
+            "no": _ProductionWork.no,
+            "code_package": _ProductionWork.code_package.no,
+            "product_name": _ProductionWork.code_package.product_name,
+            "arrival_factory": _ProductionWork.code_package.arrival_factory,
+            "order_id": _ProductionWork.order_id,
+            "status": _ProductionWork.status,
+            "device_no": _ProductionWork.device.no,
+            "production_line_name": _ProductionWork.production_line.name,
+            "factory_info_name": _ProductionWork.factory_info.name,
+            "create_datetime": _ProductionWork.create_datetime,
+            "update_datetime": _ProductionWork.update_datetime,
+            "code_verify_record": ProductionWorkVerifyRecord.objects.filter(production_work_id=pk).values('code_list',
+                                                                                                          'result',
+                                                                                                          'record_datetime')
+        }
+        return DetailResponse(data=data)
