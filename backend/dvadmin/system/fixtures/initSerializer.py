@@ -144,7 +144,7 @@ class RoleMenuInitSerializer(CustomModelSerializer):
 
     def create(self, validated_data):
         init_data = self.initial_data
-        validated_data['menu_component_name'].pop()
+        validated_data.pop('menu_component_name')
         role_id = Role.objects.filter(key=init_data['role_key']).first()
         menu_id = Menu.objects.filter(component_name=init_data['menu_component_name']).first()
         validated_data['role'] = role_id
