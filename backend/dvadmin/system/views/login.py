@@ -106,10 +106,10 @@ class LoginView(TokenObtainPairView):
             # 手动通过 user 签发 jwt-token
             user = Users.objects.get(username=username)
         except:
-            return DetailResponse(msg='该账号未注册')
+            return ErrorResponse(msg='该账号未注册')
         # 获得用户后，校验密码并签发token
         if not user.check_password(password):
-            return DetailResponse(msg='密码错误')
+            return ErrorResponse(msg='密码错误')
         result = {
            "name":user.name,
             "userId":user.id,
