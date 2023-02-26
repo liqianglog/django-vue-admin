@@ -1,313 +1,382 @@
 <template>
   <d2-container>
-    <div class="page-header">
-
-      <el-avatar src="https://q1.qlogo.cn/g?b=qq&amp;nk=190848757&amp;s=640" class="user-avatar">
-
-      </el-avatar>
-      <div class="title">
-        <h1>早安, DVAdmin, 开始您一天的工作吧！</h1>
-        <span> 今日晴，20℃ - 32℃！ </span>
+    <div class="component-header">
+      <div class="set-btn-class">
+        <el-button v-if="customizing" type="primary" icon="el-icon-check" round @click="save">完成</el-button>
+        <el-button v-else type="primary" icon="el-icon-edit" round @click="custom">自定义</el-button>
+      </div>
+      <div v-if="customizing" class="all-component-class">
+        <el-card style="margin-bottom: 20px">
+          <div slot="header">
+            <i class="el-icon-circle-plus"></i>
+            <span>添加部件</span>
+            <el-button-group style="float: right">
+              <el-button type="primary" size="mini" @click="backDefaul()">恢复默认</el-button>
+              <el-button type="danger" size="mini" @click="close()">关闭</el-button>
+            </el-button-group>
+          </div>
+          <div class="widgets-list">
+            <div v-if="myCompsList.length<=0" class="widgets-list-nodata">
+              <el-empty description="没有部件啦" :image-size="60"></el-empty>
+            </div>
+            <div v-for="item in myCompsList" :key="item.title" class="widgets-list-item" @drag="onDrag($event,item)"
+                 @dragend="onDragend($event,item)" draggable="true"
+                 unselectable="on">
+              <el-card style="width: 300px">
+                <div slot="header">
+                  <i :class="item.icon"></i>
+                  <span> {{ item.title }}</span>
+                  <el-button type="primary" style="float: right;" size="mini" @click="push(item)">添加</el-button>
+                </div>
+                <div class="item-info">
+                  <p>{{ item.description }}</p>
+                </div>
+              </el-card>
+            </div>
+          </div>
+        </el-card>
       </div>
     </div>
-
-    <el-row :gutter="20">
-      <el-col :span="12">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>友情链接</span>
-
-            <el-button style="float: right; padding: 3px 0" type="text">
-              <el-link href="https://bbs.django-vue-admin.com" target="_blank" type="primary">更多</el-link>
-            </el-button>
-          </div>
-          <el-row>
-              <el-col :span="8" v-for="({name,imageUrl,slogan,link},index) in projects" :key="index">
-              <el-card shadow="hover" style="padding: 0">
-                <div class="project-detail">
-                  <div>
-                    <a :href="link" target="_blank">
-                      <img :src="imageUrl" alt="">
-                      <span v-text="name" class="name"></span>
-                    </a>
-                  </div>
-                  <div v-text="slogan" class="slogan" :title="slogan"></div>
-                </div>
-
-              </el-card>
-              </el-col>
-          </el-row>
-        </el-card>
-
-      </el-col>
-
-      <el-col :span="12">
-        <div class="grid-content bg-purple">
-
-          <el-card class="box-card" >
-            <div slot="header" class="clearfix">
-              <span>快捷导航</span>
-            </div>
-            <el-row>
-              <el-col :span="8" v-for="({name,icon,route,color},index) of navigators" :key="index" style="padding: 0">
-                <el-card shadow="hover">
-                  <div  style="display: flex;align-items: center;flex-direction: column;cursor: pointer" @click="()=>{gotoRoute(route)}">
-                    <d2-icon-svg :name="icon" style="width: 25px;height: 25px;" :style="{fill:color}"/>
-                    <div style="text-align: center;font-size: 12px;margin-top: 20px" v-text="name"></div>
-                  </div>
-                </el-card>
-              </el-col>
-            </el-row>
-          </el-card>
-
-          <el-card class="box-card"  style="margin-top: 25px">
-            <div class="work">
-              <d2-icon-svg name="work" style="margin-left: 50%;transform: translateX(-50%);height: 216px"/>
-            </div>
-          </el-card>
+    <div class="widgets" ref="widgets">
+      <div :class="['widgets-wrapper',customizing?'widgets-wrapper-bg':'']">
+        <div v-if="nowCompsList.length<=0" class="no-widgets">
+          <el-empty image="img/no-widgets.svg" description="没有部件啦" :image-size="280"></el-empty>
         </div>
-      </el-col>
-    </el-row>
+        <grid-layout
+          ref="gridlayout"
+          :layout.sync="layout"
+          :col-num="24"
+          :row-height="1"
+          :is-draggable="customizing"
+          :vertical-compact="false"
+          :use-css-transforms="true"
+          :autoSize="true"
+        >
+          <grid-item v-for="(item, index) in layout"
+                     :static="item.static"
+                     :x="item.x"
+                     :y="item.y"
+                     :w="item.w"
+                     :h="item.h"
+                     :i="item.i"
+                     :key="index"
+                     :isResizable="customizing"
 
+          >
+            <div  v-if="customizing" class="customize-overlay">
+              <el-button class="close" type="danger" plain icon="el-icon-close" size="small"
+                         @click="remove(index)"></el-button>
+              <label>
+                <i :class="allComps[item.element].icon"></i>
+                {{ allComps[item.element].title }}</label>
+            </div>
+            <component :class="customizing?'set-component-bg':''"  :is="allComps[item.element]"></component>
+          </grid-item>
+        </grid-layout>
+      </div>
+    </div>
   </d2-container>
 </template>
 
 <script>
-import { use } from 'echarts/core'
-import { CanvasRenderer } from 'echarts/renderers'
-import { PieChart } from 'echarts/charts'
-import {
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent
-} from 'echarts/components'
-
-use([
-  CanvasRenderer,
-  PieChart,
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent
-])
+import draggable from 'vuedraggable'
+import allComps from './components'
+import util from '@/libs/util'
+import VueGridLayout from 'vue-grid-layout'
+import XEUtils from 'xe-utils'
+const mouseXY = { x: null, y: null }
+const DragPos = { x: 0, y: 0, w: 1, h: 1, i: null }
 export default {
-  name: 'workbench',
+  components: {
+    draggable,
+    GridLayout: VueGridLayout.GridLayout,
+    GridItem: VueGridLayout.GridItem
+  },
   data () {
     return {
-      projects: [
-        {
-          name: '官方文档',
-          imageUrl: '/image/django-vue-admin.png',
-          slogan: 'Django-Vue-Admin 是一套全部开源的快速开发平台，毫无保留给个人及企业免费使用。',
-          link: 'http://django-vue-admin.com'
-        },
-        {
-          name: '官方论坛',
-          imageUrl: '/image/django-vue-admin.png',
-          slogan: 'Django-Vue-Admin 官方论坛',
-          link: 'http://bbs.django-vue-admin.com'
-        },
-        {
-          name: 'D2admin',
-          imageUrl: '/image/d2-pub.png',
-          slogan: 'D2Admin (opens new window)是一个完全 开源免费 的企业中后台产品前端集成方案，使用最新的前端技术栈，' +
-            '小于 60kb 的本地首屏 js 加载，已经做好大部分项目前期准备工作，并且带有大量示例代码，助力管理系统快速开发。',
-          link: 'https://d2.pub/zh'
-        },
-        {
-          name: 'SimpleUi',
-          imageUrl: '/image/simple-ui.png',
-          slogan: '一个基于Django Admin的现代化主题。',
-          link: 'https://simpleui.72wo.com/'
-        },
-        {
-          name: '若依',
-          imageUrl: '/image/ruoyi.png',
-          slogan: '基于SpringBoot、Shiro、Mybatis的权限后台管理系统。',
-          link: 'http://ruoyi.vip/'
-        },
-        {
-          name: 'Gin-Vue-Admin',
-          imageUrl: '/image/gin-vue-admin.png',
-          slogan: '使用gin+vue进行极速开发的全栈后台管理系统。',
-          link: 'https://www.gin-vue-admin.com/'
-        },
-        {
-          name: 'DCM',
-          imageUrl: '/image/django-comment-migrate.png',
-          slogan: '这是一个Django model注释迁移的app',
-          link: 'https://github.com/starryrbs/django-comment-migrate'
-        },
-        {
-          name: 'Jetbrains',
-          imageUrl: '/image/jetbrains.jpeg',
-          slogan: '我们构建我们的软件，让您可以享受构建自己的软件的乐趣',
-          link: 'https://www.jetbrains.com/'
-        },
-        {
-          name: 'Django',
-          imageUrl: '/image/django.png',
-          slogan: '有期限的完美主义者的网络框架。',
-          link: 'https://github.com/django/django'
-        }
-      ],
-      navigators: [
-        {
-          name: '控制台',
-          icon: 'home',
-          route: {
-            name: 'index'
-          },
-          color: 'rgb(31, 218, 202);'
-        },
-        {
-          name: '部门管理',
-          icon: 'department',
-          route: {
-            name: 'dept'
-          },
-          color: 'rgb(225, 133, 37);'
-        },
-        {
-          name: '角色管理',
-          icon: 'role',
-          route: {
-            name: 'role'
-          },
-          color: 'rgb(191, 12, 44);'
-        },
-        {
-          name: '菜单管理',
-          icon: 'menu',
-          route: {
-            name: 'menu'
-          },
-          color: 'rgb(63, 178, 127);'
-        },
-        {
-          name: '用户管理',
-          icon: 'user',
-          route: {
-            name: 'user'
-          },
-          color: 'rgb(191, 12, 44);'
-        },
-        {
-          name: '日志管理',
-          icon: 'log',
-          route: {
-            name: 'operationLog'
-          },
-          color: 'rgb(0, 216, 255);'
-        }
-      ],
-      chartData: {
-        columns: ['日期', '销售额'],
-        rows: [
-          { 日期: '1月1日', 销售额: 123 },
-          { 日期: '1月2日', 销售额: 1223 },
-          { 日期: '1月3日', 销售额: 2123 },
-          { 日期: '1月4日', 销售额: 4123 },
-          { 日期: '1月5日', 销售额: 3123 },
-          { 日期: '1月6日', 销售额: 7123 }
+      customizing: false,
+      allComps: allComps,
+      selectLayout: [],
+      defaultGrid: {
+        // 默认分栏数量和宽度 例如 [24] [18,6] [8,8,8] [6,12,6]
+        layout: [12, 6, 6],
+        // 小组件分布，com取值:views/home/components 文件名
+        copmsList: [
+          ['welcome'],
+          ['about', 'ver'],
+          ['time', 'progress']
         ]
+      },
+      defaultLayout: [],
+      layout: [
+        // { x: 0, y: 0, w: 2, h: 2, i: '0', element: 'welcome' },
+        // { x: 2, y: 0, w: 2, h: 4, i: '1', element: 'about' },
+        // { x: 4, y: 0, w: 2, h: 5, i: '2', element: 'time' },
+        // { x: 6, y: 0, w: 2, h: 3, i: '3', element: 'progress' }
+      ]
+    }
+  },
+  created () {
+    this.layout = JSON.parse(util.cookies.get('grid-layout') || JSON.stringify(this.defaultLayout))
+  },
+  mounted () {
+    document.addEventListener('dragover', function (e) {
+      mouseXY.x = e.clientX
+      mouseXY.y = e.clientY
+    }, false)
+    this.$emit('on-mounted')
+  },
+  computed: {
+    allCompsList () {
+      var allCompsList = []
+      for (var key in this.allComps) {
+        allCompsList.push({
+          key: key,
+          title: allComps[key].title,
+          icon: allComps[key].icon,
+          height: allComps[key].height,
+          width: allComps[key].width,
+          maxH: allComps[key].maxH || Infinity,
+          maxW: allComps[key].maxW || Infinity,
+          isResizable: allComps[key].isResizable || null,
+          description: allComps[key].description
+        })
       }
+      return allCompsList
+    },
+    myCompsList () {
+      return this.allCompsList
+    },
+    nowCompsList () {
+      return this.allCompsList
     }
   },
   methods: {
-    gotoRoute (route) {
-      this.$router.push(route)
+    // 开启自定义
+    custom () {
+      this.customizing = true
+      const oldWidth = this.$refs.widgets.offsetWidth
+      this.$nextTick(() => {
+        const scale = this.$refs.widgets.offsetWidth / oldWidth
+        this.$refs.widgets.style.setProperty('transform', `scale(${scale})`)
+      })
+    },
+    // 设置布局
+    setLayout (layout) {
+      // 暂定
+    },
+    getLayoutElementNumber (elementName) {
+      // var index = 0
+      // this.layout.map(res => {
+      //   if (elementName === res.element) {
+      //     index += 1
+      //   }
+      // })
+      // return index + 1
+      return elementName + this.layout.length
+    },
+    // 追加
+    push (item) {
+      console.log(1, item)
+      this.layout.push({
+        x: 6,
+        y: 0,
+        w: item.width,
+        h: item.height,
+        isResizable: item.isResizable || null,
+        i: this.getLayoutElementNumber(item.key),
+        element: item.key
+      })
+    },
+    // 删除组件
+    remove (index) {
+      this.layout.splice(index, 1)
+    },
+    // 保存
+    save () {
+      console.log(this.layout)
+      this.customizing = false
+      this.$refs.widgets.style.removeProperty('transform')
+      util.cookies.set('grid-layout', this.layout)
+    },
+    // 恢复默认
+    backDefaul () {
+      this.customizing = false
+      this.$refs.widgets.style.removeProperty('transform')
+      this.layout = JSON.parse(JSON.stringify(this.defaultLayout))
+      util.cookies.remove('grid-layout')
+    },
+    // 关闭
+    close () {
+      this.customizing = false
+      this.$refs.widgets.style.removeProperty('transform')
+    },
+    // 拖拽事件
+    onDrag (e, item) {
+      const { key, width, height } = item
+      const parentRect = this.$refs.widgets.getBoundingClientRect()
+      let mouseInGrid = false
+      if (((mouseXY.x > parentRect.left) && (mouseXY.x < parentRect.right)) && ((mouseXY.y > parentRect.top) && (mouseXY.y < parentRect.bottom))) {
+        mouseInGrid = true
+      }
+      const cloneLayout = XEUtils.clone(this.layout, true)
+      if (mouseInGrid === true && (cloneLayout.findIndex(item => item.i === this.getLayoutElementNumber(key)) === -1)) {
+        // this.layout.push({
+        //   x: (this.layout.length * 2) % (this.colNum || 12),
+        //   y: this.layout.length + (this.colNum || 12), // puts it at the bottom
+        //   w: width,
+        //   h: height,
+        //   i: this.getLayoutElementNumber(key),
+        //   element: key
+        // })
+      }
+      const index = this.layout.findIndex(item => item.i === this.getLayoutElementNumber(key))
+      if (index !== -1) {
+        try {
+          this.$refs.gridlayout.$children[this.layout.length].$refs.item.style.display = 'none'
+        } catch {
+        }
+        const el = this.$refs.gridlayout.$children[index]
+        el.dragging = { top: mouseXY.y - parentRect.top, left: mouseXY.x - parentRect.left }
+        const new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left)
+        if (mouseInGrid === true) {
+          this.$refs.gridlayout.dragEvent('dragstart', this.getLayoutElementNumber(key), new_pos.x, new_pos.y, 1, 1)
+          DragPos.i = String(index)
+          DragPos.x = this.layout[index].x
+          DragPos.y = this.layout[index].y
+        }
+        if (mouseInGrid === false) {
+          this.$refs.gridlayout.dragEvent('dragend', this.getLayoutElementNumber(key), new_pos.x, new_pos.y, 1, 1)
+          this.layout = this.layout.filter(obj => obj.i !== this.getLayoutElementNumber(key))
+        }
+      }
+    },
+    onDragend (e, item) {
+      const { key, width, height } = item
+      const parentRect = this.$refs.widgets.getBoundingClientRect()
+      let mouseInGrid = false
+      if (((mouseXY.x > parentRect.left) && (mouseXY.x < parentRect.right)) && ((mouseXY.y > parentRect.top) && (mouseXY.y < parentRect.bottom))) {
+        mouseInGrid = true
+      }
+      if (mouseInGrid === true) {
+        this.layout.push({
+          x: DragPos.x,
+          y: DragPos.y,
+          w: width,
+          h: height,
+          i: this.getLayoutElementNumber(key),
+          element: key
+        })
+        this.$refs.gridlayout.dragEvent('dragend', this.getLayoutElementNumber(key), DragPos.x, DragPos.y, 1, 1)
+        this.layout = this.layout.filter(obj => obj.i !== this.getLayoutElementNumber(key))
+        // UNCOMMENT below if you want to add a grid-item
+        /*
+        this.layout.push({
+            x: DragPos.x,
+            y: DragPos.y,
+            w: 1,
+            h: 1,
+            i: DragPos.i,
+        });
+        this.$refs.gridLayout.dragEvent('dragend', DragPos.i, DragPos.x,DragPos.y,1,1);
+        try {
+            this.$refs.gridLayout.$children[this.layout.length].$refs.item.style.display="block";
+        } catch {
+        }
+        */
+      }
     }
   }
 }
 </script>
-
 <style scoped lang="scss">
+.component-header {
+  background-color: #FFFFFF;
+  position: sticky;
+  top: -20px;
+  z-index: 99;
 
-  $userAvatarLength: 72px;
+  .set-btn-class {
+    float: right;
+    z-index: 99;
+    margin-bottom: 10px;
+  }
 
-  .page-header{
-    box-sizing: border-box;
-    padding: 16px;
-    .user-avatar{
-        width: $userAvatarLength;
-        height: $userAvatarLength;
-        line-height: $userAvatarLength;
-      display: inline-block;
-    }
+  .all-component-class {
+    clear: right;
 
-    .title{
-      display: inline-block;
-      padding: 0 0 0 15px;
-      position: relative;
-      top: -5px;
+    .widgets-list {
+      display: flex;
+      justify-content: space-between;
+      overflow-x: scroll;
+      padding-bottom: 10px;
 
-      h1{
-        font-size: 1.125rem;
-        font-weight: 500;
-        line-height: 1.75rem;
+      .widgets-list-item {
+        margin-right: 10px;
       }
-      span{
-        font-size: 14px;
-        color: rgba(0,0,0,.45);
+
+      .widgets-list-item:last-child {
+        margin-right: 0px;
       }
     }
+  }
+}
 
-  }
+.widgets-wrapper-bg {
+  background: rgba(180, 180, 180, .2);
+  min-height: 500px;
+}
 
-  .project-detail{
-    color: rgba(0,0,0,.45);
-    height: 65px;
-     img {
-       width: 25px;
-       height: 25px;
-     }
-    .name{
-      margin-left: 1rem;
-      font-size: 1rem;
-      line-height: 2rem;
-      height: 2rem;
-      display: inline-block;
-      color: rgba(0,0,0,.85);
-      position: relative;
-      top: -5px;
-    }
-    .slogan{
-      font-size: 12px;
-      padding: 5px 0;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-    }
-    .team{
-      font-size: 14px;
-    }
-  }
+.widgets-wrapper .sortable-ghost {
+  opacity: 0.5;
+}
 
-  .activity{
-    padding: 0;
-    .activity-avatar{
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-    }
-    .activity-detail{
-      padding: 10px;
-      line-height: 15px;
-      font-size: 14px;
-      color: rgba(0,0,0,.85);
-    }
-  }
-  .chart {
-    height: 408px;
-  }
+.set-component-bg{
+  background:rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0,0,0,.5);
+}
 
-  .el-divider--horizontal{
-    margin: 4px 0;
-    background: 0 0;
-    border-top: 1px solid #e8eaec;
+.customize-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 5px;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: move;
+}
 
-  }
-  .el-card, .el-message {
-    border-radius: 0;
-  }
+.customize-overlay label {
+  background: #409EFF;
+  color: #fff;
+  height: 40px;
+  padding: 0 30px;
+  border-radius: 40px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: move;
+}
+
+.customize-overlay label i {
+  margin-right: 15px;
+  font-size: 24px;
+}
+
+.customize-overlay .close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.customize-overlay .close:focus, .customize-overlay .close:hover {
+  background: #76B1F9;
+}
+
 </style>

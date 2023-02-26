@@ -121,12 +121,12 @@ class MessageCenterCreateSerializer(CustomModelSerializer):
         users = initial_data.get('target_user', [])
         if target_type in [1]:  # 按角色
             target_role = initial_data.get('target_role',[])
-            users = Users.objects.exclude(is_deleted=True).filter(role__id__in=target_role).values_list('id', flat=True)
+            users = Users.objects.filter(role__id__in=target_role).values_list('id', flat=True)
         if target_type in [2]:  # 按部门
             target_dept = initial_data.get('target_dept',[])
-            users = Users.objects.exclude(is_deleted=True).filter(dept__id__in=target_dept).values_list('id', flat=True)
+            users = Users.objects.filter(dept__id__in=target_dept).values_list('id', flat=True)
         if target_type in [3]:  # 系统通知
-            users = Users.objects.exclude(is_deleted=True).values_list('id', flat=True)
+            users = Users.objects.values_list('id', flat=True)
         targetuser_data = []
         for user in users:
             targetuser_data.append({

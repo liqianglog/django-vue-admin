@@ -219,10 +219,12 @@ class ExportUserProfileSerializer(CustomModelSerializer):
 
 
 class UserProfileImportSerializer(CustomModelSerializer):
+    password = serializers.CharField(required=True, max_length=50, error_messages={"required": "登录密码不能为空"})
+
     def save(self, **kwargs):
         data = super().save(**kwargs)
         password = hashlib.new(
-            "md5", str(self.initial_data.get("password", "")).encode(encoding="UTF-8")
+            "md5", str(self.initial_data.get("password", "admin123456")).encode(encoding="UTF-8")
         ).hexdigest()
         data.set_password(password)
         data.save()
