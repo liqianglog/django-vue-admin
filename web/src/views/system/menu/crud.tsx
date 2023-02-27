@@ -83,6 +83,7 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 				},
 			},
 			rowHandle: {
+				width: 310,
 				buttons: {
 					custom: {
 						text: '按钮配置',
@@ -231,7 +232,9 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 				},
 				sort: {
 					title: '排序',
-					width: 60,
+					column: {
+						width: 60,
+					},
 					type: 'number',
 					form: {
 						value: 1,
@@ -242,6 +245,9 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 				},
 				is_catalog: {
 					title: '是否目录',
+					column: {
+						width: 60,
+					},
 					type: 'dict-switch',
 					dict: dict({
 						data: dictionary('button_whether_bool'),
@@ -368,7 +374,9 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 				},
 				component_name: {
 					title: '组件名称',
-					width: 170,
+					column: {
+						width: 140,
+					},
 					form: {
 						rules: [{ required: true, message: '请输入组件名称' }],
 						component: {
@@ -391,7 +399,6 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 				menuPermission: {
 					title: '拥有权限',
 					type: 'dict-select',
-					width: 300,
 					form: {
 						show: false,
 						component: {
@@ -403,13 +410,18 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 							},
 						},
 					},
+					column: {
+						width: 260,
+					},
 				},
 				cache: {
 					title: '缓存',
+					column: {
+						width: 60,
+					},
 					search: {
 						show: true,
 					},
-					width: 60,
 					type: 'dict-switch',
 					dict: dict({
 						data: dictionary('button_whether_bool'),
@@ -432,10 +444,12 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 				},
 				visible: {
 					title: '侧边可见',
+					column: {
+						width: 60,
+					},
 					search: {
 						show: true,
 					},
-					width: 75,
 					type: 'dict-switch',
 					dict: dict({
 						data: dictionary('button_whether_bool'),
@@ -462,7 +476,9 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 					search: {
 						show: true,
 					},
-					width: 70,
+					column: {
+						width: 80,
+					},
 					type: 'dict-switch',
 					dict: dict({
 						data: dictionary('button_status_bool'),

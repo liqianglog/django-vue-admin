@@ -25,9 +25,10 @@
 								<el-tab-pane :label="$t('message.label.one1')" name="account">
 									<Account />
 								</el-tab-pane>
-								<el-tab-pane :label="$t('message.label.two2')" name="mobile">
+								<!-- TODO 手机号码登录未接入，展示隐藏 -->
+								<!-- <el-tab-pane :label="$t('message.label.two2')" name="mobile">
 									<Mobile />
-								</el-tab-pane>
+								</el-tab-pane> -->
 							</el-tabs>
 						</div>
 						<Scan v-if="state.isScan" />
