@@ -118,7 +118,7 @@ export default {
       that.$refs.upload.clearFiles()
       // 是否更新已经存在的用户数据
       return request({
-        url: util.baseURL() + that.api + 'import_data/',
+        url:  that.api + 'import_data/',
         method: 'post',
         data: {
           url: response.data.url
