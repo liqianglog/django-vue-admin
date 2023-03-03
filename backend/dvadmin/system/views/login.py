@@ -73,17 +73,16 @@ class LoginView(TokenObtainPairView):
         # username可能携带的不止是用户名，可能还是用户的其它唯一标识 手机号 邮箱
         username = request.data.get('username',None)
         if username is None:
-            return ErrorResponse(msg="参数错误")
+            return ErrorResponse(msg="账号不能为空")
         password = request.data.get('password',None)
         if password is None:
-            return ErrorResponse(msg="参数错误")
-        captcha = request.data.get('captcha',None)
-        if captcha is None:
-            return ErrorResponse(msg="参数错误")
-        captchaKey = request.data.get('captchaKey',None)
-        if captchaKey is None:
-            return ErrorResponse(msg="参数错误")
+            return ErrorResponse(msg="密码不能为空")
+
         if dispatch.get_system_config_values("base.captcha_state"):
+            captcha = request.data.get('captcha', None)
+            captchaKey = request.data.get('captchaKey', None)
+            if captchaKey is None:
+                return ErrorResponse(msg="验证码不能为空")
             if captcha is None:
                 raise CustomValidationError("验证码不能为空")
             self.image_code = CaptchaStore.objects.filter(
