@@ -97,6 +97,12 @@
         </div>
       </div>
     </div>
+<!-- 授权后可以删除-->
+    <div class="dvadmin-auth">
+      <span>Powered by Django-Vue-Admin</span>
+      <el-divider direction="vertical"></el-divider>
+      <span>Copyright dvadmin团队</span>
+    </div>
   </div>
 </template>
 
@@ -208,4 +214,24 @@ export default {
 <style lang="scss">
 // 注册主题
 @import "~@/assets/style/theme/register.scss";
+
+// 授权样式
+.dvadmin-auth{
+  font-size: 0.8em;
+  position: absolute;
+  top: 50vh;
+  right: -9vw;
+  text-align: center;
+  color: #888888;
+  background-image: linear-gradient(to left, #d3d3d3, #989898, #888888, #363636,#888888,#989898,#d3d3d3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-size: 200% 100%;
+  animation: bgp 6s infinite linear;
+  transform: rotate(90deg);
+}
+@-webkit-keyframes bgp {
+  0% {background-position: 0 0; }
+  100% {background-position: -100% 0; }
+}
 </style>
