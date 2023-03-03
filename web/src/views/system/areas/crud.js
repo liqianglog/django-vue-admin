@@ -29,34 +29,35 @@ export const crudOptions = (vm) => {
         iconLoaded: 'el-icon-loading' // 美化loading图标
       }
     },
-    rowHandle: {
-      show: false,
-      width: 140,
-      view: {
-        thin: true,
-        text: '',
-        show: false,
-        disabled () {
-          return !vm.hasPermissions('Retrieve')
-        }
-      },
-      edit: {
-        thin: true,
-        text: '',
-        show: false,
-        disabled () {
-          return !vm.hasPermissions('Update')
-        }
-      },
-      remove: {
-        thin: true,
-        text: '',
-        show: false,
-        disabled () {
-          return !vm.hasPermissions('Delete')
-        }
-      }
-    },
+    // rowHandle: {
+    //   show: false,
+    //   width: 140,
+    //   view: {
+    //     thin: true,
+    //     text: '',
+    //     show: false,
+    //     disabled () {
+    //       return !vm.hasPermissions('Retrieve')
+    //     }
+    //   },
+    //   edit: {
+    //     thin: true,
+    //     text: '',
+    //     show: false,
+    //     disabled () {
+    //       return !vm.hasPermissions('Update')
+    //     }
+    //   },
+    //   remove: {
+    //     thin: true,
+    //     text: '',
+    //     show: false,
+    //     disabled () {
+    //       return !vm.hasPermissions('Delete')
+    //     }
+    //   }
+    // },
+    rowHandle: false,
     viewOptions: {
       componentType: 'form'
     },

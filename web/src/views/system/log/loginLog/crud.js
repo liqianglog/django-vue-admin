@@ -4,12 +4,11 @@ export const crudOptions = (vm) => {
       compact: true
     },
     options: {
-      tableType: 'vxe-table',
-      rowKey: true, // 必须设置，true or false
+      // tableType: 'vxe-table',
+      // rowKey: true, // 必须设置，true or false
       rowId: 'id',
       height: '100%', // 表格高度100%, 使用toolbar必须设置
-      highlightCurrentRow: false
-
+      highlightCurrentRow: false,
     },
     rowHandle: {
       fixed: 'right',
@@ -284,7 +283,8 @@ export const crudOptions = (vm) => {
         title: '登录时间',
         key: 'create_datetime',
         width: 160,
-        type: 'datetime'
+        type: 'datetime',
+        sortable: true
       }
     ]
   }
