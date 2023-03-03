@@ -1,5 +1,4 @@
 <template>
-  <div>{{props.modelValue}}</div>
   <el-select popper-class="popperClass" class="tableSelector" :multiple="props.tableConfig.isMultiple"
              @remove-tag="removeTag" v-model="data" placeholder="请选择" @visible-change="visibleChange">
     <template #empty>
@@ -26,7 +25,7 @@
           <el-table-column v-if="props.tableConfig.isMultiple" fixed type="selection" width="55"/>
           <el-table-column fixed type="index" label="#" width="50"/>
           <el-table-column :prop="item.prop" :label="item.label" :width="item.width"
-                           v-for="(item,index) in props.tableConfig.columns"/>
+                           v-for="(item,index) in props.tableConfig.columns" :key="index"/>
         </el-table>
         <el-pagination style="margin-top: 10px" background
                        v-model:current-page="pageConfig.page"
@@ -43,19 +42,20 @@
 <script setup lang="ts">
 import {defineProps, onMounted, reactive, ref, toRaw, watch} from 'vue'
 import {dict} from '@fast-crud/fast-crud'
-import XEUtils from "xe-utils";
-import qs from 'qs'
+import XEUtils from 'xe-utils'
+
 const props = defineProps({
   modelValue: {},
   tableConfig: {
     url: null,
     label: null, //显示值
     value: null, //数据值
-    isTree:false,
+    isTree: false,
     data: [],//默认数据
     isMultiple: false, //是否多选
     columns: [], //每一项对应的列表项
-  }
+  },
+  displayLabel: {}
 } as any)
 const emit = defineEmits(['update:modelValue'])
 // tableRef
@@ -67,6 +67,7 @@ const multipleSelection = ref()
 watch(multipleSelection, // 监听multipleSelection的变化，
     (value) => {
       const {tableConfig} = props
+      //是否多选
       if (!tableConfig.isMultiple) {
         data.value = value ? value[tableConfig.label] : null
       } else {
@@ -78,7 +79,6 @@ watch(multipleSelection, // 监听multipleSelection的变化，
     }, // 当multipleSelection值触发后，同步修改data.value的值
     {immediate: true} // 立即触发一次，给data赋值初始值
 )
-
 
 
 // 搜索值
@@ -127,18 +127,17 @@ const getDict = async () => {
   }
   const dicts = dict({url: url, params: params})
   await dicts.reloadDict()
-  const dictData = dicts.data
+  const dictData: any = dicts.data
   const {data, page, limit, total} = dictData
   pageConfig.page = page
   pageConfig.limit = limit
   pageConfig.total = total
   if (props.tableConfig.data === undefined || props.tableConfig.data.length === 0) {
-    if(props.tableConfig.isTree){
-      tableData.value = XEUtils.toArrayTree(data,{parentKey: 'parent', key: 'id', children: 'children'})
-    }else{
+    if (props.tableConfig.isTree) {
+      tableData.value = XEUtils.toArrayTree(data, {parentKey: 'parent', key: 'id', children: 'children'})
+    } else {
       tableData.value = data
     }
-
   } else {
     tableData.value = props.tableConfig.data
   }
@@ -163,21 +162,16 @@ const handlePageChange = (page: any) => {
   getDict()
 }
 
-const getDictByValue = async ()=>{
-  const url = props.tableConfig.url
-  const dicts = dict({url: url, params: {}})
-  await dicts.reloadDict()
-  const dictData = dicts.data
-  console.log(dictData)
-  return dictData
-}
-
-// 监听modelValue的变化，更新数据
-watch(()=>{
-  return props.modelValue
-},(value)=>{
-
-},{immediate: true})
+// 监听displayLabel的变化，更新数据
+watch(() => {
+  return props.displayLabel
+}, (value) => {
+  const {tableConfig} = props
+  const result = value ? value.map((item: any) => {
+    return item[tableConfig.label]
+  }) : null
+  data.value = result
+}, {immediate: true})
 
 
 </script>

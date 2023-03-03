@@ -39,10 +39,9 @@ export const DictionaryStore = defineStore('Dictionary', {
 			}).then((ret: { data: [] }) => {
 				// 转换数据格式并保存到pinia
 				let dataList = ret.data;
-
 				dataList.forEach((item: any) => {
 					let childrens = item.children;
-					console.log(item);
+					// console.log(item);
 					this.data[item.value] = childrens;
 				});
 			});

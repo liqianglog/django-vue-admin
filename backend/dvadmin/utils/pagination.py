@@ -64,6 +64,8 @@ class CustomPagination(PageNumberPagination):
         page =int(self.get_page_number(self.request, paginator)) or 1
         total=self.page.paginator.count if self.page else 0
         limit= int(self.get_page_size(self.request)) or 10
+        is_next= self.page.has_next()
+        is_previous= self.page.has_previous()
         data=data
 
         if not data:
@@ -77,5 +79,7 @@ class CustomPagination(PageNumberPagination):
             ('page', page),
             ('limit', limit),
             ('total',total),
+            ('is_next',is_next),
+            ('is_previous', is_previous),
             ('data', data)
         ]))

@@ -109,6 +109,12 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                         component: {
                             name: shallowRef(tableSelector),
                             vModel: "modelValue",
+                            displayLabel:compute(({row}) => {
+                                if(row){
+                                    return row.user_info;
+                                }
+                                return null
+                            }),
                             tableConfig: {
                                 url: '/api/system/user/',
                                 label: 'name',
@@ -195,6 +201,9 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                         component: {
                             name: shallowRef(tableSelector),
                             vModel: "modelValue",
+                            displayLabel:compute(({ form }) => {
+                                return form.target_dept_name;
+                            }),
                             tableConfig: {
                                 url: '/api/system/dept/all_dept/',
                                 label: 'name',
