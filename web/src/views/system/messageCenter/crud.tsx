@@ -4,6 +4,7 @@ import {request} from "/@/utils/service";
 import {dictionary} from "/@/utils/dictionary";
 import tableSelector from "/@/components/tableSelector/index.vue"
 import {shallowRef} from "vue";
+import manyToMany from "/@/components/manyToMany/index.vue"
 
 interface CreateCrudOptionsTypes {
     crudOptions: CrudOptions;
@@ -139,13 +140,15 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                                 required: true,
                                 message: '必填项'
                             }
-                        ],
-
+                        ]
                     },
-                    component: {
-                        name: 'manyToMany',
-                        valueBinding: 'user_info',
-                        children: 'name'
+                    column:{
+                        component: {
+                            name: shallowRef(manyToMany),
+                            vModel: "modelValue",
+                            bindValue:compute(({row}) => {return row.user_info}),
+                            displayLabel: 'name'
+                        }
                     }
                 },
                 target_role: {
@@ -159,6 +162,12 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                         component: {
                             name: shallowRef(tableSelector),
                             vModel: "modelValue",
+                            displayLabel:compute(({row}) => {
+                                if(row){
+                                    return row.role_info;
+                                }
+                                return null
+                            }),
                             tableConfig: {
                                 url: '/api/system/role/',
                                 label: 'name',
@@ -184,10 +193,13 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                             }
                         ]
                     },
-                    component: {
-                        name: 'manyToMany',
-                        valueBinding: 'role_info',
-                        children: 'name'
+                    column:{
+                        component: {
+                            name: shallowRef(manyToMany),
+                            vModel: "modelValue",
+                            bindValue:compute(({row}) => {return row.role_info}),
+                            displayLabel: 'name'
+                        }
                     }
                 },
                 target_dept: {
@@ -233,6 +245,14 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                                 message: '必填项'
                             }
                         ]
+                    },
+                    column:{
+                        component: {
+                            name: shallowRef(manyToMany),
+                            vModel: "modelValue",
+                            bindValue:compute(({row}) => {return row.dept_info}),
+                            displayLabel: 'name'
+                        }
                     }
                 },
                 content: {
