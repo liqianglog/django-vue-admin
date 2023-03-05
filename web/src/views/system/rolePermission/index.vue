@@ -306,7 +306,7 @@ const onSaveButtonForm = async () => {
   //选中的部门
   const checkedList = deptTree.value.getCheckedKeys()
   form.dept = checkedList
-  if (!buttonFormRef) return
+  if (!buttonFormRef.value) return
   await buttonFormRef.value.validate((valid, fields) => {
     if (valid) {
       api.CreatePermission(form).then((res:any)=>{

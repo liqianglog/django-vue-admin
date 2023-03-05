@@ -1,5 +1,5 @@
 <template>
-	<el-drawer size="70%" v-model="drawer" direction="rtl" destroy-on-close :before-close="handleClose">
+	<el-drawer size="70%"   v-model="drawer" direction="rtl" destroy-on-close :before-close="handleClose">
 		<fs-page>
 			<fs-crud ref="crudRef" v-bind="crudBinding"> </fs-crud>
 		</fs-page>
@@ -24,8 +24,10 @@ const { resetCrudOptions } = useCrud({ crudExpose, crudOptions });
 
 //抽屉是否显示
 const drawer = ref(false);
+
 //抽屉关闭确认
 const handleClose = (done: () => void) => {
+
 	ElMessageBox.confirm('您确定要关闭?', {
 		confirmButtonText: '确定',
 		cancelButtonText: '取消',

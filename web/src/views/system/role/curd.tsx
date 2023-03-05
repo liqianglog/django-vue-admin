@@ -41,6 +41,7 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                         },
                         click: (context:any):void => {
                             const {row} = context
+                            // eslint-disable-next-line no-mixed-spaces-and-tabs
                         	rolePermission.value.drawer=true
                             rolePermission.value.editedRoleInfo = row
                             rolePermission.value.initGet()
@@ -69,6 +70,7 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                             //计算序号,你可以自定义计算规则，此处为翻页累加
                             let index = context.index ?? 1;
                             let pagination = crudExpose.crudBinding.value.pagination;
+                            // @ts-ignore
                             return ((pagination.currentPage ?? 1) - 1) * pagination.pageSize + index + 1;
                         },
                     },

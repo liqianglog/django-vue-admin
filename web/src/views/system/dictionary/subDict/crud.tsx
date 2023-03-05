@@ -2,11 +2,12 @@ import * as api from './api';
 import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } from '@fast-crud/fast-crud';
 import { request } from '/@/utils/service';
 import { dictionary } from '/@/utils/dictionary';
+import {watch} from "vue";
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
 
-export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExpose }): CreateCrudOptionsTypes {
+export const createCrudOptions = function ({ crudExpose,currentRow }: { crudExpose: CrudExpose,currentRow:any }): CreateCrudOptionsTypes {
 	const pageRequest = async (query: PageQuery) => {
 		return await api.GetList(query);
 	};
@@ -20,6 +21,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 	const addRequest = async ({ form }: AddReq) => {
 		return await api.AddObj(form);
 	};
+
 	return {
 		crudOptions: {
 			request: {
@@ -41,6 +43,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 							//计算序号,你可以自定义计算规则，此处为翻页累加
 							let index = context.index ?? 1;
 							let pagination = crudExpose.crudBinding.value.pagination;
+							// @ts-ignore
 							return ((pagination.currentPage ?? 1) - 1) * pagination.pageSize + index + 1;
 						},
 					},

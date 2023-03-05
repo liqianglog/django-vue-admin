@@ -1,12 +1,13 @@
 import * as api from './api';
 import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } from '@fast-crud/fast-crud';
 import { dictionary } from '/@/utils/dictionary';
+import {ref}  from 'vue';
 
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
 
-export const createCrudOptions = function ({ crudExpose, subDictRef }: { crudExpose: CrudExpose; subDictRef: any }): CreateCrudOptionsTypes {
+export const createCrudOptions = function ({ crudExpose, subDictRef,showSub }: { crudExpose: CrudExpose; subDictRef: any,showSub:any }): CreateCrudOptionsTypes {
 	const pageRequest = async (query: PageQuery) => {
 		return await api.GetList(query);
 	};
@@ -39,8 +40,13 @@ export const createCrudOptions = function ({ crudExpose, subDictRef }: { crudExp
 							content: '字典配置',
 						},
 						//@ts-ignore
-						click: (opts: any) => {
+						click: (context: any) => {
+							const {row} = context
+							console.log(subDictRef.value.crudBinding)
+							// showSub.value = true
+							subDictRef.value.currentRow = row
 							subDictRef.value.drawer = true;
+
 						},
 					},
 				},
@@ -58,6 +64,7 @@ export const createCrudOptions = function ({ crudExpose, subDictRef }: { crudExp
 							//计算序号,你可以自定义计算规则，此处为翻页累加
 							let index = context.index ?? 1;
 							let pagination = crudExpose.crudBinding.value.pagination;
+							// @ts-ignore
 							return ((pagination.currentPage ?? 1) - 1) * pagination.pageSize + index + 1;
 						},
 					},

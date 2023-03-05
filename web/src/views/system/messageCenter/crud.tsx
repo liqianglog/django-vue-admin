@@ -33,7 +33,6 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                 delRequest
             },
             columns: {
-
                 id: {
                     title: 'id',
                     form: {
