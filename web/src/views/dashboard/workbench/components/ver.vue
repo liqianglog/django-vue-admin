@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     async getVer () {
-      this.ver = 'v2.0.9'
+      this.ver = 'v2.1.0'
     },
     golog () {
       window.open('https://gitee.com/liqianglog/django-vue-admin/releases')
