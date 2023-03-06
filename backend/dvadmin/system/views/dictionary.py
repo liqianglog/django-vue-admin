@@ -54,21 +54,17 @@ class DictionaryViewSet(CustomModelViewSet):
     extra_filter_class = []
     search_fields = ['label']
 
-    def list(self,request):
-        """懒加载"""
-        params = request.query_params
+    def get_queryset(self):
+        params = self.request.query_params
         parent = params.get('parent', None)
         if params:
             if parent:
                 queryset = self.queryset.filter(status=1, parent=parent)
             else:
-                queryset = self.queryset.filter(status=1)
+                queryset = self.queryset.filter(status=1, parent__isnull=True)
         else:
             queryset = self.queryset.filter(status=1, parent__isnull=True)
-        queryset = self.filter_queryset(queryset)
-        serializer = DictionarySerializer(queryset, many=True, request=request)
-        data = serializer.data
-        return SuccessResponse(data=data)
+        return queryset
 
 
 class InitDictionaryViewSet(APIView):

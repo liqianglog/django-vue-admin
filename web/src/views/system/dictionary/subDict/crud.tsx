@@ -7,7 +7,7 @@ interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
 
-export const createCrudOptions = function ({ crudExpose,currentRow }: { crudExpose: CrudExpose,currentRow:any }): CreateCrudOptionsTypes {
+export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExpose }): CreateCrudOptionsTypes {
 	const pageRequest = async (query: PageQuery) => {
 		return await api.GetList(query);
 	};

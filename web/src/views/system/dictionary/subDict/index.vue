@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, defineProps, computed } from 'vue';
+import {ref, onMounted, defineProps, computed, watch} from 'vue';
 import { useExpose, useCrud } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
 import { ElMessageBox } from 'element-plus';
@@ -40,10 +40,11 @@ const handleClose = (done: () => void) => {
 			// catch error
 		});
 };
-
-defineExpose({ drawer });
+const {setSearchFormData,doRefresh} = crudExpose
+defineExpose({ drawer,setSearchFormData,doRefresh });
 // 页面打开后获取列表数据
 onMounted(() => {
+  // console.log(48,currentRow)
 	crudExpose.doRefresh();
 });
 </script>

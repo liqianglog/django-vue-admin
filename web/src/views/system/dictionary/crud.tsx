@@ -1,13 +1,13 @@
 import * as api from './api';
 import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } from '@fast-crud/fast-crud';
 import { dictionary } from '/@/utils/dictionary';
-import {ref}  from 'vue';
+import {nextTick, ref} from 'vue';
 
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
 
-export const createCrudOptions = function ({ crudExpose, subDictRef,showSub }: { crudExpose: CrudExpose; subDictRef: any,showSub:any }): CreateCrudOptionsTypes {
+export const createCrudOptions = function ({ crudExpose, subDictRef }: { crudExpose: CrudExpose; subDictRef: any }): CreateCrudOptionsTypes {
 	const pageRequest = async (query: PageQuery) => {
 		return await api.GetList(query);
 	};
@@ -42,10 +42,12 @@ export const createCrudOptions = function ({ crudExpose, subDictRef,showSub }: {
 						//@ts-ignore
 						click: (context: any) => {
 							const {row} = context
-							console.log(subDictRef.value.crudBinding)
-							// showSub.value = true
-							subDictRef.value.currentRow = row
 							subDictRef.value.drawer = true;
+							nextTick(()=>{
+								subDictRef.value.setSearchFormData({ form: { parent: row.id } });
+								subDictRef.value.doRefresh();
+							})
+
 
 						},
 					},

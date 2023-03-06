@@ -1,7 +1,7 @@
 <template>
 	<fs-page>
 		<fs-crud ref="crudRef" v-bind="crudBinding"> </fs-crud>
-		<subDict ref="subDictRef" :row-id="rowId"></subDict>
+		<subDict ref="subDictRef"></subDict>
 	</fs-page>
 </template>
 
@@ -14,10 +14,6 @@ import subDict from './subDict/index.vue';
 
 //字典配置ref
 const subDictRef = ref();
-
-const rowId: Ref<number> = ref(0);
-
-defineExpose({ subDictRef, rowId });
 // crud组件的ref
 const crudRef = ref();
 // crud 配置的ref
