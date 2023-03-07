@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts" name="app">
-import { defineAsyncComponent, computed, ref, onBeforeMount, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { defineAsyncComponent, computed, ref, onBeforeMount, onMounted, onUnmounted, nextTick, watch,onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
@@ -33,7 +33,8 @@ const route = useRoute();
 const stores = useTagsViewRoutes();
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
-
+import websocket from "/@/utils/websocket";
+import {ElNotification} from "element-plus";
 // 获取版本号
 const getVersion = computed(() => {
 	let isVersion = false;
@@ -57,6 +58,8 @@ onBeforeMount(() => {
 	setIntroduction.cssCdn();
 	// 设置批量第三方 js
 	setIntroduction.jsCdn();
+  //websockt 模块
+  websocket.init(wsReceive)
 });
 // 页面加载时
 onMounted(() => {
@@ -90,4 +93,28 @@ watch(
 		deep: true,
 	}
 );
+
+// websocket相关代码
+import {messageCenterStore} from "/@/stores/messageCenter";
+const wsReceive = (message: any) => {
+  const data = JSON.parse(message.data)
+  const { unread } = data
+  const messageCenter = messageCenterStore()
+  messageCenter.setUnread(unread);
+  if (data.contentType === 'SYSTEM') {
+    ElNotification({
+      title: '系统消息',
+      message: data.content,
+      type: 'success',
+      position: 'bottom-right',
+      duration: 5000
+    })
+  }
+
+}
+onBeforeUnmount(() => {
+  // 关闭连接
+  websocket.close()
+})
+
 </script>

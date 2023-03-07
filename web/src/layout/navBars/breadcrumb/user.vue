@@ -39,7 +39,7 @@
 		<div class="layout-navbars-breadcrumb-user-icon">
 			<el-popover placement="bottom" trigger="click" transition="el-zoom-in-top" :width="300" :persistent="false">
 				<template #reference>
-					<el-badge :is-dot="true">
+					<el-badge :value="messageCenter.unread">
 						<el-icon :title="$t('message.user.title4')">
 							<ele-Bell />
 						</el-icon>
@@ -205,6 +205,10 @@ onMounted(() => {
 		initI18nOrSize('globalI18n', 'disabledI18n');
 	}
 });
+
+//消息中心的未读数量
+import {messageCenterStore} from "/@/stores/messageCenter";
+const messageCenter = messageCenterStore()
 </script>
 
 <style scoped lang="scss">

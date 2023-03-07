@@ -2,16 +2,16 @@
 	<div class="layout-navbars-breadcrumb-user-news">
 		<div class="head-box">
 			<div class="head-box-title">{{ $t('message.user.newTitle') }}</div>
-			<div class="head-box-btn" v-if="state.newsList.length > 0" @click="onAllReadClick">{{ $t('message.user.newBtn') }}</div>
+<!--			<div class="head-box-btn" v-if="state.newsList.length > 0" @click="onAllReadClick">{{ $t('message.user.newBtn') }}</div>-->
 		</div>
 		<div class="content-box">
 			<template v-if="state.newsList.length > 0">
 				<div class="content-box-item" v-for="(v, k) in state.newsList" :key="k">
-					<div>{{ v.label }}</div>
+					<div>{{ v.title }}</div>
 					<div class="content-box-msg">
-						{{ v.value }}
+						<div v-html="v.content"></div>
 					</div>
-					<div class="content-box-time">{{ v.time }}</div>
+					<div class="content-box-time">{{ v.create_datetime }}</div>
 				</div>
 			</template>
 			<el-empty :description="$t('message.user.newDesc')" v-else></el-empty>
@@ -21,17 +21,11 @@
 </template>
 
 <script setup lang="ts" name="layoutBreadcrumbUserNews">
-import { reactive } from 'vue';
+import { reactive,onBeforeMount,ref,onMounted } from 'vue';
 
 // 定义变量内容
 const state = reactive({
-	newsList: [
-		{
-			label: '关于版本发布的通知',
-			value: 'django-vue3-admin，基于 vue3 + CompositionAPI + typescript + vite + element plus, 是一款全栈，快速，开源的后台管理系统！',
-			time: '2023-02-14',
-		},
-	],
+	newsList: [] as any,
 });
 
 // 全部已读点击
@@ -39,9 +33,27 @@ const onAllReadClick = () => {
 	state.newsList = [];
 };
 // 前往通知中心点击
+import {useRouter } from "vue-router";
+const route = useRouter()
 const onGoToGiteeClick = () => {
-	window.open('https://gitee.com/huge-dream/django-vue3-admin');
+  route.push('/messageCenter')
 };
+//获取最新消息
+import { request } from "/@/utils/service";
+const getLastMsg= ()=>{
+  request({
+    url: '/api/system/message_center/get_newest_msg/',
+    method: 'get',
+    params: {}
+  }).then((res:any) => {
+    const { data } = res
+    state.newsList= [data]
+  })
+}
+onMounted(()=>{
+  getLastMsg()
+})
+
 </script>
 
 <style scoped lang="scss">
