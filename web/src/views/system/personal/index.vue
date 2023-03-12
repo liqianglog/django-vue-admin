@@ -6,7 +6,7 @@
         <el-card shadow="hover" header="个人信息">
           <div class="personal-user">
             <div class="personal-user-left">
-              <el-upload class="h100 personal-user-left-upload" :action="action" multiple :limit="1">
+              <el-upload class="h100 personal-user-left-upload" :action="uploadAvatar.action" :headers="uploadAvatar.headers" multiple :limit="1">
                 <img v-if="state.personalForm.avatar" :src="state.personalForm.avatar" />
                 <img v-else src="https://img2.baidu.com/it/u=1978192862,2048448374&fm=253&fmt=auto&app=138&f=JPEG?w=504&h=500" />
               </el-upload>
@@ -196,6 +196,7 @@ import { formatAxis } from '/@/utils/formatTime';
 import * as api from './api'
 import {ElMessage } from "element-plus";
 import {getBaseURL} from "/@/utils/baseUrl";
+import { Session } from '/@/utils/storage';
 // 当前时间提示语
 const currentTime = computed(() => {
   return formatAxis(new Date());
@@ -206,7 +207,12 @@ const rules = reactive({
   mobile: [{ pattern: /^1[3-9]\d{9}$/, message: '请输入正确手机号' }]
 })
 // 定义变量内容
-const action= ref(getBaseURL() + 'api/system/file/')
+const uploadAvatar = reactive({
+  action:getBaseURL() + 'api/system/file/',
+  headers: {
+    Authorization: 'JWT ' + Session.get('token')
+  },
+})
 const state = reactive<PersonalState>({
   newsInfoList:[],
   personalForm: {
@@ -231,7 +237,7 @@ const state = reactive<PersonalState>({
  * 跳转消息中心
  */
 import {useRouter } from "vue-router";
-import {UpdatePassword} from "./api";
+import {Session} from "/@/utils/storage";
 const route = useRouter()
 const msgMore=()=>{
   route.push({path:'/messageCenter'})
