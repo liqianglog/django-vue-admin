@@ -14,6 +14,7 @@ export default {
 		limitsFrontEndBtn: 'FrontEndBtn',
 		limitsBackEnd: 'BackEnd',
 		limitsBackEndEndPage: 'BackEndEndPage',
+		personal: 'personal',
 	},
 	staticRoutes: {
 		signIn: 'signIn',

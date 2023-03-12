@@ -25,6 +25,7 @@ export default {
 		limitsFrontEndBtn: '按钮权限',
 		limitsBackEnd: '后端控制',
 		limitsBackEndEndPage: '页面权限',
+		personal: '个人中心',
 	},
 	staticRoutes: {
 		signIn: '登录',

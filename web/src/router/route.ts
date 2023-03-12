@@ -32,6 +32,20 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 		},
 		children: [],
 	},
+	{
+		path: '/personal',
+		name: 'personal',
+		component: () => import('/@/views/system/personal/index.vue'),
+		meta: {
+			title: 'message.router.personal',
+			isLink: '',
+			isHide: false,
+			isKeepAlive: true,
+			isAffix: false,
+			isIframe: false,
+			icon: 'iconfont icon-gerenzhongxin',
+		},
+	}
 ];
 
 /**
