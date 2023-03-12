@@ -1,6 +1,14 @@
 <template>
   <fs-page>
-    <fs-crud ref="crudRef" v-bind="crudBinding"></fs-crud>
+
+    <fs-crud ref="crudRef" v-bind="crudBinding">
+      <template #header-middle>
+        <el-tabs v-model="tabActivted" @tab-click="onTabClick">
+          <el-tab-pane label="我的发布" name="send"></el-tab-pane>
+          <el-tab-pane label="我的接收" name="receive"></el-tab-pane>
+        </el-tabs>
+      </template>
+    </fs-crud>
   </fs-page>
 </template>
 
@@ -14,8 +22,15 @@ const crudRef = ref();
 const crudBinding = ref();
 // 暴露的方法
 const {crudExpose} = useExpose({crudRef, crudBinding});
+//tab选择
+const  tabActivted = ref('send')
+const onTabClick= (tab:any)=> {
+  const { paneName } = tab
+  tabActivted.value = paneName
+  crudExpose.doRefresh();
+}
 // 你的crud配置
-const {crudOptions} = createCrudOptions({crudExpose});
+const {crudOptions} = createCrudOptions({crudExpose,tabActivted});
 // 初始化crud配置
 const {resetCrudOptions} = useCrud({crudExpose, crudOptions});
 
@@ -23,4 +38,6 @@ const {resetCrudOptions} = useCrud({crudExpose, crudOptions});
 onMounted(() => {
   crudExpose.doRefresh();
 });
+
+
 </script>

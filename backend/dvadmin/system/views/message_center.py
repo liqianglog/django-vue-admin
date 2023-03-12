@@ -86,7 +86,9 @@ class MessageCenterTargetUserListSerializer(CustomModelSerializer):
         user_id = self.request.user.id
         message_center_id = instance.id
         queryset = MessageCenterTargetUser.objects.filter(messagecenter__id=message_center_id,users_id=user_id).first()
-        return queryset.is_read
+        if queryset:
+            return queryset.is_read
+        return False
 
     class Meta:
         model = MessageCenter
@@ -160,7 +162,7 @@ class MessageCenterViewSet(CustomModelViewSet):
     queryset = MessageCenter.objects.order_by('create_datetime')
     serializer_class = MessageCenterSerializer
     create_serializer_class = MessageCenterCreateSerializer
-    extra_filter_class = []
+    extra_filter_backends = []
 
     def get_queryset(self):
         if self.action == 'list':
@@ -211,6 +213,6 @@ class MessageCenterViewSet(CustomModelViewSet):
         queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).order_by('create_datetime').last()
         data = None
         if queryset:
-            serializer = MessageCenterTargetUserListSerializer(queryset, many=False, request=request)
+            serializer = MessageCenterTargetUserListSerializer(queryset.messagecenter, many=False, request=request)
             data = serializer.data
         return DetailResponse(data=data, msg="获取成功")

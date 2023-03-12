@@ -78,7 +78,7 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 			actionbar: {
 				buttons: {
 					add: {
-						show: hasPermissions('Menu:Create'),
+						show: hasPermissions('menu:Create'),
 					},
 				},
 			},

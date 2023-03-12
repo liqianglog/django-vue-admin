@@ -7,6 +7,7 @@
 """
 from rest_framework import serializers
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 from dvadmin.system.models import Dept
 from dvadmin.utils.json_response import DetailResponse, SuccessResponse
@@ -140,7 +141,7 @@ class DeptViewSet(CustomModelViewSet):
         return DetailResponse(data=queryset, msg="获取成功")
 
 
-    @action(methods=["GET"], detail=False, permission_classes=[AnonymousUserPermission],extra_filter_class=[])
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],extra_filter_class=[])
     def all_dept(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')

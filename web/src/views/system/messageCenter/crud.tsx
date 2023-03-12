@@ -1,17 +1,24 @@
 import * as api from "./api";
-import {dict, compute, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions,} from "@fast-crud/fast-crud";
-import {request} from "/@/utils/service";
-import {dictionary} from "/@/utils/dictionary";
+import {dict, useCompute, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions,} from "@fast-crud/fast-crud";
 import tableSelector from "/@/components/tableSelector/index.vue"
-import {shallowRef} from "vue";
+import {shallowRef, computed, ref} from "vue";
 import manyToMany from "/@/components/manyToMany/index.vue"
+
+const {compute} = useCompute()
 
 interface CreateCrudOptionsTypes {
     crudOptions: CrudOptions;
 }
 
-export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpose }): CreateCrudOptionsTypes {
+
+export const createCrudOptions = function ({
+                                               crudExpose,
+                                               tabActivted
+                                           }: { crudExpose: CrudExpose, tabActivted: any }): CreateCrudOptionsTypes {
     const pageRequest = async (query: PageQuery) => {
+        if (tabActivted.value === 'receive') {
+            return await api.GetSelfReceive(query);
+        }
         return await api.GetList(query);
     };
     const editRequest = async ({form, row}: EditReq) => {
@@ -24,6 +31,15 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
     const addRequest = async ({form}: AddReq) => {
         return await api.AddObj(form);
     };
+
+    const viewRequest = async ({row}: { row: any }) => {
+        return await api.GetObj(row.id);
+    }
+
+    const IsReadFunc = computed(() => {
+        return tabActivted.value === 'receive'
+    })
+
     return {
         crudOptions: {
             request: {
@@ -32,18 +48,33 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                 editRequest,
                 delRequest
             },
+            rowHandle: {
+                buttons: {
+                    edit: {
+                        show: false
+                    },
+                    view: {
+                        click({index,row}) {
+                            crudExpose.openView({index,row})
+                            if(tabActivted.value === 'receive'){
+                                viewRequest({row})
+                                crudExpose.doRefresh()
+                            }
+                        }
+                    }
+                }
+            },
             columns: {
                 id: {
                     title: 'id',
                     form: {
-                        show: false
+                        show: false,
                     }
-
                 },
                 title: {
                     title: '标题',
                     search: {
-                        disabled: false
+                        show: true,
                     },
                     type: ["text", "colspan"],
                     form: {
@@ -60,7 +91,7 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                     title: '是否已读',
                     type: 'dict-select',
                     column: {
-                        show: false
+                        show: IsReadFunc,
                     },
                     dict: dict({
                         data: [
@@ -76,9 +107,6 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                     title: '目标类型',
                     type: ['dict-radio', 'colspan'],
                     width: 120,
-                    // show() {
-                    //     return vm.tabActivted === 'send'
-                    // },
                     dict: dict({
                         data: [{value: 0, label: '按用户'}, {value: 1, label: '按角色'}, {
                             value: 2,
@@ -104,13 +132,12 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                         disabled: true
                     },
                     width: 130,
-                    disabled: true,
                     form: {
                         component: {
                             name: shallowRef(tableSelector),
                             vModel: "modelValue",
-                            displayLabel:compute(({row}) => {
-                                if(row){
+                            displayLabel: compute(({row}) => {
+                                if (row) {
                                     return row.user_info;
                                 }
                                 return null
@@ -141,11 +168,14 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                             }
                         ]
                     },
-                    column:{
+                    column: {
+                        show: false,
                         component: {
                             name: shallowRef(manyToMany),
                             vModel: "modelValue",
-                            bindValue:compute(({row}) => {return row.user_info}),
+                            bindValue: compute(({row}) => {
+                                return row.user_info
+                            }),
                             displayLabel: 'name'
                         }
                     }
@@ -155,14 +185,13 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                     search: {
                         disabled: true
                     },
-                    disabled: true,
                     width: 130,
                     form: {
                         component: {
                             name: shallowRef(tableSelector),
                             vModel: "modelValue",
-                            displayLabel:compute(({row}) => {
-                                if(row){
+                            displayLabel: compute(({row}) => {
+                                if (row) {
                                     return row.role_info;
                                 }
                                 return null
@@ -192,11 +221,14 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                             }
                         ]
                     },
-                    column:{
+                    column: {
+                        show: false,
                         component: {
                             name: shallowRef(manyToMany),
                             vModel: "modelValue",
-                            bindValue:compute(({row}) => {return row.role_info}),
+                            bindValue: compute(({row}) => {
+                                return row.role_info
+                            }),
                             displayLabel: 'name'
                         }
                     }
@@ -212,7 +244,7 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                         component: {
                             name: shallowRef(tableSelector),
                             vModel: "modelValue",
-                            displayLabel:compute(({ form }) => {
+                            displayLabel: compute(({form}) => {
                                 return form.target_dept_name;
                             }),
                             tableConfig: {
@@ -225,14 +257,14 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                                     prop: 'name',
                                     label: '部门名称'
                                 },
-                                {
-                                    prop: 'status_label',
-                                    label: '状态'
-                                },
-                                {
-                                    prop: 'parent_name',
-                                    label: '父级部门'
-                                }]
+                                    {
+                                        prop: 'status_label',
+                                        label: '状态'
+                                    },
+                                    {
+                                        prop: 'parent_name',
+                                        label: '父级部门'
+                                    }]
                             }
                         },
                         show: compute(({form}) => {
@@ -245,11 +277,14 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                             }
                         ]
                     },
-                    column:{
+                    column: {
+                        show: false,
                         component: {
                             name: shallowRef(manyToMany),
                             vModel: "modelValue",
-                            bindValue:compute(({row}) => {return row.dept_info}),
+                            bindValue: compute(({row}) => {
+                                return row.dept_info
+                            }),
                             displayLabel: 'name'
                         }
                     }
@@ -269,11 +304,18 @@ export const createCrudOptions = function ({crudExpose}: { crudExpose: CrudExpos
                             }
                         ],
                         component: {
-                            // disabled: compute(({form}) => {
-                            //     return form.disabled;
-                            // }),
+                            disabled: true,
                             id: "1", // 当同一个页面有多个editor时，需要配置不同的id
-                            config: {},
+                            editorConfig: {
+                                // 是否只读
+                                readOnly: compute((context) => {
+                                    const {mode} = context
+                                    if (mode === 'add') {
+                                        return false
+                                    }
+                                    return true;
+                                }),
+                            },
                             uploader: {
                                 type: "form",
                                 buildUrl(res: any) {

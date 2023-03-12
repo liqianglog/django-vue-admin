@@ -13,9 +13,23 @@ export function GetList(query: PageQuery) {
 
 export function GetObj(id: InfoReq) {
     return request({
-        url: apiPrefix + id,
+        url: apiPrefix + id + '/',
         method: 'get',
     });
+}
+
+/**
+ * 获取自己接收的消息
+ * @param query
+ * @returns {*}
+ * @constructor
+ */
+export function GetSelfReceive (query:PageQuery) {
+    return request({
+        url: apiPrefix + 'get_self_receive/',
+        method: 'get',
+        params: query
+    })
 }
 
 export function AddObj(obj: AddReq) {
@@ -25,6 +39,9 @@ export function AddObj(obj: AddReq) {
         data: obj,
     });
 }
+
+
+
 
 export function UpdateObj(obj: EditReq) {
     return request({
