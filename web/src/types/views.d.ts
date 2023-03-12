@@ -15,8 +15,8 @@ type Recommend = {
 };
 declare type PersonalState = {
 	newsInfoList: NewInfo[];
-	recommendList: Recommend[];
 	personalForm: {
+		avatar:string,
 		username: string;
 		name: string;
 		email: string;

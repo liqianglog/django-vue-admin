@@ -6,8 +6,9 @@
         <el-card shadow="hover" header="个人信息">
           <div class="personal-user">
             <div class="personal-user-left">
-              <el-upload class="h100 personal-user-left-upload" action="https://jsonplaceholder.typicode.com/posts/" multiple :limit="1">
-                <img src="https://img2.baidu.com/it/u=1978192862,2048448374&fm=253&fmt=auto&app=138&f=JPEG?w=504&h=500" />
+              <el-upload class="h100 personal-user-left-upload" :action="action" multiple :limit="1">
+                <img v-if="state.personalForm.avatar" :src="state.personalForm.avatar" />
+                <img v-else src="https://img2.baidu.com/it/u=1978192862,2048448374&fm=253&fmt=auto&app=138&f=JPEG?w=504&h=500" />
               </el-upload>
             </div>
             <div class="personal-user-right">
@@ -46,12 +47,14 @@
         <el-card shadow="hover">
           <template #header>
             <span>消息通知</span>
-            <span class="personal-info-more">更多</span>
+            <span class="personal-info-more" @click="msgMore">更多</span>
           </template>
           <div class="personal-info-box">
             <ul class="personal-info-ul">
               <li v-for="(v, k) in state.newsInfoList" :key="k" class="personal-info-li">
-                <a :href="v.link" target="_block" class="personal-info-li-title">{{ v.title }}</a>
+                <div class="personal-info-li-title">
+                  [{{v.creator_name}},{{v.create_datetime}}]  {{v.title}}
+                </div>
               </li>
             </ul>
           </div>
@@ -108,7 +111,7 @@
                 <div class="personal-edit-safe-item-left-value">当前密码强度：强</div>
               </div>
               <div class="personal-edit-safe-item-right">
-                <el-button text type="primary">立即修改</el-button>
+                <el-button text type="primary" @click="passwordFormShow=true">立即修改</el-button>
               </div>
             </div>
           </div>
@@ -138,6 +141,52 @@
         </el-card>
       </el-col>
     </el-row>
+<!--    密码修改-->
+    <el-dialog v-model="passwordFormShow" title="密码修改">
+        <el-form
+            ref="userPasswordFormRef"
+            :model="userPasswordInfo"
+            required-asterisk
+            label-width="100px"
+            label-position="left"
+            :rules="passwordRules"
+            center
+        >
+          <el-form-item label="原密码" required prop="oldPassword">
+            <el-input
+                v-model="userPasswordInfo.oldPassword"
+                placeholder="请输入原始密码"
+                clearable
+            ></el-input>
+          </el-form-item>
+          <el-form-item required prop="newPassword" label="新密码">
+            <el-input
+                type="password"
+                v-model="userPasswordInfo.newPassword"
+                placeholder="请输入新密码"
+                show-password
+                clearable
+            ></el-input>
+          </el-form-item>
+          <el-form-item required prop="newPassword2" label="确认密码">
+            <el-input
+                type="password"
+                v-model="userPasswordInfo.newPassword2"
+                placeholder="请再次输入新密码"
+                show-password
+                clearable
+            ></el-input>
+          </el-form-item>
+        </el-form>
+      <template #footer>
+      <span class="dialog-footer">
+         <el-button type="primary" @click="settingPassword">
+              <i class="fa fa-check"></i>提交
+            </el-button>
+
+      </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -146,15 +195,22 @@ import { reactive, computed,onMounted,ref } from 'vue';
 import { formatAxis } from '/@/utils/formatTime';
 import * as api from './api'
 import {ElMessage } from "element-plus";
-
+import {getBaseURL} from "/@/utils/baseUrl";
+// 当前时间提示语
+const currentTime = computed(() => {
+  return formatAxis(new Date());
+});
 const userInfoFormRef = ref()
 const rules = reactive({
   name: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
   mobile: [{ pattern: /^1[3-9]\d{9}$/, message: '请输入正确手机号' }]
 })
 // 定义变量内容
+const action= ref(getBaseURL() + 'api/system/file/')
 const state = reactive<PersonalState>({
+  newsInfoList:[],
   personalForm: {
+    avatar:'',
     username:'',
     name: '',
     email: '',
@@ -172,12 +228,22 @@ const state = reactive<PersonalState>({
 });
 
 /**
+ * 跳转消息中心
+ */
+import {useRouter } from "vue-router";
+import {UpdatePassword} from "./api";
+const route = useRouter()
+const msgMore=()=>{
+  route.push({path:'/messageCenter'})
+}
+
+/**
  * 获取用户个人信息
  */
 const getUserInfo = function (){
   api.GetUserInfo({}).then((res:any)=>{
     const {data} = res
-    console.log(data)
+    state.personalForm.avatar = data.avatar || '';
     state.personalForm.username = data.username || '';
     state.personalForm.name = data.name || '';
     state.personalForm.email = data.email || '';
@@ -206,16 +272,83 @@ const submitForm = async () => {
   })
 }
 
-
+/**
+ * 获取消息通知
+ */
+const getMsg = () => {
+  api.GetSelfReceive({}).then((res:any)=>{
+    const {data} = res
+    state.newsInfoList = data || [];
+  })
+}
 onMounted(()=>{
   getUserInfo();
+  getMsg();
 })
 
+/**************************密码修改部分************************/
+const passwordFormShow = ref(false)
+const userPasswordFormRef = ref()
+const userPasswordInfo=reactive({
+  oldPassword: '',
+  newPassword: '',
+  newPassword2: ''
+})
 
-// 当前时间提示语
-const currentTime = computed(() => {
-  return formatAxis(new Date());
-});
+const validatePass = (rule, value, callback) => {
+  const pwdRegex = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z]).{8,30}')
+  if (value === '') {
+    callback(new Error('请输入密码'))
+  } else if (value === userPasswordInfo.oldPassword) {
+    callback(new Error('原密码与新密码一致'))
+  } else if (!pwdRegex.test(value)) {
+    callback(new Error('您的密码复杂度太低(密码中必须包含字母、数字)'))
+  } else {
+    if (userPasswordInfo.newPassword2 !== '') {
+      userPasswordFormRef.value.validateField('newPassword2')
+    }
+    callback()
+  }
+}
+const validatePass2 = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('请再次输入密码'))
+  } else if (value !== userPasswordInfo.newPassword) {
+    callback(new Error('两次输入密码不一致!'))
+  } else {
+    callback()
+  }
+}
+
+const  passwordRules=reactive({
+  oldPassword: [
+    {
+      required: true,
+      message: '请输入原密码',
+      trigger: 'blur'
+    }
+  ],
+  newPassword: [{ validator: validatePass, trigger: 'blur' }],
+  newPassword2: [{ validator: validatePass2, trigger: 'blur' }]
+})
+
+/**
+ * 重新设置密码
+ */
+const settingPassword= ()=>{
+  userPasswordFormRef.value.validate((valid) => {
+    if (valid) {
+      api.UpdatePassword(userPasswordInfo).then((res:any)=>{
+        ElMessage.success('密码修改成功')
+      })
+    } else {
+      // 校验失败
+      // 登录表单校验失败
+      ElMessage.error('表单校验失败，请检查')
+    }
+  })
+}
+
 </script>
 
 <style scoped lang="scss">
