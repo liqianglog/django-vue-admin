@@ -190,7 +190,7 @@ let buttonOptions = ref<[]>()
 let editedMenuInfo = ref()
 //菜单节点点击事件
 const menuNodeClick = (node: any, obj: any) => {
-  isBtnPermissionShow.value = obj.checked && !node.is_catalog
+  isBtnPermissionShow.value =  !node.is_catalog
   if (!node.is_catalog) {
     buttonOptions.value = []
     editedMenuInfo.value = node
