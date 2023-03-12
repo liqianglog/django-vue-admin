@@ -22,7 +22,9 @@
                     </el-col>
                     <el-col :xs="24" :sm="16" class="personal-item mb6">
                       <div class="personal-item-label">部门：</div>
-                      <div class="personal-item-value">{{state.personalForm.dept_info.dept_name}}</div>
+                      <div class="personal-item-value">
+                        <el-tag >{{state.personalForm.dept_info.dept_name}}</el-tag>
+                      </div>
                     </el-col>
                   </el-row>
                 </el-col>
@@ -78,7 +80,7 @@
                 </el-form-item>
               </el-col>
               <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
-                <el-form-item label="手机" prop="phone">
+                <el-form-item label="手机" prop="mobile">
                   <el-input v-model="state.personalForm.mobile" placeholder="请输入手机" clearable></el-input>
                 </el-form-item>
               </el-col>
