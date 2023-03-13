@@ -74,7 +74,7 @@ def code_package_import_check(code_package_id):
         return f"校验状态错误:{code_package_obj.get_validate_status_display()}"
     code_package_obj.validate_status = 2
     code_package_obj.save()
-    code_package_obj.write_log({"content": f"码包状态", "step": 1, })
+    # code_package_obj.write_log({"content": f"码包状态", "step": 1, })
     # 2.根据规则验证码包是否合格
     source_file_path = os.path.join(get_code_package_import_txt_path(), code_package_obj.file_position)
     code_package_template_obj = code_package_obj.code_package_template
