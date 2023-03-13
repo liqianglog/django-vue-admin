@@ -86,7 +86,7 @@ import VueGridLayout from 'vue-grid-layout'
 import XEUtils from 'xe-utils'
 import '@/plugin/dragx'
 const mouseXY = { x: null, y: null }
-const DragPos = { x: null, y: null, w: 1, h: 1, i: null }
+const DragPos = { x: 0, y: 0, w: 1, h: 1, i: null }
 export default {
   components: {
     draggable,

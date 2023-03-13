@@ -11,4 +11,5 @@ urlpatterns = [
     re_path('carton/verify_manage/', include('carton_manage.verify_manage.urls')),  # 检测管理
     re_path('carton/ipc/', include('carton_manage.ipc_api.urls')),  # 工控机接口
     path('carton/ipc/device_login/', DeviceManageLogin.as_view()),  # 设备登录
+    re_path('datav/index/',include('dataV.urls'))
 ]

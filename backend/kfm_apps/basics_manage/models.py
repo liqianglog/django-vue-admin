@@ -91,7 +91,6 @@ class DeviceManage(CoreModel):
         db_table = table_prefix + "device_manage"
         verbose_name = '生产设备管理'
         verbose_name_plural = verbose_name
-        ordering = ('-create_datetime',)
 
     def __str__(self):
         return str(self.name)

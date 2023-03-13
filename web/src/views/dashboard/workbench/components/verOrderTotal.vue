@@ -1,7 +1,7 @@
 <template>
   <el-card class="box-card">
     <div>
-      <el-statistic group-separator="," :precision="0" :value="order_total" title="码包订单总数"></el-statistic>
+      <el-statistic group-separator="," :precision="0" :value="verify_work_order_total" title="检测工单数"></el-statistic>
     </div>
   </el-card>
 </template>
@@ -10,18 +10,18 @@
 import { request } from '@/api/service'
 
 export default {
-  title: '码包订单总数',
+  title: '检测工单数',
   icon: 'el-icon-monitor',
-  description: '码包订单总数',
-  name: 'cpOrderTotal',
+  description: '检测工单数',
+  name: 'verOrderTotal',
   height: 6,
   width: 4,
   minH: 6,
-  minW: 8,
+  minW: 4,
   isResizable: true,
   data () {
     return {
-      order_total: 50
+      verify_work_order_total: 50
     }
   },
   methods: {
@@ -30,7 +30,7 @@ export default {
         url: '/api/datav/index/number_info/'
       }).then(res => {
         const { data } = res
-        this.order_total = data.codepackage_total
+        this.verify_work_order_total = data.verify_work_order_total
       })
     }
   },
