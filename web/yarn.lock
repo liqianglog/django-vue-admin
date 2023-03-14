@@ -3956,6 +3956,11 @@ vuedraggable-es@^4.1.1:
   dependencies:
     sortablejs "1.14.0"
 
+vxe-table@^4.3.10:
+  version "4.3.10"
+  resolved "https://registry.npmjs.org/vxe-table/-/vxe-table-4.3.10.tgz#4156d9542d61997d07c29a06e89208a3adc4825a"
+  integrity sha512-qxLhA3hiAfxsm8+dbN1n7+FrRwMEzUB/676x67gEb3H63WFWulRvTc88LCe0itMcuYcpy7uZHn5ruRsz0KnorQ==
+
 wangeditor@^4.7.5:
   version "4.7.15"
   resolved "https://registry.npmjs.org/wangeditor/-/wangeditor-4.7.15.tgz#38c5e279a79d0428e4fd77ae5be46367e9c819e5"
