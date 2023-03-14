@@ -1,7 +1,7 @@
 import {ElNotification  as message} from 'element-plus'
-import store from '@/store'
 import {Session} from "/@/utils/storage";
 import {getWsBaseURL} from "/@/utils/baseUrl";
+// @ts-ignore
 import socket from '@/types/api/socket'
 
 const websocket: socket = {
@@ -77,10 +77,11 @@ const websocket: socket = {
             websocket.send(data)
         }, websocket.hearbeat_interval)
     },
-    send: (data, callback = null) => {
+    send: (data:string, callback = null) => {
         // 开启状态直接发送
         if (websocket.websocket.readyState === websocket.websocket.OPEN) {
             websocket.websocket.send(JSON.stringify(data))
+            // @ts-ignore
             callback && callback()
         } else {
             clearInterval(websocket.hearbeat_timer)
