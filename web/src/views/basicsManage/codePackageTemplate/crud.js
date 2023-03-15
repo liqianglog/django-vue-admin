@@ -190,7 +190,7 @@ export const crudOptions = (vm) => {
         form: {
           component: {
             dict: {
-              data: [{ label: ',', value: ',' }, { label: '|', value: '|' }, { label: ';', value: ';' }]
+              data: [{ label: ',', value: ',' }, { label: '|', value: '|' }, { label: ';', value: ';' }, { label: '无', value: '无' }]
             },
             name: 'dict-select',
             span: 12

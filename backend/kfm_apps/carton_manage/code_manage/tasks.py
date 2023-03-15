@@ -82,7 +82,7 @@ def code_package_import_check(code_package_id):
         readline = file.readline()
         # 2.1.校验换行符
         if (code_package_template_obj.line_feed == 1 and not readline.endswith(
-                '\r\n')) or code_package_template_obj.line_feed == 0 and readline.endswith('\r\n'):  # 回车换行
+                '\r\n')) or (code_package_template_obj.line_feed == 0 and readline.endswith('\r\n')):  # 回车换行
             # 换行符校验失败
             code_package_obj.write_log({
                 "content": '规则验证-换行符',
@@ -102,14 +102,17 @@ def code_package_import_check(code_package_id):
             return "规则验证-整体字符长度校验失败"
         code_package_obj.write_log({"content": f"规则验证-整体字符长度", "step": 2.2})
         # 2.3.分隔符
-        readline_list = readline.split(code_package_template_obj.separator)
-        if len(readline_list) <= 1:
-            code_package_obj.write_log({
-                "content": '规则验证-分隔符',
-                "step": 2.3,
-                "type": 'error'
-            })
-            return "规则验证-分隔符校验失败"
+        if code_package_template_obj.separator == '无':
+            readline_list = [readline]
+        else:
+            readline_list = readline.split(code_package_template_obj.separator)
+            if len(readline_list) <= 1:
+                code_package_obj.write_log({
+                    "content": '规则验证-分隔符',
+                    "step": 2.3,
+                    "type": 'error'
+                })
+                return "规则验证-分隔符校验失败"
         code_package_obj.write_log({"content": f"规则验证-分隔符", "step": 2.3})
         # 2.4.分割后的字段数
         if len(readline_list) != code_package_template_obj.fields:
@@ -173,7 +176,10 @@ def code_package_import_check(code_package_id):
     with open(source_file_path) as file:
         for readline in file:
             readline = readline.replace('\r\n', '').replace('\n', '')
-            readline_list = readline.split(code_package_template_obj.separator)
+            if code_package_template_obj.separator == '无':
+                readline_list = [readline]
+            else:
+                readline_list = readline.split(code_package_template_obj.separator)
             if code_package_template_obj.code_type in [0, 2]:  # 外码
                 w_url = readline_list[code_package_template_obj.w_field_position]
                 code_data_list.append(_HistoryTemporaryCode(
