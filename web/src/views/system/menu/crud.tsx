@@ -3,8 +3,7 @@ import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } fro
 import { dictionary } from '/@/utils/dictionary';
 import { eIconPicker, eIcon } from 'e-icon-picker';
 import { useCompute } from '@fast-crud/fast-crud';
-import { inject } from 'vue';
-import { functions } from 'lodash-es';
+import { inject,computed } from 'vue';
 import { apiPrefix as menuPrefix } from './api';
 import XEUtils from 'xe-utils';
 import { request } from '/@/utils/service';
@@ -93,10 +92,10 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 							content: '按钮配置',
 						},
 						show: compute(({ row }: any) => {
-							if (row.web_path && !row.is_link) {
-								return true && hasPermissions();
+							if (row.is_catalog) {
+								return false;
 							}
-							return false;
+							return true;
 						}),
 						click: (context: any): void => {
 							const { row } = context;

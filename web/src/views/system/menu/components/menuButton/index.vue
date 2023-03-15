@@ -11,11 +11,12 @@
         <el-tag>{{ selectOptions.name }}</el-tag>
       </div>
     </template>
-    <div style="position: relative">
-      <fs-page>
+    <div>
+      <fs-page style="margin-top: 60px;">
         <fs-crud ref="crudRef" v-bind="crudBinding">
         </fs-crud>
       </fs-page>
+
     </div>
   </el-drawer>
 </template>
@@ -29,7 +30,7 @@ import * as api from './api'
 // 弹窗是否显示
 const drawer = ref(false)
 // 当前选择的菜单信息
-const selectOptions = ref({name:null})
+const selectOptions:any = ref({name:null})
 
 //抽屉关闭确认
 const handleClose = (done: () => void) => {
