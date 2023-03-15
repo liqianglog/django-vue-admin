@@ -11,9 +11,11 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { useExpose, useCrud } from '@fast-crud/fast-crud';
+import { useExpose, useCrud,dict } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './curd';
 import RolePermission from '/@/views/system/rolePermission/index.vue';
+import * as api from './api'
+import _ from "lodash-es";
 const rolePermission = ref();
 defineExpose(rolePermission);
 // crud组件的ref

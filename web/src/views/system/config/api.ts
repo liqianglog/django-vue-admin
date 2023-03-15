@@ -51,3 +51,11 @@ export function GetAssociationTable() {
 		params: {},
 	});
 }
+
+export function saveContent (data:any) {
+	return request({
+		url: apiPrefix + 'save_content/',
+		method: 'put',
+		data: data
+	})
+}
