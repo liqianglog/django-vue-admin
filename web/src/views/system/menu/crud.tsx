@@ -17,7 +17,6 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 	//验证路由地址
 	const validateWebPath = (rule: string, value: string, callback: Function) => {
 		const isLink = JSON.parse(crudExpose.getFormData().is_link);
-		console.log(isLink);
 		let pattern = /^\/.*?/;
 		if (isLink) {
 			pattern = /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/g;
@@ -33,7 +32,7 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 	};
 
 	const pageRequest = async (query: PageQuery) => {
-		return await api.GetList({});
+		return await api.GetList(query);
 	};
 	const editRequest = async ({ form, row }: EditReq) => {
 		form.id = row.id;

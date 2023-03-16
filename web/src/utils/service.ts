@@ -13,9 +13,17 @@ function createService() {
 	// 创建一个 axios 实例
 	const service = axios.create({
 		timeout: 20000,
+		headers: {
+			'Content-Type': 'application/json;charset=utf-8'
+		},
 		paramsSerializer: {
 			serialize(params) {
-				return qs.stringify(params, { allowDots: true });
+				return qs.stringify(params, {  indices: false,encoder: (val:string) => {
+						if (typeof val === 'boolean') {
+							return val ? 1 : 0;
+						}
+						return val;
+					} });
 			},
 		},
 	});

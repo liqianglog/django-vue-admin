@@ -103,8 +103,15 @@ class MenuViewSet(CustomModelViewSet):
 
     def list(self,request):
         """懒加载"""
+        request.query_params._mutable = True
         params = request.query_params
         parent = params.get('parent', None)
+        page = params.get('page',None)
+        limit = params.get('limit', None)
+        if page:
+            del params['page']
+        if limit:
+            del params['limit']
         if params:
             if parent:
                 queryset = self.queryset.filter(status=1, parent=parent)

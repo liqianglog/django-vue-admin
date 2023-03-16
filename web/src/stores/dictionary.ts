@@ -42,7 +42,19 @@ export const DictionaryStore = defineStore('Dictionary', {
 				dataList.forEach((item: any) => {
 					let childrens = item.children;
 					// console.log(item);
-					this.data[item.value] = childrens;
+					// this.data[item.value] = childrens;
+					childrens.forEach((children:any, index:any) => {
+						switch (children.type) {
+							case 1:
+								children.value = Number(children.value)
+								break
+							case 6:
+								children.value = children.value === 'true'
+								break
+						}
+					})
+					console.log(childrens)
+				this.data[item.value]=childrens
 				});
 			});
 		},

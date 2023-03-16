@@ -14,6 +14,7 @@ from dvadmin.system.models import Role, Menu, MenuButton, Dept
 from dvadmin.system.views.dept import DeptSerializer
 from dvadmin.system.views.menu import MenuSerializer
 from dvadmin.system.views.menu_button import MenuButtonSerializer
+from dvadmin.utils.crud_mixin import FastCrudMixin
 from dvadmin.utils.json_response import SuccessResponse, DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.validator import CustomUniqueValidator
@@ -81,7 +82,7 @@ class MenuPermissonSerializer(CustomModelSerializer):
         fields = ['id', 'parent', 'name', 'menuPermission']
 
 
-class RoleViewSet(CustomModelViewSet):
+class RoleViewSet(CustomModelViewSet,FastCrudMixin):
     """
     角色管理接口
     list:查询

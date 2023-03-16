@@ -259,6 +259,9 @@ LOGGING = {
 # ================================================= #
 
 REST_FRAMEWORK = {
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
     "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",  # 日期时间格式配置
     "DATE_FORMAT": "%Y-%m-%d",
     "DEFAULT_FILTER_BACKENDS": (
