@@ -57,36 +57,21 @@ class LoginSerializer(TokenObtainPairSerializer):
     captcha = serializers.CharField(
         max_length=6, required=False, allow_null=True, allow_blank=True
     )
+
     class Meta:
         model = Users
         fields = "__all__"
         read_only_fields = ["id"]
 
-class LoginView(TokenObtainPairView):
-    """
-    登录接口
-    """
-    serializer_class = LoginSerializer
-    permission_classes = []
+    default_error_messages = {"no_active_account": _("账号/密码错误")}
 
-    def post(self, request, *args, **kwargs):
-        # username可能携带的不止是用户名，可能还是用户的其它唯一标识 手机号 邮箱
-        username = request.data.get('username',None)
-        if username is None:
-            return ErrorResponse(msg="账号不能为空")
-        password = request.data.get('password',None)
-        if password is None:
-            return ErrorResponse(msg="密码不能为空")
-
+    def validate(self, attrs):
+        captcha = self.initial_data.get("captcha", None)
         if dispatch.get_system_config_values("base.captcha_state"):
-            captcha = request.data.get('captcha', None)
-            captchaKey = request.data.get('captchaKey', None)
-            if captchaKey is None:
-                return ErrorResponse(msg="验证码不能为空")
             if captcha is None:
                 raise CustomValidationError("验证码不能为空")
             self.image_code = CaptchaStore.objects.filter(
-                id=captchaKey
+                id=self.initial_data["captchaKey"]
             ).first()
             five_minute_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
             if self.image_code and five_minute_ago > self.image_code.expiration:
@@ -101,36 +86,34 @@ class LoginView(TokenObtainPairView):
                 else:
                     self.image_code and self.image_code.delete()
                     raise CustomValidationError("图片验证码错误")
-        try:
-            # 手动通过 user 签发 jwt-token
-            user = Users.objects.get(username=username)
-        except:
-            return ErrorResponse(msg='该账号未注册')
-        # 获得用户后，校验密码并签发token
-        if not user.check_password(password):
-            return ErrorResponse(msg='密码错误')
-        result = {
-           "name":user.name,
-            "userId":user.id,
-            "avatar":user.avatar,
-        }
-        dept = getattr(user, 'dept', None)
+        data = super().validate(attrs)
+        data["name"] = self.user.name
+        data["userId"] = self.user.id
+        data["avatar"] = self.user.avatar
+        data['user_type'] = self.user.user_type
+        dept = getattr(self.user, 'dept', None)
         if dept:
-            result['dept_info'] = {
+            data['dept_info'] = {
                 'dept_id': dept.id,
                 'dept_name': dept.name,
-                'dept_key': dept.key
+
             }
-        role = getattr(user, 'role', None)
+        role = getattr(self.user, 'role', None)
         if role:
-            result['role_info'] = role.values('id', 'name', 'key')
-        refresh = LoginSerializer.get_token(user)
-        result["refresh"] = str(refresh)
-        result["access"] = str(refresh.access_token)
+            data['role_info'] = role.values('id', 'name', 'key')
+        request = self.context.get("request")
+        request.user = self.user
         # 记录登录日志
-        request.user = user
         save_login_log(request=request)
-        return DetailResponse(data=result,msg="获取成功")
+        return {"code": 2000, "msg": "请求成功", "data": data}
+
+
+class LoginView(TokenObtainPairView):
+    """
+    登录接口
+    """
+    serializer_class = LoginSerializer
+    permission_classes = []
 
 
 class LoginTokenSerializer(TokenObtainPairSerializer):
