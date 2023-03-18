@@ -106,7 +106,7 @@ class DeptCreateUpdateSerializer(CustomModelSerializer):
     """
 
     def create(self, validated_data):
-        value = validated_data.get('parent',None)
+        value = validated_data.get('parent', None)
         if value is None:
             validated_data['parent'] = self.request.user.dept
         instance = super().create(validated_data)
@@ -168,22 +168,27 @@ class DeptViewSet(CustomModelViewSet):
             dept_list = [user_dept_id]
             data_range_list = list(set(data_range))
             for item in data_range_list:
-                if item in [0,2]:
+                if item in [0, 2]:
                     dept_list = [user_dept_id]
                 elif item == 1:
                     dept_list = Dept.recursion_dept_info(dept_id=user_dept_id)
                 elif item == 3:
-                    dept_list = Dept.objects.values_list('id',flat=True)
+                    dept_list = Dept.objects.values_list('id', flat=True)
                 elif item == 4:
-                    dept_list = request.user.role.values_list('dept',flat=True)
+                    dept_list = request.user.role.values_list('dept', flat=True)
                 else:
                     dept_list = []
             queryset = Dept.objects.filter(id__in=dept_list).values('id', 'name', 'parent')
         return DetailResponse(data=queryset, msg="获取成功")
 
-
     @action(methods=["GET"], detail=False, permission_classes=[AnonymousUserPermission])
     def all_dept(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
+        return DetailResponse(data=data, msg="获取成功")
+
+    @action(methods=["GET"], detail=False, permission_classes=[AnonymousUserPermission])
+    def all_dept_not_extra(self, request, *args, **kwargs):
         self.extra_filter_backends = []
         queryset = self.filter_queryset(self.get_queryset())
         data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
