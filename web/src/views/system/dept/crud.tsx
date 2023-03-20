@@ -8,6 +8,7 @@ interface CreateCrudOptionsTypes {
 }
 
 export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExpose }): CreateCrudOptionsTypes {
+	const { getFormRef, getFormData } = crudExpose;
 	const pageRequest = async (query: PageQuery) => {
 		return await api.GetList(query);
 	};
@@ -20,6 +21,17 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 	};
 	const addRequest = async ({ form }: AddReq) => {
 		return await api.AddObj(form);
+	};
+
+	const validatePhone = async (rule: any, value: any, callback: any) => {
+		if (value === '') {
+			throw new Error('请输入手机号码');
+		}
+		if (verifyPhone(value)) {
+			callback();
+		} else {
+			throw new Error('手机号码格式有误');
+		}
 	};
 
 	/**
@@ -155,10 +167,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 					title: '联系电话',
 					sortable: true,
 					form: {
-						rules: [
-							{ required: true, message: '请输入联系电话' },
-							{ validator: verifyPhone, trigger: 'change' },
-						],
+						rules: [{ validator: validatePhone, trigger: 'blur' }],
 						component: {
 							span: 12,
 							props: {

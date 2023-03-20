@@ -190,7 +190,7 @@ export function verifyNumberCnUppercase(val: any, unit = '仟佰拾亿仟佰拾�
  */
 export function verifyPhone(val: string) {
 	// false: 手机号码不正确
-	if (!/^((12[0-9])|(13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0|1,5-9]))\d{8}$/.test(val)) return false;
+	if (!/^((\+|00)86)?1((3[\d])|(4[5,6,7,9])|(5[0-3,5-9])|(6[5-7])|(7[0-8])|(8[\d])|(9[1,8,9]))\d{8}$/.test(val)) return false;
 	// true: 手机号码正确
 	else return true;
 }
