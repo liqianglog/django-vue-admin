@@ -20,6 +20,18 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
     const addRequest = async ({ form }: AddReq) => {
         return await api.AddObj(form);
     };
+
+    /**
+     * 懒加载
+     * @param row
+     * @returns {Promise<unknown>}
+     */
+    const loadContentMethod = (tree: any, treeNode: any, resolve: any) => {
+        api.GetList({ parent: tree.id }).then((res: any) => {
+            resolve(res.data);
+        });
+    };
+
     return {
         crudOptions: {
             request: {
@@ -28,21 +40,24 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                 editRequest,
                 delRequest
             },
+            pagination: {
+                show: false,
+            },
+            table: {
+                rowKey: 'id',
+                lazy: true,
+                load: loadContentMethod,
+                treeProps: { children: 'children', hasChildren: 'hasChild' },
+            },
             columns: {
                 _index: {
                     title: '序号',
                     form: { show: false },
                     column: {
-                        //type: 'index',
+                        type: 'index',
                         align: 'center',
                         width: '70px',
                         columnSetDisabled: true, //禁止在列设置中选择
-                        formatter: (context) => {
-                            //计算序号,你可以自定义计算规则，此处为翻页累加
-                            let index = context.index ?? 1;
-                            let pagination = crudExpose.crudBinding.value.pagination;
-                            return ((pagination.currentPage ?? 1) - 1) * pagination.pageSize + index + 1;
-                        },
                     },
                 },
                 search: {

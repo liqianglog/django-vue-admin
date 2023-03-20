@@ -102,8 +102,15 @@ class DeptViewSet(CustomModelViewSet):
 
     def list(self, request, *args, **kwargs):
         # 如果懒加载，则只返回父级
+        request.query_params._mutable = True
         params = request.query_params
         parent = params.get('parent', None)
+        page = params.get('page', None)
+        limit = params.get('limit', None)
+        if page:
+            del params['page']
+        if limit:
+            del params['limit']
         if params:
             if parent:
                 queryset = self.queryset.filter(status=True, parent=parent)
