@@ -29,12 +29,15 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                 delRequest
             },
             rowHandle: {
-                width: 400,
+                //固定右侧
+                fixed: "right",
+                width: 310,
                 buttons: {
                     orderExample: {
+                        show:false,
                         text: "重置密码",
                         click: () => {
-                            console.log("reset password")
+                            //console.log("reset password")
                         }
                     }
                 },
@@ -49,12 +52,6 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                         align: 'center',
                         width: '70px',
                         columnSetDisabled: true, //禁止在列设置中选择
-                        formatter: (context) => {
-                            //计算序号,你可以自定义计算规则，此处为翻页累加
-                            let index = context.index ?? 1;
-                            let pagination = crudExpose.crudBinding.value.pagination;
-                            return ((pagination.currentPage ?? 1) - 1) * pagination.pageSize + index + 1;
-                        },
                     },
                 },
                 search: {
@@ -240,6 +237,9 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                 },
                 email: {
                     title: '邮箱',
+                    column:{
+                        width:260
+                    },
                     form: {
                         rules: [
                             {
