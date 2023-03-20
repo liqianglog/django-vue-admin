@@ -49,6 +49,20 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                 load: loadContentMethod,
                 treeProps: { children: 'children', hasChildren: 'hasChild' },
             },
+            rowHandle:{
+              fiexd:'right',
+                width:310,
+              buttons:{
+                  addChildren:{
+                      text: "添加子级",
+                      type:"warning",
+                      click(context){
+                        const rowId =context.row.id
+                         crudExpose.openAdd({ row: { parent: rowId } })
+                      }
+                  }
+              }
+            },
             columns: {
                 _index: {
                     title: '序号',
@@ -83,38 +97,38 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                         }
                     },
                 },
-                parent: {
-                    column: {
-                        show: false
-                    },
-                    title: '上级部门',
-                    type: 'dict-tree',
-                    dict: dict({
-                        url: '/api/system/dept/all_dept/',
-                        value: 'id',
-                        label: 'name',
-                        isTree: true,
-                        getData: async ({ url }: { url: string }) => {
-                            return request({
-                                url: url,
-                            }).then((ret: any) => {
-                                return ret.data
-                            })
-                        }
-                    }),
-                    form: {
-                        helper: '默认留空为创建者的部门',
-                        component: {
-                            span: 12,
-                            props: {
-                                props: {
-                                    value: "id",
-                                    label: "name",
-                                }
-                            }
-                        }
-                    }
-                },
+                // parent: {
+                //     column: {
+                //         show: false
+                //     },
+                //     title: '上级部门',
+                //     type: 'dict-tree',
+                //     dict: dict({
+                //         url: '/api/system/dept/all_dept/',
+                //         value: 'id',
+                //         label: 'name',
+                //         isTree: true,
+                //         getData: async ({ url }: { url: string }) => {
+                //             return request({
+                //                 url: url,
+                //             }).then((ret: any) => {
+                //                 return ret.data
+                //             })
+                //         }
+                //     }),
+                //     form: {
+                //         helper: '默认留空为创建者的部门',
+                //         component: {
+                //             span: 12,
+                //             props: {
+                //                 props: {
+                //                     value: "id",
+                //                     label: "name",
+                //                 }
+                //             }
+                //         }
+                //     }
+                // },
                 name: {
                     title: '部门名称',
                     sortable: true,
