@@ -104,6 +104,14 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 							menuButtonRef.value.initGet();
 						},
 					},
+					addChildren:{
+						text: "添加子级",
+						type:"warning",
+						click(context){
+							const rowId =context.row.id
+							crudExpose.openAdd({ row: { parent: rowId } })
+						}
+					}
 				}
 			},
 			columns: {
@@ -142,46 +150,6 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 						component: {
 							props: {
 								clearable: true,
-							},
-						},
-					},
-				},
-				parent: {
-					title: '父级菜单',
-					column: {
-						show: false,
-					},
-					type: 'dict-cascader',
-					dict: dict({
-						url: menuPrefix,
-						value: 'id',
-						label: 'name',
-						children: 'children',
-						isTree: true,
-						getData: async ({ url }: { url: string }) => {
-							return request({
-								url: url,
-								params: { limit: 100, status: 1, is_catalog: 1 },
-							}).then((ret: any) => {
-								const responseData = ret.data;
-								const result = XEUtils.toArrayTree(responseData, {
-									parentKey: 'parent',
-									strict: true,
-								});
-								return [{ id: null, name: '根节点', children: result }];
-							});
-						},
-					}),
-					form: {
-						component: {
-							filterable: true,
-							placeholder: '请选择父级菜单',
-							props: {
-								props: {
-									checkStrictly: true,
-									value: 'id',
-									label: 'name',
-								},
 							},
 						},
 					},
