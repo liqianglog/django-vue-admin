@@ -48,7 +48,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                     title: '序号',
                     form: { show: false },
                     column: {
-                        //type: 'index',
+                        type: 'index',
                         align: 'center',
                         width: '70px',
                         columnSetDisabled: true, //禁止在列设置中选择
@@ -164,9 +164,15 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                         }
                     }),
                     form: {
+                        rules: [ // 表单校验规则
+                            {
+                                required: true,
+                                message: '必填项'
+                            }
+                        ],
                         component: {
                             filterable: true,
-                            placeholder: '请选择角色',
+                            placeholder: '请选择',
                             props: {
                                 props: {
                                     value: "id",
@@ -181,7 +187,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                     search: {
                         disabled: true
                     },
-                    type: 'dict-tree',
+                    type: 'dict-select',
                     dict: dict({
                         url: '/api/system/role/',
                         value: 'id',
@@ -200,15 +206,16 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                         }
                     }),
                     form: {
-                        component: {
-                            filterable: true,
-                            placeholder: '请选择角色',
-                            props: {
-                                props: {
-                                    value: "id",
-                                    label: "name",
-                                }
+                        rules: [ // 表单校验规则
+                            {
+                                required: true,
+                                message: '必填项'
                             }
+                        ],
+                        component: {
+                            multiple: true,
+                            filterable: true,
+                            placeholder: '请选择角色'
                         },
                     }
                 },
@@ -303,18 +310,8 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                 avatar: {
                     title: '头像',
                     type: 'avatar-cropper',
-                    form: {
-                        component: {
-                            props: {
-                                elProps: { // 与el-uploader 配置一致
-                                    multiple: false,
-                                    limit: 1 // 限制5个文件
-                                },
-                                sizeLimit: 500 * 1024 // 不能超过限制
-                            },
-                            span: 24
-                        },
-                        helper: '限制文件大小不能超过500k'
+                    form:{
+                        show:false
                     }
                 }
             }
