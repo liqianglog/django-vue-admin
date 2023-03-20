@@ -1,7 +1,7 @@
 <template>
 	<div class="layout-logo" v-if="setShowLogo" @click="onThemeConfigChange">
 		<img :src="logoMini" class="layout-logo-medium-img" />
-		<span>{{ themeConfig.globalTitle }}</span>
+		<span style="font-size: x-large">{{ themeConfig.globalTitle }}</span>
 	</div>
 	<div class="layout-logo-size" v-else @click="onThemeConfigChange">
 		<img :src="logoMini" class="layout-logo-size-img" />
@@ -52,7 +52,7 @@ const onThemeConfigChange = () => {
 		}
 	}
 	&-medium-img {
-		width: 20px;
+		width: 40px;
 		margin-right: 5px;
 	}
 }
@@ -63,7 +63,7 @@ const onThemeConfigChange = () => {
 	cursor: pointer;
 	animation: logoAnimation 0.3s ease-in-out;
 	&-img {
-		width: 20px;
+		width: 40px;
 		margin: auto;
 	}
 	&:hover {

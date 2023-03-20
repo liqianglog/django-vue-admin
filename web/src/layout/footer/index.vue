@@ -2,7 +2,7 @@
 	<div class="layout-footer pb15">
 		<div class="layout-footer-warp">
 			<div>❤️ Powered by Django-Vue3-Admin ❤️</div>
-			<div class="mt5">Copyright dvadmin团队</div>
+			<div class="mt5">Copyright DVAdmin团队</div>
 		</div>
 	</div>
 </template>

@@ -17,7 +17,7 @@ export default defineComponent({
 		const initQrcode = () => {
 			(qrcodeRef.value as HTMLElement).innerHTML = '';
 			new QRCode(qrcodeRef.value, {
-				text: `https://jq.qq.com/?_wv=1027&k=8keWoTap`,
+				text: `https://jq.qq.com/?_wv=1027&k=hUu2GeU1`,
 				width: 260,
 				height: 260,
 				colorDark: '#000000',
