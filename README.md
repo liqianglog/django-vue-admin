@@ -14,15 +14,15 @@
 
 ## 平台简介
 
-💡 [django-vue-admin](https://gitee.com/dvadmin/django-vue-admin) 是一套全部开源的快速开发平台，毫无保留给个人及企业免费使用。
+💡 [django-vue3-admin](https://gitee.com/huge-dream/django-vue3-admin.git) 是一套全部开源的快速开发平台，毫无保留给个人及企业免费使用。
 
 
 
-* 🧑‍🤝‍🧑前端采用[D2Admin](https://github.com/d2-projects/d2-admin) 、[Vue](https://cn.vuejs.org/)、[ElementUI](https://element.eleme.cn/)。
+* 🧑‍🤝‍🧑前端采用 Vue3+TS+pinia+fastcrud(感谢[vue-next-admin](https://lyt-top.gitee.io/vue-next-admin-doc-preview/))
 * 👭后端采用 Python 语言 Django 框架以及强大的 [Django REST Framework](https://pypi.org/project/djangorestframework)。
 * 👫权限认证使用[Django REST Framework SimpleJWT](https://pypi.org/project/djangorestframework-simplejwt)，支持多终端认证系统。
 * 👬支持加载动态权限菜单，多方式轻松权限控制。
-* 💏特别鸣谢：[D2Admin](https://github.com/d2-projects/d2-admin) 、[Vue-Element-Admin](https://github.com/PanJiaChen/vue-element-admin)。
+* 💏特别鸣谢：[vue-next-admin](https://lyt-top.gitee.io/vue-next-admin-doc-preview/)。
 * 💡 特别感谢[jetbrains](https://www.jetbrains.com/) 为本开源项目提供免费的 IntelliJ IDEA 授权。
 
 

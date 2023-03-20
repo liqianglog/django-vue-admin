@@ -12,13 +12,13 @@ Because of love, so embrace the future
 
 ## framework introduction
 
-💡 [django-vue-admin](https://gitee.com/dvadmin/django-vue-admin) Is a set of all open source rapid development platform, no reservation for individuals and enterprises free use.
+💡 [django-vue3-admin](https://gitee.com/huge-dream/django-vue3-admin.git) Is a set of all open source rapid development platform, no reservation for individuals and enterprises free use.
 
-* 🧑‍🤝‍🧑Front-end adoption[D2Admin](https://github.com/d2-projects/d2-admin) 、[Vue](https://cn.vuejs.org/)、[ElementUI](https://element.eleme.cn/)。
+* 🧑‍🤝‍🧑Front-end adoption Vue3+TS+pinia+fastcrud。
 * 👭The backend uses the Python language Django framework as well as the powerful[Django REST Framework](https://pypi.org/project/djangorestframework)。
 * 👫Permission authentication use[Django REST Framework SimpleJWT](https://pypi.org/project/djangorestframework-simplejwt)，Supports the multi-terminal authentication system.
 * 👬Support loading dynamic permission menu, multi - way easy permission control.
-* 💏 Special thanks:[D2Admin](https://github.com/d2-projects/d2-admin) 、[Vue-Element-Admin](https://github.com/PanJiaChen/vue-element-admin)。
+* 💏 Special thanks: [vue-next-admin](https://lyt-top.gitee.io/vue-next-admin-doc-preview/).
 * 💡 💏 Special thanks:[jetbrains](https://www.jetbrains.com/) To provide a free IntelliJ IDEA license for this open source project.
 
 ## Online experience
