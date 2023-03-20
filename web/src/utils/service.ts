@@ -1,5 +1,8 @@
 import axios from 'axios';
 import { get } from 'lodash-es';
+import { ElMessage, ElMessageBox } from 'element-plus'
+import type { Action } from 'element-plus'
+
 // @ts-ignore
 import { errorLog, errorCreate } from './tools.ts';
 // import { env } from "/src/utils/util.env";
@@ -58,11 +61,22 @@ function createService() {
 			} else {
 				// 有 code 代表这是一个后端接口 可以进行进一步的判断
 				switch (code) {
+					case 400:
+						Local.clear();
+						Session.clear();
+						errorCreate(`${dataAxios.msg}: ${response.config.url}`);
+						window.location.reload();
+						break;
 					case 401:
 						Local.clear();
 						Session.clear();
-						window.location.reload();
 						dataAxios.msg = '登录授权过期，请重新登录';
+						ElMessageBox.alert(dataAxios.msg, '提示', {
+							confirmButtonText: 'OK',
+							callback: (action: Action) => {
+								window.location.reload();
+							},
+						})
 						errorCreate(`${dataAxios.msg}: ${response.config.url}`);
 						break;
 					case 2000:
