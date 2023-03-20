@@ -31,6 +31,9 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                 delRequest,
             },
             rowHandle: {
+                //固定右侧
+                fixed: "right",
+                width:310,
                 buttons: {
                     custom: {
                         text: "权限配置",

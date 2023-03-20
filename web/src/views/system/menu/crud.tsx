@@ -81,6 +81,7 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 				},
 			},
 			rowHandle: {
+				fixed: "right",
 				width: 310,
 				buttons: {
 					custom: {
@@ -103,7 +104,7 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 							menuButtonRef.value.initGet();
 						},
 					},
-				},
+				}
 			},
 			columns: {
 				_index: {
@@ -244,7 +245,7 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 				is_catalog: {
 					title: '是否目录',
 					column: {
-						width: 60,
+						width: 100,
 					},
 					type: 'dict-switch',
 					dict: dict({
@@ -443,7 +444,7 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 				visible: {
 					title: '侧边可见',
 					column: {
-						width: 60,
+						width: 100,
 					},
 					search: {
 						show: true,
