@@ -53,7 +53,6 @@ export const DictionaryStore = defineStore('Dictionary', {
 								break
 						}
 					})
-					console.log(childrens)
 				this.data[item.value]=childrens
 				});
 			});
