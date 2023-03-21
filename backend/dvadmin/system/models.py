@@ -149,7 +149,7 @@ class Dept(CoreModel):
 class Menu(CoreModel):
     parent = models.ForeignKey(
         to="Menu",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         verbose_name="上级菜单",
         null=True,
         blank=True,
@@ -184,7 +184,7 @@ class MenuButton(CoreModel):
         to="Menu",
         db_constraint=False,
         related_name="menuPermission",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         verbose_name="关联菜单",
         help_text="关联菜单",
     )
@@ -309,7 +309,7 @@ class Area(CoreModel):
         to="self",
         verbose_name="父地区编码",
         to_field="code",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         db_constraint=False,
         null=True,
         blank=True,
@@ -348,7 +348,7 @@ class SystemConfig(CoreModel):
     parent = models.ForeignKey(
         to="self",
         verbose_name="父级",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         db_constraint=False,
         null=True,
         blank=True,

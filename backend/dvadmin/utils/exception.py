@@ -12,7 +12,7 @@ import traceback
 from django.db.models import ProtectedError
 from django.http import Http404
 from rest_framework.exceptions import APIException as DRFAPIException, AuthenticationFailed
-from rest_framework.views import set_rollback
+from rest_framework.views import set_rollback, exception_handler
 
 from dvadmin.utils.json_response import ErrorResponse
 
@@ -30,7 +30,8 @@ def CustomExceptionHandler(ex, context):
     """
     msg = ''
     code = 4000
-
+    # 调用默认的异常处理函数
+    response = exception_handler(ex, context)
     if isinstance(ex, AuthenticationFailed):
         code = 401
         msg = ex.detail
@@ -46,7 +47,7 @@ def CustomExceptionHandler(ex, context):
                     msg = "%s:%s" % (k, i)
     elif isinstance(ex, ProtectedError):
         set_rollback()
-        msg = "删除失败:该条数据与其他数据有相关绑定"
+        msg = "无法删除:该条数据与其他数据有相关绑定"
     # elif isinstance(ex, DatabaseError):
     #     set_rollback()
     #     msg = "接口服务器异常,请联系管理员"
