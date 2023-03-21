@@ -355,8 +355,8 @@ class SystemConfig(CoreModel):
         help_text="父级",
     )
     title = models.CharField(max_length=50, verbose_name="标题", help_text="标题")
-    key = models.CharField(max_length=20, verbose_name="键", help_text="键", db_index=True)
-    value = models.JSONField(max_length=100, verbose_name="值", help_text="值", null=True, blank=True)
+    key = models.CharField(max_length=100, verbose_name="键", help_text="键", db_index=True)
+    value = models.JSONField(max_length=200, verbose_name="值", help_text="值", null=True, blank=True)
     sort = models.IntegerField(default=0, verbose_name="排序", help_text="排序", blank=True)
     status = models.BooleanField(default=True, verbose_name="启用状态", help_text="启用状态")
     data_options = models.JSONField(verbose_name="数据options", help_text="数据options", null=True, blank=True)
@@ -406,7 +406,7 @@ class SystemConfig(CoreModel):
 
 
 class LoginLog(CoreModel):
-    LOGIN_TYPE_CHOICES = ((1, "普通登录"), (2, "微信扫码登录"),)
+    LOGIN_TYPE_CHOICES = ((1, "普通登录"), (2, "微信扫码登录"), (3, "飞书扫码登录"), (4, "钉钉扫码登录"))
     username = models.CharField(max_length=32, verbose_name="登录用户名", null=True, blank=True, help_text="登录用户名")
     ip = models.CharField(max_length=32, verbose_name="登录ip", null=True, blank=True, help_text="登录ip")
     agent = models.TextField(verbose_name="agent信息", null=True, blank=True, help_text="agent信息")

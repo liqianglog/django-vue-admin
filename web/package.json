@@ -1,6 +1,6 @@
 {
   "name": "django-vue-admin",
-  "version": "2.0.8",
+  "version": "2.1.0",
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "start": "npm run serve",
@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@great-dream/template": "^1.0.2",
-    "@vue/composition-api": "1.0.4",
     "axios": "^0.19.0",
     "axios-mock-adapter": "^1.18.1",
     "better-scroll": "^1.15.2",

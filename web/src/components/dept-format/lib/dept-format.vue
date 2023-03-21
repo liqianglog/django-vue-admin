@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{$store.state.d2admin.dept.data[currentValue] || ''}}
+    {{currentValue}}
   </div>
 </template>
 <script>
@@ -24,21 +24,20 @@ export default {
     }
   },
   watch: {
-    value (value) {
-      // this.$emit('change', value)
-      if (this.currentValue === value) {
-        return
-      }
-      this.setValue(value)
+    value () {
+      this.setValue()
     }
   },
   created () {
     this.setValue(this.value)
   },
   methods: {
-    setValue (value) {
+    async setValue () {
       // 在这里对 传入的value值做处理
-      this.currentValue = String(this.value)
+      if (!this.$store.state.d2admin.dept.data) {
+        await this.$store.dispatch('d2admin/dept/load')
+      }
+      this.currentValue = this.$store.state.d2admin.dept.data[String(this.value)]
       // 根据值的key 递归获取对应的名称
     }
   }
