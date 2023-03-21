@@ -18,7 +18,7 @@ class MenuButtonSerializer(CustomModelSerializer):
 
     class Meta:
         model = MenuButton
-        fields = ['id', 'name', 'value', 'api', 'method']
+        fields = ['id', 'name', 'value', 'api', 'method', 'menu']
         read_only_fields = ["id"]
 
 
@@ -31,6 +31,7 @@ class MenuButtonInitSerializer(CustomModelSerializer):
         model = MenuButton
         fields = ['id', 'name', 'value', 'api', 'method', 'menu']
         read_only_fields = ["id"]
+
 
 class MenuButtonCreateUpdateSerializer(CustomModelSerializer):
     """
