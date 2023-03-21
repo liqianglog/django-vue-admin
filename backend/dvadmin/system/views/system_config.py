@@ -61,10 +61,10 @@ class SystemConfigChinldernSerializer(CustomModelSerializer):
     """
     系统配置子级-序列化器
     """
-    chinldern = serializers.SerializerMethodField()
+    children = serializers.SerializerMethodField()
     form_item_type_label = serializers.CharField(source='get_form_item_type_display', read_only=True)
 
-    def get_chinldern(self, instance):
+    def get_children(self, instance):
         queryset = SystemConfig.objects.filter(parent=instance)
         serializer = SystemConfigSerializer(queryset, many=True)
         return serializer.data

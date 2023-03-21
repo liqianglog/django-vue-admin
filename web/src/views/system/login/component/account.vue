@@ -27,7 +27,7 @@
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item class="login-animation3">
+		<el-form-item class="login-animation3" v-if="showCaptcha()">
 			<el-col :span="15">
 				<el-input
 					type="text"
@@ -46,7 +46,6 @@
 			<el-col :span="8">
 				<el-button class="login-content-captcha">
 					<el-image :src="ruleForm.captchaImgBase" @click="refreshCaptcha" />
-					<!-- TODO 完成点击刷新验证码 -->
 				</el-button>
 			</el-col>
 		</el-form-item>
@@ -74,7 +73,8 @@ import { NextLoading } from '/@/utils/loading';
 import * as loginApi from '/@/views/system/login/api';
 import { useUserInfo } from '/@/stores/userInfo';
 import { DictionaryStore } from '/@/stores/dictionary';
-import {BtnPermissionStore} from "/@/plugin/permission/store.permission";
+import { SystemConfigStore } from '/@/stores/systemConfig';
+import { BtnPermissionStore } from '/@/plugin/permission/store.permission';
 import { Md5 } from 'ts-md5';
 
 export default defineComponent({
@@ -104,6 +104,10 @@ export default defineComponent({
 			return formatAxis(new Date());
 		});
 
+		const showCaptcha = (): boolean => {
+			return SystemConfigStore().systemConfig.captcha_state;
+		};
+
 		const getCaptcha = async () => {
 			loginApi.getCaptcha().then((ret: any) => {
 				state.ruleForm.captchaImgBase = ret.data.image_base;
@@ -118,7 +122,7 @@ export default defineComponent({
 		};
 		const loginClick = async () => {
 			loginApi.login({ ...state.ruleForm, password: Md5.hashStr(state.ruleForm.password) }).then((ret: any) => {
-			  Session.set('token', ret.data.access);
+				Session.set('token', ret.data.access);
 				Cookies.set('username', ret.data.name);
 				if (!themeConfig.value.isRequestRoutes) {
 					// 前端控制路由，2、请注意执行顺序
@@ -142,6 +146,8 @@ export default defineComponent({
 			getUserInfo();
 			//获取所有字典
 			DictionaryStore().getSystemDictionarys();
+			//获取系统配置
+			SystemConfigStore().getSystemConfigs();
 			// 初始化登录成功时间问候语
 			let currentTimeInfo = currentTime.value;
 			// 登录成功，跳到转首页
@@ -170,6 +176,7 @@ export default defineComponent({
 			refreshCaptcha,
 			loginClick,
 			loginSuccess,
+			showCaptcha,
 			...toRefs(state),
 		};
 	},
