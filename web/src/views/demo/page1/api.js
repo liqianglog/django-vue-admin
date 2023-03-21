@@ -4,13 +4,13 @@ export function GetList (query) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
-        code: 0,
+        code: 2000,
         msg: 'success',
         data: {
           total: 99,
           current: query.current,
           size: 20,
-          records: [
+          data: [
             { id: 1, select1: '1', select2: 'sz,wh' },
             { id: 2, select1: '1', select2: 'sz,sh' },
             { id: 3, select1: '0', select2: 'sz,gz' },

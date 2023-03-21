@@ -102,6 +102,7 @@ export const crudOptions = (vm) => {
         title: '上级部门',
         key: 'parent',
         type: 'tree-selector',
+        minWidth:200,
         dict: {
           isTree: true,
           label: 'name',
@@ -126,6 +127,7 @@ export const crudOptions = (vm) => {
         key: 'name',
         sortable: true,
         treeNode: true, // 设置为树形列
+        minWidth:180,
         search: {
           disabled: false,
           component: {
@@ -157,6 +159,7 @@ export const crudOptions = (vm) => {
         title: '部门标识',
         key: 'key',
         sortable: true,
+        minWidth:100,
         form: {
           component: {
             props: {
@@ -173,6 +176,7 @@ export const crudOptions = (vm) => {
         title: '负责人',
         key: 'owner',
         sortable: true,
+        minWidth:100,
         form: {
           component: {
             span: 12,
@@ -187,6 +191,7 @@ export const crudOptions = (vm) => {
         title: '联系电话',
         key: 'phone',
         sortable: true,
+        minWidth:100,
         form: {
           component: {
             span: 12,
@@ -201,6 +206,7 @@ export const crudOptions = (vm) => {
         title: '邮箱',
         key: 'email',
         sortable: true,
+        minWidth:100,
         form: {
           component: {
             span: 12,

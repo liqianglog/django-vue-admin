@@ -96,6 +96,7 @@ export const crudOptions = (vm) => {
       title: '角色名称',
       key: 'name',
       sortable: true,
+      minWidth:120,
       search: {
         disabled: false,
         component: {
@@ -125,6 +126,7 @@ export const crudOptions = (vm) => {
       title: '权限标识',
       key: 'key',
       sortable: true,
+      minWidth:100,
       form: {
         rules: [ // 表单校验规则
           { required: true, message: '权限标识必填项' }
@@ -157,6 +159,7 @@ export const crudOptions = (vm) => {
       key: 'admin',
       sortable: true,
       type: 'radio',
+      minWidth:120,
       dict: {
         data: vm.dictionary('button_whether_bool')
       },
@@ -178,6 +181,7 @@ export const crudOptions = (vm) => {
         disabled: false
       },
       type: 'radio',
+      minWidth:100,
       dict: {
         data: vm.dictionary('button_status_bool')
       },
