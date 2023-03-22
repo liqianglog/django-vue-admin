@@ -78,18 +78,6 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                         },
                     },
                 },
-                search: {
-                    title: '关键词',
-                    column: {show: false},
-                    type: 'text',
-                    search: {show: true},
-                    form: {
-                        show: false,
-                        component: {
-                            placeholder: '输入关键词搜索',
-                        },
-                    },
-                },
                 id: {
                     title: 'ID',
                     type: 'text',
@@ -103,7 +91,7 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                     search: {show: true},
                     column: {
                         minWidth: 120,
-                        sortable: true,
+                        sortable: "custom",
                     },
                     form: {
                         rules: [{required: true, message: '角色名称必填'}],
@@ -118,7 +106,7 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                     search: {show: false},
                     column: {
                         width: 120,
-                        sortable: true,
+                        sortable: "custom",
                     },
                     form: {
                         rules: [{required: true, message: '权限标识必填'}],
@@ -131,9 +119,10 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                     type: 'number',
                     column: {
                         width: 90,
-                        sortable: true,
+                        sortable: "custom",
                     },
                     form: {
+                        rules: [{required: true, message: '排序必填'}],
                         value: 1,
                     },
                 },
@@ -157,9 +146,10 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                     }),
                     column: {
                         width: 130,
-                        sortable: true,
+                        sortable: "custom",
                     },
                     form: {
+                        rules: [{required: true, message: '是否管理员必填'}],
                         value: false,
                     },
                 },
@@ -183,9 +173,10 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                     }),
                     column: {
                         width: 90,
-                        sortable: true,
+                        sortable: "custom",
                     },
                     form: {
+                        rules: [{required: true, message: '状态必填'}],
                         value: true,
                     },
                 },
@@ -195,7 +186,7 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                     search: {show: false},
                     column: {
                         width: 170,
-                        sortable: true,
+                        sortable: "custom",
                     },
                     form: {
                         show: false,
@@ -209,7 +200,7 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                     type: 'text',
                     search: {show: false},
                     column: {
-                        sortable: true,
+                        sortable: "custom",
                         width: 170,
                     },
                     form: {
@@ -219,18 +210,17 @@ export const createCrudOptions = function ({crudExpose,rolePermission}: {crudExp
                         },
                     },
                 },
-
-                description: {
-                    title: '备注',
-                    type: 'textarea',
-                    search: {show: false},
-                    form: {
-                        component: {
-                            maxlength: 200,
-                            placeholder: '输入备注',
-                        },
-                    },
-                },
+                // description: {
+                //     title: '备注',
+                //     type: 'textarea',
+                //     search: {show: false},
+                //     form: {
+                //         component: {
+                //             maxlength: 200,
+                //             placeholder: '输入备注',
+                //         },
+                //     },
+                // },
             },
         },
     };
