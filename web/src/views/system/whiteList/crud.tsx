@@ -28,6 +28,14 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 				editRequest,
 				delRequest,
 			},
+			form: {
+				col: {span: 24},
+                labelWidth: '110px',
+                wrapper: {
+                    is: 'el-dialog',
+                    width: '600px',
+                },
+			},
 			columns: {
 				_index: {
 					title: '序号',
@@ -70,7 +78,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 				},
 				method: {
 					title: '请求方式',
-					sortable: true,
+					sortable: "custom",
 					search: {
 						disabled: false,
 					},
@@ -93,6 +101,10 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 								label: 'DELETE',
 								value: 3,
 							},
+							{
+								label: 'PATCH',
+								value: 4,
+							}
 						],
 					}),
 					form: {
@@ -113,7 +125,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 				},
 				url: {
 					title: '接口地址',
-					sortable: true,
+					sortable: "custom",
 					search: {
 						disabled: true,
 					},
@@ -155,9 +167,11 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 							class: { yxtInput: true },
 						},
 						helper: {
-							render(h) {
-								return <el-alert title="请正确填写，以免请求时被拦截。匹配单例使用正则,例如:/api/xx/.*?/" type="warning" />;
+							position: "label",
+							tooltip: {
+								placement: "top-start"
 							},
+							text: "请正确填写，以免请求时被拦截。匹配单例使用正则,例如:/api/xx/.*?/"
 						},
 					},
 				},
@@ -173,6 +187,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 					}),
 					form: {
 						value: true,
+						rules: [{ required: true, message: '必填项' }],
 						component: {
 							span: 12,
 						},

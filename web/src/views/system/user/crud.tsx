@@ -54,29 +54,6 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
                         columnSetDisabled: true, //禁止在列设置中选择
                     },
                 },
-                search: {
-                    title: '关键词',
-                    column: {
-                        show: false
-                    },
-                    search: {
-                        show: true,
-                        component: {
-                            props: {
-                                clearable: true
-                            },
-                            placeholder: '请输入关键词'
-                        }
-                    },
-                    form: {
-                        show: false,
-                        component: {
-                            props: {
-                                clearable: true
-                            }
-                        }
-                    },
-                },
                 username: {
                     title: '账号',
                     search: {
