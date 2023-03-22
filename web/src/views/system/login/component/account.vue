@@ -27,7 +27,7 @@
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item class="login-animation3" v-if="showCaptcha()">
+		<el-form-item class="login-animation3" v-if="isShowCaptcha">
 			<el-col :span="15">
 				<el-input
 					type="text"
@@ -103,10 +103,10 @@ export default defineComponent({
 		const currentTime = computed(() => {
 			return formatAxis(new Date());
 		});
-
-		const showCaptcha = (): boolean => {
-			return SystemConfigStore().systemConfig.captcha_state;
-		};
+		// 是否关闭验证码
+		const isShowCaptcha = computed(() => {
+			return SystemConfigStore().systemConfig['base.captcha_state'];
+		});
 
 		const getCaptcha = async () => {
 			loginApi.getCaptcha().then((ret: any) => {
@@ -146,8 +146,7 @@ export default defineComponent({
 			getUserInfo();
 			//获取所有字典
 			DictionaryStore().getSystemDictionarys();
-			//获取系统配置
-			SystemConfigStore().getSystemConfigs();
+
 			// 初始化登录成功时间问候语
 			let currentTimeInfo = currentTime.value;
 			// 登录成功，跳到转首页
@@ -170,13 +169,15 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCaptcha();
+			//获取系统配置
+			SystemConfigStore().getSystemConfigs();
 		});
 
 		return {
 			refreshCaptcha,
 			loginClick,
 			loginSuccess,
-			showCaptcha,
+			isShowCaptcha,
 			...toRefs(state),
 		};
 	},

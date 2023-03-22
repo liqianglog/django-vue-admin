@@ -11,7 +11,7 @@ import { useRoutesList } from '/@/stores/routesList';
 import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
 import { useMenuApi } from '/@/api/menu/index';
 import { handleMenu } from '../utils/menu';
-import {BtnPermissionStore} from "/@/plugin/permission/store.permission";
+import { BtnPermissionStore } from '/@/plugin/permission/store.permission';
 
 const menuApi = useMenuApi();
 
