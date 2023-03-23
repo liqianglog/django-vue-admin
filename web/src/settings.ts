@@ -28,6 +28,9 @@ export default {
 						//你项目后台接口大概率与fast-crud所需要的返回结构不一致，所以需要配置此项
 						//请参考文档http://fast-crud.docmirror.cn/api/crud-options/request.html
 						transformQuery: ({ page, form, sort }: any) => {
+							if (sort.asc !== undefined){
+								form["ordering"] = `${sort.asc ? "" : "-"}${sort.prop}`
+							} 
 							//转换为你pageRequest所需要的请求参数结构
 							return { page: page.currentPage, limit: page.pageSize, ...form };
 						},
