@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "corsheaders",  # 注册跨域app
+    'rest_framework_simplejwt.token_blacklist',
     "dvadmin.system",
     "drf_yasg",
     "captcha",
@@ -306,12 +307,14 @@ from datetime import timedelta
 
 SIMPLE_JWT = {
     # token有效时长
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=10),
     # token刷新后的有效时间
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     # 设置前缀
     "AUTH_HEADER_TYPES": ("JWT",),
     "ROTATE_REFRESH_TOKENS": True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
 
 # ====================================#
@@ -387,6 +390,8 @@ SYSTEM_CONFIG = {}
 # 字典配置
 DICTIONARY_CONFIG = {}
 
+
+
 # ================================================= #
 # ******************** 插件配置 ******************** #
 # ================================================= #
@@ -399,4 +404,7 @@ PLUGINS_URL_PATTERNS = []
 # from dvadmin_upgrade_center.settings import *    # 升级中心
 # from dvadmin_celery.settings import *            # celery 异步任务
 # ...
+from dvadmin_third.settings import *  # 扫码登录
+from dvadmin_uniapp.settings import *  # uniapp后端
+
 # ********** 一键导入插件配置结束 **********

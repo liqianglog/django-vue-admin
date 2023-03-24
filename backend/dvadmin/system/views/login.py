@@ -12,7 +12,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from django.conf import settings
 
@@ -105,6 +106,13 @@ class LoginSerializer(TokenObtainPairSerializer):
         request.user = self.user
         # 记录登录日志
         save_login_log(request=request)
+        # 将之前登录用户的token加入黑名单
+        last_token = self.user.last_token
+        if last_token:
+            token = RefreshToken(last_token)
+            token.blacklist()
+            # 将最新的token保存到用户表
+            Users.objects.filter(id=self.user.id).update(last_token=data.get('refresh'))
         return {"code": 2000, "msg": "请求成功", "data": data}
 
 

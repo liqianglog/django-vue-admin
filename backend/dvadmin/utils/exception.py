@@ -12,6 +12,7 @@ import traceback
 from django.db.models import ProtectedError
 from django.http import Http404
 from rest_framework.exceptions import APIException as DRFAPIException, AuthenticationFailed
+from rest_framework.status import HTTP_407_PROXY_AUTHENTICATION_REQUIRED, HTTP_401_UNAUTHORIZED
 from rest_framework.views import set_rollback, exception_handler
 
 from dvadmin.utils.json_response import ErrorResponse
@@ -33,8 +34,14 @@ def CustomExceptionHandler(ex, context):
     # 调用默认的异常处理函数
     response = exception_handler(ex, context)
     if isinstance(ex, AuthenticationFailed):
-        code = 401
-        msg = ex.detail
+        if response and response.data.get('detail') =="Given token not valid for any token type":
+            code = 401
+            msg = ex.detail
+        elif response and response.data.get('detail') =="Token is blacklisted":
+            return ErrorResponse(status=HTTP_401_UNAUTHORIZED)
+        else:
+            code = 401
+            msg = ex.detail
     elif isinstance(ex,Http404):
         code = 400
         msg = "接口地址不正确"

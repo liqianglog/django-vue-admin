@@ -78,12 +78,10 @@ function createService () {
             // return dataAxios.data
             return dataAxios
           case 401:
-            // TODO 置换token 未完善
-            util.cookies.remove('token')
-            util.cookies.remove('uuid')
-            util.cookies.remove('refresh')
-            router.push({ path: '/login' })
-            errorCreate(`${getErrorMessage(dataAxios.msg)}`)
+            refreshTken().then(res => {
+              util.cookies.set('token', res.access)
+              router.push({path:'/index'})
+            })
             break
           case 404:
             dataNotFound(`${dataAxios.msg}`)
@@ -109,13 +107,11 @@ function createService () {
           error.message = '请求错误'
           break
         case 401:
-          refreshTken().then(res => {
-            util.cookies.set('token', res.access)
-          }).catch(e => {
-            router.push({ name: 'login' })
-            router.go(0)
-            error.message = '未认证，请登录'
-          })
+          util.cookies.remove('token')
+          util.cookies.remove('uuid')
+          util.cookies.remove('refresh')
+          router.push({ path: '/login' })
+          error.message = '系统已检测到您的账号在其他地方登录~'
           break
         case 403:
           error.message = '拒绝访问'
