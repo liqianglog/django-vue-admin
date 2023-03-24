@@ -79,8 +79,8 @@ function createService () {
             return dataAxios
           case 401:
             refreshTken().then(res => {
-              util.cookies.set('token', res.access)
-              router.push({path:'/index'})
+              util.cookies.set('token', res.data.access)
+              // router.push({path:'/index'})
             })
             break
           case 404:

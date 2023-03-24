@@ -10,8 +10,11 @@ from django.utils.translation import gettext_lazy as _
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers
+from rest_framework.status import HTTP_401_UNAUTHORIZED
 from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -107,14 +110,30 @@ class LoginSerializer(TokenObtainPairSerializer):
         # 记录登录日志
         save_login_log(request=request)
         # 将之前登录用户的token加入黑名单
-        last_token = self.user.last_token
+        user = Users.objects.filter(id=self.user.id).values('last_token').first()
+        last_token = user.get('last_token')
         if last_token:
             token = RefreshToken(last_token)
             token.blacklist()
-            # 将最新的token保存到用户表
-            Users.objects.filter(id=self.user.id).update(last_token=data.get('refresh'))
+        # 将最新的token保存到用户表
+        Users.objects.filter(id=self.user.id).update(last_token=data.get('refresh'))
         return {"code": 2000, "msg": "请求成功", "data": data}
 
+class CustomTokenRefreshView(TokenRefreshView):
+    """
+    自定义token刷新
+    """
+    def post(self, request, *args, **kwargs):
+        refresh_token = request.data.get("refresh")
+        try:
+            token = RefreshToken(refresh_token)
+            data = {
+                "access":str(token.access_token),
+                "refresh":str(token)
+            }
+        except:
+            return ErrorResponse(status=HTTP_401_UNAUTHORIZED)
+        return DetailResponse(data=data)
 
 class LoginView(TokenObtainPairView):
     """
@@ -156,6 +175,7 @@ class LoginTokenView(TokenObtainPairView):
 
 class LogoutView(APIView):
     def post(self, request):
+        Users.objects.filter(id=self.request.user.id).update(last_token=None)
         return DetailResponse(msg="注销成功")
 
 
