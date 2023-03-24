@@ -1,9 +1,9 @@
 import hashlib
 import os
 
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
-
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from application import dispatch
 from dvadmin.utils.models import CoreModel, table_prefix
 
@@ -11,6 +11,34 @@ STATUS_CHOICES = (
     (0, "禁用"),
     (1, "启用"),
 )
+
+
+class Role(CoreModel):
+    name = models.CharField(max_length=64, verbose_name="角色名称", help_text="角色名称")
+    key = models.CharField(max_length=64, unique=True, verbose_name="权限字符", help_text="权限字符")
+    sort = models.IntegerField(default=1, verbose_name="角色顺序", help_text="角色顺序")
+    status = models.BooleanField(default=True, verbose_name="角色状态", help_text="角色状态")
+    admin = models.BooleanField(default=False, verbose_name="是否为admin", help_text="是否为admin")
+
+    class Meta:
+        db_table = table_prefix + "system_role"
+        verbose_name = "角色表"
+        verbose_name_plural = verbose_name
+        ordering = ("sort",)
+
+
+class CustomUserManager(UserManager):
+
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
+        user = super(CustomUserManager, self).create_superuser(username, email, password, **extra_fields)
+        user.set_password(password)
+        try:
+            user.role.add(Role.objects.get(name="管理员"))
+            user.save(using=self._db)
+            return user
+        except ObjectDoesNotExist:
+            user.delete()
+            raise ValidationError("角色`管理员`不存在, 创建失败, 请先执行python manage.py init")
 
 
 class Users(CoreModel, AbstractUser):
@@ -48,6 +76,7 @@ class Users(CoreModel, AbstractUser):
         blank=True,
         help_text="关联部门",
     )
+    objects = CustomUserManager()
 
     def set_password(self, raw_password):
         super().set_password(hashlib.md5(raw_password.encode(encoding="UTF-8")).hexdigest())
@@ -72,20 +101,6 @@ class Post(CoreModel):
     class Meta:
         db_table = table_prefix + "system_post"
         verbose_name = "岗位表"
-        verbose_name_plural = verbose_name
-        ordering = ("sort",)
-
-
-class Role(CoreModel):
-    name = models.CharField(max_length=64, verbose_name="角色名称", help_text="角色名称")
-    key = models.CharField(max_length=64, unique=True, verbose_name="权限字符", help_text="权限字符")
-    sort = models.IntegerField(default=1, verbose_name="角色顺序", help_text="角色顺序")
-    status = models.BooleanField(default=True, verbose_name="角色状态", help_text="角色状态")
-    admin = models.BooleanField(default=False, verbose_name="是否为admin", help_text="是否为admin")
-
-    class Meta:
-        db_table = table_prefix + "system_role"
-        verbose_name = "角色表"
         verbose_name_plural = verbose_name
         ordering = ("sort",)
 

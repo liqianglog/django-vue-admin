@@ -293,6 +293,11 @@ class UserViewSet(CustomModelViewSet):
                 'dept_id': dept.id,
                 'dept_name': dept.name
             }
+        else:
+            result['dept_info'] = {
+                'dept_id': None,
+                'dept_name': "暂无部门"
+            }
         role = getattr(user, 'role', None)
         if role:
             result['role_info'] = role.values('id', 'name', 'key')
