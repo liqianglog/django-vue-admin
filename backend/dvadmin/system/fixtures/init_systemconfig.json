@@ -49,6 +49,25 @@
                 "placeholder": "请输入默认密码",
                 "setting": null,
                 "children": []
+            },
+            {
+                "parent": 10,
+                "title": "开启单点登录",
+                "key": "single_login",
+                "value": true,
+                "sort": 1,
+                "status": true,
+                "data_options": null,
+                "form_item_type": 9,
+                "rule": [
+                    {
+                        "message": "必填项不能为空",
+                        "required": true
+                    }
+                ],
+                "placeholder": "请选择",
+                "setting": null,
+                "children": []
             }
         ]
     },
