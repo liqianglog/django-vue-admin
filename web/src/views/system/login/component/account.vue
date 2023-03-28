@@ -121,19 +121,24 @@ export default defineComponent({
 			});
 		};
 		const loginClick = async () => {
-			loginApi.login({ ...state.ruleForm, password: Md5.hashStr(state.ruleForm.password) }).then((ret: any) => {
-				Session.set('token', ret.data.access);
-				Cookies.set('username', ret.data.name);
-				if (!themeConfig.value.isRequestRoutes) {
-					// 前端控制路由，2、请注意执行顺序
-					initFrontEndControlRoutes();
-					loginSuccess();
-				} else {
-					// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
-					// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
-					initBackEndControlRoutes();
-					// 执行完 initBackEndControlRoutes，再执行 signInSuccess
-					loginSuccess();
+			loginApi.login({ ...state.ruleForm, password: Md5.hashStr(state.ruleForm.password) }).then((res: any) => {
+				if (res.code === 2000) {
+					Session.set('token', res.data.access);
+					Cookies.set('username', res.data.name);
+					if (!themeConfig.value.isRequestRoutes) {
+						// 前端控制路由，2、请注意执行顺序
+						initFrontEndControlRoutes();
+						loginSuccess();
+					} else {
+						// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
+						// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
+						initBackEndControlRoutes();
+						// 执行完 initBackEndControlRoutes，再执行 signInSuccess
+						loginSuccess();
+					}
+				} else if (res.code === 4000) {
+					// 登录错误之后，刷新验证码
+					refreshCaptcha();
 				}
 			});
 		};
