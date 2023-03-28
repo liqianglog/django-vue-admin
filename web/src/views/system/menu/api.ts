@@ -6,12 +6,20 @@ export function GetList(query: PageQuery) {
 	return request({
 		url: apiPrefix,
 		method: 'get',
-		params: query
+		params: query,
 	});
 }
+export function GetAllMenu(query: PageQuery) {
+	return request({
+		url: apiPrefix + 'get_all_menu/',
+		method: 'get',
+		params: query,
+	});
+}
+
 export function GetObj(id: InfoReq) {
 	return request({
-		url: apiPrefix + id+'/',
+		url: apiPrefix + id + '/',
 		method: 'get',
 	});
 }
@@ -32,10 +40,9 @@ export function UpdateObj(obj: EditReq) {
 	});
 }
 
-export function DelObj(id: DelReq) {
+export function DelObj(obj: DelReq) {
 	return request({
-		url: apiPrefix + id + '/',
+		url: apiPrefix + obj.id + '/',
 		method: 'delete',
-		data: { id },
 	});
 }

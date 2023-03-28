@@ -53,9 +53,6 @@ class MenuCreateSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-
-
-
 class WebRouterSerializer(CustomModelSerializer):
     """
     前端菜单路由的简单序列化器
@@ -63,11 +60,11 @@ class WebRouterSerializer(CustomModelSerializer):
     path = serializers.CharField(source="web_path")
     title = serializers.CharField(source="name")
 
-
     class Meta:
         model = Menu
-        fields = ('id', 'parent', 'icon', 'sort', 'path', 'name', 'title', 'is_link', 'is_catalog', 'web_path', 'component',
-        'component_name', 'cache', 'visible')
+        fields = (
+            'id', 'parent', 'icon', 'sort', 'path', 'name', 'title', 'is_link', 'is_catalog', 'web_path', 'component',
+            'component_name', 'cache', 'visible', 'status')
         read_only_fields = ["id"]
 
 
@@ -86,6 +83,7 @@ class MenuViewSet(CustomModelViewSet):
     update_serializer_class = MenuCreateSerializer
     search_fields = ['name', 'status']
     filter_fields = ['parent', 'name', 'status', 'is_link', 'visible', 'cache', 'is_catalog']
+
     # extra_filter_class = []
 
     @action(methods=['GET'], detail=False, permission_classes=[])
@@ -101,12 +99,25 @@ class MenuViewSet(CustomModelViewSet):
         data = serializer.data
         return SuccessResponse(data=data, total=len(data), msg="获取成功")
 
-    def list(self,request):
+    @action(methods=['GET'], detail=False, permission_classes=[])
+    def get_all_menu(self, request):
+        """用于菜单管理获取所有的菜单"""
+        user = request.user
+        queryset = self.queryset.all()
+        if not user.is_superuser:
+            role_list = user.role.values_list('id', flat=True)
+            menu_list = RoleMenuPermission.objects.filter(role__in=role_list).values_list('menu_id')
+            queryset = Menu.objects.filter(id__in=menu_list)
+        serializer = WebRouterSerializer(queryset, many=True, request=request)
+        data = serializer.data
+        return SuccessResponse(data=data, total=len(data), msg="获取成功")
+
+    def list(self, request):
         """懒加载"""
         request.query_params._mutable = True
         params = request.query_params
         parent = params.get('parent', None)
-        page = params.get('page',None)
+        page = params.get('page', None)
         limit = params.get('limit', None)
         if page:
             del params['page']
