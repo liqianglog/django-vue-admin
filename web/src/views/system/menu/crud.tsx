@@ -3,7 +3,7 @@ import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } fro
 import { dictionary } from '/@/utils/dictionary';
 import { eIconPicker, eIcon } from 'e-icon-picker';
 import { useCompute } from '@fast-crud/fast-crud';
-import { inject,computed } from 'vue';
+import { inject, computed } from 'vue';
 import { apiPrefix as menuPrefix } from './api';
 import XEUtils from 'xe-utils';
 import { request } from '/@/utils/service';
@@ -81,9 +81,20 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 				},
 			},
 			rowHandle: {
-				fixed: "right",
-				width: 310,
+				fixed: 'right',
+				width: 200,
 				buttons: {
+					view: {
+						show: false,
+					},
+					edit: {
+						iconRight: 'Edit',
+						type: 'text',
+					},
+					remove: {
+						iconRight: 'Delete',
+						type: 'text',
+					},
 					custom: {
 						text: '按钮配置',
 						type: 'warning',
@@ -104,15 +115,15 @@ export const createCrudOptions = function ({ crudExpose, menuButtonRef }: { crud
 							menuButtonRef.value.initGet();
 						},
 					},
-					addChildren:{
-						text: "添加子级",
-						type:"warning",
-						click(context){
-							const rowId =context.row.id
-							crudExpose.openAdd({ row: { parent: rowId } })
-						}
-					}
-				}
+					addChildren: {
+						text: '添加子级',
+						type: 'text',
+						click(context) {
+							const rowId = context.row.id;
+							crudExpose.openAdd({ row: { parent: rowId } });
+						},
+					},
+				},
 			},
 			columns: {
 				_index: {
