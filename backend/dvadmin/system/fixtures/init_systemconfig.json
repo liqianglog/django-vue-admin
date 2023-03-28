@@ -54,7 +54,7 @@
                 "parent": 10,
                 "title": "开启单点登录",
                 "key": "single_login",
-                "value": true,
+                "value": false,
                 "sort": 1,
                 "status": true,
                 "data_options": null,
