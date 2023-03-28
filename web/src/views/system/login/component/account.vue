@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, defineComponent, computed, onMounted } from 'vue';
+import { toRefs, reactive, defineComponent, computed, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
@@ -140,6 +140,12 @@ export default defineComponent({
 		const getUserInfo = () => {
 			useUserInfo().setUserInfos();
 		};
+
+		const enterClickLogin = (e: any) => {
+			if (e.keyCode == 13 || e.keyCode == 100) {
+				loginClick();
+			}
+		};
 		// 登录成功后的跳转
 		const loginSuccess = () => {
 			//登录成功获取用户信息,获取系统字典数据
@@ -171,6 +177,10 @@ export default defineComponent({
 			getCaptcha();
 			//获取系统配置
 			SystemConfigStore().getSystemConfigs();
+			window.addEventListener('keyup', enterClickLogin, false);
+		});
+		onUnmounted(() => {
+			window.removeEventListener('keyup', enterClickLogin, false);
 		});
 
 		return {
