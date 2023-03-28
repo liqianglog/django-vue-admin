@@ -97,17 +97,12 @@ export default {
       customizing: false,
       allComps: allComps,
       selectLayout: [],
-      defaultGrid: {
-        // 默认分栏数量和宽度 例如 [24] [18,6] [8,8,8] [6,12,6]
-        layout: [12, 6, 6],
-        // 小组件分布，com取值:views/home/components 文件名
-        copmsList: [
-          ['welcome'],
-          ['about', 'ver'],
-          ['time', 'progress']
-        ]
-      },
-      defaultLayout: [],
+      defaultLayout: [
+        { x: 0, y: 0, w: 50, h: 50, i: '0', element: 'welcome' },
+        { x: 0, y: 52, w: 8, h: 16, i: '1', element: 'about' },
+        { x: 8, y: 52, w: 8, h: 16, i: '2', element: 'time' },
+        { x: 16, y: 52, w: 8, h: 20, i: '3', element: 'ver' }
+      ],
       layout: [
         // { x: 0, y: 0, w: 2, h: 2, i: '0', element: 'welcome' },
         // { x: 2, y: 0, w: 2, h: 4, i: '1', element: 'about' },

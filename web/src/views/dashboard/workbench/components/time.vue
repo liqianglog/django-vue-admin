@@ -14,8 +14,8 @@ export default {
   title: '时钟',
   icon: 'el-icon-alarm-clock',
   description: '演示部件效果',
-  height: 17,
-  minH: 17,
+  height: 10,
+  minH: 10,
   width: 8,
   minW: 4,
   isResizable: true,
@@ -47,11 +47,11 @@ export default {
 }
 
 .time h2 {
-  font-size: 40px;
+  font-size: 24px;
 }
 
 .time p {
-  font-size: 14px;
+  font-size: 18px;
   margin-top: 10px;
   opacity: 0.7;
 }
