@@ -6,8 +6,8 @@
         "is_link": false,
         "is_catalog": true,
         "web_path": "/system",
-        "component": "layout/routerView/parent",
-        "component_name": "menu",
+        "component": "",
+        "component_name": "",
         "status": true,
         "cache": false,
         "visible": true,
@@ -25,7 +25,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 19,
+                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -72,7 +72,7 @@
                 "status": true,
                 "cache": false,
                 "visible": false,
-                "parent": 19,
+                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -113,7 +113,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 19,
+                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -160,7 +160,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 19,
+                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -213,7 +213,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 19,
+                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -284,7 +284,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 19,
+                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -331,7 +331,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 19,
+                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -376,8 +376,8 @@
         "is_link": false,
         "is_catalog": true,
         "web_path": "/generalConfig",
-        "component": "layout/routerView/parent",
-        "component_name": "config",
+        "component": "",
+        "component_name": "",
         "status": true,
         "cache": false,
         "visible": true,
@@ -395,7 +395,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 27,
+                "parent": 49,
                 "children": [],
                 "menu_button": [
                     {
@@ -442,7 +442,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 27,
+                "parent": 49,
                 "children": [],
                 "menu_button": [
                     {
@@ -489,7 +489,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 27,
+                "parent": 49,
                 "children": [],
                 "menu_button": [
                     {
@@ -536,7 +536,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 27,
+                "parent": 49,
                 "children": [],
                 "menu_button": [
                     {
@@ -575,8 +575,8 @@
         "is_link": false,
         "is_catalog": true,
         "web_path": "/log",
-        "component": "layout/routerView/parent",
-        "component_name": "log",
+        "component": "",
+        "component_name": "",
         "status": true,
         "cache": false,
         "visible": true,
@@ -594,7 +594,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 32,
+                "parent": 54,
                 "children": [],
                 "menu_button": [
                     {
@@ -623,7 +623,7 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 32,
+                "parent": 54,
                 "children": [],
                 "menu_button": [
                     {
