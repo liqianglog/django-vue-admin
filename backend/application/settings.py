@@ -94,7 +94,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "application.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -307,7 +306,7 @@ from datetime import timedelta
 
 SIMPLE_JWT = {
     # token有效时长
-    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=60),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     # token刷新后的有效时间
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     # 设置前缀
@@ -390,8 +389,6 @@ SYSTEM_CONFIG = {}
 # 字典配置
 DICTIONARY_CONFIG = {}
 
-
-
 # ================================================= #
 # ******************** 插件配置 ******************** #
 # ================================================= #
@@ -401,10 +398,13 @@ TENANT_SHARED_APPS = []
 PLUGINS_URL_PATTERNS = []
 # ********** 一键导入插件配置开始 **********
 # 例如:
-# from dvadmin_upgrade_center.settings import *    # 升级中心
-# from dvadmin_celery.settings import *            # celery 异步任务
+# from dvadmin_upgrade_center.settings import *   # 升级中心
+# from dvadmin_celery.settings import *           # celery 异步任务
+# from dvadmin_sms.settings import *              # 短信服务
+# from dvadmin_third.settings import *            # 扫码登录
+# from dvadmin_uniapp.settings import *           # UniApp后端
+# from dvadmin_ak_sk.settings import *            # 秘钥管理管理
+# from dvadmin_tenants.settings import *          # 租户管理
 # ...
-from dvadmin_third.settings import *  # 扫码登录
-from dvadmin_uniapp.settings import *  # uniapp后端
 
 # ********** 一键导入插件配置结束 **********
