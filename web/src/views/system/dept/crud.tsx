@@ -1,16 +1,11 @@
 import * as api from './api';
-import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions, compute } from '@fast-crud/fast-crud';
+import { dict, UserPageQuery, AddReq, DelReq, EditReq, compute, CreateCrudOptionsProps, CreateCrudOptionsRet } from '@fast-crud/fast-crud';
 import { verifyPhone } from '/@/utils/toolsValidate';
-import { request } from '/@/utils/service';
 import { dictionary } from '/@/utils/dictionary';
 import { successMessage } from '/@/utils/message';
-interface CreateCrudOptionsTypes {
-	crudOptions: CrudOptions;
-}
 
-export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExpose }): CreateCrudOptionsTypes {
-	const { getFormRef, getFormData } = crudExpose;
-	const pageRequest = async (query: PageQuery) => {
+export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProps): CreateCrudOptionsRet {
+	const pageRequest = async (query: UserPageQuery) => {
 		return await api.GetList(query);
 	};
 	const editRequest = async ({ form, row }: EditReq) => {
@@ -84,7 +79,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 						type: 'text',
 						click(context) {
 							const rowId = context.row.id;
-							crudExpose.openAdd({ row: { parent: rowId } });
+							crudExpose!.openAdd({ row: { parent: rowId } });
 						},
 					},
 				},
@@ -205,6 +200,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 							{
 								type: 'email',
 								message: '请输入正确的邮箱地址',
+								// @ts-ignore
 								trigger: ['blur', 'change'],
 							},
 						],

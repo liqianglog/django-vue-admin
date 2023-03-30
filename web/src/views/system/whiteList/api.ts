@@ -1,8 +1,8 @@
 import { request } from '/@/utils/service';
-import { PageQuery, AddReq, DelReq, EditReq, InfoReq } from '@fast-crud/fast-crud';
+import { UserPageQuery, AddReq, DelReq, EditReq, InfoReq } from '@fast-crud/fast-crud';
 
 export const apiPrefix = '/api/system/api_white_list/';
-export function GetList(query: PageQuery) {
+export function GetList(query: UserPageQuery) {
 	return request({
 		url: apiPrefix,
 		method: 'get',

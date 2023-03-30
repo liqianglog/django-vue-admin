@@ -1,9 +1,9 @@
 import { request } from '/@/utils/service';
-import { PageQuery, AddReq, DelReq, EditReq, InfoReq } from '@fast-crud/fast-crud';
+import { UserPageQuery, AddReq, DelReq, EditReq, InfoReq } from '@fast-crud/fast-crud';
 import XEUtils from 'xe-utils';
 
 export const apiPrefix = '/api/system/system_config/';
-export function GetList(query: PageQuery) {
+export function GetList(query: UserPageQuery) {
 	return request({
 		url: apiPrefix,
 		method: 'get',
@@ -52,10 +52,10 @@ export function GetAssociationTable() {
 	});
 }
 
-export function saveContent (data:any) {
+export function saveContent(data: any) {
 	return request({
 		url: apiPrefix + 'save_content/',
 		method: 'put',
-		data: data
-	})
+		data: data,
+	});
 }
