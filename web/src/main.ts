@@ -25,6 +25,8 @@ import fontAwesome470 from 'e-icon-picker/icon/fontawesome/font-awesome.v4.7.0.j
 import eIconList from 'e-icon-picker/icon/default-icon/eIconList.js';
 import iconfont from '/@/assets/iconfont/iconfont.json'; //引入json文件
 import '/@/assets/iconfont/iconfont.css'; //引入css
+// 自动注册插件
+import { scanAndInstallPlugins } from '/@/views/plugins/index';
 
 let forIconfont = analyzingIconForIconfont(iconfont); //解析class
 iconList.addIcon(forIconfont.list); // 添加iconfont dvadmin3的icon
@@ -32,6 +34,8 @@ iconList.addIcon(elementPlus); // 添加element plus的图标
 iconList.addIcon(fontAwesome470); // 添加fontAwesome 470版本的图标
 
 let app = createApp(App);
+
+scanAndInstallPlugins(app);
 
 app.use(eIconPicker, {
 	addIconList: eIconList, //全局添加图标
