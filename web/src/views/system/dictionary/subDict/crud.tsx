@@ -2,7 +2,7 @@ import * as api from './api';
 import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } from '@fast-crud/fast-crud';
 import { request } from '/@/utils/service';
 import { dictionary } from '/@/utils/dictionary';
-import {watch} from "vue";
+import { watch } from 'vue';
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
@@ -29,6 +29,24 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 				addRequest,
 				editRequest,
 				delRequest,
+			},
+			rowHandle: {
+				//固定右侧
+				fixed: 'right',
+				width: 200,
+				buttons: {
+					view: {
+						show: false,
+					},
+					edit: {
+						iconRight: 'Edit',
+						type: 'text',
+					},
+					remove: {
+						iconRight: 'Delete',
+						type: 'text',
+					},
+				},
 			},
 			columns: {
 				_index: {

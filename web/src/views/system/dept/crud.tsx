@@ -64,11 +64,23 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 			},
 			rowHandle: {
 				fiexd: 'right',
-				width: 310,
+				fixed: 'right',
+				width: 200,
 				buttons: {
+					view: {
+						show: false,
+					},
+					edit: {
+						iconRight: 'Edit',
+						type: 'text',
+					},
+					remove: {
+						iconRight: 'Delete',
+						type: 'text',
+					},
 					addChildren: {
 						text: '添加子级',
-						type: 'warning',
+						type: 'text',
 						click(context) {
 							const rowId = context.row.id;
 							crudExpose.openAdd({ row: { parent: rowId } });

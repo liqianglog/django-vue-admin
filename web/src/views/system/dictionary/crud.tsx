@@ -1,7 +1,7 @@
 import * as api from './api';
 import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } from '@fast-crud/fast-crud';
 import { dictionary } from '/@/utils/dictionary';
-import {nextTick, ref} from 'vue';
+import { nextTick, ref } from 'vue';
 
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
@@ -30,25 +30,34 @@ export const createCrudOptions = function ({ crudExpose, subDictRef }: { crudExp
 				delRequest,
 			},
 			rowHandle: {
-				width: 360,
+				width: 200,
 				buttons: {
+					view: {
+						show: false,
+					},
+					edit: {
+						iconRight: 'Edit',
+						type: 'text',
+					},
+					remove: {
+						iconRight: 'Delete',
+						type: 'text',
+					},
 					custom: {
 						text: '字典配置',
-						type: 'success',
+						type: 'text',
 						tooltip: {
 							placement: 'top',
 							content: '字典配置',
 						},
 						//@ts-ignore
 						click: (context: any) => {
-							const {row} = context
+							const { row } = context;
 							subDictRef.value.drawer = true;
-							nextTick(()=>{
+							nextTick(() => {
 								subDictRef.value.setSearchFormData({ form: { parent: row.id } });
 								subDictRef.value.doRefresh();
-							})
-
-
+							});
 						},
 					},
 				},

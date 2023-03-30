@@ -36,7 +36,11 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 				},
 			},
 			rowHandle: {
+				width: 100,
 				buttons: {
+					view: {
+						type: 'text',
+					},
 					edit: {
 						show: false,
 					},

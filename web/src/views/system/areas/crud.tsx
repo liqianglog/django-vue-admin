@@ -40,6 +40,24 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 				editRequest,
 				delRequest,
 			},
+			rowHandle: {
+				//固定右侧
+				fixed: 'right',
+				width: 200,
+				buttons: {
+					view: {
+						show: false,
+					},
+					edit: {
+						iconRight: 'Edit',
+						type: 'text',
+					},
+					remove: {
+						iconRight: 'Delete',
+						type: 'text',
+					},
+				},
+			},
 			pagination: {
 				show: false,
 			},

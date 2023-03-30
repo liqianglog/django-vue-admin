@@ -31,7 +31,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 			rowHandle: {
 				//固定右侧
 				fixed: 'right',
-				width: 200,
+				width: 140,
 				buttons: {
 					view: {
 						show: false,
