@@ -1,7 +1,8 @@
 import * as api from './api';
-import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } from '@fast-crud/fast-crud';
+import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions, compute } from '@fast-crud/fast-crud';
 import { request } from '/@/utils/service';
 import { dictionary } from '/@/utils/dictionary';
+import { successMessage } from '/@/utils/message';
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
@@ -63,6 +64,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 						align: 'center',
 						width: '70px',
 						columnSetDisabled: true, //禁止在列设置中选择
+						//@ts-ignore
 						formatter: (context) => {
 							//计算序号,你可以自定义计算规则，此处为翻页累加
 							let index = context.index ?? 1;
@@ -198,18 +200,25 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 					search: {
 						disabled: false,
 					},
-					width: 150,
 					type: 'dict-radio',
+					column: {
+						component: {
+							name: 'fs-dict-switch',
+							activeText: '',
+							inactiveText: '',
+							style: '--el-switch-on-color: #409eff; --el-switch-off-color: #dcdfe6',
+							onChange: compute((context) => {
+								return () => {
+									api.UpdateObj(context.row).then((res: APIResponseData) => {
+										successMessage(res.msg as string);
+									});
+								};
+							}),
+						},
+					},
 					dict: dict({
 						data: dictionary('button_status_bool'),
 					}),
-					form: {
-						value: true,
-						rules: [{ required: true, message: '必填项' }],
-						component: {
-							span: 12,
-						},
-					},
 				},
 			},
 		},

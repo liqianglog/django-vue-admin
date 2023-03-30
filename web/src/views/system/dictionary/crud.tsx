@@ -1,7 +1,8 @@
 import * as api from './api';
-import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } from '@fast-crud/fast-crud';
+import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions, compute } from '@fast-crud/fast-crud';
 import { dictionary } from '/@/utils/dictionary';
 import { nextTick, ref } from 'vue';
+import { successMessage } from '/@/utils/message';
 
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
@@ -163,24 +164,24 @@ export const createCrudOptions = function ({ crudExpose, subDictRef }: { crudExp
 						show: true,
 					},
 					type: 'dict-radio',
+					column: {
+						component: {
+							name: 'fs-dict-switch',
+							activeText: '',
+							inactiveText: '',
+							style: '--el-switch-on-color: #409eff; --el-switch-off-color: #dcdfe6',
+							onChange: compute((context) => {
+								return () => {
+									api.UpdateObj(context.row).then((res: APIResponseData) => {
+										successMessage(res.msg as string);
+									});
+								};
+							}),
+						},
+					},
 					dict: dict({
 						data: dictionary('button_status_bool'),
 					}),
-					component: {
-						props: {
-							options: [],
-						},
-					},
-					form: {
-						rules: [
-							// 表单校验规则
-							{ required: true, message: '状态必填项' },
-						],
-						value: true,
-						component: {
-							placeholder: '请选择状态',
-						},
-					},
 				},
 				sort: {
 					title: '排序',

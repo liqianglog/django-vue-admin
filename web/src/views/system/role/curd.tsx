@@ -1,6 +1,8 @@
-import { CrudOptions, AddReq, DelReq, EditReq, dict, CrudExpose } from '@fast-crud/fast-crud';
+import { CrudOptions, AddReq, DelReq, EditReq, dict, CrudExpose, compute } from '@fast-crud/fast-crud';
 import _ from 'lodash-es';
 import * as api from './api';
+import { dictionary } from '/@/utils/dictionary';
+import { successMessage } from '../../../utils/message';
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
@@ -167,28 +169,24 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 					title: '状态',
 					search: { show: true },
 					type: 'dict-radio',
-					dict: dict({
-						data: [
-							{
-								label: '启用',
-								value: true,
-								color: 'success',
-							},
-							{
-								label: '禁用',
-								value: false,
-								color: 'danger',
-							},
-						],
-					}),
 					column: {
-						width: 90,
-						sortable: 'custom',
+						component: {
+							name: 'fs-dict-switch',
+							activeText: '',
+							inactiveText: '',
+							style: '--el-switch-on-color: #409eff; --el-switch-off-color: #dcdfe6',
+							onChange: compute((context) => {
+								return () => {
+									api.UpdateObj(context.row).then((res: APIResponseData) => {
+										successMessage(res.msg as string);
+									});
+								};
+							}),
+						},
 					},
-					form: {
-						rules: [{ required: true, message: '状态必填' }],
-						value: true,
-					},
+					dict: dict({
+						data: dictionary('button_status_bool'),
+					}),
 				},
 				update_datetime: {
 					title: '更新时间',
