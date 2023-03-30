@@ -9,13 +9,6 @@ export function GetList(query: PageQuery) {
 		params: query,
 	});
 }
-export function GetAllMenu(query: PageQuery) {
-	return request({
-		url: apiPrefix + 'get_all_menu/',
-		method: 'get',
-		params: query,
-	});
-}
 
 export function GetObj(id: InfoReq) {
 	return request({
@@ -44,5 +37,29 @@ export function DelObj(obj: DelReq) {
 	return request({
 		url: apiPrefix + obj.id + '/',
 		method: 'delete',
+	});
+}
+
+export function GetAllMenu(query: PageQuery) {
+	return request({
+		url: apiPrefix + 'get_all_menu/',
+		method: 'get',
+		params: query,
+	});
+}
+
+export function lazyLoadMenu(query: PageQuery) {
+	return request({
+		url: apiPrefix,
+		method: 'get',
+		params: query,
+	});
+}
+
+export function dragMenu(obj: AddReq) {
+	return request({
+		url: apiPrefix + 'drag_menu/',
+		method: 'post',
+		data: obj,
 	});
 }

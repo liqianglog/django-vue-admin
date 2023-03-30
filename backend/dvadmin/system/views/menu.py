@@ -112,6 +112,18 @@ class MenuViewSet(CustomModelViewSet):
         data = serializer.data
         return SuccessResponse(data=data, total=len(data), msg="获取成功")
 
+    @action(methods=['POST'], detail=False, permission_classes=[])
+    def drag_menu(self, request):
+        """前端拖拽菜单之后重写parent"""
+        menu_id = request.data['menu_id']
+        parent_id = request.data['parent_id']
+        print(parent_id)
+        menu = Menu.objects.get(id=menu_id)
+        menu.parent_id = parent_id
+        menu.save()
+
+        return SuccessResponse(data=[], msg="拖拽菜单成功")
+
     def list(self, request):
         """懒加载"""
         request.query_params._mutable = True
@@ -125,11 +137,11 @@ class MenuViewSet(CustomModelViewSet):
             del params['limit']
         if params:
             if parent:
-                queryset = self.queryset.filter(status=1, parent=parent)
+                queryset = self.queryset.filter(parent=parent)
             else:
-                queryset = self.queryset.filter(status=1)
+                queryset = self.queryset.filter()
         else:
-            queryset = self.queryset.filter(status=1, parent__isnull=True)
+            queryset = self.queryset.filter(parent__isnull=True)
         queryset = self.filter_queryset(queryset)
         serializer = MenuSerializer(queryset, many=True, request=request)
         data = serializer.data
