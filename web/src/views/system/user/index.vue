@@ -1,14 +1,14 @@
 <template>
 	<fs-page>
-		<el-row>
-			<el-col :span="4">
+		<el-row class="mx-2">
+			<el-col :span="4" class="p-1">
 				<el-card :body-style="{ height: '100%' }">
 					<el-input v-model="filterText" :placeholder="placeholder" />
 
 					<el-tree ref="treeRef" class="filter-tree" :data="data" :props="defaultProps" default-expand-all :filter-node-method="filterNode" />
 				</el-card>
 			</el-col>
-			<el-col :span="20" :offset="0">
+			<el-col :span="20" :offset="0" class="p-1">
 				<el-card :body-style="{ height: '100%' }">
 					<fs-crud class="h-full w-full" ref="crudRef" v-bind="crudBinding"> </fs-crud>
 				</el-card>

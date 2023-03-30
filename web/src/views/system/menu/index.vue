@@ -16,11 +16,19 @@
 						:data="data"
 						:props="treeProps"
 						:filter-node-method="filterNode"
+						:load="loadNode"
+						:allow-drag="allowDrag"
+						:allow-drop="allowDrop"
+						@node-drop="nodeDrop"
+						lazy
+						icon="ArrowRightBold"
+						:indent="12"
+						draggable
 						@node-click="handleNodeClick"
 					>
 						<template #default="{ node, data }">
-							<span v-if="data.status" class="text-center font-black text-xl">{{ node.label }}</span>
-							<span v-else class="text-center font-black text-xl text-red-700">{{ node.label }}</span>
+							<span v-if="data.status" class="text-center font-black text-xl"><SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}</span>
+							<span v-else class="text-center font-black text-xl text-red-700"><SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}</span>
 						</template>
 					</el-tree>
 				</el-card>
@@ -28,6 +36,7 @@
 			<el-col :span="20" class="p-1">
 				<el-card :body-style="{ height: '100%' }">
 					<el-form ref="formRef" :rules="rules" :model="form" label-width="80px" label-position="right">
+						<el-alert :title="content" type="success" effect="dark" :closable="false" center />
 						<el-divider>
 							<strong>菜单配置</strong>
 						</el-divider>
@@ -36,7 +45,7 @@
 								<el-form-item label="菜单ID" prop="id"> <el-input v-model="form.id" disabled /> </el-form-item>
 							</el-col>
 							<el-col :span="10">
-								<el-form-item label="父级ID" prop="parent"> <el-input v-model="form.parent" disabled /> </el-form-item>
+								<el-form-item label="父级ID" prop="parent"> <el-input v-model="form.parent" /> </el-form-item>
 							</el-col>
 							<el-col :span="10">
 								<el-form-item required label="菜单名称" prop="name"> <el-input v-model="form.name" /> </el-form-item>
@@ -71,16 +80,13 @@
 								</el-form-item>
 							</el-col>
 							<el-col :span="20">
-								<el-form-item label="权限">
-									<el-checkbox-group v-model="form.permission">
+								<el-form-item label="权限" class="flex flex-wrap w-full">
+									<el-checkbox-group v-model="form.permission" :disabled="form.is_catalog" class="flex flex-wrap">
 										<el-checkbox v-model="form.permission">全选</el-checkbox>
-										<el-checkbox label="查询(Search)" />
-										<el-checkbox label="新增(Add)" />
-										<el-checkbox label="删除(Delete)" />
-										<el-checkbox label="编辑(Update)" />
-										<el-checkbox label="导入(Import)" />
-										<el-checkbox label="导出(Export)" />
+										<!-- TODO 选中没做 -->
+										<el-checkbox v-for="item in menuPermissonList" :checked="true" :label="`${item.name}(${item.value})`" />
 									</el-checkbox-group>
+									<el-button class="mx-2" @click="addPermission()">其他权限</el-button>
 								</el-form-item>
 							</el-col>
 							<el-col :span="20">
@@ -102,16 +108,15 @@
 				</el-card>
 			</el-col>
 		</el-row>
+		<menuButton :drawer-show="permissionDrawerVisible" @drawer-close="drawerClose()" :select-menu="form"></menuButton>
 	</fs-page>
 </template>
 
 <script lang="ts" setup>
 import * as api from './api';
-import { ElForm, ElTree, FormInstance, FormRules } from 'element-plus';
-import type Node from 'element-plus/es/components/tree/src/model/node';
-import { ref, onMounted, computed, watch, reactive, toRaw, defineAsyncComponent, nextTick, shallowRef } from 'vue';
-import { useExpose, useCrud } from '@fast-crud/fast-crud';
-import { createCrudOptions } from './crud';
+import * as menuButoonApi from './components/menuButton/api';
+import { ElForm, ElTree, FormRules } from 'element-plus';
+import { ref, onMounted, watch, reactive, toRaw, defineAsyncComponent, nextTick, shallowRef } from 'vue';
 import XEUtils from 'xe-utils';
 import { errorMessage, successMessage } from '../../../utils/message';
 
@@ -121,21 +126,26 @@ interface Tree {
 	status: boolean;
 	children?: Tree[];
 }
+
 interface APIResponseData {
 	code?: number;
 	data: [];
 	msg?: string;
 }
+
 interface Form<T> {
 	[key: string]: T;
 }
+
 interface ComponentFileItem {
 	value: string;
 	label: string;
 }
 
 // 引入组件
+const menuButton = defineAsyncComponent(() => import('./components/menuButton/index.vue'));
 const IconSelector = defineAsyncComponent(() => import('/@/components/iconSelector/index.vue'));
+const SvgIcon = defineAsyncComponent(() => import('/@/components/svgIcon/index.vue'));
 const placeholder = ref('请输入菜单名称');
 const filterText = ref('');
 const treeRef = ref<InstanceType<typeof ElTree>>();
@@ -143,6 +153,15 @@ const treeRef = ref<InstanceType<typeof ElTree>>();
 const treeProps = {
 	children: 'children',
 	label: 'name',
+	icon: 'icon',
+	isLeaf: (data: Tree[], node: Node) => {
+		// @ts-ignore
+		if (node.data.is_catalog) {
+			return false;
+		} else {
+			return true;
+		}
+	},
 };
 
 const validateWebPath = (rule: string, value: string, callback: Function) => {
@@ -163,17 +182,59 @@ const filterNode = (value: string, data: Tree) => {
 	return toRaw(data).name.indexOf(value) !== -1;
 };
 
+// 懒加载
+const loadNode = (node: Node, resolve: (data: Tree[]) => void) => {
+	// @ts-ignore
+	if (node.level !== 0) {
+		// @ts-ignore
+		api.lazyLoadMenu({ parent: node.data.id }).then((res: APIResponseData) => {
+			resolve(res.data);
+		});
+	}
+};
+
+// 判断是否可以拖动
+const allowDrag = (node: Node) => {
+	// @ts-ignore
+	if (node.data.is_catalog) {
+		return false;
+	} else {
+		return true;
+	}
+};
+
+// 判断是否可以被放置
+const allowDrop = (draggingNode: Node, dropNode: Node, type: string) => {
+	// @ts-ignore
+	if (!dropNode.isLeaf) {
+		return true;
+	}
+};
+
+const nodeDrop = (draggingNode: Node, dropNode: Node, dropType: string, event: any) => {
+	// @ts-ignore
+	if (!dropNode.isLeaf) {
+		// @ts-ignore
+		api.dragMenu({ menu_id: draggingNode.data.id, parent_id: dropNode.data.id }).then((res: APIResponseData) => {
+			successMessage(res.msg as string);
+		});
+	}
+};
+
 let data = ref([]);
 
 let isAddNewMenu = ref(false); // 判断当前是新增菜单，还是更新保存当前菜单
 
+const permissionDrawerVisible = ref(false);
+
 const content = `
 1.红色菜单代表状态禁用;
-2.添加菜单是，如果是目录，组件地址为空即可;
-3.添加根节点菜单，父级ID为空即可
+2.添加菜单，如果是目录，组件地址为空即可;
+3.添加根节点菜单，父级ID为空即可;
+4.支持拖拽菜单;
 `;
 
-let form: Form<string> = reactive({
+let form: Form<any> = reactive({
 	id: '',
 	parent: '',
 	name: '',
@@ -181,13 +242,17 @@ let form: Form<string> = reactive({
 	web_path: '',
 	sort: '',
 	status: '',
+	is_catalog: false,
 	permission: '',
 	icon: '',
 });
+
+let menuPermissonList = ref([]);
+
 const formRef = ref<InstanceType<typeof ElForm>>();
 
 const querySearch = (queryString: string, cb: any) => {
-	const files: any = import.meta.globEager('@views/**/*.vue');
+	const files: any = import.meta.glob('@views/**/*.vue');
 	let fileLists: Array<any> = [];
 	Object.keys(files).forEach((queryString: string) => {
 		fileLists.push({
@@ -196,6 +261,11 @@ const querySearch = (queryString: string, cb: any) => {
 		});
 	});
 	const results = queryString ? fileLists.filter(createFilter(queryString)) : fileLists;
+	// 统一去掉/src/views/前缀
+	results.forEach((val) => {
+		val.label = val.label.replace('/src/views/', '');
+		val.value = val.value.replace('/src/views/', '');
+	});
 	cb(results);
 };
 
@@ -211,7 +281,7 @@ const rules = reactive<FormRules>({
 });
 
 const getData = () => {
-	api.GetAllMenu({}).then((ret: APIResponseData) => {
+	api.GetList({}).then((ret: APIResponseData) => {
 		const responseData = ret.data;
 		const result = XEUtils.toArrayTree(responseData, {
 			parentKey: 'parent',
@@ -222,17 +292,26 @@ const getData = () => {
 	});
 };
 
+const getPermissions = (menu: object) => {
+	menuButoonApi.GetList(menu).then((res: APIResponseData) => {
+		menuPermissonList.value = res.data;
+	});
+};
+
 const saveMenu = () => {
 	formRef.value?.validate((valid, fields) => {
 		if (valid) {
 			if (!isAddNewMenu.value) {
 				// 保存菜单
+
+				form.component == '' ? (form.is_catalog = true) : (form.is_catalog = false);
 				api.UpdateObj(form).then((res: APIResponseData) => {
 					successMessage(res.msg as string);
 					getData();
 				});
 			} else {
 				// 新增菜单
+				form.component == '' ? (form.is_catalog = true) : (form.is_catalog = false);
 				api.AddObj(form).then((res: APIResponseData) => {
 					successMessage(res.msg as string);
 					getData();
@@ -243,22 +322,26 @@ const saveMenu = () => {
 		}
 	});
 };
+
 const newMenu = () => {
 	formRef.value?.resetFields();
 	isAddNewMenu.value = true;
 };
+
 const addChildMenu = () => {
 	let parentId = form.id;
 	formRef.value?.resetFields();
 	form.parent = parentId;
 	isAddNewMenu.value = true;
 };
+
 const addSameLevelMenu = () => {
 	let parentId = form.parent;
 	formRef.value?.resetFields();
 	form.parent = parentId;
 	isAddNewMenu.value = true;
 };
+
 const deleteMenu = () => {
 	api.DelObj(form).then((res: APIResponseData) => {
 		successMessage(res.msg as string);
@@ -270,8 +353,19 @@ const handleNodeClick = (data: any, node: any, prop: any) => {
 	Object.keys(toRaw(data)).forEach((key: string) => {
 		form[key] = data[key];
 	});
+	delete form.component_name;
 	form.id = data.id;
 	isAddNewMenu.value = false;
+
+	// 点击tree node时，加载对应的权限菜单
+	getPermissions({ menu: form.id });
+};
+
+const addPermission = () => {
+	!form.is_catalog ? (permissionDrawerVisible.value = true) : errorMessage('目录没有菜单权限');
+};
+const drawerClose = () => {
+	permissionDrawerVisible.value = false;
 };
 
 // 页面打开后获取列表数据
@@ -291,13 +385,5 @@ onMounted(() => {
 
 .el-card {
 	height: 100%;
-}
-.custom-tree-node {
-	flex: 1;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	font-size: 14px;
-	padding-right: 8px;
 }
 </style>
