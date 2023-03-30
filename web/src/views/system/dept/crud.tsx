@@ -1,8 +1,9 @@
 import * as api from './api';
-import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } from '@fast-crud/fast-crud';
+import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions, compute } from '@fast-crud/fast-crud';
 import { verifyPhone } from '/@/utils/toolsValidate';
 import { request } from '/@/utils/service';
 import { dictionary } from '/@/utils/dictionary';
+import { successMessage } from '/@/utils/message';
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
@@ -229,16 +230,24 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 						disabled: false,
 					},
 					type: 'dict-radio',
+					column: {
+						component: {
+							name: 'fs-dict-switch',
+							activeText: '',
+							inactiveText: '',
+							style: '--el-switch-on-color: #409eff; --el-switch-off-color: #dcdfe6',
+							onChange: compute((context) => {
+								return () => {
+									api.UpdateObj(context.row).then((res: APIResponseData) => {
+										successMessage(res.msg as string);
+									});
+								};
+							}),
+						},
+					},
 					dict: dict({
 						data: dictionary('button_status_bool'),
 					}),
-					form: {
-						value: true,
-						component: {
-							span: 12,
-							placeholder: '请选择状态',
-						},
-					},
 				},
 			},
 		},
