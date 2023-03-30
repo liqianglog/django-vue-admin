@@ -1,14 +1,10 @@
 import * as api from './api';
-import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions, compute } from '@fast-crud/fast-crud';
-import { request } from '/@/utils/service';
+import { dict, UserPageQuery, AddReq, DelReq, EditReq, compute, CreateCrudOptionsProps, CreateCrudOptionsRet } from '@fast-crud/fast-crud';
 import { dictionary } from '/@/utils/dictionary';
 import { successMessage } from '/@/utils/message';
-interface CreateCrudOptionsTypes {
-	crudOptions: CrudOptions;
-}
 
-export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExpose }): CreateCrudOptionsTypes {
-	const pageRequest = async (query: PageQuery) => {
+export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProps): CreateCrudOptionsRet {
+	const pageRequest = async (query: UserPageQuery) => {
 		return await api.GetList(query);
 	};
 	const editRequest = async ({ form, row }: EditReq) => {
@@ -27,8 +23,8 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 	 * @param row
 	 * @returns {Promise<unknown>}
 	 */
-	const loadContentMethod = (tree: any, treeNode: any, resolve: any) => {
-		api.GetList({ pcode: tree.code }).then((res: any) => {
+	const loadContentMethod = (tree: any, treeNode: any, resolve: Function) => {
+		pageRequest({ pcode: tree.code }).then((res: APIResponseData) => {
 			resolve(res.data);
 		});
 	};

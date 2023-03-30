@@ -1,13 +1,8 @@
 import * as api from './api';
-import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } from '@fast-crud/fast-crud';
-import { request } from '/@/utils/service';
-import { dictionary } from '/@/utils/dictionary';
-interface CreateCrudOptionsTypes {
-	crudOptions: CrudOptions;
-}
+import { UserPageQuery, AddReq, DelReq, EditReq, CreateCrudOptionsProps, CreateCrudOptionsRet, dict } from '@fast-crud/fast-crud';
 
-export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExpose }): CreateCrudOptionsTypes {
-	const pageRequest = async (query: PageQuery) => {
+export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProps): CreateCrudOptionsRet {
+	const pageRequest = async (query: UserPageQuery) => {
 		return await api.GetList(query);
 	};
 	const editRequest = async ({ form, row }: EditReq) => {
@@ -58,6 +53,12 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 						align: 'center',
 						width: '70px',
 						columnSetDisabled: true, //禁止在列设置中选择
+						formatter: (context) => {
+							//计算序号,你可以自定义计算规则，此处为翻页累加
+							let index = context.index ?? 1;
+							let pagination = crudExpose!.crudBinding.value.pagination;
+							return ((pagination!.currentPage ?? 1) - 1) * pagination!.pageSize + index + 1;
+						},
 					},
 				},
 				search: {
@@ -237,22 +238,21 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 				},
 				login_type: {
 					title: '登录类型',
-					type: 'select',
+					type: 'dict-select',
 					search: {
 						disabled: false,
 					},
-					dict: {
+					dict: dict({
 						data: [
 							{ label: '普通登录', value: 1 },
 							{ label: '微信扫码登录', value: 2 },
 						],
-					},
+					}),
 					form: {
 						component: {
 							placeholder: '请选择登录类型',
 						},
 					},
-					component: { props: { color: 'auto' } }, // 自动染色
 				},
 				os: {
 					title: '操作系统',

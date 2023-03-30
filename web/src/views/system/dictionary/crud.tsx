@@ -1,15 +1,11 @@
 import * as api from './api';
-import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions, compute } from '@fast-crud/fast-crud';
+import { dict, UserPageQuery, AddReq, DelReq, EditReq, compute, CreateCrudOptionsProps, CreateCrudOptionsRet } from '@fast-crud/fast-crud';
 import { dictionary } from '/@/utils/dictionary';
 import { nextTick, ref } from 'vue';
 import { successMessage } from '/@/utils/message';
 
-interface CreateCrudOptionsTypes {
-	crudOptions: CrudOptions;
-}
-
-export const createCrudOptions = function ({ crudExpose, subDictRef }: { crudExpose: CrudExpose; subDictRef: any }): CreateCrudOptionsTypes {
-	const pageRequest = async (query: PageQuery) => {
+export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOptionsProps): CreateCrudOptionsRet {
+	const pageRequest = async (query: UserPageQuery) => {
 		return await api.GetList(query);
 	};
 	const editRequest = async ({ form, row }: EditReq) => {
@@ -52,12 +48,12 @@ export const createCrudOptions = function ({ crudExpose, subDictRef }: { crudExp
 							content: '字典配置',
 						},
 						//@ts-ignore
-						click: (context: any) => {
-							const { row } = context;
-							subDictRef.value.drawer = true;
+						click: (ctx: any) => {
+							const { row } = ctx;
+							context!.subDictRef.value.drawer = true;
 							nextTick(() => {
-								subDictRef.value.setSearchFormData({ form: { parent: row.id } });
-								subDictRef.value.doRefresh();
+								context!.subDictRef.value.setSearchFormData({ form: { parent: row.id } });
+								context!.subDictRef.value.doRefresh();
 							});
 						},
 					},
@@ -75,7 +71,7 @@ export const createCrudOptions = function ({ crudExpose, subDictRef }: { crudExp
 						formatter: (context) => {
 							//计算序号,你可以自定义计算规则，此处为翻页累加
 							let index = context.index ?? 1;
-							let pagination = crudExpose.crudBinding.value.pagination;
+							let pagination = crudExpose!.crudBinding.value.pagination;
 							// @ts-ignore
 							return ((pagination.currentPage ?? 1) - 1) * pagination.pageSize + index + 1;
 						},

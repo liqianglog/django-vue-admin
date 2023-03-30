@@ -1,8 +1,8 @@
 import { request } from '/@/utils/service';
-import { PageQuery, AddReq, DelReq, EditReq, InfoReq } from '@fast-crud/fast-crud';
+import { UserPageQuery, AddReq, DelReq, EditReq, InfoReq } from '@fast-crud/fast-crud';
 
 export const apiPrefix = '/api/system/menu/';
-export function GetList(query: PageQuery) {
+export function GetList(query: UserPageQuery) {
 	return request({
 		url: apiPrefix,
 		method: 'get',
@@ -40,7 +40,7 @@ export function DelObj(obj: DelReq) {
 	});
 }
 
-export function GetAllMenu(query: PageQuery) {
+export function GetAllMenu(query: UserPageQuery) {
 	return request({
 		url: apiPrefix + 'get_all_menu/',
 		method: 'get',
@@ -48,7 +48,7 @@ export function GetAllMenu(query: PageQuery) {
 	});
 }
 
-export function lazyLoadMenu(query: PageQuery) {
+export function lazyLoadMenu(query: UserPageQuery) {
 	return request({
 		url: apiPrefix,
 		method: 'get',

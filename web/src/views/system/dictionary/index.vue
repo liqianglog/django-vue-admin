@@ -6,24 +6,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch } from 'vue';
-import type { Ref } from 'vue';
-import { useExpose, useCrud } from '@fast-crud/fast-crud';
+import { ref, onMounted, defineAsyncComponent } from 'vue';
+import { useFs } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
-import subDict from './subDict/index.vue';
-
-//字典配置ref
+const subDict = defineAsyncComponent(() => import('./subDict/index.vue'));
 const subDictRef = ref();
-// crud组件的ref
-const crudRef = ref();
-// crud 配置的ref
-const crudBinding = ref();
-// 暴露的方法
-const { crudExpose } = useExpose({ crudRef, crudBinding });
-// 你的crud配置
-const { crudOptions } = createCrudOptions({ crudExpose, subDictRef });
-// 初始化crud配置
-const { resetCrudOptions } = useCrud({ crudExpose, crudOptions });
+
+const { crudBinding, crudRef, crudExpose } = useFs({ createCrudOptions, context: { subDictRef } });
 
 // 页面打开后获取列表数据
 onMounted(() => {

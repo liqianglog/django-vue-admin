@@ -37,13 +37,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useExpose, useCrud } from '@fast-crud/fast-crud';
+import { ref, onMounted, watch, toRaw } from 'vue';
+import { useFs } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
 import * as api from './api';
 import { ElTree } from 'element-plus';
-import { ref, onMounted, watch, toRaw, defineAsyncComponent } from 'vue';
 import XEUtils from 'xe-utils';
-import { errorMessage, successMessage } from '../../../utils/message';
 
 interface Tree {
 	id: number;
@@ -116,24 +115,11 @@ const getData = () => {
 	});
 };
 
+const { crudBinding, crudRef, crudExpose } = useFs({ createCrudOptions });
+
 // 页面打开后获取列表数据
 onMounted(() => {
 	getData();
-});
-
-// crud组件的ref
-const crudRef = ref();
-// crud 配置的ref
-const crudBinding = ref();
-// 暴露的方法
-const { crudExpose } = useExpose({ crudRef, crudBinding });
-// 你的crud配置
-const { crudOptions } = createCrudOptions({ crudExpose });
-// 初始化crud配置
-const { resetCrudOptions } = useCrud({ crudExpose, crudOptions });
-
-// 页面打开后获取列表数据
-onMounted(() => {
 	crudExpose.doRefresh();
 });
 </script>

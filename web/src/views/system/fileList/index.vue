@@ -6,18 +6,10 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { useExpose, useCrud } from '@fast-crud/fast-crud';
+import { useFs } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
-// crud组件的ref
-const crudRef = ref();
-// crud 配置的ref
-const crudBinding = ref();
-// 暴露的方法
-const { crudExpose } = useExpose({ crudRef, crudBinding });
-// 你的crud配置
-const { crudOptions } = createCrudOptions({ crudExpose });
-// 初始化crud配置
-const { resetCrudOptions } = useCrud({ crudExpose, crudOptions });
+
+const { crudBinding, crudRef, crudExpose } = useFs({ createCrudOptions });
 
 // 页面打开后获取列表数据
 onMounted(() => {

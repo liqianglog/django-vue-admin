@@ -1,13 +1,8 @@
 import * as api from './api';
-import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } from '@fast-crud/fast-crud';
-import { request } from '/@/utils/service';
-import { dictionary } from '/@/utils/dictionary';
-interface CreateCrudOptionsTypes {
-	crudOptions: CrudOptions;
-}
+import { UserPageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions, CreateCrudOptionsProps, CreateCrudOptionsRet } from '@fast-crud/fast-crud';
 
-export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExpose }): CreateCrudOptionsTypes {
-	const pageRequest = async (query: PageQuery) => {
+export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProps): CreateCrudOptionsRet {
+	const pageRequest = async (query: UserPageQuery) => {
 		return await api.GetList(query);
 	};
 	const editRequest = async ({ form, row }: EditReq) => {
@@ -65,8 +60,8 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 						formatter: (context) => {
 							//计算序号,你可以自定义计算规则，此处为翻页累加
 							let index = context.index ?? 1;
-							let pagination = crudExpose.crudBinding.value.pagination;
-							return ((pagination.currentPage ?? 1) - 1) * pagination.pageSize + index + 1;
+							let pagination = crudExpose!.crudBinding.value.pagination;
+							return ((pagination!.currentPage ?? 1) - 1) * pagination!.pageSize + index + 1;
 						},
 					},
 				},
