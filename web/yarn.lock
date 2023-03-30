@@ -1433,18 +1433,18 @@
   resolved "https://registry.npmjs.org/@eslint/js/-/js-8.36.0.tgz#9837f768c03a1e4a30bd304a64fb8844f0e72efe"
   integrity sha512-lxJ9R5ygVm8ZWgYdUweoq5ownDlJ4upvoWmO4eLxBYHdMo+vZ/Rx0EN6MbKWDJOSUGrqJy2Gt+Dyv/VKml0fjg==
 
-"@fast-crud/fast-crud@^1.11.7":
-  version "1.11.7"
-  resolved "https://registry.npmjs.org/@fast-crud/fast-crud/-/fast-crud-1.11.7.tgz#bd2cfd21830a6d8fed651c2a7539a2beda904b69"
-  integrity sha512-7oTzeOkEyru6WnwpuJ764lujSfIwlg0m4Ecvrf00xPkXEVgXLDla0FwITrgOOP76MwjjLrEfIKKYH5XT9Yxakg==
+"@fast-crud/fast-crud@^1.11.10":
+  version "1.11.10"
+  resolved "https://registry.npmjs.org/@fast-crud/fast-crud/-/fast-crud-1.11.10.tgz#9316346c424275e0706c801de90c091c17091577"
+  integrity sha512-TIfetITnXRsIh5ETDmlvzjK5Rjhgoizf5lYBO2HdUV7JxqQiULKh0TpYebFbgYABfcFjNz2XbgEmngFWZ+Qc3w==
   dependencies:
     lru-cache "^8.0.3"
     vuedraggable-es "^4.1.1"
 
-"@fast-crud/fast-extends@^1.11.7":
-  version "1.11.7"
-  resolved "https://registry.npmjs.org/@fast-crud/fast-extends/-/fast-extends-1.11.7.tgz#1b8ecbe207ec1957475e8bc888a0c090f04c69dc"
-  integrity sha512-4a8yK6LzyV0QYprVGUvFrFMlC0o7i7C8GD9XcXM7TAH2qcj7EjuoWtQK/LcE3S2EC1jGte5Vo9rLvFZJxCHwzA==
+"@fast-crud/fast-extends@^1.11.10":
+  version "1.11.10"
+  resolved "https://registry.npmjs.org/@fast-crud/fast-extends/-/fast-extends-1.11.10.tgz#1f0342e677bccc86245d0e40b531d16cbaed7364"
+  integrity sha512-aYaMshrUwE9yuAzwwaXA94r7gGFd385/sSE3Q6M7OLnW0uysjMt9WkdvwKtEPh14hpVdvKyYRo0G5DvLz383xg==
   dependencies:
     "@aws-sdk/client-s3" "^3.292.0"
     "@aws-sdk/s3-request-presigner" "^3.292.0"
@@ -1464,15 +1464,15 @@
     quill "^1.3.7"
     vue-cropperjs "^5.0.0"
 
-"@fast-crud/ui-element@^1.11.7":
-  version "1.11.7"
-  resolved "https://registry.npmjs.org/@fast-crud/ui-element/-/ui-element-1.11.7.tgz#388aec01041b628c89b95f287822eb6b6f77ebe7"
-  integrity sha512-U6JDOhQRPxDAdRbTnC6M7Zh+v2D4F9yotYiWodjD4O/iQa/Q4Msdy8LeIArlBnMwDZYLksdc9QfxglNf0QEODg==
+"@fast-crud/ui-element@^1.11.10":
+  version "1.11.10"
+  resolved "https://registry.npmjs.org/@fast-crud/ui-element/-/ui-element-1.11.10.tgz#25ce805ced2020d54a7b2c19f1df73fd39227a1f"
+  integrity sha512-lZNhIx7E6jkGrjEz3+ChJc8z53f1GFxmYWBoKDkJilfE6HhF+gmuV3nZiuRixjbSqWhVRHStMd+/7kDys7htZg==
 
-"@fast-crud/ui-interface@^1.11.6":
-  version "1.11.6"
-  resolved "https://registry.npmjs.org/@fast-crud/ui-interface/-/ui-interface-1.11.6.tgz#f8f1d5c35bb397745139996e04ba2b88b6339e99"
-  integrity sha512-0Q2xYaJZQ4LKvo6odOC8rVrmEFRnuFn57zjGJuv23S57qSU5VvxhJ+n6lxoN8c+oEXmjUQV6vmjOW3YP9wZULA==
+"@fast-crud/ui-interface@^1.11.9":
+  version "1.11.9"
+  resolved "https://registry.npmjs.org/@fast-crud/ui-interface/-/ui-interface-1.11.9.tgz#df6d4732a020e7df06daf0b3763adb91a5e70f25"
+  integrity sha512-WFGWWleM7Uy2eWcbFxiKK1FZ/mtEoKVImfbxCPvNFkGgZS2NGA5zPXkJNY5/PntwCcgAvxvSYzLrtKfOlOHnpQ==
   dependencies:
     lodash-es "^4.17.21"
 
