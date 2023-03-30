@@ -28,13 +28,31 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 				editRequest,
 				delRequest,
 			},
+			rowHandle: {
+				//固定右侧
+				fixed: 'right',
+				width: 200,
+				buttons: {
+					view: {
+						show: false,
+					},
+					edit: {
+						iconRight: 'Edit',
+						type: 'text',
+					},
+					remove: {
+						iconRight: 'Delete',
+						type: 'text',
+					},
+				},
+			},
 			form: {
-				col: {span: 24},
-                labelWidth: '110px',
-                wrapper: {
-                    is: 'el-dialog',
-                    width: '600px',
-                },
+				col: { span: 24 },
+				labelWidth: '110px',
+				wrapper: {
+					is: 'el-dialog',
+					width: '600px',
+				},
 			},
 			columns: {
 				_index: {
@@ -78,7 +96,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 				},
 				method: {
 					title: '请求方式',
-					sortable: "custom",
+					sortable: 'custom',
 					search: {
 						disabled: false,
 					},
@@ -104,7 +122,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 							{
 								label: 'PATCH',
 								value: 4,
-							}
+							},
 						],
 					}),
 					form: {
@@ -125,7 +143,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 				},
 				url: {
 					title: '接口地址',
-					sortable: "custom",
+					sortable: 'custom',
 					search: {
 						disabled: true,
 					},
@@ -167,11 +185,11 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 							class: { yxtInput: true },
 						},
 						helper: {
-							position: "label",
+							position: 'label',
 							tooltip: {
-								placement: "top-start"
+								placement: 'top-start',
 							},
-							text: "请正确填写，以免请求时被拦截。匹配单例使用正则,例如:/api/xx/.*?/"
+							text: '请正确填写，以免请求时被拦截。匹配单例使用正则,例如:/api/xx/.*?/',
 						},
 					},
 				},
