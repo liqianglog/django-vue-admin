@@ -7,8 +7,8 @@ import { setLogger } from '@fast-crud/fast-crud';
 import ui from '@fast-crud/ui-element';
 import { request } from '/@/utils/service';
 //扩展包
-import {FsExtendsEditor} from "@fast-crud/fast-extends";
-import "@fast-crud/fast-extends/dist/style.css";
+import { FsExtendsEditor } from '@fast-crud/fast-extends';
+import '@fast-crud/fast-extends/dist/style.css';
 export default {
 	async install(app: any, options: any) {
 		// 先安装ui
@@ -18,7 +18,7 @@ export default {
 			//i18n, //i18n配置，可选，默认使用中文，具体用法请看demo里的 src/i18n/index.js 文件
 			// 此处配置公共的dictRequest（字典请求）
 			async dictRequest({ dict }: any) {
-				return await request({ url: dict.url,params:dict.params || {} }); //根据dict的url，异步返回一个字典数组
+				return await request({ url: dict.url, params: dict.params || {} }); //根据dict的url，异步返回一个字典数组
 			},
 			//公共crud配置
 			commonOptions() {
@@ -28,9 +28,9 @@ export default {
 						//你项目后台接口大概率与fast-crud所需要的返回结构不一致，所以需要配置此项
 						//请参考文档http://fast-crud.docmirror.cn/api/crud-options/request.html
 						transformQuery: ({ page, form, sort }: any) => {
-							if (sort.asc !== undefined){
-								form["ordering"] = `${sort.asc ? "" : "-"}${sort.prop}`
-							} 
+							if (sort.asc !== undefined) {
+								form['ordering'] = `${sort.asc ? '' : '-'}${sort.prop}`;
+							}
 							//转换为你pageRequest所需要的请求参数结构
 							return { page: page.currentPage, limit: page.pageSize, ...form };
 						},
@@ -58,11 +58,11 @@ export default {
 			},
 		});
 		//富文本
-		app.use(FsExtendsEditor,{
-			wangEditor:{
-				width:300,
-			}
-		})
+		app.use(FsExtendsEditor, {
+			wangEditor: {
+				width: 300,
+			},
+		});
 		setLogger({ level: 'error' });
 		// 设置自动染色
 		const dictComponentList = ['dict-cascader', 'dict-checkbox', 'dict-radio', 'dict-select', 'dict-switch', 'dict-tree'];
