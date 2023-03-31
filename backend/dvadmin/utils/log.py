@@ -1,28 +1,37 @@
 import logging
 import os.path
-from logging import LogRecord
+import sys
 
-from django.core.servers.basehttp import WSGIRequestHandler
+from django.db import connection
 from loguru import logger
 
 from logging.handlers import RotatingFileHandler
 
 # 1.🎖️先声明一个类继承logging.Handler(制作一件品如的衣服)
-from loguru._defaults import LOGURU_FORMAT
+
+from application.dispatch import is_tenants_mode
 
 
-class InterceptTimedRotatingFileHandler(RotatingFileHandler):
+class InterceptTimedRotatingFileHandler(RotatingFileHandler, logging.Filter):
     """
     自定义反射时间回滚日志记录器
     缺少命名空间
     """
 
     def __init__(self, filename, when='d', interval=1, backupCount=5, encoding="utf-8", delay=False, utc=False,
-                 maxBytes=1024 * 1024 * 100, atTime=None, logging_levels="all"):
+                 maxBytes=1024 * 1024 * 100, atTime=None, logging_levels="all", format=None):
         super(InterceptTimedRotatingFileHandler, self).__init__(filename)
         filename = os.path.abspath(filename)
+        # 定义默认格式
+        if not format:
+            format = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <green>{extra[ip]}:{extra[port]}</green> | <level>{level: <8}</level>| <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
         when = when.lower()
         # 2.🎖️需要本地用不同的文件名做为不同日志的筛选器
+        logger.configure(
+            handlers=[
+                dict(sink=sys.stderr, format=format),
+            ],
+        )
         self.logger_ = logger.bind(sime=filename, ip="-", port="-", username="张三")
         self.filename = filename
         key_map = {
@@ -74,7 +83,7 @@ class InterceptTimedRotatingFileHandler(RotatingFileHandler):
                 # self.logger_.remove(file_key[filename_fmt_key])
             self.logger_.add(
                 filename_fmt,
-                # format="<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <green>{extra[ip]}:{extra[port]}</green> | <level>{level: <8}</level>| <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+                format=format,
                 retention=retention,
                 encoding=encoding,
                 level=self.level,
@@ -100,13 +109,17 @@ class InterceptTimedRotatingFileHandler(RotatingFileHandler):
         # 设置自定义属性
         port = "-"
         ip = "-"
-        locals_self = frame.f_locals.get('self', None)
+        details = frame.f_locals.get('details', None)
         msg = self.format(record)
-        if locals_self and hasattr(locals_self, 'client_address'):
-            ip, port = locals_self.client_address
-            # - 127.0.0.1:56525 -
-            msg = f"{ip}:{port} - {msg}"
+        bind = {}
+        if details and details.get('client'):
+            ip, port = details.get('client').split(':')
+        if is_tenants_mode():
+            bind["schema_name"] = connection.tenant.schema_name
+            bind["domain_url"] = getattr(connection.tenant, 'domain_url', None)
+        bind["ip"] = ip
+        bind["port"] = port
         self.logger_ \
             .opt(depth=depth, exception=record.exc_info, colors=True) \
-            .bind(ip=ip, port=port) \
+            .bind(**bind) \
             .log(level, msg)
