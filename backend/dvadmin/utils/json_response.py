@@ -20,12 +20,10 @@ class SuccessResponse(Response):
                  content_type=None,page=1,limit=1,total=1):
         std_data = {
             "code": 2000,
-            "data": {
-                "page": page,
-                "limit": limit,
-                "total": total,
-                "data": data
-            },
+            "page": page,
+            "limit": limit,
+            "total": total,
+            "data": data,
             "msg": msg
         }
         super().__init__(std_data, status, template_name, headers, exception, content_type)

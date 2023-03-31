@@ -11,13 +11,18 @@ import traceback
 
 from django.db.models import ProtectedError
 from django.http import Http404
-from rest_framework.exceptions import APIException as DRFAPIException, AuthenticationFailed
-from rest_framework.views import set_rollback
+from rest_framework.exceptions import APIException as DRFAPIException, AuthenticationFailed, NotAuthenticated
+from rest_framework.status import HTTP_401_UNAUTHORIZED
+from rest_framework.views import set_rollback, exception_handler
 
 from dvadmin.utils.json_response import ErrorResponse
 
 logger = logging.getLogger(__name__)
 
+
+class CustomAuthenticationFailed(NotAuthenticated):
+    # 设置 status_code 属性为 400
+    status_code = 400
 
 def CustomExceptionHandler(ex, context):
     """
@@ -30,9 +35,14 @@ def CustomExceptionHandler(ex, context):
     """
     msg = ''
     code = 4000
-
+    # 调用默认的异常处理函数
+    response = exception_handler(ex, context)
     if isinstance(ex, AuthenticationFailed):
         code = 401
+        code_type = response.data.get('detail').code
+        if code_type == 'no_active_account':
+            code=400
+            return ErrorResponse(status=HTTP_401_UNAUTHORIZED)
         msg = ex.detail
     elif isinstance(ex,Http404):
         code = 400

@@ -12,7 +12,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.db.models import F
 from rest_framework.permissions import BasePermission
 
-from dvadmin.system.models import ApiWhiteList
+from dvadmin.system.models import ApiWhiteList, RoleMenuButtonPermission
 
 
 def ValidationApi(reqApi, validApi):
@@ -81,7 +81,8 @@ class CustomPermission(BasePermission):
             # ********#
             if not hasattr(request.user, "role"):
                 return False
-            userApiList = request.user.role.values('permission__api', 'permission__method')  # 获取当前用户的角色拥有的所有接口
+            role_id_list = request.user.role.values_list('id',flat=True)
+            userApiList = RoleMenuButtonPermission.objects.filter(role__in=role_id_list).values(permission__api=F('menu_button__api'), permission__method=F('menu_button__method'))  # 获取当前用户的角色拥有的所有接口
             ApiList = [
                 str(item.get('permission__api').replace('{id}', '([a-zA-Z0-9-]+)')) + ":" + str(
                     item.get('permission__method')) + '$' for item in userApiList if item.get('permission__api')]

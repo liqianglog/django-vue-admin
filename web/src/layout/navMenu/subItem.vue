@@ -14,7 +14,7 @@
 					<span>{{ $t(val.meta.title) }}</span>
 				</template>
 				<template v-else>
-					<a :href="val.meta.isLink" target="_blank" rel="opener" class="w100">
+					<a class="w100" @click.prevent="onALinkClick(val)">
 						<SvgIcon :name="val.meta.icon" />
 						{{ $t(val.meta.title) }}
 					</a>
@@ -24,25 +24,26 @@
 	</template>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue';
+<script setup lang="ts" name="navMenuSubItem">
+import { computed } from 'vue';
+import { RouteRecordRaw } from 'vue-router';
+import other from '/@/utils/other';
 
-export default defineComponent({
-	name: 'navMenuSubItem',
-	props: {
-		chil: {
-			type: Array,
-			default: () => [],
-		},
-	},
-	setup(props) {
-		// 获取父级菜单数据
-		const chils = computed(() => {
-			return <any>props.chil;
-		});
-		return {
-			chils,
-		};
+// 定义父组件传过来的值
+const props = defineProps({
+	// 菜单列表
+	chil: {
+		type: Array<RouteRecordRaw>,
+		default: () => [],
 	},
 });
+
+// 获取父级菜单数据
+const chils = computed(() => {
+	return <RouteItems>props.chil;
+});
+// 打开外部链接
+const onALinkClick = (val: RouteItem) => {
+	other.handleOpenLink(val);
+};
 </script>

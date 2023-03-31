@@ -12,6 +12,8 @@ from dvadmin.system.views.menu_button import MenuButtonViewSet
 from dvadmin.system.views.message_center import MessageCenterViewSet
 from dvadmin.system.views.operation_log import OperationLogViewSet
 from dvadmin.system.views.role import RoleViewSet
+from dvadmin.system.views.role_menu import RoleMenuPermissionViewSet
+from dvadmin.system.views.role_menu_button_permission import RoleMenuButtonPermissionViewSet
 from dvadmin.system.views.system_config import SystemConfigViewSet
 from dvadmin.system.views.user import UserViewSet
 
@@ -28,6 +30,11 @@ system_url.register(r'file', FileViewSet)
 system_url.register(r'api_white_list', ApiWhiteListViewSet)
 system_url.register(r'system_config', SystemConfigViewSet)
 system_url.register(r'message_center',MessageCenterViewSet)
+system_url.register(r'role_menu_button_permission', RoleMenuButtonPermissionViewSet)
+system_url.register(r'role_menu_permission', RoleMenuPermissionViewSet)
+
+
+
 
 urlpatterns = [
     path('user/export/', UserViewSet.as_view({'post': 'export_data', })),

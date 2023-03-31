@@ -7,6 +7,7 @@
 """
 from rest_framework import serializers
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 from dvadmin.system.models import Dept
 from dvadmin.utils.json_response import DetailResponse, SuccessResponse
@@ -55,49 +56,7 @@ class DeptImportSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-class DeptInitSerializer(CustomModelSerializer):
-    """
-    递归深度获取数信息(用于生成初始化json文件)
-    """
-    children = serializers.SerializerMethodField()
 
-    def get_children(self, obj: Dept):
-        data = []
-        instance = Dept.objects.filter(parent_id=obj.id)
-        if instance:
-            serializer = DeptInitSerializer(instance=instance, many=True)
-            data = serializer.data
-        return data
-
-    def save(self, **kwargs):
-        instance = super().save(**kwargs)
-        children = self.initial_data.get('children')
-        if children:
-            for menu_data in children:
-                menu_data['parent'] = instance.id
-                filter_data = {
-                    "name": menu_data['name'],
-                    "parent": menu_data['parent'],
-                    "key": menu_data['key']
-                }
-                instance_obj = Dept.objects.filter(**filter_data).first()
-                if instance_obj and not self.initial_data.get('reset'):
-                    continue
-                serializer = DeptInitSerializer(instance_obj, data=menu_data, request=self.request)
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
-
-        return instance
-
-    class Meta:
-        model = Dept
-        fields = ['name', 'sort', 'owner', 'phone', 'email', 'status', 'parent', 'creator', 'dept_belong_id',
-                  'children', 'key']
-        extra_kwargs = {
-            'creator': {'write_only': True},
-            'dept_belong_id': {'write_only': True}
-        }
-        read_only_fields = ['id', 'children']
 
 
 class DeptCreateUpdateSerializer(CustomModelSerializer):
@@ -134,7 +93,7 @@ class DeptViewSet(CustomModelViewSet):
     update_serializer_class = DeptCreateUpdateSerializer
     filter_fields = ['name', 'id', 'parent']
     search_fields = []
-    # extra_filter_backends = []
+    # extra_filter_class = []
     import_serializer_class = DeptImportSerializer
     import_field_dict = {
         "name": "部门名称",
@@ -143,8 +102,15 @@ class DeptViewSet(CustomModelViewSet):
 
     def list(self, request, *args, **kwargs):
         # 如果懒加载，则只返回父级
+        request.query_params._mutable = True
         params = request.query_params
         parent = params.get('parent', None)
+        page = params.get('page', None)
+        limit = params.get('limit', None)
+        if page:
+            del params['page']
+        if limit:
+            del params['limit']
         if params:
             if parent:
                 queryset = self.queryset.filter(status=True, parent=parent)
@@ -182,7 +148,7 @@ class DeptViewSet(CustomModelViewSet):
         return DetailResponse(data=queryset, msg="获取成功")
 
 
-    @action(methods=["GET"], detail=False, permission_classes=[AnonymousUserPermission])
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],extra_filter_class=[])
     def all_dept(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')

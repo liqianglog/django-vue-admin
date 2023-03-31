@@ -60,32 +60,7 @@ class UserSerializer(CustomModelSerializer):
         return serializer.data
 
 
-class UsersInitSerializer(CustomModelSerializer):
-    """
-    初始化获取数信息(用于生成初始化json文件)
-    """
 
-    def save(self, **kwargs):
-        instance = super().save(**kwargs)
-        role_key = self.initial_data.get('role_key', [])
-        role_ids = Role.objects.filter(key__in=role_key).values_list('id', flat=True)
-        instance.role.set(role_ids)
-        dept_key = self.initial_data.get('dept_key', None)
-        dept_id = Dept.objects.filter(key=dept_key).first()
-        instance.dept = dept_id
-        instance.save()
-        return instance
-
-    class Meta:
-        model = Users
-        fields = ["username", "email", 'mobile', 'avatar', "name", 'gender', 'user_type', "dept", 'user_type',
-                  'first_name', 'last_name', 'email', 'is_staff', 'is_active', 'creator', 'dept_belong_id',
-                  'password', 'last_login', 'is_superuser']
-        read_only_fields = ['id']
-        extra_kwargs = {
-            'creator': {'write_only': True},
-            'dept_belong_id': {'write_only': True}
-        }
 
 
 class UserCreateSerializer(CustomModelSerializer):
@@ -253,16 +228,7 @@ class UserViewSet(CustomModelViewSet):
     serializer_class = UserSerializer
     create_serializer_class = UserCreateSerializer
     update_serializer_class = UserUpdateSerializer
-    # filter_fields = ["name", "username", "gender", "is_active", "dept", "user_type"]
-    filter_fields = {
-        "name": ["exact"],
-        "mobile": ["exact"],
-        "username": ["exact"],
-        "gender": ["icontains"],
-        "is_active": ["icontains"],
-        "dept": ["exact"],
-        "user_type": ["exact"],
-    }
+    filter_fields = ["name", "username", "gender", "is_active", "dept", "user_type"]
     search_fields = ["username", "name", "gender", "dept__name", "role__name"]
     # 导出
     export_field_label = {
@@ -355,6 +321,7 @@ class UserViewSet(CustomModelViewSet):
         if not check_password:
             check_password = request.user.check_password(hashlib.md5(old_pwd.encode(encoding='UTF-8')).hexdigest())
         if check_password:
+            new_pwd = hashlib.md5(new_pwd.encode(encoding='UTF-8')).hexdigest()
             request.user.password = make_password(new_pwd)
             request.user.save()
             return DetailResponse(data=None, msg="修改成功")

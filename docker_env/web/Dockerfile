@@ -1,7 +1,8 @@
-FROM registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/dvadmin3-base-web:latest
+FROM node:16.19-alpine
 WORKDIR /web/
 COPY web/. .
-RUN cnpm run build
+RUN yarn install
+RUN yarn build
 
 FROM nginx:alpine
 COPY ./docker_env/nginx/my.conf /etc/nginx/conf.d/my.conf
