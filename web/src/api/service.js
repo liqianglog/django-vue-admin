@@ -124,7 +124,7 @@ function createService () {
           util.cookies.remove('uuid')
           util.cookies.remove('refresh')
           router.push({ path: '/login' })
-          error.message = '系统已检测到您的账号在其他地方登录~'
+          error.message = '认证已失效,请重新登录~'
           break
         case 403:
           error.message = '拒绝访问'
