@@ -9,8 +9,6 @@ import qs from 'qs'
 /**
  * @description 创建请求实例
  */
-axios.defaults.retry = 1
-axios.defaults.retryDelay = 1000
 
 export function getErrorMessage (msg) {
   if (typeof msg === 'string') {
@@ -59,7 +57,7 @@ function createService () {
   service.interceptors.response.use(
     response => {
       // dataAxios 是 axios 返回数据中的 data
-      let dataAxios = response.data
+      let dataAxios = response.data || null
       if (response.headers['content-disposition']) {
         dataAxios = response
       }
@@ -80,7 +78,22 @@ function createService () {
           case 401:
             refreshTken().then(res => {
               util.cookies.set('token', res.data.access)
-              // router.push({path:'/index'})
+              // 设置请求超时次数
+              let config = response.config
+              config.__retryCount = config.__retryCount || 0
+              if (config.__retryCount >= config.retry) {
+                return Promise.reject()
+              }
+              config.__retryCount += 1
+              const backoff = new Promise((resolve) => {
+                setTimeout(() => {
+                  resolve()
+                }, config.retryDelay || 1)
+              })
+              return backoff.then(() => {
+                config.headers['Authorization'] = 'JWT ' + res.data.access
+                return service(config)
+              })
             })
             break
           case 404:
@@ -176,7 +189,9 @@ function createRequestFunction (service) {
       timeout: 60000,
       baseURL: util.baseURL(),
       data: {},
-      params: params
+      params: params,
+      retry: 3, //重新请求次数
+      retryDelay: 1500 //重新请求间隔
     }
     return service(Object.assign(configDefault, config))
   }
@@ -212,7 +227,12 @@ const refreshTken = function () {
  * @param method
  * @param filename
  */
-export const downloadFile = function ({ url, params, method, filename = '文件导出' }) {
+export const downloadFile = function ({
+  url,
+  params,
+  method,
+  filename = '文件导出'
+}) {
   request({
     url: url,
     method: method,
