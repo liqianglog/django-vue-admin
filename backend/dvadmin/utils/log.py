@@ -12,7 +12,7 @@ from logging.handlers import RotatingFileHandler
 from application.dispatch import is_tenants_mode
 
 
-class InterceptTimedRotatingFileHandler(RotatingFileHandler, logging.Filter):
+class InterceptTimedRotatingFileHandler(RotatingFileHandler):
     """
     自定义反射时间回滚日志记录器
     缺少命名空间
@@ -24,7 +24,7 @@ class InterceptTimedRotatingFileHandler(RotatingFileHandler, logging.Filter):
         filename = os.path.abspath(filename)
         # 定义默认格式
         if not format:
-            format = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <green>{extra[ip]}:{extra[port]}</green> | <level>{level: <8}</level>| <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+            format = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <green>{extra[client_addr]:^18}</green> | <level>{level: <8}</level>| <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
         when = when.lower()
         # 2.🎖️需要本地用不同的文件名做为不同日志的筛选器
         logger.configure(
@@ -32,7 +32,7 @@ class InterceptTimedRotatingFileHandler(RotatingFileHandler, logging.Filter):
                 dict(sink=sys.stderr, format=format),
             ],
         )
-        self.logger_ = logger.bind(sime=filename, ip="-", port="-", username="张三")
+        self.logger_ = logger.bind(sime=filename, client_addr="-")
         self.filename = filename
         key_map = {
             'h': 'hour',
@@ -107,19 +107,26 @@ class InterceptTimedRotatingFileHandler(RotatingFileHandler, logging.Filter):
             frame = frame.f_back
             depth += 1
         # 设置自定义属性
-        port = "-"
-        ip = "-"
         details = frame.f_locals.get('details', None)
         msg = self.format(record)
         bind = {}
-        if details and details.get('client'):
-            ip, port = details.get('client').split(':')
+        record_client = None
+        if isinstance(record.args, dict):
+            record_client = record.args.get('client_addr') or record.args.get('client')
+        elif isinstance(record.args, tuple) and len(record.args) > 0:
+            if ":" in str(record.args[0]):
+                record_client = record.args[0]
+                msg = f"{msg.split('-')[1].strip(' ')}"
+            elif isinstance(record.args[0], tuple) and len(record.args[0]) == 2:
+                record_client = f"{record.args[0][0]}:{record.args[0][1]}"
+                msg = f"{msg.split('-')[1].strip(' ')}"
+        client = record_client or (details and details.get('client'))
+        if client:
+            bind["client_addr"] = client
         if is_tenants_mode():
             bind["schema_name"] = connection.tenant.schema_name
             bind["domain_url"] = getattr(connection.tenant, 'domain_url', None)
-        bind["ip"] = ip
-        bind["port"] = port
         self.logger_ \
-            .opt(depth=depth, exception=record.exc_info, colors=True) \
+            .opt(depth=depth, exception=record.exc_info, colors=True, lazy=True) \
             .bind(**bind) \
             .log(level, msg)
