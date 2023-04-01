@@ -55,7 +55,7 @@ function createService () {
   )
   // 响应拦截
   service.interceptors.response.use(
-    response => {
+    async response => {
       // dataAxios 是 axios 返回数据中的 data
       let dataAxios = response.data || null
       if (response.headers['content-disposition']) {
@@ -76,26 +76,29 @@ function createService () {
             // return dataAxios.data
             return dataAxios
           case 401:
-            refreshTken().then(res => {
-              util.cookies.set('token', res.data.access)
-              // 设置请求超时次数
-              let config = response.config
-              config.__retryCount = config.__retryCount || 0
-              if (config.__retryCount >= config.retry) {
-                return Promise.reject()
-              }
-              config.__retryCount += 1
-              const backoff = new Promise((resolve) => {
-                setTimeout(() => {
-                  resolve()
-                }, config.retryDelay || 1)
-              })
-              return backoff.then(() => {
-                config.headers['Authorization'] = 'JWT ' + res.data.access
-                return service(config)
-              })
+            if (response.config.url === 'api/login/') {
+              errorCreate(`${getErrorMessage(dataAxios.msg)}`)
+              break
+            }
+            var res = await refreshTken()
+            util.cookies.set('token', res.data.access)
+            // 设置请求超时次数
+            var config = response.config
+            if (config.__retryCount >= config.retry) {
+              // 如果重试次数超过3次则跳转登录页面
+              router.push({ path: '/login' })
+              errorCreate('认证已失效,请重新登录~')
+              break
+            }
+            var backoff = new Promise((resolve) => {
+              setTimeout(() => {
+                resolve()
+              }, config.retryDelay || 1)
             })
-            break
+            return backoff.then(() => {
+              config.headers.Authorization = 'JWT ' + res.data.access
+              return service(config)
+            })
           case 404:
             dataNotFound(`${dataAxios.msg}`)
             break
@@ -190,8 +193,8 @@ function createRequestFunction (service) {
       baseURL: util.baseURL(),
       data: {},
       params: params,
-      retry: 3, //重新请求次数
-      retryDelay: 1500 //重新请求间隔
+      retry: 3, // 重新请求次数
+      retryDelay: 1000 // 重新请求间隔
     }
     return service(Object.assign(configDefault, config))
   }
