@@ -81,24 +81,21 @@ function createService () {
               break
             }
             var res = await refreshTken()
-            util.cookies.set('token', res.data.access)
             // 设置请求超时次数
             var config = response.config
+            util.cookies.set('token', res.data.access)
+            config.headers.Authorization = 'JWT ' + res.data.access
+            config.__retryCount = config.__retryCount || 0
             if (config.__retryCount >= config.retry) {
               // 如果重试次数超过3次则跳转登录页面
+              util.cookies.remove('token')
+              util.cookies.remove('uuid')
               router.push({ path: '/login' })
               errorCreate('认证已失效,请重新登录~')
               break
             }
-            var backoff = new Promise((resolve) => {
-              setTimeout(() => {
-                resolve()
-              }, config.retryDelay || 1)
-            })
-            return backoff.then(() => {
-              config.headers.Authorization = 'JWT ' + res.data.access
-              return service(config)
-            })
+            config.__retryCount += 1
+            return service(config)
           case 404:
             dataNotFound(`${dataAxios.msg}`)
             break
