@@ -24,7 +24,7 @@ class InterceptTimedRotatingFileHandler(RotatingFileHandler):
         filename = os.path.abspath(filename)
         # 定义默认格式
         if not format:
-            format = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <green>{extra[client_addr]:^18}</green> | <level>{level: <8}</level>| <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+            format = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <green>{extra[client_addr]:^18}</green> | <level>{level: <8}</level>| <cyan>{message}</cyan>"
         when = when.lower()
         # 2.🎖️需要本地用不同的文件名做为不同日志的筛选器
         logger.configure(
@@ -116,10 +116,12 @@ class InterceptTimedRotatingFileHandler(RotatingFileHandler):
         elif isinstance(record.args, tuple) and len(record.args) > 0:
             if ":" in str(record.args[0]):
                 record_client = record.args[0]
-                msg = f"{msg.split('-')[1].strip(' ')}"
+                if msg.split("-") and len(msg.split("-")) == 2:
+                    msg = f"{msg.split('-')[1].strip(' ')}"
             elif isinstance(record.args[0], tuple) and len(record.args[0]) == 2:
                 record_client = f"{record.args[0][0]}:{record.args[0][1]}"
-                msg = f"{msg.split('-')[1].strip(' ')}"
+                if msg.split("-") and len(msg.split("-")) == 2:
+                    msg = f"{msg.split('-')[1].strip(' ')}"
         client = record_client or (details and details.get('client'))
         if client:
             bind["client_addr"] = client

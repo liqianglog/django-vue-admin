@@ -77,9 +77,10 @@ class DeptInitSerializer(CustomModelSerializer):
                 menu_data['parent'] = instance.id
                 filter_data = {
                     "name": menu_data['name'],
-                    "parent": menu_data['parent'],
-                    "key": menu_data['key']
+                    "parent": menu_data['parent']
                 }
+                if 'key' in menu_data:
+                    filter_data['key'] = menu_data['key']
                 instance_obj = Dept.objects.filter(**filter_data).first()
                 if instance_obj and not self.initial_data.get('reset'):
                     continue
@@ -147,12 +148,12 @@ class DeptViewSet(CustomModelViewSet):
         parent = params.get('parent', None)
         if params:
             if parent:
-                queryset = self.queryset.filter(status=True, parent=parent)
+                queryset = self.queryset.filter(parent=parent)
             else:
-                queryset = self.queryset.filter(status=True)
+                queryset = self.queryset.filter(parent__isnull=True)
         else:
-            queryset = self.queryset.filter(status=True, parent__isnull=True)
-        queryset = self.filter_queryset(queryset)
+            queryset = self.queryset.filter(parent__isnull=True)
+        queryset = self.filter_queryset(queryset.order_by('sort', 'create_datetime'))
         serializer = DeptSerializer(queryset, many=True, request=request)
         data = serializer.data
         return SuccessResponse(data=data)
