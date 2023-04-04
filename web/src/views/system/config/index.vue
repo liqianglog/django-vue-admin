@@ -64,7 +64,9 @@
             <addContent></addContent>
           </el-col>
         </el-row>
-        <formContent v-else :options="item" :editableTabsItem="item"></formContent>
+      <div v-else>
+        <formContent v-if="item.key===editableTabsValue"  :options="item" :editableTabsItem="item"></formContent>
+      </div>
       </el-tab-pane>
     </el-tabs>
   </d2-container>
