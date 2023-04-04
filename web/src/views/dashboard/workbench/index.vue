@@ -1,42 +1,45 @@
 <template>
   <d2-container>
-    <div class="component-header">
-      <div class="set-btn-class">
-        <el-button v-if="customizing" type="primary" icon="el-icon-check" round @click="save">完成</el-button>
+    <suspended-library ref="suspendedLibrary">
+      <div class="set-btn-class" slot="callbackButton">
+        <el-button v-if="customizing" type="primary" icon="el-icon-check" round @click="save">完成&nbsp;&nbsp;
+        </el-button>
         <el-button v-else type="primary" icon="el-icon-edit" round @click="custom">自定义</el-button>
+        <el-button v-if="minimize" type="warning" icon="el-icon-plus" round @click="clickMinimize">展开&nbsp;&nbsp;
+        </el-button>
       </div>
-      <div v-if="customizing" class="all-component-class">
-        <el-card style="margin-bottom: 20px">
-          <div slot="header">
-            <i class="el-icon-circle-plus"></i>
-            <span>添加部件</span>
-            <el-button-group style="float: right">
-              <el-button type="primary" size="mini" @click="backDefaul()">恢复默认</el-button>
-              <el-button type="danger" size="mini" @click="close()">关闭</el-button>
-            </el-button-group>
-          </div>
-          <div class="widgets-list">
-            <div v-if="myCompsList.length<=0" class="widgets-list-nodata">
-              <el-empty description="没有部件啦" :image-size="60"></el-empty>
-            </div>
-            <div v-for="item in myCompsList" :key="item.title" class="widgets-list-item" @drag="onDrag($event,item)"
-                 @dragend="onDragend($event,item)" draggable="true"
-                 unselectable="on">
-              <el-card style="width: 300px">
-                <div slot="header">
-                  <i :class="item.icon"></i>
-                  <span> {{ item.title }}</span>
-                  <el-button type="primary" style="float: right;" size="mini" @click="push(item)">添加</el-button>
-                </div>
-                <div class="item-info">
-                  <p>{{ item.description }}</p>
-                </div>
-              </el-card>
-            </div>
-          </div>
-        </el-card>
+      <div slot="operateButton">
+        <el-tooltip class="item" effect="dark" content="最小化" placement="top">
+          <el-button v-if="customizing" type="success" icon="el-icon-minus" circle size="mini"
+                     @click="clickMinimize"></el-button>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="恢复默认" placement="top">
+          <el-button v-if="customizing" type="primary" icon="el-icon-refresh-right" circle size="mini"
+                     @click="backDefault()"></el-button>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="关闭" placement="top">
+          <el-button v-if="customizing" type="danger" icon="el-icon-close" circle size="mini"
+                     @click="close()"></el-button>
+        </el-tooltip>
       </div>
-    </div>
+      <div slot="widgetsList">
+        <div v-if="myCompsList.length<=0" class="widgets-list-nodata">
+          <el-empty description="没有部件啦" :image-size="60"></el-empty>
+        </div>
+        <div class="widgetsListBox">
+          <span v-for="item in myCompsList" :key="item.title">
+            <el-tooltip class="item" effect="dark" :content="item.description" placement="top">
+              <div class="widgetsListItem" :style="{background: $util.randomBackground()}">
+                <span style="position: relative;right: 8px;float: right;top: -22px;cursor: pointer;" @click="push(item)">
+                  <i class="el-icon-plus"></i>
+                </span>
+                <i :class="item.icon"></i> &nbsp;{{ item.title }}
+              </div>
+            </el-tooltip>
+          </span>
+        </div>
+      </div>
+    </suspended-library>
     <div class="widgets" ref="widgets">
       <div :class="['widgets-wrapper',customizing?'widgets-wrapper-bg':'']">
         <div v-if="nowCompsList.length<=0" class="no-widgets">
@@ -45,7 +48,7 @@
         <grid-layout
           ref="gridlayout"
           :layout.sync="layout"
-          :col-num="24"
+          :col-num="colNum"
           :row-height="1"
           :is-draggable="customizing"
           :vertical-compact="false"
@@ -59,22 +62,31 @@
                      :w="item.w"
                      :h="item.h"
                      :i="item.i"
+                     :minW="item.minW"
+                     :minH="item.minH"
+                     :maxW="item.maxW"
+                     :maxH="item.maxH"
                      :key="index"
                      :isResizable="customizing"
 
           >
-            <div  v-if="customizing" class="customize-overlay">
+            <div v-if="customizing" class="customize-overlay">
+              <el-button v-if="item.config && Object.keys(item.config).length!==0" class="close" style="right: 60px;"
+                         type="primary" plain icon="el-icon-setting" size="small"
+                         @click="clickConfig(item,index)" circle></el-button>
               <el-button class="close" type="danger" plain icon="el-icon-close" size="small"
-                         @click="remove(index)"></el-button>
+                         @click="remove(index)" circle></el-button>
               <label>
                 <i :class="allComps[item.element].icon"></i>
                 {{ allComps[item.element].title }}</label>
             </div>
-            <component :class="customizing?'set-component-bg':''"  :is="allComps[item.element]"></component>
+            <component :class="customizing?'set-component-bg':''" :is="allComps[item.element]"
+                       :config="item.config || {}"></component>
           </grid-item>
         </grid-layout>
       </div>
     </div>
+    <dashboard-config ref="dashboardConfig"></dashboard-config>
   </d2-container>
 </template>
 
@@ -83,11 +95,14 @@ import draggable from 'vuedraggable'
 import allComps from './components'
 import util from '@/libs/util'
 import VueGridLayout from 'vue-grid-layout'
-import XEUtils from 'xe-utils'
-const mouseXY = { x: null, y: null }
-const DragPos = { x: 0, y: 0, w: 1, h: 1, i: null }
+import SuspendedLibrary from '@/views/dashboard/workbench/suspendedLibrary'
+import DashboardConfig from '@/views/dashboard/workbench/config'
+import initData from './init.js'
+
 export default {
   components: {
+    DashboardConfig,
+    SuspendedLibrary,
     draggable,
     GridLayout: VueGridLayout.GridLayout,
     GridItem: VueGridLayout.GridItem
@@ -97,28 +112,16 @@ export default {
       customizing: false,
       allComps: allComps,
       selectLayout: [],
-      defaultLayout: [
-        { x: 0, y: 0, w: 50, h: 50, i: '0', element: 'welcome' },
-        { x: 0, y: 52, w: 8, h: 16, i: '1', element: 'about' },
-        { x: 8, y: 52, w: 8, h: 16, i: '2', element: 'time' },
-        { x: 16, y: 52, w: 8, h: 20, i: '3', element: 'ver' }
-      ],
-      layout: [
-        // { x: 0, y: 0, w: 2, h: 2, i: '0', element: 'welcome' },
-        // { x: 2, y: 0, w: 2, h: 4, i: '1', element: 'about' },
-        // { x: 4, y: 0, w: 2, h: 5, i: '2', element: 'time' },
-        // { x: 6, y: 0, w: 2, h: 3, i: '3', element: 'progress' }
-      ]
+      defaultLayout: initData,
+      layout: [],
+      colNum: 24,
+      minimize: false
     }
   },
   created () {
     this.layout = JSON.parse(util.cookies.get('grid-layout') || JSON.stringify(this.defaultLayout))
   },
   mounted () {
-    document.addEventListener('dragover', function (e) {
-      mouseXY.x = e.clientX
-      mouseXY.y = e.clientY
-    }, false)
     this.$emit('on-mounted')
   },
   computed: {
@@ -131,8 +134,11 @@ export default {
           icon: allComps[key].icon,
           height: allComps[key].height,
           width: allComps[key].width,
-          maxH: allComps[key].maxH || Infinity,
-          maxW: allComps[key].maxW || Infinity,
+          minH: allComps[key].minH || 1,
+          minW: allComps[key].minW || 1,
+          maxH: allComps[key].maxH || 100,
+          maxW: (allComps[key].maxW > this.colNum ? this.colNum : allComps[key].maxW) || Infinity,
+          config: allComps[key].config || {},
           isResizable: allComps[key].isResizable || null,
           description: allComps[key].description
         })
@@ -150,36 +156,31 @@ export default {
     // 开启自定义
     custom () {
       this.customizing = true
+      this.$refs.suspendedLibrary.menu = true
       const oldWidth = this.$refs.widgets.offsetWidth
       this.$nextTick(() => {
         const scale = this.$refs.widgets.offsetWidth / oldWidth
         this.$refs.widgets.style.setProperty('transform', `scale(${scale})`)
       })
     },
-    // 设置布局
-    setLayout (layout) {
-      // 暂定
-    },
     getLayoutElementNumber (elementName) {
-      // var index = 0
-      // this.layout.map(res => {
-      //   if (elementName === res.element) {
-      //     index += 1
-      //   }
-      // })
-      // return index + 1
       return elementName + this.layout.length
     },
     // 追加
     push (item) {
       console.log(1, item)
       this.layout.push({
-        x: 6,
-        y: 0,
+        i: this.getLayoutElementNumber(item.key),
+        x: (this.layout.length * 2) % (this.colNum || 12),
+        y: this.layout.length + (this.colNum || 12),
         w: item.width,
         h: item.height,
+        minW: item.minW,
+        minH: item.minH,
+        maxW: item.maxW,
+        maxH: item.maxH,
+        config: item.config || {},
         isResizable: item.isResizable || null,
-        i: this.getLayoutElementNumber(item.key),
         element: item.key
       })
     },
@@ -191,12 +192,16 @@ export default {
     save () {
       console.log(this.layout)
       this.customizing = false
+      this.minimize = false
+      this.$refs.suspendedLibrary.menu = false
       this.$refs.widgets.style.removeProperty('transform')
       util.cookies.set('grid-layout', this.layout)
     },
     // 恢复默认
-    backDefaul () {
+    backDefault () {
       this.customizing = false
+      this.minimize = false
+      this.$refs.suspendedLibrary.menu = false
       this.$refs.widgets.style.removeProperty('transform')
       this.layout = JSON.parse(JSON.stringify(this.defaultLayout))
       util.cookies.remove('grid-layout')
@@ -204,87 +209,50 @@ export default {
     // 关闭
     close () {
       this.customizing = false
+      this.minimize = false
+      this.$refs.suspendedLibrary.menu = false
       this.$refs.widgets.style.removeProperty('transform')
     },
-    // 拖拽事件
-    onDrag (e, item) {
-      const { key, width, height } = item
-      const parentRect = this.$refs.widgets.getBoundingClientRect()
-      let mouseInGrid = false
-      if (((mouseXY.x > parentRect.left) && (mouseXY.x < parentRect.right)) && ((mouseXY.y > parentRect.top) && (mouseXY.y < parentRect.bottom))) {
-        mouseInGrid = true
-      }
-      const cloneLayout = XEUtils.clone(this.layout, true)
-      if (mouseInGrid === true && (cloneLayout.findIndex(item => item.i === this.getLayoutElementNumber(key)) === -1)) {
-        // this.layout.push({
-        //   x: (this.layout.length * 2) % (this.colNum || 12),
-        //   y: this.layout.length + (this.colNum || 12), // puts it at the bottom
-        //   w: width,
-        //   h: height,
-        //   i: this.getLayoutElementNumber(key),
-        //   element: key
-        // })
-      }
-      const index = this.layout.findIndex(item => item.i === this.getLayoutElementNumber(key))
-      if (index !== -1) {
-        try {
-          this.$refs.gridlayout.$children[this.layout.length].$refs.item.style.display = 'none'
-        } catch {
-        }
-        const el = this.$refs.gridlayout.$children[index]
-        el.dragging = { top: mouseXY.y - parentRect.top, left: mouseXY.x - parentRect.left }
-        const new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left)
-        if (mouseInGrid === true) {
-          this.$refs.gridlayout.dragEvent('dragstart', this.getLayoutElementNumber(key), new_pos.x, new_pos.y, 1, 1)
-          DragPos.i = String(index)
-          DragPos.x = this.layout[index].x
-          DragPos.y = this.layout[index].y
-        }
-        if (mouseInGrid === false) {
-          this.$refs.gridlayout.dragEvent('dragend', this.getLayoutElementNumber(key), new_pos.x, new_pos.y, 1, 1)
-          this.layout = this.layout.filter(obj => obj.i !== this.getLayoutElementNumber(key))
-        }
-      }
+    // 最小化
+    clickMinimize () {
+      this.minimize = !this.minimize
+      this.$refs.suspendedLibrary.menu = !this.$refs.suspendedLibrary.menu
     },
-    onDragend (e, item) {
-      const { key, width, height } = item
-      const parentRect = this.$refs.widgets.getBoundingClientRect()
-      let mouseInGrid = false
-      if (((mouseXY.x > parentRect.left) && (mouseXY.x < parentRect.right)) && ((mouseXY.y > parentRect.top) && (mouseXY.y < parentRect.bottom))) {
-        mouseInGrid = true
-      }
-      if (mouseInGrid === true) {
-        this.layout.push({
-          x: DragPos.x,
-          y: DragPos.y,
-          w: width,
-          h: height,
-          i: this.getLayoutElementNumber(key),
-          element: key
-        })
-        this.$refs.gridlayout.dragEvent('dragend', this.getLayoutElementNumber(key), DragPos.x, DragPos.y, 1, 1)
-        this.layout = this.layout.filter(obj => obj.i !== this.getLayoutElementNumber(key))
-        // UNCOMMENT below if you want to add a grid-item
-        /*
-        this.layout.push({
-            x: DragPos.x,
-            y: DragPos.y,
-            w: 1,
-            h: 1,
-            i: DragPos.i,
-        });
-        this.$refs.gridLayout.dragEvent('dragend', DragPos.i, DragPos.x,DragPos.y,1,1);
-        try {
-            this.$refs.gridLayout.$children[this.layout.length].$refs.item.style.display="block";
-        } catch {
-        }
-        */
-      }
+    // 系统配置
+    clickConfig (itme) {
+      this.$refs.dashboardConfig.deviceUpgradeDrawer = true
+      this.$refs.dashboardConfig.initData(this.allComps[itme.element], itme)
+      this.minimize = false
     }
   }
 }
 </script>
 <style scoped lang="scss">
+::v-deep .d2-container-full__body{
+  padding: 0!important;
+}
+.widgetsListItem {
+  width: 168px;
+  height: 75px;
+  border-radius: 4px 4px 4px 4px;
+  font-size: 16px;
+  font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  margin-left: 7px;
+  line-height: 75px;
+  margin-bottom: 10px;
+  position: initial;
+}
+
+.widgetsListBox {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  z-index: 999999;
+}
+
 .component-header {
   background-color: #FFFFFF;
   position: sticky;
@@ -294,7 +262,6 @@ export default {
   .set-btn-class {
     float: right;
     z-index: 99;
-    margin-bottom: 10px;
   }
 
   .all-component-class {
@@ -326,9 +293,9 @@ export default {
   opacity: 0.5;
 }
 
-.set-component-bg{
-  background:rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(0,0,0,.5);
+.set-component-bg {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, .5);
 }
 
 .customize-overlay {
@@ -368,10 +335,6 @@ export default {
   position: absolute;
   top: 15px;
   right: 15px;
-}
-
-.customize-overlay .close:focus, .customize-overlay .close:hover {
-  background: #76B1F9;
 }
 
 </style>

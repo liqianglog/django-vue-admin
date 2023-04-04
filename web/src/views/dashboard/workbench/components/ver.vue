@@ -14,7 +14,7 @@ export default {
   title: '版本信息',
   icon: 'el-icon-monitor',
   description: '当前项目版本信息',
-  height: 10,
+  height: 20,
   minH: 10,
   width: 8,
   minW: 4,
@@ -44,16 +44,9 @@ export default {
     gogit () {
       window.open('https://gitee.com/liqianglog/django-vue-admin')
     },
-    // 生成一个随机整数
+    // 生成一个颜色
     randomColor () {
-      const color = [
-        '#50A8F4FF',
-        '#FD6165FF',
-        '#E679D8FF',
-        '#F9AB5BFF'
-      ]
-      const ran = Math.floor(Math.random() * 4)
-      return color[ran]
+      return this.color || this.$util.randomColor()
     }
   }
 }
@@ -66,5 +59,12 @@ export default {
   .card-content{
     //text-align: center;
   }
+}
+::v-deep .el-card__body {
+  height: 110px;
+
+}
+.el-card{
+  height: 100%;
 }
 </style>
