@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "corsheaders",  # 注册跨域app
+    'rest_framework_simplejwt.token_blacklist',
     "dvadmin.system",
     "drf_yasg",
     "captcha",
@@ -92,7 +93,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "application.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -190,83 +190,71 @@ CHANNEL_LAYERS = {
 # ================================================= #
 
 # log 配置部分BEGIN #
-SERVER_LOGS_FILE = os.path.join(BASE_DIR, "logs", "server.log")
-ERROR_LOGS_FILE = os.path.join(BASE_DIR, "logs", "error.log")
+LOGS_FILE = os.path.join(BASE_DIR, "logs")
 if not os.path.exists(os.path.join(BASE_DIR, "logs")):
     os.makedirs(os.path.join(BASE_DIR, "logs"))
-
-# 格式:[2020-04-22 23:33:01][micoservice.apps.ready():16] [INFO] 这是一条日志:
-# 格式:[日期][模块.函数名称():行号] [级别] 信息
-STANDARD_LOG_FORMAT = (
-    "[%(asctime)s][%(name)s.%(funcName)s():%(lineno)d] [%(levelname)s] %(message)s"
-)
-CONSOLE_LOG_FORMAT = (
-    "[%(asctime)s][%(name)s.%(funcName)s():%(lineno)d] [%(levelname)s] %(message)s"
-)
 
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "standard": {"format": STANDARD_LOG_FORMAT},
-        "console": {
-            "format": CONSOLE_LOG_FORMAT,
+        "servers": {
+            "format": "%(message)s",
             "datefmt": "%Y-%m-%d %H:%M:%S",
-        },
-        "file": {
-            "format": CONSOLE_LOG_FORMAT,
-            "datefmt": "%Y-%m-%d %H:%M:%S",
-        },
+        }
     },
     "handlers": {
-        "file": {
-            "level": "INFO",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": SERVER_LOGS_FILE,
+        "servers": {
+            "logging_levels": ["info", "error", "warning"],
+            "class": "dvadmin.utils.log.InterceptTimedRotatingFileHandler",  # 这个路径看你本地放在哪里(下面的log文件)
+            "filename": os.path.join(LOGS_FILE, "server.log"),
+            "when": "D",
+            "interval": 1,
             "maxBytes": 1024 * 1024 * 100,  # 100 MB
-            "backupCount": 5,  # 最多备份5个
-            "formatter": "standard",
+            "backupCount": 1,
+            "formatter": "servers",
             "encoding": "utf-8",
-        },
-        "error": {
-            "level": "ERROR",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": ERROR_LOGS_FILE,
-            "maxBytes": 1024 * 1024 * 100,  # 100 MB
-            "backupCount": 3,  # 最多备份3个
-            "formatter": "standard",
-            "encoding": "utf-8",
-        },
-        "console": {
-            "level": "INFO",
-            "class": "logging.StreamHandler",
-            "formatter": "console",
-        },
+        }
     },
     "loggers": {
         # default日志
-        "": {
-            "handlers": ["console", "error", "file"],
-            "level": "INFO",
+        'django': {
+            'handlers': ['servers'],
+            'propagate': False,
+            'level': "INFO"
         },
-        "django": {
-            "handlers": ["console", "error", "file"],
-            "level": "INFO",
-            "propagate": False,
+        '': {
+            'handlers': ['servers'],
+            'propagate': False,
+            'level': "ERROR"
         },
-        "scripts": {
-            "handlers": ["console", "error", "file"],
-            "level": "INFO",
-            "propagate": False,
+        'celery': {
+            'handlers': ['servers'],
+            'propagate': False,
+            'level': "INFO"
         },
-        # 数据库相关日志
-        "django.db.backends": {
-            "handlers": [],
-            "propagate": True,
+        'django.db.backends': {
+            'handlers': ['servers'],
+            'propagate': False,
+            'level': "INFO"
+        },
+        'django.request': {
+            'handlers': ['servers'],
+            'propagate': False,
+            'level': "DEBUG"
+        },
+        "uvicorn.error": {
             "level": "INFO",
+            "handlers": ["servers"],
+        },
+        "uvicorn.access": {
+            "handlers": ["servers"],
+            "level": "INFO",
+            "propagate": False
         },
     },
 }
+
 
 # ================================================= #
 # *************** REST_FRAMEWORK配置 *************** #
@@ -306,12 +294,14 @@ from datetime import timedelta
 
 SIMPLE_JWT = {
     # token有效时长
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     # token刷新后的有效时间
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     # 设置前缀
     "AUTH_HEADER_TYPES": ("JWT",),
     "ROTATE_REFRESH_TOKENS": True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
 
 # ====================================#
@@ -396,7 +386,13 @@ TENANT_SHARED_APPS = []
 PLUGINS_URL_PATTERNS = []
 # ********** 一键导入插件配置开始 **********
 # 例如:
-# from dvadmin_upgrade_center.settings import *    # 升级中心
-# from dvadmin_celery.settings import *            # celery 异步任务
+# from dvadmin_upgrade_center.settings import *   # 升级中心
+# from dvadmin_celery.settings import *           # celery 异步任务
+# from dvadmin_sms.settings import *              # 短信服务
+# from dvadmin_third.settings import *            # 扫码登录
+# from dvadmin_uniapp.settings import *           # UniApp后端
+# from dvadmin_ak_sk.settings import *            # 秘钥管理管理
+# from dvadmin_tenants.settings import *          # 租户管理
 # ...
+
 # ********** 一键导入插件配置结束 **********

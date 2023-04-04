@@ -45,6 +45,7 @@ class Users(CoreModel,AbstractUser):
         blank=True,
         help_text="关联部门",
     )
+    last_token = models.CharField(max_length=255,null=True,blank=True, verbose_name="最后一次登录Token", help_text="最后一次登录Token")
 
     def set_password(self, raw_password):
         super().set_password(hashlib.md5(raw_password.encode(encoding="UTF-8")).hexdigest())
@@ -149,7 +150,7 @@ class Dept(CoreModel):
 class Menu(CoreModel):
     parent = models.ForeignKey(
         to="Menu",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         verbose_name="上级菜单",
         null=True,
         blank=True,
@@ -184,7 +185,7 @@ class MenuButton(CoreModel):
         to="Menu",
         db_constraint=False,
         related_name="menuPermission",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         verbose_name="关联菜单",
         help_text="关联菜单",
     )
@@ -309,7 +310,7 @@ class Area(CoreModel):
         to="self",
         verbose_name="父地区编码",
         to_field="code",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         db_constraint=False,
         null=True,
         blank=True,
@@ -348,15 +349,15 @@ class SystemConfig(CoreModel):
     parent = models.ForeignKey(
         to="self",
         verbose_name="父级",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         db_constraint=False,
         null=True,
         blank=True,
         help_text="父级",
     )
     title = models.CharField(max_length=50, verbose_name="标题", help_text="标题")
-    key = models.CharField(max_length=20, verbose_name="键", help_text="键", db_index=True)
-    value = models.JSONField(max_length=100, verbose_name="值", help_text="值", null=True, blank=True)
+    key = models.CharField(max_length=100, verbose_name="键", help_text="键", db_index=True)
+    value = models.JSONField(max_length=200, verbose_name="值", help_text="值", null=True, blank=True)
     sort = models.IntegerField(default=0, verbose_name="排序", help_text="排序", blank=True)
     status = models.BooleanField(default=True, verbose_name="启用状态", help_text="启用状态")
     data_options = models.JSONField(verbose_name="数据options", help_text="数据options", null=True, blank=True)
@@ -406,7 +407,7 @@ class SystemConfig(CoreModel):
 
 
 class LoginLog(CoreModel):
-    LOGIN_TYPE_CHOICES = ((1, "普通登录"), (2, "微信扫码登录"),)
+    LOGIN_TYPE_CHOICES = ((1, "普通登录"), (2, "微信扫码登录"), (3, "飞书扫码登录"), (4, "钉钉扫码登录"))
     username = models.CharField(max_length=32, verbose_name="登录用户名", null=True, blank=True, help_text="登录用户名")
     ip = models.CharField(max_length=32, verbose_name="登录ip", null=True, blank=True, help_text="登录ip")
     agent = models.TextField(verbose_name="agent信息", null=True, blank=True, help_text="agent信息")

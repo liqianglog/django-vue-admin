@@ -123,6 +123,30 @@ util.randomString = function (e) {
   return n
 }
 
+util.randomColor = function () {
+  const color = [
+    '#50A8F4FF',
+    '#FD6165FF',
+    '#E679D8FF',
+    '#F9AB5BFF'
+  ]
+  const ran = Math.floor(Math.random() * color.length)
+  return color[ran]
+}
+
+util.randomBackground = function () {
+  const background = [
+    'linear-gradient(150deg, #accaff 0%, #3b88ec 100%)',
+    'linear-gradient(150deg, #c5f8e6 0%, #10a465 100%)',
+    'linear-gradient(150deg, #e8d6ff 0%, #9f55ff 100%)',
+    'linear-gradient(150deg, #fdda45 0%, #fe6b62 100%)',
+    'linear-gradient(150deg, #cefbc8 0%, #00aec5 100%)',
+    'linear-gradient(150deg, #c5f8e6 0%, #10a465 100%)'
+  ]
+  const ran = Math.floor(Math.random() * background.length)
+  return background[ran]
+}
+
 util.ArrayToTree = function (rootList, parentValue, parentName, list) {
   for (const item of rootList) {
     if (item.parent === parentValue) {

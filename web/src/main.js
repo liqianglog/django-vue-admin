@@ -34,11 +34,13 @@ import md5 from 'js-md5'
 
 // websocket
 import websocket from '@/api/websocket'
+import util from '@/libs/util'
 
 // 核心插件
 Vue.use(d2Admin)
 Vue.use(VXETable)
 Vue.prototype.$md5 = md5
+Vue.prototype.$util = util
 Vue.prototype.$websocket = websocket
 
 new Vue({

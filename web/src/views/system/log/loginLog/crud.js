@@ -8,7 +8,7 @@ export const crudOptions = (vm) => {
       // rowKey: true, // 必须设置，true or false
       rowId: 'id',
       height: '100%', // 表格高度100%, 使用toolbar必须设置
-      highlightCurrentRow: false,
+      highlightCurrentRow: false
     },
     rowHandle: {
       fixed: 'right',

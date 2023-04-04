@@ -1,5 +1,5 @@
 <template>
-  <el-card shadow="hover" header="欢迎">
+  <el-card shadow="hover" header="欢迎" style="background: linear-gradient(150deg, #3b88ec 0%, #accaff 100%);color: #fff;">
     <div class="welcome">
       <div class="logo">
         <img src="/image/django-vue-admin.png">
@@ -37,10 +37,10 @@ export default {
   title: '欢迎',
   icon: 'el-icon-present',
   description: '项目特色以及文档链接',
-  height: 50,
-  minH: 50,
   width: 8,
-  minW: 4,
+  height: 45,
+  minH: 45,
+  minW: 1,
   isResizable: true,
   data () {
     return {}
@@ -48,15 +48,19 @@ export default {
   methods: {
     godoc () {
       window.open('https://www.django-vue-admin.com/')
+    },
+    // 生成一个颜色
+    randomColor () {
+      if (this.config?.color?.value) {
+        return this.config.color.value
+      }
+      return this.color || this.$util.randomColor()
     }
   }
 }
 </script>
 
 <style scoped>
-.welcome {
-}
-
 .welcome .logo {
   text-align: center;
 }
@@ -108,6 +112,9 @@ export default {
 
 .actions {
   text-align: center;
-  margin: 40px 0 20px 0;
+  margin: 40rpx 0 20rpx 0;
+}
+.el-card{
+  height: 100%;
 }
 </style>

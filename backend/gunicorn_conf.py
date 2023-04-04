@@ -23,7 +23,7 @@ pidfile = './gunicorn.pid'
 # 日志级别，这个日志级别指的是错误日志的级别，而访问日志的级别无法设置
 loglevel = 'info'
 # 设置gunicorn访问日志格式，错误日志无法设置
-access_log_format = '%(t)s %(p)s %(h)s "%(r)s" %(s)s %(L)s %(b)s %(f)s" "%(a)s"'
+access_log_format = '' # worker_class 为 uvicorn.workers.UvicornWorker 时，日志格式为Django的loggers
 # 监听队列
 backlog = 512
 #进程名

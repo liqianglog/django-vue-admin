@@ -27,6 +27,7 @@ class SystemConfigCreateSerializer(CustomModelSerializer):
     """
     form_item_type_label = serializers.CharField(source='get_form_item_type_display', read_only=True)
 
+
     class Meta:
         model = SystemConfig
         fields = "__all__"
