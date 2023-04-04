@@ -2,7 +2,7 @@
 
 [![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitee.com/liqianglog/django-vue-admin/blob/master/LICENSE)  [![img](https://img.shields.io/badge/python-%3E=3.7.x-green.svg)](https://python.org/)  [![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-3.2-blue)](https://docs.djangoproject.com/zh-hans/3.2/) [![img](https://img.shields.io/badge/node-%3E%3D%2012.0.0-brightgreen)](https://nodejs.org/zh-cn/) [![img](https://gitee.com/liqianglog/django-vue-admin/badge/star.svg?theme=dark)](https://gitee.com/liqianglog/django-vue-admin)
 
-[preview](https://demo.django-vue-admin.com) | [Official website document](https://www.django-vue-admin.com) | [qq group](https://qm.qq.com/cgi-bin/qm/qr?k=fOdnHhC8DJlRHGYSnyhoB8P5rgogA6Vs&jump_from=webapi) | [community](https://bbs.django-vue-admin.com) | [plugins market](https://bbs.django-vue-admin.com/plugMarket.html) | [Github](https://github.com/liqianglog/django-vue-admin)
+[中文文档](./README.md) | [preview](https://demo.django-vue-admin.com) | [Official website document](https://www.django-vue-admin.com) | [qq group](https://qm.qq.com/cgi-bin/qm/qr?k=fOdnHhC8DJlRHGYSnyhoB8P5rgogA6Vs&jump_from=webapi) | [community](https://bbs.django-vue-admin.com) | [plugins market](https://bbs.django-vue-admin.com/plugMarket.html) | [Github](https://github.com/liqianglog/django-vue-admin)
 
 💡 **「About」**
 
@@ -111,8 +111,8 @@ npm run dev
  python3 manage.py init_area
 8. start backend
  python3 manage.py runserver 0.0.0.0:8000
-or daphne :
-  daphne -b 0.0.0.0 -p 8000 application.asgi:application
+or gunicorn :
+  gunicorn -c gunicorn_conf.py application.asgi:application
 ~~~
 
 ### visit backend swagger
@@ -147,22 +147,29 @@ docker-compose up -d --build
 
 ## Demo screenshot✅
 
-![image-01](https://images.gitee.com/uploads/images/2022/0530/234137_b58c8f98_5074988.png)
 
-![image-02](https://images.gitee.com/uploads/images/2022/0530/234240_39834603_5074988.png)
+![image-01](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-01.jpg)
 
-![image-03](https://images.gitee.com/uploads/images/2022/0530/234339_35e728a0_5074988.png)
+![image-02](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-02.jpg)
 
-![image-04](https://images.gitee.com/uploads/images/2022/0530/234426_957036b0_5074988.png)
+![image-03](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-03.jpg)
 
-![image-05](https://images.gitee.com/uploads/images/2022/0530/234458_898be492_5074988.png)
+![image-04](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-04.jpg)
 
-![image-06](https://images.gitee.com/uploads/images/2022/0530/234521_35b40076_5074988.png)
+![image-05](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-05.jpg)
 
-![image-07](https://images.gitee.com/uploads/images/2022/0530/234615_c2325639_5074988.png)
+![image-06](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-06.jpg)
 
-![image-08](https://images.gitee.com/uploads/images/2022/0530/234639_1ed6cc93_5074988.png)
+![image-07](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-07.jpg)
 
-![image-09](https://images.gitee.com/uploads/images/2022/0530/234815_cea2c53f_5074988.png)
+![image-08](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-08.jpg)
 
-![image-10](https://images.gitee.com/uploads/images/2022/0530/234840_5f3e5f53_5074988.png)
+![image-09](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-09.jpg)
+
+![image-10](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-10.jpg)
+
+![image-11](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-11.jpg)
+
+![image-12](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-12.jpg)
+
+![image-13](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-13.jpg)
