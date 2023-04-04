@@ -396,6 +396,7 @@ export default {
       const tableLength = tableData.length
       if (tableLength === 0) {
         const { row } = $table.insert()
+        console.log(row)
       } else {
         const errMap = await $table.validate().catch(errMap => errMap)
         if (errMap) {
