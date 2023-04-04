@@ -44,6 +44,6 @@ LOGIN_NO_CAPTCHA_AUTH = True
 # ================================================= #
 
 ALLOWED_HOSTS = ["*"]
+# 系统配置存放位置：redis/memory(默认)
+DISPATCH_DB_TYPE = 'redis'
 
-# daphne启动命令
-#daphne application.asgi:application -b 0.0.0.0 -p 8000
