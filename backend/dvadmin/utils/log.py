@@ -128,7 +128,4 @@ class InterceptTimedRotatingFileHandler(RotatingFileHandler):
         if is_tenants_mode():
             bind["schema_name"] = connection.tenant.schema_name
             bind["domain_url"] = getattr(connection.tenant, 'domain_url', None)
-        self.logger_ \
-            .opt(depth=depth, exception=record.exc_info, colors=True, lazy=True) \
-            .bind(**bind) \
-            .log(level, msg)
+        self.logger_.opt(depth=depth, exception=record.exc_info, colors=True, lazy=True).bind(**bind).log(level, f"{msg}")
