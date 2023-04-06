@@ -11,9 +11,6 @@ from jwt import InvalidSignatureError
 from rest_framework.request import Request
 
 from application import settings
-from dvadmin.system.models import MessageCenter, Users, MessageCenterTargetUser
-from dvadmin.system.views.message_center import MessageCenterTargetUserSerializer
-from dvadmin.utils.serializers import CustomModelSerializer
 
 send_dict = {}
 
@@ -110,17 +107,10 @@ class MegCenter(DvadminWebSocket):
     async def push_message(self, event):
         """消息发送"""
         message = event['json']
+        print("进入消息发送")
         await self.send(text_data=json.dumps(message))
 
 
-class MessageCreateSerializer(CustomModelSerializer):
-    """
-    消息中心-新增-序列化器
-    """
-    class Meta:
-        model = MessageCenter
-        fields = "__all__"
-        read_only_fields = ["id"]
 
 def websocket_push(user_id,message):
     username = "user_" + str(user_id)
@@ -132,50 +122,3 @@ def websocket_push(user_id,message):
             "json": message
         }
     )
-
-def create_message_push(title: str, content: str, target_type: int=0, target_user: list=[], target_dept=None, target_role=None,
-             message: dict = {'contentType': 'INFO', 'content': '测试~'}, request= Request):
-    if message is None:
-        message = {"contentType": "INFO", "content": None}
-    if target_role is None:
-        target_role = []
-    if target_dept is None:
-        target_dept = []
-    data = {
-        "title": title,
-        "content": content,
-        "target_type": target_type,
-        "target_user":target_user,
-        "target_dept":target_dept,
-        "target_role":target_role
-    }
-    message_center_instance = MessageCreateSerializer(data=data,request=request)
-    message_center_instance.is_valid(raise_exception=True)
-    message_center_instance.save()
-    users = target_user or []
-    if target_type in [1]:  # 按角色
-        users = Users.objects.filter(role__id__in=target_role).values_list('id', flat=True)
-    if target_type in [2]:  # 按部门
-        users = Users.objects.filter(dept__id__in=target_dept).values_list('id', flat=True)
-    if target_type in [3]:  # 系统通知
-        users = Users.objects.values_list('id', flat=True)
-    targetuser_data = []
-    for user in users:
-        targetuser_data.append({
-            "messagecenter": message_center_instance.instance.id,
-            "users": user
-        })
-    targetuser_instance = MessageCenterTargetUserSerializer(data=targetuser_data, many=True, request=request)
-    targetuser_instance.is_valid(raise_exception=True)
-    targetuser_instance.save()
-    for user in users:
-        username = "user_" + str(user)
-        unread_count = async_to_sync(_get_message_unread)(user)
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            username,
-            {
-                "type": "push.message",
-                "json": {**message,'unread':unread_count}
-            }
-        )

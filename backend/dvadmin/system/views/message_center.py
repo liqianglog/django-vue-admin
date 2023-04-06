@@ -8,6 +8,7 @@ from rest_framework import serializers
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
+from application.websocketConfig import websocket_push
 from dvadmin.system.models import MessageCenter, Users, MessageCenterTargetUser
 from dvadmin.utils.json_response import SuccessResponse, DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -95,20 +96,6 @@ class MessageCenterTargetUserListSerializer(CustomModelSerializer):
         fields = "__all__"
         read_only_fields = ["id"]
 
-def websocket_push(user_id, message):
-    """
-    主动推送消息
-    """
-    username = "user_"+str(user_id)
-    print(103,message)
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-    username,
-    {
-      "type": "push.message",
-      "json": message
-    }
-    )
 
 class MessageCenterCreateSerializer(CustomModelSerializer):
     """
