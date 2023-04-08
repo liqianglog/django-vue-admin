@@ -112,22 +112,12 @@ class MegCenter(DvadminWebSocket):
     async def push_message(self, event):
         """消息发送"""
         message = event['json']
-        print("进入消息发送",event)
         await self.send(text_data=json.dumps(message))
 
 
 
 def websocket_push(room_name,message):
     channel_layer = get_channel_layer()
-    print(channel_layer.__dict__)
-    # async_to_sync(channel_layer.group_send)(
-    #     "dvadmin",
-    #     {
-    #         "type": "push.message",
-    #         "json": message
-    #     }
-    # )
-    print("进入推送了")
     async_to_sync(channel_layer.group_send)(
         room_name,
         {
