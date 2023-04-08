@@ -170,19 +170,22 @@ CORS_ALLOW_CREDENTIALS = True  # 指明在跨域访问中，后端是否支持�
 # ********************* channels配置 ******************* #
 # ================================================= #
 ASGI_APPLICATION = 'application.asgi.application'
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels.layers.InMemoryChannelLayer"
-#     }
-# }
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)], #需修改
+if not locals().get('REDIS_HOST', ""):
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }
+else:
+    REDIS_URL = locals().get('REDIS_URL', "")
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [(REDIS_URL)],  # 需修改
+            },
         },
-    },
-}
+    }
 
 
 # ================================================= #
