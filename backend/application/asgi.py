@@ -13,27 +13,23 @@ import jwt
 from channels.db import database_sync_to_async
 from channels.middleware import BaseMiddleware
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AnonymousUser
 from django.core.asgi import get_asgi_application
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.db import close_old_connections
-from rest_framework_simplejwt.authentication import AUTH_HEADER_TYPE_BYTES
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-from rest_framework_simplejwt.tokens import UntypedToken
-from dvadmin.system.models import Users
-from application import settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'application.settings')
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 @database_sync_to_async
 def get_user(validated_token):
+    from dvadmin.system.models import Users
     try:
         user = get_user_model().objects.get(id=validated_token["user_id"])
         # return get_user_model().objects.get(id=toke_id)
         return user
 
     except Users.DoesNotExist:
+        from django.contrib.auth.models import AnonymousUser
         return AnonymousUser()
 
 
@@ -43,6 +39,9 @@ class JwtAuthMiddleware(BaseMiddleware):
 
     async def __call__(self, scope, receive, send):
         # Close old database connections to prevent usage of timed out connections
+        from rest_framework_simplejwt.authentication import AUTH_HEADER_TYPE_BYTES
+        from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+        from rest_framework_simplejwt.tokens import UntypedToken
         close_old_connections()
         parts = dict(scope['headers']).get(b'authorization', b'').split()
         print("parts",scope)
@@ -69,6 +68,7 @@ class JwtAuthMiddleware(BaseMiddleware):
             return None
         else:
             #  Then token is valid, decode it
+            from application import settings
             decoded_data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
             print(decoded_data)
             # Will return a dictionary like -
