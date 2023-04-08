@@ -117,6 +117,11 @@ class MegCenter(DvadminWebSocket):
 
 
 def websocket_push(room_name,message):
+    """
+    主动推送
+    @param room_name: 群组名称
+    @param message: 消息内容
+    """
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         room_name,
