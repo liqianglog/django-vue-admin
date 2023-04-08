@@ -47,4 +47,3 @@ uvicorn==0.21.1
 gunicorn==20.1.0
 gevent==22.10.2
 websockets==10.4
-loguru==0.6.0
