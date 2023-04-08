@@ -16,12 +16,12 @@ send_dict = {}
 
 
 # 发送消息结构体
-def set_message(sender, msg_type, msg, unread=0):
+def set_message(sender, msg_type, msg, refresh_unread=False):
     text = {
         'sender': sender,
         'contentType': msg_type,
         'content': msg,
-        'unread': unread
+        'refresh_unread': refresh_unread
     }
     return text
 
@@ -59,10 +59,14 @@ class DvadminWebSocket(AsyncJsonWebsocketConsumer):
             decoded_result = jwt.decode(self.service_uid, settings.SECRET_KEY, algorithms=["HS256"])
             if decoded_result:
                 self.user_id = decoded_result.get('user_id')
-                self.chat_group_name = "user_" + str(self.user_id)
+                self.room_name = "user_" + str(self.user_id)
                 # 收到连接时候处理，
                 await self.channel_layer.group_add(
-                    self.chat_group_name,
+                    "dvadmin",
+                    self.channel_name
+                )
+                await self.channel_layer.group_add(
+                    self.room_name,
                     self.channel_name
                 )
                 await self.accept()
@@ -74,13 +78,14 @@ class DvadminWebSocket(AsyncJsonWebsocketConsumer):
                 else:
                     await self.send_json(
                         set_message('system', 'SYSTEM', "请查看您的未读消息~",
-                                    unread=unread_count))
+                                    refresh_unread=True))
         except InvalidSignatureError:
             await self.disconnect(None)
 
     async def disconnect(self, close_code):
         # Leave room group
-        await self.channel_layer.group_discard(self.chat_group_name, self.channel_name)
+        await self.channel_layer.group_discard(self.room_name, self.channel_name)
+        await self.channel_layer.group_discard("dvadmin", self.channel_name)
         print("连接关闭")
         try:
             await self.close(close_code)
@@ -96,27 +101,35 @@ class MegCenter(DvadminWebSocket):
     async def receive(self, text_data):
         # 接受客户端的信息，你处理的函数
         text_data_json = json.loads(text_data)
-        message_id = text_data_json.get('message_id', None)
-        user_list = await _get_message_center_instance(message_id)
-        for send_user in user_list:
-            await self.channel_layer.group_send(
-                "user_" + str(send_user),
-                {'type': 'push.message', 'json': text_data_json}
-            )
+        # message_id = text_data_json.get('message_id', None)
+        # user_list = await _get_message_center_instance(message_id)
+        # for send_user in user_list:
+        #     await self.channel_layer.group_send(
+        #         "user_" + str(send_user),
+        #         {'type': 'push.message', 'json': text_data_json}
+        #     )
 
     async def push_message(self, event):
         """消息发送"""
         message = event['json']
-        print("进入消息发送")
+        print("进入消息发送",event)
         await self.send(text_data=json.dumps(message))
 
 
 
-def websocket_push(user_id,message):
-    username = "user_" + str(user_id)
+def websocket_push(room_name,message):
     channel_layer = get_channel_layer()
+    print(channel_layer.__dict__)
+    # async_to_sync(channel_layer.group_send)(
+    #     "dvadmin",
+    #     {
+    #         "type": "push.message",
+    #         "json": message
+    #     }
+    # )
+    print("进入推送了")
     async_to_sync(channel_layer.group_send)(
-        username,
+        room_name,
         {
             "type": "push.message",
             "json": message

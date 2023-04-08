@@ -29,8 +29,10 @@ function webSocketOnError (e) {
  */
 function webSocketOnMessage (e) {
   const data = JSON.parse(e.data)
-  const { unread } = data
-  store.dispatch('d2admin/messagecenter/setUnread', unread || 0)
+  const { refresh_unread } = data
+  if (refresh_unread) {
+    store.dispatch('d2admin/messagecenter/setUnread')
+  }
   if (data.contentType === 'SYSTEM') {
     ElementUI.Notification({
       title: '系统消息',
