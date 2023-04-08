@@ -84,6 +84,7 @@
             :key="index"
             v-else-if="item.form_item_type_label === 'switch'"
             v-model="form[item.key]"
+            :inactive-value="false"
             active-color="#13ce66"
             inactive-color="#ff4949">
           </el-switch>
@@ -310,7 +311,7 @@ export default {
             if ([5, 12, 14].indexOf(item.form_item_type) !== -1) {
               form[key] = []
             } else {
-              form[key] = undefined
+              form[key] = item.value
             }
           }
           if (item.form_item_type_label === 'array') {
@@ -321,7 +322,7 @@ export default {
             })
           }
         }
-        this.form = JSON.parse(JSON.stringify(form))
+        this.form = Object.assign({}, form)
       })
     },
     // 提交数据
