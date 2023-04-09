@@ -1,17 +1,23 @@
-import { CrudOptions, AddReq, DelReq, EditReq, dict, CrudExpose } from '@fast-crud/fast-crud';
+import {
+	CrudOptions,
+	AddReq,
+	DelReq,
+	EditReq,
+	dict,
+	CrudExpose,
+	CreateCrudOptionsRet,
+	CreateCrudOptionsProps,
+	UserPageQuery,
+} from '@fast-crud/fast-crud';
 import _ from 'lodash-es';
 import * as api from './api';
-import { dictionary } from '/@/utils/dictionary';
-
-interface CreateCrudOptionsTypes {
-	crudOptions: CrudOptions;
-}
 
 import { request } from '/@/utils/service';
 //此处为crudOptions配置
-export const createCrudOptions = function ({ crudExpose, selectOptions }: { crudExpose: CrudExpose; selectOptions: any }): CreateCrudOptionsTypes {
-	const pageRequest = async (query: any) => {
-		return await api.GetList({ menu: selectOptions.value.id } as any);
+export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOptionsProps): CreateCrudOptionsRet {
+	const pageRequest = async (query: UserPageQuery) => {
+		console.log(context!.selectOptions);
+		return await api.GetList({ menu: context!.selectOptions.value.id } as any);
 	};
 	const editRequest = async ({ form, row }: EditReq) => {
 		form.id = row.id;
