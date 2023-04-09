@@ -38,12 +38,16 @@ def CustomExceptionHandler(ex, context):
     # 调用默认的异常处理函数
     response = exception_handler(ex, context)
     if isinstance(ex, AuthenticationFailed):
-        code = 401
-        code_type = response.data.get('detail').code
-        if code_type == 'no_active_account':
-            code=400
+        # 如果是身份验证错误
+        if response and response.data.get('detail') == "Given token not valid for any token type":
+            code = 401
+            msg = ex.detail
+        elif response and response.data.get('detail') == "Token is blacklisted":
+            # token在黑名单
             return ErrorResponse(status=HTTP_401_UNAUTHORIZED)
-        msg = ex.detail
+        else:
+            code = 401
+            msg = ex.detail
     elif isinstance(ex,Http404):
         code = 400
         msg = "接口地址不正确"
