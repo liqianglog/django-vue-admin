@@ -79,16 +79,7 @@
 									</el-radio-group>
 								</el-form-item>
 							</el-col>
-							<el-col :span="20">
-								<el-form-item label="权限" class="flex flex-wrap w-full">
-									<el-checkbox-group v-model="form.permission" :disabled="form.is_catalog" class="flex flex-wrap">
-										<el-checkbox v-model="form.permission">全选</el-checkbox>
-										<!-- TODO 选中没做 -->
-										<el-checkbox v-for="item in menuPermissonList" :checked="true" :label="`${item.name}(${item.value})`" />
-									</el-checkbox-group>
-									<el-button class="mx-2" @click="addPermission()">其他权限</el-button>
-								</el-form-item>
-							</el-col>
+
 							<el-col :span="20">
 								<el-form-item label="图标" prop="icon">
 									<IconSelector clearable v-model="form.icon" />
@@ -104,11 +95,15 @@
 								</el-divider>
 							</el-col>
 						</el-row>
+						<el-row>
+							<el-col>
+								<menuButton :select-menu="form" class="h-screen/2" />
+							</el-col>
+						</el-row>
 					</el-form>
 				</el-card>
 			</el-col>
 		</el-row>
-		<menuButton :drawer-show="permissionDrawerVisible" @drawer-close="drawerClose()" :select-menu="form"></menuButton>
 	</fs-page>
 </template>
 
