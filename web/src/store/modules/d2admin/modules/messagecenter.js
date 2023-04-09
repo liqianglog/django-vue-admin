@@ -1,3 +1,5 @@
+import { request } from '@/api/service'
+import { urlPrefix } from '@/views/system/messageCenter/api'
 
 export default {
   namespaced: true,
@@ -18,8 +20,22 @@ export default {
      * @param {String} param type {String} 类型
      * @param {Object} payload meta {Object} 附带的信息
      */
-    async setUnread ({ state, commit }, number) {
-      commit('set', number)
+    async setUnread ({
+      state,
+      commit
+    }, number) {
+      if (number) {
+        commit('set', number)
+      } else {
+        request({
+          url: '/api/system/message_center/get_unread_msg/',
+          method: 'get',
+          params: {}
+        }).then(res => {
+          const { data } = res
+          commit('set', data.count)
+        })
+      }
     }
   },
   mutations: {

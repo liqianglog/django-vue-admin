@@ -170,91 +170,116 @@ CORS_ALLOW_CREDENTIALS = True  # 指明在跨域访问中，后端是否支持�
 # ********************* channels配置 ******************* #
 # ================================================= #
 ASGI_APPLICATION = 'application.asgi.application'
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+if not locals().get('REDIS_HOST', ""):
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
     }
-}
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             "hosts": [('127.0.0.1', 6379)], #需修改
-#         },
-#     },
-# }
+else:
+    REDIS_URL = locals().get('REDIS_URL', "")
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [(REDIS_URL)],  # 需修改
+            },
+        },
+    }
 
-
-# ================================================= #
-# ********************* 日志配置 ******************* #
-# ================================================= #
-
-# log 配置部分BEGIN #
+# # ================================================= #
+# # ********************* 日志配置 ******************* #
+# # ================================================= #
+# # log 配置部分BEGIN #
+SERVER_LOGS_FILE = os.path.join(BASE_DIR, "logs", "server.log")
+ERROR_LOGS_FILE = os.path.join(BASE_DIR, "logs", "error.log")
 LOGS_FILE = os.path.join(BASE_DIR, "logs")
 if not os.path.exists(os.path.join(BASE_DIR, "logs")):
     os.makedirs(os.path.join(BASE_DIR, "logs"))
 
+# 格式:[2020-04-22 23:33:01][micoservice.apps.ready():16] [INFO] 这是一条日志:
+# 格式:[日期][模块.函数名称():行号] [级别] 信息
+STANDARD_LOG_FORMAT = (
+    "[%(asctime)s][%(name)s.%(funcName)s():%(lineno)d] [%(levelname)s] %(message)s"
+)
+CONSOLE_LOG_FORMAT = (
+    "[%(asctime)s][%(name)s.%(funcName)s():%(lineno)d] [%(levelname)s] %(message)s"
+)
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "servers": {
-            "format": "%(message)s",
+        "standard": {"format": STANDARD_LOG_FORMAT},
+        "console": {
+            "format": CONSOLE_LOG_FORMAT,
             "datefmt": "%Y-%m-%d %H:%M:%S",
-        }
+        },
+        "file": {
+            "format": CONSOLE_LOG_FORMAT,
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
     },
     "handlers": {
-        "servers": {
-            "logging_levels": ["info", "error", "warning"],
-            "class": "dvadmin.utils.log.InterceptTimedRotatingFileHandler",  # 这个路径看你本地放在哪里(下面的log文件)
-            "filename": os.path.join(LOGS_FILE, "server.log"),
-            "when": "D",
-            "interval": 1,
+        "file": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": SERVER_LOGS_FILE,
             "maxBytes": 1024 * 1024 * 100,  # 100 MB
-            "backupCount": 1,
-            "formatter": "servers",
+            "backupCount": 5,  # 最多备份5个
+            "formatter": "standard",
             "encoding": "utf-8",
-        }
+        },
+        "error": {
+            "level": "ERROR",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": ERROR_LOGS_FILE,
+            "maxBytes": 1024 * 1024 * 100,  # 100 MB
+            "backupCount": 3,  # 最多备份3个
+            "formatter": "standard",
+            "encoding": "utf-8",
+        },
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "console",
+        },
+
     },
     "loggers": {
-        # default日志
-        'django': {
-            'handlers': ['servers'],
-            'propagate': False,
-            'level': "INFO"
+        "": {
+            "handlers": ["console", "error", "file"],
+            "level": "INFO",
         },
-        '': {
-            'handlers': ['servers'],
-            'propagate': False,
-            'level': "ERROR"
+        "django": {
+            "handlers": ["console", "error", "file"],
+            "level": "INFO",
+            "propagate": False,
         },
         'celery': {
-            'handlers': ['servers'],
+            'handlers': ["console", "error", "file"],
             'propagate': False,
             'level': "INFO"
         },
         'django.db.backends': {
-            'handlers': ['servers'],
+            'handlers': ["console", "error", "file"],
             'propagate': False,
             'level': "INFO"
         },
         'django.request': {
-            'handlers': ['servers'],
+            'handlers': ["console", "error", "file"],
             'propagate': False,
             'level': "DEBUG"
         },
         "uvicorn.error": {
             "level": "INFO",
-            "handlers": ["servers"],
+            "handlers": ["console", "error", "file"],
         },
         "uvicorn.access": {
-            "handlers": ["servers"],
-            "level": "INFO",
-            "propagate": False
+            "handlers": ["console", "error", "file"],
+            "level": "INFO"
         },
     },
 }
-
 
 # ================================================= #
 # *************** REST_FRAMEWORK配置 *************** #

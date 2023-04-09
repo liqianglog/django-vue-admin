@@ -397,12 +397,20 @@ class SystemConfig(CoreModel):
         return f"{self.title}"
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        # from application.websocketConfig import websocket_push
+        # websocket_push("dvadmin", message={"sender": 'system', "contentType": 'SYSTEM',
+        #                                    "content": '系统配置有变化~', "systemConfig": True})
+
         super().save(force_insert, force_update, using, update_fields)
         dispatch.refresh_system_config()  # 有更新则刷新系统配置
 
     def delete(self, using=None, keep_parents=False):
         res = super().delete(using, keep_parents)
         dispatch.refresh_system_config()
+        from application.websocketConfig import websocket_push
+        websocket_push("dvadmin", message={"sender": 'system', "contentType": 'SYSTEM',
+                                           "content": '系统配置有变化~', "systemConfig": True})
+
         return res
 
 
