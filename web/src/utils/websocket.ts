@@ -30,7 +30,7 @@ const websocket: socket = {
         }
         const token = Session.get('token')
         if(!token){
-            message.warning('websocket认证失败')
+            // message.warning('websocket认证失败')
             return null
         }
         const wsUrl = `${getWsBaseURL()}ws/${token}/`
