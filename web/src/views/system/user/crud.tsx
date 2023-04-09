@@ -63,8 +63,10 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 					search: {
 						show: true,
 					},
-					minWidth: 100,
 					type: 'input',
+					column:{
+						minWidth: 100 //最小列宽
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -114,6 +116,9 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 						show: true,
 					},
 					type: 'input',
+					column:{
+						minWidth: 100 //最小列宽
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -147,6 +152,9 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 							});
 						},
 					}),
+					column:{
+						minWidth: 150 //最小列宽
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -190,6 +198,9 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 							});
 						},
 					}),
+					column:{
+						minWidth: 100 //最小列宽
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -211,6 +222,9 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 						show: true,
 					},
 					type: 'input',
+					column:{
+						minWidth: 120 //最小列宽
+					},
 					form: {
 						rules: [
 							{
@@ -269,6 +283,9 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 					dict: dict({
 						data: dictionary('user_type'),
 					}),
+					column:{
+						minWidth: 100 //最小列宽
+					},
 					form: {
 						show: false,
 						value: 0,
