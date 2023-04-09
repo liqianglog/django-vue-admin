@@ -70,7 +70,7 @@ function createService() {
 					case 401:
 						Local.clear();
 						Session.clear();
-						dataAxios.msg = '登录授权过期，请重新登录';
+						dataAxios.msg = '登录认证失败，请重新登录';
 						ElMessageBox.alert(dataAxios.msg, '提示', {
 							confirmButtonText: 'OK',
 							callback: (action: Action) => {
@@ -100,7 +100,15 @@ function createService() {
 					error.message = '请求错误';
 					break;
 				case 401:
-					error.message = '未授权，请登录';
+					Local.clear();
+					Session.clear();
+					error.message = '登录授权过期，请重新登录';
+					ElMessageBox.alert(error.message, '提示', {
+						confirmButtonText: 'OK',
+						callback: (action: Action) => {
+							window.location.reload();
+						},
+					})
 					break;
 				case 403:
 					error.message = '拒绝访问';
