@@ -2,6 +2,15 @@ import { request } from '/@/utils/service';
 import { PageQuery, AddReq, DelReq, EditReq, InfoReq } from '@fast-crud/fast-crud';
 
 export const apiPrefix = '/api/system/user/';
+
+export function GetDept(query: PageQuery) {
+    return request({
+        url: "/api/system/dept/dept_lazy_tree/",
+        method: 'get',
+        params: query,
+    });
+}
+
 export function GetList(query: PageQuery) {
     return request({
         url: apiPrefix,

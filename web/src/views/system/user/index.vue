@@ -1,124 +1,116 @@
 <template>
-	<fs-page>
-		<el-row class="mx-2">
-			<el-col :span="4" class="p-1">
-				<el-card :body-style="{ height: '100%' }">
-					<p class="font-mono font-black text-center text-xl pb-5">
-						用户列表
-						<el-tooltip effect="dark" :content="content" placement="right">
-							<el-icon> <QuestionFilled /> </el-icon>
-						</el-tooltip>
-					</p>
-					<el-input v-model="filterText" :placeholder="placeholder" />
-					<el-tree
-						ref="treeRef"
-						class="font-mono font-bold leading-6 text-7xl"
-						:data="data"
-						:props="treeProps"
-						:filter-node-method="filterNode"
-						:load="loadNode"
-						lazy
-						icon="ArrowRightBold"
-						:indent="12"
-					>
-						<template #default="{ node, data }">
-							<span class="text-center font-black text-xl">{{ node.label }}</span>
-						</template>
-					</el-tree>
-				</el-card>
-			</el-col>
-			<el-col :span="20" class="p-1">
-				<el-card :body-style="{ height: '100%' }">
-					<fs-crud ref="crudRef" v-bind="crudBinding"> </fs-crud>
-				</el-card>
-			</el-col>
-		</el-row>
-	</fs-page>
+  <fs-page>
+    <el-row class="mx-2">
+      <el-col xs="24" :sm="8" :md="6" :lg="4" :xl="4" class="p-1">
+        <el-card :body-style="{ height: '100%' }">
+          <p class="font-mono font-black text-center text-xl pb-5">
+            部门列表
+            <el-tooltip effect="dark" :content="content" placement="right">
+              <el-icon>
+                <QuestionFilled/>
+              </el-icon>
+            </el-tooltip>
+          </p>
+          <el-input v-model="filterText" :placeholder="placeholder"/>
+          <el-tree
+              ref="treeRef"
+              class="font-mono font-bold leading-6 text-7xl"
+              :data="data"
+              :props="treeProps"
+              :filter-node-method="filterNode"
+              icon="ArrowRightBold"
+              :indent="12"
+              @node-click="onTreeNodeClick"
+          >
+            <template #default="{ node, data }">
+              <span class="text-center font-black text-xl">{{ node.label }}</span>
+            </template>
+          </el-tree>
+        </el-card>
+      </el-col>
+      <el-col xs="24" :sm="16" :md="18" :lg="20" :xl="20" class="p-1">
+        <el-card :body-style="{ height: '100%' }">
+
+          <fs-crud ref="crudRef" v-bind="crudBinding"></fs-crud>
+
+        </el-card>
+      </el-col>
+    </el-row>
+  </fs-page>
 </template>
 
 <script lang="ts" setup>
-import { useExpose, useCrud } from '@fast-crud/fast-crud';
-import { createCrudOptions } from './crud';
+import {useExpose, useCrud} from '@fast-crud/fast-crud';
+import {createCrudOptions} from './crud';
 import * as api from './api';
-import { ElTree } from 'element-plus';
-import { ref, onMounted, watch, toRaw, defineAsyncComponent } from 'vue';
+import {ElTree} from 'element-plus';
+import {ref, onMounted, watch, toRaw, defineAsyncComponent} from 'vue';
 import XEUtils from 'xe-utils';
-import { errorMessage, successMessage } from '../../../utils/message';
+import {errorMessage, successMessage} from '../../../utils/message';
+import {GetDept} from "./api";
 
 interface Tree {
-	id: number;
-	name: string;
-	status: boolean;
-	children?: Tree[];
+  id: number;
+  name: string;
+  status: boolean;
+  children?: Tree[];
 }
 
 interface APIResponseData {
-	code?: number;
-	data: [];
-	msg?: string;
+  code?: number;
+  data: [];
+  msg?: string;
 }
 
 // 引入组件
-const placeholder = ref('请输入用户名称');
+const placeholder = ref('请输入部门名称');
 const filterText = ref('');
 const treeRef = ref<InstanceType<typeof ElTree>>();
 
 const treeProps = {
-	children: 'children',
-	label: 'name',
-	icon: 'icon',
-	isLeaf: (data: Tree[], node: Node) => {
-		// @ts-ignore
-		if (node.data.hasChild) {
-			return false;
-		} else {
-			return true;
-		}
-	},
+  children: 'children',
+  label: 'name',
+  icon: 'icon'
 };
 
 watch(filterText, (val) => {
-	treeRef.value!.filter(val);
+  treeRef.value!.filter(val);
 });
 
 const filterNode = (value: string, data: Tree) => {
-	if (!value) return true;
-	return toRaw(data).name.indexOf(value) !== -1;
+  if (!value) return true;
+  return toRaw(data).name.indexOf(value) !== -1;
 };
 
-// 懒加载
-const loadNode = (node: Node, resolve: (data: Tree[]) => void) => {
-	// @ts-ignore
-	if (node.level !== 0) {
-		// @ts-ignore
-		api.GetList({ parent: node.data.id }).then((res: APIResponseData) => {
-			resolve(res.data);
-			console.log(res.data);
-		});
-	}
-};
 
 let data = ref([]);
 
 const content = `
-1.用户数据支持懒加载;
+1.部门信息;
 `;
 
 const getData = () => {
-	api.GetList({}).then((ret: APIResponseData) => {
-		const responseData = ret.data;
-		const result = XEUtils.toArrayTree(responseData, {
-			parentKey: 'parent',
-			children: 'children',
-			strict: true,
-		});
-		data.value = result;
-	});
+  api.GetDept({}).then((ret: APIResponseData) => {
+    const responseData = ret.data;
+    const result = XEUtils.toArrayTree(responseData, {
+      parentKey: 'parent',
+      children: 'children',
+      strict: true
+    });
+    console.log(result)
+    data.value = result;
+  });
 };
+
+//树形点击事件
+const onTreeNodeClick = (node: any) => {
+  const {id} = node
+  crudExpose.doSearch({form: {dept: id}})
+}
 
 // 页面打开后获取列表数据
 onMounted(() => {
-	getData();
+  getData();
 });
 
 // crud组件的ref
@@ -126,28 +118,28 @@ const crudRef = ref();
 // crud 配置的ref
 const crudBinding = ref();
 // 暴露的方法
-const { crudExpose } = useExpose({ crudRef, crudBinding });
+const {crudExpose} = useExpose({crudRef, crudBinding});
 // 你的crud配置
-const { crudOptions } = createCrudOptions({ crudExpose });
+const {crudOptions} = createCrudOptions({crudExpose});
 // 初始化crud配置
-const { resetCrudOptions } = useCrud({ crudExpose, crudOptions });
+const {resetCrudOptions} = useCrud({crudExpose, crudOptions});
 
 // 页面打开后获取列表数据
 onMounted(() => {
-	crudExpose.doRefresh();
+  crudExpose.doRefresh();
 });
 </script>
 
 <style lang="scss" scoped>
 .el-row {
-	height: 100%;
+  height: 100%;
 
-	.el-col {
-		height: 100%;
-	}
+  .el-col {
+    height: 100%;
+  }
 }
 
 .el-card {
-	height: 100%;
+  height: 100%;
 }
 </style>
