@@ -62,10 +62,10 @@ function createService() {
 				// 有 code 代表这是一个后端接口 可以进行进一步的判断
 				switch (code) {
 					case 400:
-						Local.clear();
-						Session.clear();
+						// Local.clear();
+						// Session.clear();
 						errorCreate(`${dataAxios.msg}: ${response.config.url}`);
-						window.location.reload();
+						// window.location.reload();
 						break;
 					case 401:
 						Local.clear();

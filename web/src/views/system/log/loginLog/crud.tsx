@@ -31,6 +31,7 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				},
 			},
 			rowHandle: {
+				fixed:'right',
 				width: 100,
 				buttons: {
 					view: {
@@ -89,8 +90,10 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 					search: {
 						disabled: false,
 					},
-					width: 140,
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						disabled: true,
 						component: {
@@ -103,8 +106,10 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 					search: {
 						disabled: false,
 					},
-					width: 130,
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						disabled: true,
 						component: {
@@ -118,8 +123,10 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						disabled: true,
 					},
 					disabled: true,
-					width: 180,
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						component: {
 							placeholder: '请输入运营商',
@@ -128,8 +135,10 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				},
 				continent: {
 					title: '大州',
-					width: 80,
 					type: 'input',
+					column:{
+						minWidth: 90,
+					},
 					form: {
 						disabled: true,
 						component: {
@@ -140,8 +149,10 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				},
 				country: {
 					title: '国家',
-					width: 80,
 					type: 'input',
+					column:{
+						minWidth: 90,
+					},
 					form: {
 						component: {
 							placeholder: '请输入国家',
@@ -151,8 +162,10 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				},
 				province: {
 					title: '省份',
-					width: 80,
 					type: 'input',
+					column:{
+						minWidth: 80,
+					},
 					form: {
 						component: {
 							placeholder: '请输入省份',
@@ -162,8 +175,10 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				},
 				city: {
 					title: '城市',
-					width: 80,
 					type: 'input',
+					column:{
+						minWidth: 80,
+					},
 					form: {
 						component: {
 							placeholder: '请输入城市',
@@ -174,8 +189,10 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				district: {
 					title: '县区',
 					key: '',
-					width: 80,
 					type: 'input',
+					column:{
+						minWidth: 80,
+					},
 					form: {
 						component: {
 							placeholder: '请输入县区',
@@ -186,6 +203,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				area_code: {
 					title: '区域代码',
 					type: 'input',
+					column:{
+						minWidth: 90,
+					},
 					form: {
 						component: {
 							placeholder: '请输入区域代码',
@@ -195,8 +215,10 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				},
 				country_english: {
 					title: '英文全称',
-					width: 120,
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						component: {
 							placeholder: '请输入英文全称',
@@ -207,6 +229,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				country_code: {
 					title: '简称',
 					type: 'input',
+					column:{
+						minWidth: 100,
+					},
 					form: {
 						component: {
 							placeholder: '请输入简称',
@@ -218,6 +243,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 					title: '经度',
 					type: 'input',
 					disabled: true,
+					column:{
+						minWidth: 100,
+					},
 					form: {
 						component: {
 							placeholder: '请输入经度',
@@ -229,6 +257,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 					title: '纬度',
 					type: 'input',
 					disabled: true,
+					column:{
+						minWidth: 100,
+					},
 					form: {
 						component: {
 							placeholder: '请输入纬度',
@@ -248,6 +279,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 							{ label: '微信扫码登录', value: 2 },
 						],
 					}),
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						component: {
 							placeholder: '请选择登录类型',
@@ -257,6 +291,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				os: {
 					title: '操作系统',
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						component: {
 							placeholder: '请输入操作系统',
@@ -266,6 +303,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				browser: {
 					title: '浏览器名',
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						component: {
 							placeholder: '请输入浏览器名',
@@ -276,6 +316,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 					title: 'agent信息',
 					disabled: true,
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						component: {
 							placeholder: '请输入agent信息',

@@ -94,6 +94,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						show: true,
 					},
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						component: {
 							placeholder: '请输入文件名称',
@@ -106,12 +109,17 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 					search: {
 						disabled: true,
 					},
+					column:{
+						minWidth: 200,
+					},
 				},
 				md5sum: {
 					title: '文件MD5',
-					width: 200,
 					search: {
 						disabled: true,
+					},
+					column:{
+						minWidth: 120,
 					},
 					form: {
 						disabled: false,

@@ -105,8 +105,10 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						show: true,
 					},
 					treeNode: true,
-					width: 160,
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -123,6 +125,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						show: true,
 					},
 					type: 'input',
+					column:{
+						minWidth: 90,
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -139,6 +144,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						disabled: true,
 					},
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -155,6 +163,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						disabled: true,
 					},
 					type: 'input',
+					column:{
+						minWidth: 100,
+					},
 					form: {
 						disabled: false,
 						rules: [
@@ -168,6 +179,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				},
 				initials: {
 					title: '首字母',
+					column:{
+						minWidth: 100,
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -184,9 +198,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 					search: {
 						show: true,
 					},
-					width: 90,
 					type: 'dict-radio',
 					column: {
+						minWidth:90,
 						component: {
 							name: 'fs-dict-switch',
 							activeText: '',
