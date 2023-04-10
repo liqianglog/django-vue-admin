@@ -172,30 +172,30 @@ docker-compose up -d --build
 
 ## 演示图✅
 
-![image-01](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-01.jpg)
+![image-01](https://foruda.gitee.com/images/1681118295661653899/12b2f755_5074988.jpeg)
 
-![image-02](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-02.jpg)
+![image-02](https://foruda.gitee.com/images/1681118320563350469/311f888b_5074988.jpeg)
 
-![image-03](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-03.jpg)
+![image-03](https://foruda.gitee.com/images/1681118339552860024/780a4e11_5074988.jpeg)
 
-![image-04](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-04.jpg)
+![image-04](https://foruda.gitee.com/images/1681118349561624452/d917f8bc_5074988.jpeg)
 
-![image-05](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-05.jpg)
+![image-05](https://foruda.gitee.com/images/1681118368415555513/03a8db63_5074988.jpeg)
 
-![image-06](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-06.jpg)
+![image-06](https://foruda.gitee.com/images/1681118379484890540/6f9caa75_5074988.jpeg)
 
-![image-07](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-07.jpg)
+![image-07](https://foruda.gitee.com/images/1681118387902110958/86d86d80_5074988.jpeg)
 
-![image-08](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-08.jpg)
+![image-08](https://foruda.gitee.com/images/1681118398381431700/1e3fa0ec_5074988.jpeg)
 
-![image-09](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-09.jpg)
+![image-09](https://foruda.gitee.com/images/1681118450796081811/aa00a240_5074988.png)
 
-![image-10](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-10.jpg)
+![image-10](https://foruda.gitee.com/images/1681118482618114892/5cc2e297_5074988.png)
 
-![image-11](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-11.jpg)
+![image-11](https://foruda.gitee.com/images/1681118492497719384/52a47252_5074988.png)
 
-![image-12](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-12.jpg)
+![image-12](https://foruda.gitee.com/images/1681118517168485285/f34152ba_5074988.png)
 
-![image-13](https://kfm-waiter.oss-cn-zhangjiakou.aliyuncs.com/dvadmin/img/docs/demo-13.jpg)
+![image-13](https://foruda.gitee.com/images/1681118527820910716/43a7c660_5074988.png)
 
 
