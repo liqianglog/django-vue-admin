@@ -39,3 +39,11 @@ export function DelObj(id: DelReq) {
 		data: { id },
 	});
 }
+
+export function lazyLoadDept(query: UserPageQuery) {
+	return request({
+		url: apiPrefix,
+		method: 'get',
+		params: query,
+	});
+}
