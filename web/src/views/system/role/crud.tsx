@@ -3,6 +3,7 @@ import _ from 'lodash-es';
 import * as api from './api';
 import { dictionary } from '/@/utils/dictionary';
 import { successMessage } from '../../../utils/message';
+import {inject} from "vue";
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
@@ -23,6 +24,9 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 		return await api.AddObj(form);
 	};
 
+	//权限判定
+	const hasPermissions = inject("$hasPermissions")
+
 	return {
 		crudOptions: {
 			request: {
@@ -42,17 +46,20 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 					edit: {
 						iconRight: 'Edit',
 						type: 'text',
+						show:hasPermissions('role:Update')
 					},
 					remove: {
 						iconRight: 'Delete',
 						type: 'text',
+						show:hasPermissions('role:Delete')
 					},
 					custom: {
 						text: '权限配置',
 						type: 'text',
+						show:hasPermissions('role:Update'),
 						tooltip: {
 							placement: 'top',
-							content: '删除',
+							content: '权限配置',
 						},
 						click: (context: any): void => {
 							const { row } = context;
@@ -81,13 +88,6 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 						align: 'center',
 						width: '70px',
 						columnSetDisabled: true, //禁止在列设置中选择
-						formatter: (context) => {
-							//计算序号,你可以自定义计算规则，此处为翻页累加
-							let index = context.index ?? 1;
-							let pagination = crudExpose.crudBinding.value.pagination;
-							// @ts-ignore
-							return ((pagination.currentPage ?? 1) - 1) * pagination.pageSize + index + 1;
-						},
 					},
 				},
 				id: {
@@ -108,7 +108,7 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 					form: {
 						rules: [{ required: true, message: '角色名称必填' }],
 						component: {
-							placeholder: '输入角色名称搜索',
+							placeholder: '请输入角色名称',
 						},
 					},
 				},
@@ -170,6 +170,7 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 					search: { show: true },
 					type: 'dict-radio',
 					column: {
+						width:100,
 						component: {
 							name: 'fs-dict-switch',
 							activeText: '',

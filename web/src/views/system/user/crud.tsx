@@ -3,6 +3,7 @@ import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions, comp
 import { request } from '/@/utils/service';
 import { dictionary } from '/@/utils/dictionary';
 import { successMessage } from '/@/utils/message';
+import {inject} from "vue";
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
@@ -21,6 +22,10 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 	const addRequest = async ({ form }: AddReq) => {
 		return await api.AddObj(form);
 	};
+
+	//权限判定
+	const hasPermissions = inject("$hasPermissions")
+
 	return {
 		crudOptions: {
 			request: {
@@ -40,10 +45,12 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 					edit: {
 						iconRight: 'Edit',
 						type: 'text',
+						show:hasPermissions('user:Update')
 					},
 					remove: {
 						iconRight: 'Delete',
 						type: 'text',
+						show:hasPermissions('user:Delete')
 					},
 				},
 			},

@@ -1,7 +1,7 @@
 import * as api from './api';
 import { dict, UserPageQuery, AddReq, DelReq, EditReq, compute, CreateCrudOptionsProps, CreateCrudOptionsRet } from '@fast-crud/fast-crud';
 import { dictionary } from '/@/utils/dictionary';
-import { nextTick, ref } from 'vue';
+import {inject, nextTick, ref} from 'vue';
 import { successMessage } from '/@/utils/message';
 
 export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOptionsProps): CreateCrudOptionsRet {
@@ -18,6 +18,11 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 	const addRequest = async ({ form }: AddReq) => {
 		return await api.AddObj(form);
 	};
+
+	//权限判定
+	const hasPermissions = inject("$hasPermissions")
+
+
 	return {
 		crudOptions: {
 			request: {
@@ -27,6 +32,7 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 				delRequest,
 			},
 			rowHandle: {
+				fixed:'right',
 				width: 200,
 				buttons: {
 					view: {
@@ -35,14 +41,17 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 					edit: {
 						iconRight: 'Edit',
 						type: 'text',
+						show:hasPermissions('dictonary:Update')
 					},
 					remove: {
 						iconRight: 'Delete',
 						type: 'text',
+						show:hasPermissions('dictonary:Delete')
 					},
 					custom: {
 						text: '字典配置',
 						type: 'text',
+						show:hasPermissions('dictonary:Update'),
 						tooltip: {
 							placement: 'top',
 							content: '字典配置',
@@ -111,6 +120,9 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 						},
 					},
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -135,6 +147,9 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 						},
 					},
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -155,12 +170,12 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 				},
 				status: {
 					title: '状态',
-					width: 90,
 					search: {
 						show: true,
 					},
 					type: 'dict-radio',
 					column: {
+						minWidth: 90,
 						component: {
 							name: 'fs-dict-switch',
 							activeText: '',
@@ -181,8 +196,10 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 				},
 				sort: {
 					title: '排序',
-					width: 90,
 					type: 'number',
+					column:{
+						minWidth: 80,
+					},
 					form: {
 						value: 1,
 					},
