@@ -42,7 +42,7 @@ LOGIN_NO_CAPTCHA_AUTH = True
 # ================================================= #
 # ****************** 其他 配置  ******************* #
 # ================================================= #
-
+ENVIRONMENT = "local"  # 环境，test 测试环境;prod线上环境;local本地环境
 ALLOWED_HOSTS = ["*"]
 # 系统配置存放位置：redis/memory(默认)
 DISPATCH_DB_TYPE = 'redis'
