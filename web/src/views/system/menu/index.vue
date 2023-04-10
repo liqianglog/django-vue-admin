@@ -96,8 +96,8 @@
 							</el-col>
 						</el-row>
 						<el-row>
-							<el-col>
-								<menuButton :select-menu="form" class="h-screen/2" />
+							<el-col class="h-full">
+								<el-card :body-style="{ height: '100%' }" class="mt-10"><menuButton :select-menu="form" /></el-card>
 							</el-col>
 						</el-row>
 					</el-form>

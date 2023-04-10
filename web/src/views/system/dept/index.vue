@@ -3,12 +3,7 @@
 		<el-row class="mx-2">
 			<el-col :span="4" class="p-1">
 				<el-card :body-style="{ height: '100%' }">
-					<p class="font-mono font-black text-center text-xl pb-5">
-						部门列表
-						<el-tooltip effect="dark" :content="content" placement="right">
-							<el-icon> <QuestionFilled /> </el-icon>
-						</el-tooltip>
-					</p>
+					<p class="font-mono font-black text-center text-xl pb-5">部门列表</p>
 					<el-input v-model="filterText" :placeholder="placeholder" />
 					<el-tree
 						ref="treeRef"
@@ -17,19 +12,65 @@
 						:props="treeProps"
 						:filter-node-method="filterNode"
 						:load="loadNode"
+						@node-drop="nodeDrop"
 						lazy
 						icon="ArrowRightBold"
 						:indent="12"
+						draggable
+						@node-click="handleNodeClick"
 					>
 						<template #default="{ node, data }">
-							<span class="text-center font-black text-xl">{{ node.label }}</span>
+							<span v-if="data.status" class="text-center font-black text-xl"><SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}</span>
+							<span v-else class="text-center font-black text-xl text-red-700"><SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}</span>
 						</template>
 					</el-tree>
 				</el-card>
 			</el-col>
 			<el-col :span="20" class="p-1">
 				<el-card :body-style="{ height: '100%' }">
-					<fs-crud ref="crudRef" v-bind="crudBinding"> </fs-crud>
+					<el-form ref="formRef" :rules="rules" :model="form" label-width="120px" label-position="right">
+						<el-divider>
+							<strong>部门配置</strong>
+						</el-divider>
+						<el-row>
+							<el-col :span="10">
+								<el-form-item label="部门ID" prop="id"> <el-input v-model="form.id" disabled /> </el-form-item>
+							</el-col>
+							<el-col :span="10">
+								<el-form-item label="父级部门ID" prop="parent"> <el-input v-model="form.parent" /> </el-form-item>
+							</el-col>
+							<el-col :span="10">
+								<el-form-item required label="部门名称" prop="name"> <el-input v-model="form.name" /> </el-form-item>
+							</el-col>
+							<el-col :span="10">
+								<el-form-item required label="部门标识" prop="key"> <el-input v-model="form.key" /> </el-form-item>
+							</el-col>
+							<el-col :span="10">
+								<el-form-item label="负责人" prop="owner"> <el-input v-model="form.owner" /> </el-form-item>
+							</el-col>
+							<el-col :span="10">
+								<el-form-item label="联系电话" prop="phone"> <el-input v-model="form.phone" /> </el-form-item>
+							</el-col>
+							<el-col :span="10">
+								<el-form-item label="邮箱" prop="email"> <el-input v-model="form.email" /> </el-form-item>
+							</el-col>
+							<el-col :span="10">
+								<el-form-item label="排序" prop="sort">
+									<el-input-number v-model="form.sort" controls-position="right" />
+								</el-form-item>
+							</el-col>
+
+							<el-col class="center">
+								<el-divider>
+									<el-button @click="saveMenu()" type="primary" round>保存</el-button>
+									<el-button @click="newMenu()" type="success" round>新建</el-button>
+									<el-button @click="addChildMenu()" type="info" round>添加子级</el-button>
+									<el-button @click="addSameLevelMenu()" type="warning" round>添加同级</el-button>
+									<el-button @click="deleteMenu()" type="danger" round>删除部门</el-button>
+								</el-divider>
+							</el-col>
+						</el-row>
+					</el-form>
 				</el-card>
 			</el-col>
 		</el-row>
@@ -37,12 +78,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch, toRaw } from 'vue';
-import { useFs } from '@fast-crud/fast-crud';
-import { createCrudOptions } from './crud';
 import * as api from './api';
-import { ElTree } from 'element-plus';
+import { ElForm, ElTree, FormRules } from 'element-plus';
+import { ref, onMounted, reactive, toRaw, watch } from 'vue';
 import XEUtils from 'xe-utils';
+import { errorMessage, successMessage } from '../../../utils/message';
 
 interface Tree {
 	id: number;
@@ -57,7 +97,10 @@ interface APIResponseData {
 	msg?: string;
 }
 
-// 引入组件
+interface Form<T> {
+	[key: string]: T;
+}
+
 const placeholder = ref('请输入部门名称');
 const filterText = ref('');
 const treeRef = ref<InstanceType<typeof ElTree>>();
@@ -65,15 +108,23 @@ const treeRef = ref<InstanceType<typeof ElTree>>();
 const treeProps = {
 	children: 'children',
 	label: 'name',
-	icon: 'icon',
-	isLeaf: (data: Tree[], node: Node) => {
-		// @ts-ignore
-		if (node.data.hasChild) {
-			return false;
-		} else {
-			return true;
-		}
-	},
+	// isLeaf: (data: Tree[], node: Node) => {
+	// 	// @ts-ignore
+	// 	if (node.data.is_catalog) {
+	// 		return false;
+	// 	} else {
+	// 		return true;
+	// 	}
+	// },
+};
+
+const validateWebPath = (rule: string, value: string, callback: Function) => {
+	let pattern = /^\/.*?/;
+	if (!pattern.test(value)) {
+		callback(new Error('请输入正确的地址'));
+	} else {
+		callback();
+	}
 };
 
 watch(filterText, (val) => {
@@ -90,18 +141,44 @@ const loadNode = (node: Node, resolve: (data: Tree[]) => void) => {
 	// @ts-ignore
 	if (node.level !== 0) {
 		// @ts-ignore
-		api.GetList({ parent: node.data.id }).then((res: APIResponseData) => {
+		api.lazyLoadDept({ parent: node.data.id }).then((res: APIResponseData) => {
 			resolve(res.data);
-			console.log(res.data);
+		});
+	}
+};
+
+const nodeDrop = (draggingNode: Node, dropNode: Node, dropType: string, event: any) => {
+	// @ts-ignore
+	if (!dropNode.isLeaf) {
+		// @ts-ignore
+		api.dragMenu({ menu_id: draggingNode.data.id, parent_id: dropNode.data.id }).then((res: APIResponseData) => {
+			successMessage(res.msg as string);
 		});
 	}
 };
 
 let data = ref([]);
 
-const content = `
-1.部门数据支持懒加载;
-`;
+let isAddNewMenu = ref(false); // 判断当前是新增部门，还是更新保存当前部门
+
+let form: Form<any> = reactive({
+	id: '',
+	parent: '',
+	name: '',
+	owner: '',
+	phone: '',
+	email: '',
+	sort: '',
+});
+
+const formRef = ref<InstanceType<typeof ElForm>>();
+
+const rules = reactive<FormRules>({
+	// @ts-ignore
+	parent: [{ required: true, message: '父级部门名称必填', trigger: 'blur' }],
+	name: [{ required: true, message: '部门名称必填', trigger: 'blur' }],
+	key: [{ required: true, message: '部门标识必填', trigger: 'blur' }],
+});
 
 const getData = () => {
 	api.GetList({}).then((ret: APIResponseData) => {
@@ -115,12 +192,68 @@ const getData = () => {
 	});
 };
 
-const { crudBinding, crudRef, crudExpose } = useFs({ createCrudOptions });
+const saveMenu = () => {
+	formRef.value?.validate((valid, fields) => {
+		if (valid) {
+			if (!isAddNewMenu.value) {
+				// 保存部门
+				form.component == '' ? (form.is_catalog = true) : (form.is_catalog = false);
+				api.UpdateObj(form).then((res: APIResponseData) => {
+					successMessage(res.msg as string);
+					getData();
+				});
+			} else {
+				// 新增部门
+				form.component == '' ? (form.is_catalog = true) : (form.is_catalog = false);
+				api.AddObj(form).then((res: APIResponseData) => {
+					successMessage(res.msg as string);
+					getData();
+				});
+			}
+		} else {
+			errorMessage('请填写检查表单');
+		}
+	});
+};
+
+const newMenu = () => {
+	formRef.value?.resetFields();
+	isAddNewMenu.value = true;
+};
+
+const addChildMenu = () => {
+	let parentId = form.id;
+	formRef.value?.resetFields();
+	form.parent = parentId;
+	isAddNewMenu.value = true;
+};
+
+const addSameLevelMenu = () => {
+	let parentId = form.parent;
+	formRef.value?.resetFields();
+	form.parent = parentId;
+	isAddNewMenu.value = true;
+};
+
+const deleteMenu = () => {
+	api.DelObj(form).then((res: APIResponseData) => {
+		successMessage(res.msg as string);
+		getData();
+	});
+};
+
+const handleNodeClick = (data: any, node: any, prop: any) => {
+	Object.keys(toRaw(data)).forEach((key: string) => {
+		form[key] = data[key];
+	});
+	delete form.component_name;
+	form.id = data.id;
+	isAddNewMenu.value = false;
+};
 
 // 页面打开后获取列表数据
 onMounted(() => {
 	getData();
-	crudExpose.doRefresh();
 });
 </script>
 
