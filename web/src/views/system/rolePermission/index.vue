@@ -7,18 +7,24 @@
       :before-close="handleClose"
   >
     <template #header>
-      <div  >
-        <el-tag size="large"  type="primary">当前角色:{{ editedRoleInfo.name }}</el-tag>
+      <div>
+        <el-tag size="large" type="primary">当前角色:{{ editedRoleInfo.name }}</el-tag>
       </div>
-     </template>
+    </template>
     <div style="padding: 1em">
       <el-row :gutter="10">
         <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="6">
-          <el-alert title="针对角色的页面菜单进行授权"  description="点击菜单项,可对菜单下的按钮/接口授权" type="warning" />
           <el-card header="菜单页面授权">
             <template #header>
               <div class="card-header">
-                <span>菜单页面</span>
+                <el-tooltip effect="dark" content="点击菜单项,可对菜单下的按钮/接口授权" placement="right">
+                  <div>
+                    <span>菜单页面</span>
+                    <el-icon>
+                      <QuestionFilled/>
+                    </el-icon>
+                  </div>
+                </el-tooltip>
                 <el-button size="mini" type="primary" @click="onSaveAuth">保存菜单授权</el-button>
               </div>
             </template>
@@ -35,11 +41,18 @@
           </el-card>
         </el-col>
         <el-col :xs="24" :sm="24" :md="16" :lg="18" :xl="18">
-          <el-alert title="对页面菜单下按钮授权"  description="新增或删除对菜单下的按钮/接口授权" type="warning" />
+          <!--          <el-alert title="对页面菜单下按钮授权"  description="新增或删除对菜单下的按钮/接口授权" type="warning" />-->
           <el-card v-if="isBtnPermissionShow">
             <template #header>
               <div class="card-header">
-                <span>按钮/接口授权</span>
+                <el-tooltip effect="dark" content="新增或删除对菜单下的按钮/接口授权" placement="right">
+                  <div>
+                    <span>按钮/接口授权</span>
+                    <el-icon>
+                      <QuestionFilled/>
+                    </el-icon>
+                  </div>
+                </el-tooltip>
               </div>
             </template>
             <div>
@@ -49,12 +62,12 @@
               <el-table size="small" :data="buttonPermissionData" border style="width: 100%">
                 <el-table-column prop="menu_button" label="权限名称" width="100">
                   <template #default="scope">
-                    <div>{{formatMenuBtn(scope.row.menu_button)}}</div>
+                    <div>{{ formatMenuBtn(scope.row.menu_button) }}</div>
                   </template>
                 </el-table-column>
                 <el-table-column prop="data_range" label="权限范围" width="140">
                   <template #default="scope">
-                    <div>{{formatDataRange(scope.row.data_range)}}</div>
+                    <div>{{ formatDataRange(scope.row.data_range) }}</div>
                   </template>
                 </el-table-column>
                 <el-table-column prop="dept" label="权限涉及部门"/>
@@ -139,8 +152,8 @@
 import {ref, defineExpose, reactive, toRefs} from 'vue'
 import {ElMessageBox} from 'element-plus'
 import * as api from './api'
-import type {FormRules,FormInstance} from 'element-plus'
-import { ElMessage } from 'element-plus'
+import type {FormRules, FormInstance} from 'element-plus'
+import {ElMessage} from 'element-plus'
 import XEUtils from 'xe-utils'
 //抽屉是否显示
 const drawer = ref(false)
@@ -190,7 +203,7 @@ let buttonOptions = ref<[]>()
 let editedMenuInfo = ref()
 //菜单节点点击事件
 const menuNodeClick = (node: any, obj: any) => {
-  isBtnPermissionShow.value =  !node.is_catalog
+  isBtnPermissionShow.value = !node.is_catalog
   if (!node.is_catalog) {
     buttonOptions.value = []
     editedMenuInfo.value = node
@@ -198,7 +211,7 @@ const menuNodeClick = (node: any, obj: any) => {
       const {data} = res
       buttonOptions.value = data
     })
-    api.getObj({menu: node.id,role:editedRoleInfo.value.id}).then((res:any)=>{
+    api.getObj({menu: node.id, role: editedRoleInfo.value.id}).then((res: any) => {
       const {data} = res
       buttonPermissionData.value = data
     })
@@ -211,7 +224,7 @@ const menuTree = ref()
 //是否显示新增表单
 const dialogFormVisible = ref(false)
 //部门树
-const deptTree=ref()
+const deptTree = ref()
 //自定义部门数据
 const deptOptions = ref()
 //选中的部门数据
@@ -220,7 +233,7 @@ const deptCheckedKeys = []
 const buttonForm = reactive({
   menu_button: null,
   role: null,
-  menu:null,
+  menu: null,
   data_range: null,
   dept: []
 })
@@ -256,20 +269,20 @@ const onChangeButton = (val: any) => {
   })
   //获取权限部门值
   api.GetDataScopeDept({menu_button: val}).then((res: any) => {
-    deptOptions.value = XEUtils.toArrayTree(res.data,{ parentKey: 'parent', strict: false })
+    deptOptions.value = XEUtils.toArrayTree(res.data, {parentKey: 'parent', strict: false})
   })
 
 }
 //过滤按钮名称
-const formatMenuBtn = (val:any)=>{
-  let obj:any = buttonOptions.value?.find((item:any)=>{
-    return item.id===val
+const formatMenuBtn = (val: any) => {
+  let obj: any = buttonOptions.value?.find((item: any) => {
+    return item.id === val
   })
-  return obj?obj.name:null
+  return obj ? obj.name : null
 }
 //过滤权限范围
-const formatDataRange = (val:any)=>{
-  let obj:any = [
+const formatDataRange = (val: any) => {
+  let obj: any = [
     {
       "value": 0,
       "label": '仅本人数据权限'
@@ -290,17 +303,17 @@ const formatDataRange = (val:any)=>{
       "value": 4,
       "label": '自定义数据权限'
     }
-  ].find((item:any)=>{
-    return item.value===val
+  ].find((item: any) => {
+    return item.value === val
   })
-  return obj?obj.label:null
+  return obj ? obj.label : null
 }
 //保存按钮表单
 
 const onSaveButtonForm = async () => {
-  const {id:roleId} = editedRoleInfo.value
-  const {id:menuId} = editedMenuInfo.value
-  const form:any = Object.assign({},buttonForm)
+  const {id: roleId} = editedRoleInfo.value
+  const {id: menuId} = editedMenuInfo.value
+  const form: any = Object.assign({}, buttonForm)
   form.role = roleId
   form.menu = menuId
   //选中的部门
@@ -309,7 +322,7 @@ const onSaveButtonForm = async () => {
   if (!buttonFormRef.value) return
   await buttonFormRef.value.validate((valid, fields) => {
     if (valid) {
-      api.CreatePermission(form).then((res:any)=>{
+      api.CreatePermission(form).then((res: any) => {
         buttonPermissionData.value.push(form)
         dialogFormVisible.value = false
         ElMessage({
@@ -320,7 +333,7 @@ const onSaveButtonForm = async () => {
     } else {
       ElMessage({
         type: 'error',
-        title:'提交错误',
+        title: '提交错误',
         message: 'F12控制台看详情',
       })
       console.log('提交错误', fields)
@@ -329,8 +342,8 @@ const onSaveButtonForm = async () => {
 
 }
 //删除按钮权限
-const onDeleteBtn = (scope:any)=>{
-  const {row,$index} = scope
+const onDeleteBtn = (scope: any) => {
+  const {row, $index} = scope
   ElMessageBox.confirm(
       '您是否要删除数据?',
       '温馨提示',
@@ -339,15 +352,15 @@ const onDeleteBtn = (scope:any)=>{
         cancelButtonText: '取消',
         type: 'warning',
       }
-    ).then(() => {
-        api.DeletePermission({id:row.id}).then(res=>{
-          buttonPermissionData.value.splice($index,1)
-          ElMessage({
-            type: 'success',
-            message: res.msg,
-          })
-        })
+  ).then(() => {
+    api.DeletePermission({id: row.id}).then(res => {
+      buttonPermissionData.value.splice($index, 1)
+      ElMessage({
+        type: 'success',
+        message: res.msg,
       })
+    })
+  })
       .catch(() => {
         ElMessage({
           type: 'info',
@@ -373,12 +386,12 @@ const onSaveAuth = () => {
   //合并的菜单数据
   const menuIdList = [...checkedList, ...halfCheckedList]
   // console.log(menuIdList)
-  const { id:roleId } = editedRoleInfo.value
+  const {id: roleId} = editedRoleInfo.value
   const data = {
-    role:roleId,
-    menu:menuIdList
+    role: roleId,
+    menu: menuIdList
   }
-  api.SaveMenuPermission(data).then((res:any)=>{
+  api.SaveMenuPermission(data).then((res: any) => {
     ElMessage({
       message: res.msg,
       type: 'success',

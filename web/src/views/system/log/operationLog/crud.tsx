@@ -31,6 +31,7 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				},
 			},
 			rowHandle: {
+				fixed:'right',
 				width: 100,
 				buttons: {
 					view: {
@@ -90,6 +91,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						disabled: false,
 					},
 					type: 'input',
+					column:{
+						minWidth: 100,
+					},
 					form: {
 						disabled: true,
 						component: {
@@ -103,6 +107,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						disabled: false,
 					},
 					type: 'input',
+					column:{
+						minWidth: 200,
+					},
 					form: {
 						disabled: true,
 						component: {
@@ -141,6 +148,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 					search: {
 						disabled: false,
 					},
+					column:{
+						minWidth: 100,
+					},
 					form: {
 						disabled: true,
 						component: {
@@ -164,6 +174,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						disabled: false,
 					},
 					type: 'input',
+					column:{
+						minWidth: 100,
+					},
 					form: {
 						disabled: true,
 						component: {
@@ -175,6 +188,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				request_browser: {
 					title: '请求浏览器',
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						disabled: true,
 					},
@@ -186,6 +202,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						disabled: true,
 					},
 					type: 'input',
+					column:{
+						minWidth: 100,
+					},
 					form: {
 						disabled: true,
 					},
@@ -198,6 +217,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						disabled: true,
 					},
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						disabled: true,
 					},
@@ -209,6 +231,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						disabled: true,
 					},
 					type: 'input',
+					column:{
+						minWidth: 150,
+					},
 					form: {
 						disabled: true,
 					},
@@ -216,6 +241,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				},
 				creator_name: {
 					title: '操作人',
+					column:{
+						minWidth: 100,
+					},
 					form: {
 						disabled: true,
 					},

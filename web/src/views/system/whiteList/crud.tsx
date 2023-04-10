@@ -124,6 +124,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 							},
 						],
 					}),
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -162,6 +165,9 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 							});
 						},
 					}),
+					column:{
+						minWidth: 200,
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -199,6 +205,7 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 					},
 					type: 'dict-radio',
 					column: {
+						minWidth:120,
 						component: {
 							name: 'fs-dict-switch',
 							activeText: '',

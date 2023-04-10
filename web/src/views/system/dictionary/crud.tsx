@@ -111,6 +111,9 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 						},
 					},
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -135,6 +138,9 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 						},
 					},
 					type: 'input',
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -155,12 +161,12 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 				},
 				status: {
 					title: '状态',
-					width: 90,
 					search: {
 						show: true,
 					},
 					type: 'dict-radio',
 					column: {
+						minWidth: 90,
 						component: {
 							name: 'fs-dict-switch',
 							activeText: '',
@@ -181,8 +187,10 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 				},
 				sort: {
 					title: '排序',
-					width: 90,
 					type: 'number',
+					column:{
+						minWidth: 80,
+					},
 					form: {
 						value: 1,
 					},

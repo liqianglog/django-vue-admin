@@ -73,6 +73,9 @@ export const createCrudOptions = function ({ crudExpose, tabActivted }: { crudEx
 						show: true,
 					},
 					type: ['text', 'colspan'],
+					column:{
+						minWidth: 120,
+					},
 					form: {
 						rules: [
 							// 表单校验规则
@@ -103,7 +106,9 @@ export const createCrudOptions = function ({ crudExpose, tabActivted }: { crudEx
 				target_type: {
 					title: '目标类型',
 					type: ['dict-radio', 'colspan'],
-					width: 120,
+					column:{
+						minWidth: 120,
+					},
 					dict: dict({
 						data: [
 							{ value: 0, label: '按用户' },
@@ -134,7 +139,6 @@ export const createCrudOptions = function ({ crudExpose, tabActivted }: { crudEx
 					search: {
 						disabled: true,
 					},
-					width: 130,
 					form: {
 						component: {
 							name: shallowRef(tableSelector),
