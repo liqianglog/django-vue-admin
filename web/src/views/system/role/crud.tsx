@@ -3,6 +3,7 @@ import _ from 'lodash-es';
 import * as api from './api';
 import { dictionary } from '/@/utils/dictionary';
 import { successMessage } from '../../../utils/message';
+import {inject} from "vue";
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
@@ -23,6 +24,9 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 		return await api.AddObj(form);
 	};
 
+	//权限判定
+	const hasPermissions = inject("$hasPermissions")
+
 	return {
 		crudOptions: {
 			request: {
@@ -42,17 +46,20 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 					edit: {
 						iconRight: 'Edit',
 						type: 'text',
+						show:hasPermissions('role:Update')
 					},
 					remove: {
 						iconRight: 'Delete',
 						type: 'text',
+						show:hasPermissions('role:Delete')
 					},
 					custom: {
 						text: '权限配置',
 						type: 'text',
+						show:hasPermissions('role:Update'),
 						tooltip: {
 							placement: 'top',
-							content: '删除',
+							content: '权限配置',
 						},
 						click: (context: any): void => {
 							const { row } = context;

@@ -1,7 +1,7 @@
 import * as api from './api';
 import { dict, useCompute, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions } from '@fast-crud/fast-crud';
 import tableSelector from '/@/components/tableSelector/index.vue';
-import { shallowRef, computed, ref } from 'vue';
+import {shallowRef, computed, ref, inject} from 'vue';
 import manyToMany from '/@/components/manyToMany/index.vue';
 
 const { compute } = useCompute();
@@ -36,6 +36,9 @@ export const createCrudOptions = function ({ crudExpose, tabActivted }: { crudEx
 		return tabActivted.value === 'receive';
 	});
 
+	//权限判定
+	const hasPermissions = inject("$hasPermissions")
+
 	return {
 		crudOptions: {
 			request: {
@@ -45,11 +48,17 @@ export const createCrudOptions = function ({ crudExpose, tabActivted }: { crudEx
 				delRequest,
 			},
 			rowHandle: {
+				fixed:'right',
+				width:150,
 				buttons: {
 					edit: {
 						show: false,
 					},
 					view: {
+						text:"查看",
+						type:'text',
+						iconRight:'View',
+						show:hasPermissions("messageCenter:Search"),
 						click({ index, row }) {
 							crudExpose.openView({ index, row });
 							if (tabActivted.value === 'receive') {
@@ -57,6 +66,11 @@ export const createCrudOptions = function ({ crudExpose, tabActivted }: { crudEx
 								crudExpose.doRefresh();
 							}
 						},
+					},
+					remove: {
+						iconRight: 'Delete',
+						type: 'text',
+						show:hasPermissions('messageCenter:Delete')
 					},
 				},
 			},
