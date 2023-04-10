@@ -331,6 +331,7 @@ export default {
       const form = JSON.parse(JSON.stringify(this.form))
       const keys = Object.keys(form)
       const values = Object.values(form)
+      let submitForm = Object.assign([],this.formList)
       for (const index in this.formList) {
         const item = this.formList[index]
         // eslint-disable-next-line camelcase
@@ -347,7 +348,7 @@ export default {
               child.parent = parentId
               child.id = null
             }
-            this.formList.push(child)
+            submitForm.push(child)
           }
           // 必填项的判断
           for (const arr of item.rule) {
@@ -380,7 +381,7 @@ export default {
       that.$refs.form.validate((valid) => {
         if (valid) {
           api.saveContent(this.options.id,
-            this.formList).then(res => {
+            submitForm).then(res => {
             this.$message.success('保存成功')
             this.refreshView()
           })
@@ -397,14 +398,13 @@ export default {
       const tableLength = tableData.length
       if (tableLength === 0) {
         const { row } = $table.insert()
-        console.log(row)
       } else {
         const errMap = await $table.validate().catch(errMap => errMap)
         if (errMap) {
           this.$message.error('校验不通过！')
         } else {
           const { row } = $table.insert()
-          console.log(row)
+
         }
       }
     },
@@ -450,7 +450,7 @@ export default {
           if (!uploadImgKey || uploadImgKey === '') {
             that.form[imgKey] = []
           }
-          // console.log(len)
+
           const dict = {
             name: name,
             url: util.baseURL() + url
