@@ -412,10 +412,10 @@ PLUGINS_URL_PATTERNS = []
 # ********** 一键导入插件配置开始 **********
 # 例如:
 # from dvadmin_upgrade_center.settings import *   # 升级中心
-# from dvadmin_celery.settings import *           # celery 异步任务
-# from dvadmin_sms.settings import *              # 短信服务
-# from dvadmin_third.settings import *            # 扫码登录
-# from dvadmin_uniapp.settings import *           # UniApp后端
+from dvadmin_celery.settings import *           # celery 异步任务
+from dvadmin_sms.settings import *              # 短信服务
+from dvadmin_third.settings import *            # 扫码登录
+from dvadmin_uniapp.settings import *           # UniApp后端
 # from dvadmin_ak_sk.settings import *            # 秘钥管理管理
 # from dvadmin_tenants.settings import *          # 租户管理
 # ...
