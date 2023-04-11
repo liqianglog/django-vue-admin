@@ -6,9 +6,7 @@
 				<el-card shadow="hover" header="个人信息">
 					<div class="personal-user">
 						<div class="personal-user-left">
-							<!-- <el-avatar :size="100" v-if="state.personalForm.avatar" :src="state.personalForm.avatar" /> -->
-							<!-- <el-avatar :size="100" v-else src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" /> -->
-							<avatarSelector @uploadImg="uploadImg"></avatarSelector>
+							<avatarSelector v-model="selectImgVisible" @uploadImg="uploadImg" ref="avatarSelectorRef"></avatarSelector>
 						</div>
 						<div class="personal-user-right">
 							<el-row>
@@ -181,11 +179,11 @@ import { getBaseURL } from '/@/utils/baseUrl';
 import { Session } from '/@/utils/storage';
 import { useRouter } from 'vue-router';
 import { useUserInfo } from '/@/stores/userInfo';
-const userStore = useUserInfo();
+import { successMessage } from '/@/utils/message';
 
 // 头像裁剪组件
 const avatarSelector = defineAsyncComponent(() => import('/@/components/avatarSelector/index.vue'));
-
+const avatarSelectorRef = ref(null);
 // 当前时间提示语
 const currentTime = computed(() => {
 	return formatAxis(new Date());
@@ -195,13 +193,9 @@ const rules = reactive({
 	name: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
 	mobile: [{ pattern: /^1[3-9]\d{9}$/, message: '请输入正确手机号' }],
 });
-// 定义变量内容
-const uploadAvatar = reactive({
-	action: getBaseURL() + 'api/system/file/',
-	headers: {
-		Authorization: 'JWT ' + Session.get('token'),
-	},
-});
+
+let selectImgVisible = ref(false);
+
 const state = reactive<PersonalState>({
 	newsInfoList: [],
 	personalForm: {
@@ -345,13 +339,20 @@ const settingPassword = () => {
 };
 
 const uploadImg = (data: any) => {
-	console.log(data);
 	let formdata = new FormData();
-	formdata.append('key', 'test_file');
 	formdata.append('file', data);
 	api.uploadAvatar(formdata).then((res: any) => {
-		// userStore.setUserInfos()
-		console.log(res);
+		if (res.code === 2000) {
+			selectImgVisible.value = false;
+			state.personalForm.avatar = getBaseURL() + res.data.url;
+			api.updateUserInfo(state.personalForm).then((res: any) => {
+				successMessage('更新成功');
+				getUserInfo();
+				useUserInfo().updateUserInfos();
+				// @ts-ignore
+				avatarSelectorRef.value.updateAvatar(state.personalForm.avatar);
+			});
+		}
 	});
 };
 </script>

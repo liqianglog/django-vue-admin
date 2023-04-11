@@ -1,7 +1,7 @@
 <template>
 	<div class="user-info-head" @click="editCropper()">
 		<el-avatar :size="100" :src="options.img" />
-		<el-dialog :title="title" v-model="open" width="600px" append-to-body @opened="modalOpened" @close="closeDialog">
+		<el-dialog :title="title" v-model="dialogVisiable" width="600px" append-to-body @opened="modalOpened" @close="closeDialog">
 			<el-row>
 				<el-col class="flex justify-center">
 					<vue-cropper
@@ -48,7 +48,7 @@
 import 'vue-cropper/dist/index.css';
 import { VueCropper } from 'vue-cropper';
 import { useUserInfo } from '/@/stores/userInfo';
-import { getCurrentInstance, nextTick, reactive, ref } from 'vue';
+import { getCurrentInstance, nextTick, reactive, ref, computed, onMounted, defineExpose } from 'vue';
 import { base64ToFile } from '/@/utils/tools';
 const userStore = useUserInfo();
 const { proxy } = getCurrentInstance();
@@ -57,10 +57,26 @@ const open = ref(false);
 const visible = ref(false);
 const title = ref('修改头像');
 const emit = defineEmits(['uploadImg']);
+const props = defineProps({
+	modelValue: {
+		type: Boolean,
+		default: false,
+		required: true,
+	},
+});
+const dialogVisiable = computed({
+	get() {
+		return props.modelValue;
+	},
+	set(newVal) {
+		emit('update:modelValue', newVal);
+	},
+});
 
 //图片裁剪数据
 const options = reactive({
 	img: userStore.userInfos.avatar, // 裁剪图片的地址
+	fileName: '',
 	autoCrop: true, // 是否默认生成截图框
 	autoCropWidth: 200, // 默认生成截图框宽度
 	autoCropHeight: 200, // 默认生成截图框高度
@@ -70,7 +86,7 @@ const options = reactive({
 
 /** 编辑头像 */
 function editCropper() {
-	open.value = true;
+	dialogVisiable.value = true;
 }
 /** 打开弹出层结束时的回调 */
 function modalOpened() {
@@ -102,6 +118,7 @@ function beforeUpload(file) {
 		reader.readAsDataURL(file);
 		reader.onload = () => {
 			options.img = reader.result;
+			options.fileName = file.name;
 		};
 	}
 }
@@ -113,7 +130,7 @@ function uploadImg() {
 		img.src = data;
 		img.onload = async () => {
 			let _data = compress(img);
-			const imgFile = base64ToFile(_data, 'testname');
+			const imgFile = base64ToFile(_data, options.fileName);
 			emit('uploadImg', imgFile);
 		};
 	});
@@ -138,9 +155,17 @@ function compress(img) {
 
 /** 关闭窗口 */
 function closeDialog() {
-	options.img = userStore.userInfos.avatar;
 	options.visible = false;
+	options.img = userStore.userInfos.avatar;
 }
+
+const updateAvatar = (img) => {
+	options.img = img;
+};
+
+defineExpose({
+	updateAvatar,
+});
 </script>
 
 <style lang="scss" scoped>
