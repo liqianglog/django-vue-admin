@@ -208,4 +208,9 @@ export default {
 <style lang="scss">
 // 注册主题
 @import "~@/assets/style/theme/register.scss";
+
+@-webkit-keyframes bgp {
+  0% {background-position: 0 0; }
+  100% {background-position: -100% 0; }
+}
 </style>

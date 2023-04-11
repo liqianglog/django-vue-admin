@@ -9,8 +9,6 @@ import qs from 'qs'
 /**
  * @description 创建请求实例
  */
-axios.defaults.retry = 1
-axios.defaults.retryDelay = 1000
 
 export function getErrorMessage (msg) {
   if (typeof msg === 'string') {
@@ -57,9 +55,9 @@ function createService () {
   )
   // 响应拦截
   service.interceptors.response.use(
-    response => {
+    async response => {
       // dataAxios 是 axios 返回数据中的 data
-      let dataAxios = response.data
+      let dataAxios = response.data || null
       if (response.headers['content-disposition']) {
         dataAxios = response
       }
@@ -78,13 +76,26 @@ function createService () {
             // return dataAxios.data
             return dataAxios
           case 401:
-            // TODO 置换token 未完善
-            util.cookies.remove('token')
-            util.cookies.remove('uuid')
-            util.cookies.remove('refresh')
-            router.push({ path: '/login' })
-            errorCreate(`${getErrorMessage(dataAxios.msg)}`)
-            break
+            if (response.config.url === 'api/login/') {
+              errorCreate(`${getErrorMessage(dataAxios.msg)}`)
+              break
+            }
+            var res = await refreshTken()
+            // 设置请求超时次数
+            var config = response.config
+            util.cookies.set('token', res.data.access)
+            config.headers.Authorization = 'JWT ' + res.data.access
+            config.__retryCount = config.__retryCount || 0
+            if (config.__retryCount >= config.retry) {
+              // 如果重试次数超过3次则跳转登录页面
+              util.cookies.remove('token')
+              util.cookies.remove('uuid')
+              router.push({ path: '/login' })
+              errorCreate('认证已失效,请重新登录~')
+              break
+            }
+            config.__retryCount += 1
+            return service(config)
           case 404:
             dataNotFound(`${dataAxios.msg}`)
             break
@@ -109,13 +120,11 @@ function createService () {
           error.message = '请求错误'
           break
         case 401:
-          refreshTken().then(res => {
-            util.cookies.set('token', res.access)
-          }).catch(e => {
-            router.push({ name: 'login' })
-            router.go(0)
-            error.message = '未认证，请登录'
-          })
+          util.cookies.remove('token')
+          util.cookies.remove('uuid')
+          util.cookies.remove('refresh')
+          router.push({ path: '/login' })
+          error.message = '认证已失效,请重新登录~'
           break
         case 403:
           error.message = '拒绝访问'
@@ -180,7 +189,9 @@ function createRequestFunction (service) {
       timeout: 60000,
       baseURL: util.baseURL(),
       data: {},
-      params: params
+      params: params,
+      retry: 3, // 重新请求次数
+      retryDelay: 1000 // 重新请求间隔
     }
     return service(Object.assign(configDefault, config))
   }
@@ -216,7 +227,12 @@ const refreshTken = function () {
  * @param method
  * @param filename
  */
-export const downloadFile = function ({ url, params, method, filename = '文件导出' }) {
+export const downloadFile = function ({
+  url,
+  params,
+  method,
+  filename = '文件导出'
+}) {
   request({
     url: url,
     method: method,

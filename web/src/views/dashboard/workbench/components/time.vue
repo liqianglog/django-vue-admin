@@ -14,10 +14,10 @@ export default {
   title: '时钟',
   icon: 'el-icon-alarm-clock',
   description: '演示部件效果',
-  height: 5,
+  height: 20,
+  minH: 10,
   width: 8,
-  maxH: 1,
-  maxW: Infinity,
+  minW: 4,
   isResizable: true,
   data () {
     return {
@@ -33,8 +33,8 @@ export default {
   },
   methods: {
     showTime () {
-      this.time = dayjs(new Date(), 'hh:mm:ss')
-      this.day = dayjs(new Date(), 'yyyy年MM月dd日')
+      this.time = dayjs().format('HH:mm:ss')
+      this.day = dayjs().format('YYYY年MM月DD日')
     }
   }
 }
@@ -47,12 +47,19 @@ export default {
 }
 
 .time h2 {
-  font-size: 40px;
+  font-size: 24px;
 }
 
 .time p {
-  font-size: 14px;
-  margin-top: 13px;
+  font-size: 18px;
+  margin-top: 10px;
   opacity: 0.7;
+}
+::v-deep .el-card__body {
+  height: 110px;
+
+}
+.el-card{
+  height: 100%;
 }
 </style>

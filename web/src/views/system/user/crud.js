@@ -1,16 +1,15 @@
 import { request } from '@/api/service'
-import util from '@/libs/util'
 
 export const crudOptions = (vm) => {
-  util.filterParams(vm, ['dept_name', 'role_info{name}', 'dept_name_all'])
+  // util.filterParams(vm, ['dept_name', 'role_info{name}', 'dept_name_all'])
   return {
     pageOptions: {
       compact: true
     },
     options: {
       height: '100%',
-      tableType: 'vxe-table',
-      rowKey: true,
+      // tableType: 'vxe-table',
+      // rowKey: true,
       rowId: 'id'
     },
     selectionRow: {
@@ -149,6 +148,7 @@ export const crudOptions = (vm) => {
       {
         title: '姓名',
         key: 'name',
+        sortable: 'custom',
         minWidth: 90,
         search: {
           disabled: false

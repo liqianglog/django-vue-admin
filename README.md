@@ -2,7 +2,7 @@
 
 [![img](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitee.com/liqianglog/django-vue-admin/blob/master/LICENSE)  [![img](https://img.shields.io/badge/python-%3E=3.7.x-green.svg)](https://python.org/)  [![PyPI - Django Version badge](https://img.shields.io/badge/django%20versions-3.2-blue)](https://docs.djangoproject.com/zh-hans/3.2/) [![img](https://img.shields.io/badge/node-%3E%3D%2012.0.0-brightgreen)](https://nodejs.org/zh-cn/) [![img](https://gitee.com/liqianglog/django-vue-admin/badge/star.svg?theme=dark)](https://gitee.com/liqianglog/django-vue-admin)
 
-[预 览](https://demo.django-vue-admin.com) | [官网文档](https://www.django-vue-admin.com) | [群聊](https://qm.qq.com/cgi-bin/qm/qr?k=fOdnHhC8DJlRHGYSnyhoB8P5rgogA6Vs&jump_from=webapi) | [社区](https://bbs.django-vue-admin.com) | [插件市场](https://bbs.django-vue-admin.com/plugMarket.html) | [Github](https://github.com/liqianglog/django-vue-admin) 
+[English](./README.en.md) | [预 览](https://demo.django-vue-admin.com) | [官网文档](https://www.django-vue-admin.com) | [群聊](https://qm.qq.com/cgi-bin/qm/qr?k=fOdnHhC8DJlRHGYSnyhoB8P5rgogA6Vs&jump_from=webapi) | [社区](https://bbs.django-vue-admin.com) | [插件市场](https://bbs.django-vue-admin.com/plugMarket.html) | [Github](https://github.com/liqianglog/django-vue-admin) 
 
 
 
@@ -129,8 +129,8 @@ npm run dev
 	python3 manage.py init_area
 8. 启动项目
 	python3 manage.py runserver 0.0.0.0:8000
-或使用 daphne :
-  daphne -b 0.0.0.0 -p 8000 application.asgi:application
+或使用 gunicorn :
+  gunicorn -c gunicorn_conf.py application.asgi:application
 ~~~
 
 ### 访问项目
@@ -172,25 +172,30 @@ docker-compose up -d --build
 
 ## 演示图✅
 
-![image-01](https://images.gitee.com/uploads/images/2022/0530/234137_b58c8f98_5074988.png)
+![image-01](https://foruda.gitee.com/images/1681118295661653899/12b2f755_5074988.jpeg)
 
-![image-02](https://images.gitee.com/uploads/images/2022/0530/234240_39834603_5074988.png)
+![image-02](https://foruda.gitee.com/images/1681118320563350469/311f888b_5074988.jpeg)
 
-![image-03](https://images.gitee.com/uploads/images/2022/0530/234339_35e728a0_5074988.png)
+![image-03](https://foruda.gitee.com/images/1681118339552860024/780a4e11_5074988.jpeg)
 
-![image-04](https://images.gitee.com/uploads/images/2022/0530/234426_957036b0_5074988.png)
+![image-04](https://foruda.gitee.com/images/1681118349561624452/d917f8bc_5074988.jpeg)
 
-![image-05](https://images.gitee.com/uploads/images/2022/0530/234458_898be492_5074988.png)
+![image-05](https://foruda.gitee.com/images/1681118368415555513/03a8db63_5074988.jpeg)
 
-![image-06](https://images.gitee.com/uploads/images/2022/0530/234521_35b40076_5074988.png)
+![image-06](https://foruda.gitee.com/images/1681118379484890540/6f9caa75_5074988.jpeg)
 
-![image-07](https://images.gitee.com/uploads/images/2022/0530/234615_c2325639_5074988.png)
+![image-07](https://foruda.gitee.com/images/1681118387902110958/86d86d80_5074988.jpeg)
 
-![image-08](https://images.gitee.com/uploads/images/2022/0530/234639_1ed6cc93_5074988.png)
+![image-08](https://foruda.gitee.com/images/1681118398381431700/1e3fa0ec_5074988.jpeg)
 
-![image-09](https://images.gitee.com/uploads/images/2022/0530/234815_cea2c53f_5074988.png)
+![image-09](https://foruda.gitee.com/images/1681118450796081811/aa00a240_5074988.png)
 
-![image-10](https://images.gitee.com/uploads/images/2022/0530/234840_5f3e5f53_5074988.png)
+![image-10](https://foruda.gitee.com/images/1681118482618114892/5cc2e297_5074988.png)
 
+![image-11](https://foruda.gitee.com/images/1681118492497719384/52a47252_5074988.png)
+
+![image-12](https://foruda.gitee.com/images/1681118517168485285/f34152ba_5074988.png)
+
+![image-13](https://foruda.gitee.com/images/1681118527820910716/43a7c660_5074988.png)
 
 

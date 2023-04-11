@@ -77,9 +77,10 @@ class DeptInitSerializer(CustomModelSerializer):
                 menu_data['parent'] = instance.id
                 filter_data = {
                     "name": menu_data['name'],
-                    "parent": menu_data['parent'],
-                    "key": menu_data['key']
+                    "parent": menu_data['parent']
                 }
+                if 'key' in menu_data:
+                    filter_data['key'] = menu_data['key']
                 instance_obj = Dept.objects.filter(**filter_data).first()
                 if instance_obj and not self.initial_data.get('reset'):
                     continue
@@ -106,7 +107,7 @@ class DeptCreateUpdateSerializer(CustomModelSerializer):
     """
 
     def create(self, validated_data):
-        value = validated_data.get('parent',None)
+        value = validated_data.get('parent', None)
         if value is None:
             validated_data['parent'] = self.request.user.dept
         instance = super().create(validated_data)
@@ -147,12 +148,12 @@ class DeptViewSet(CustomModelViewSet):
         parent = params.get('parent', None)
         if params:
             if parent:
-                queryset = self.queryset.filter(status=True, parent=parent)
+                queryset = self.queryset.filter(parent=parent)
             else:
-                queryset = self.queryset.filter(status=True)
+                queryset = self.queryset.filter(parent__isnull=True)
         else:
-            queryset = self.queryset.filter(status=True, parent__isnull=True)
-        queryset = self.filter_queryset(queryset)
+            queryset = self.queryset.filter(parent__isnull=True)
+        queryset = self.filter_queryset(queryset.order_by('sort', 'create_datetime'))
         serializer = DeptSerializer(queryset, many=True, request=request)
         data = serializer.data
         return SuccessResponse(data=data)
@@ -168,22 +169,28 @@ class DeptViewSet(CustomModelViewSet):
             dept_list = [user_dept_id]
             data_range_list = list(set(data_range))
             for item in data_range_list:
-                if item in [0,2]:
+                if item in [0, 2]:
                     dept_list = [user_dept_id]
                 elif item == 1:
                     dept_list = Dept.recursion_dept_info(dept_id=user_dept_id)
                 elif item == 3:
-                    dept_list = Dept.objects.values_list('id',flat=True)
+                    dept_list = Dept.objects.values_list('id', flat=True)
                 elif item == 4:
-                    dept_list = request.user.role.values_list('dept',flat=True)
+                    dept_list = request.user.role.values_list('dept', flat=True)
                 else:
                     dept_list = []
             queryset = Dept.objects.filter(id__in=dept_list).values('id', 'name', 'parent')
         return DetailResponse(data=queryset, msg="获取成功")
 
-
     @action(methods=["GET"], detail=False, permission_classes=[AnonymousUserPermission])
     def all_dept(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
+        return DetailResponse(data=data, msg="获取成功")
+
+    @action(methods=["GET"], detail=False, permission_classes=[AnonymousUserPermission])
+    def all_dept_not_extra(self, request, *args, **kwargs):
+        self.extra_filter_backends = []
         queryset = self.filter_queryset(self.get_queryset())
         data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
         return DetailResponse(data=data, msg="获取成功")

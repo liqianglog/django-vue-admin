@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "corsheaders",  # 注册跨域app
+    'rest_framework_simplejwt.token_blacklist',
     "dvadmin.system",
     "drf_yasg",
     "captcha",
@@ -186,28 +187,30 @@ CORS_ALLOW_CREDENTIALS = True  # 指明在跨域访问中，后端是否支持�
 # ********************* channels配置 ******************* #
 # ================================================= #
 ASGI_APPLICATION = 'application.asgi.application'
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+if not locals().get('REDIS_HOST', ""):
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
     }
-}
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             "hosts": [('127.0.0.1', 6379)], #需修改
-#         },
-#     },
-# }
+else:
+    REDIS_URL = locals().get('REDIS_URL', "")
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [(REDIS_URL)],  # 需修改
+            },
+        },
+    }
 
-
-# ================================================= #
-# ********************* 日志配置 ******************* #
-# ================================================= #
-
-# log 配置部分BEGIN #
+# # ================================================= #
+# # ********************* 日志配置 ******************* #
+# # ================================================= #
+# # log 配置部分BEGIN #
 SERVER_LOGS_FILE = os.path.join(BASE_DIR, "logs", "server.log")
 ERROR_LOGS_FILE = os.path.join(BASE_DIR, "logs", "error.log")
+LOGS_FILE = os.path.join(BASE_DIR, "logs")
 if not os.path.exists(os.path.join(BASE_DIR, "logs")):
     os.makedirs(os.path.join(BASE_DIR, "logs"))
 
@@ -219,7 +222,6 @@ STANDARD_LOG_FORMAT = (
 CONSOLE_LOG_FORMAT = (
     "[%(asctime)s][%(name)s.%(funcName)s():%(lineno)d] [%(levelname)s] %(message)s"
 )
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -258,9 +260,9 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "console",
         },
+
     },
     "loggers": {
-        # default日志
         "": {
             "handlers": ["console", "error", "file"],
             "level": "INFO",
@@ -270,16 +272,28 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
-        "scripts": {
-            "handlers": ["console", "error", "file"],
-            "level": "INFO",
-            "propagate": False,
+        'celery': {
+            'handlers': ["console", "error", "file"],
+            'propagate': False,
+            'level': "INFO"
         },
-        # 数据库相关日志
-        "django.db.backends": {
-            "handlers": [],
-            "propagate": True,
+        'django.db.backends': {
+            'handlers': ["console", "error", "file"],
+            'propagate': False,
+            'level': "INFO"
+        },
+        'django.request': {
+            'handlers': ["console", "error", "file"],
+            'propagate': False,
+            'level': "DEBUG"
+        },
+        "uvicorn.error": {
             "level": "INFO",
+            "handlers": ["console", "error", "file"],
+        },
+        "uvicorn.access": {
+            "handlers": ["console", "error", "file"],
+            "level": "INFO"
         },
     },
 }
@@ -328,6 +342,8 @@ SIMPLE_JWT = {
     # 设置前缀
     "AUTH_HEADER_TYPES": ("JWT",),
     "ROTATE_REFRESH_TOKENS": True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
 # 设置app token 的有效时间
 APP_ACCESS_TOKEN_LIFETIME = timedelta(days=180)
@@ -424,6 +440,7 @@ from dvadmin_celery.settings import *  # celery 异步任务
 from dvadmin_tenants.settings import *  # 租户
 
 # ...
+
 # ********** 一键导入插件配置结束 **********
 
 # celery 队列配置

@@ -33,7 +33,6 @@ class UserSerializer(CustomModelSerializer):
     """
     dept_name = serializers.CharField(source='dept.name', read_only=True)
     role_info = DynamicSerializerMethodField()
-    dept_name_all = serializers.SerializerMethodField()
 
     class Meta:
         model = Users
@@ -42,11 +41,6 @@ class UserSerializer(CustomModelSerializer):
         extra_kwargs = {
             "post": {"required": False},
         }
-
-    def get_dept_name_all(self, instance):
-        dept_name_all = recursion(instance.dept, "parent", "name")
-        dept_name_all.reverse()
-        return "/".join(dept_name_all)
 
     def get_role_info(self, instance, parsed_query):
         roles = instance.role.all()
@@ -219,7 +213,7 @@ class ExportUserProfileSerializer(CustomModelSerializer):
 
 
 class UserProfileImportSerializer(CustomModelSerializer):
-    password = serializers.CharField(required=True, max_length=50,error_messages={"required": "登录密码不能为空"})
+    password = serializers.CharField(required=True, max_length=50, error_messages={"required": "登录密码不能为空"})
 
     def save(self, **kwargs):
         data = super().save(**kwargs)

@@ -10,9 +10,13 @@ from django.utils.translation import gettext_lazy as _
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers
+from rest_framework.status import HTTP_401_UNAUTHORIZED
 from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from django.conf import settings
 
@@ -54,7 +58,6 @@ class LoginSerializer(TokenObtainPairSerializer):
     登录的序列化器:
     重写djangorestframework-simplejwt的序列化器
     """
-
     captcha = serializers.CharField(
         max_length=6, required=False, allow_null=True, allow_blank=True
     )
@@ -91,12 +94,13 @@ class LoginSerializer(TokenObtainPairSerializer):
         data["name"] = self.user.name
         data["userId"] = self.user.id
         data["avatar"] = self.user.avatar
+        data['user_type'] = self.user.user_type
         dept = getattr(self.user, 'dept', None)
         if dept:
             data['dept_info'] = {
                 'dept_id': dept.id,
                 'dept_name': dept.name,
-                'dept_key': dept.key
+
             }
         role = getattr(self.user, 'role', None)
         if role:
@@ -105,14 +109,41 @@ class LoginSerializer(TokenObtainPairSerializer):
         request.user = self.user
         # 记录登录日志
         save_login_log(request=request)
+        # 是否开启单点登录
+        if dispatch.get_system_config_values("base.single_login"):
+            # 将之前登录用户的token加入黑名单
+            user = Users.objects.filter(id=self.user.id).values('last_token').first()
+            last_token = user.get('last_token')
+            if last_token:
+                try:
+                    token = RefreshToken(last_token)
+                    token.blacklist()
+                except:
+                    pass
+            # 将最新的token保存到用户表
+            Users.objects.filter(id=self.user.id).update(last_token=data.get('refresh'))
         return {"code": 2000, "msg": "请求成功", "data": data}
 
+class CustomTokenRefreshView(TokenRefreshView):
+    """
+    自定义token刷新
+    """
+    def post(self, request, *args, **kwargs):
+        refresh_token = request.data.get("refresh")
+        try:
+            token = RefreshToken(refresh_token)
+            data = {
+                "access":str(token.access_token),
+                "refresh":str(token)
+            }
+        except:
+            return ErrorResponse(status=HTTP_401_UNAUTHORIZED)
+        return DetailResponse(data=data)
 
 class LoginView(TokenObtainPairView):
     """
     登录接口
     """
-
     serializer_class = LoginSerializer
     permission_classes = []
 
@@ -149,6 +180,7 @@ class LoginTokenView(TokenObtainPairView):
 
 class LogoutView(APIView):
     def post(self, request):
+        Users.objects.filter(id=self.request.user.id).update(last_token=None)
         return DetailResponse(msg="注销成功")
 
 

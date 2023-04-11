@@ -84,6 +84,7 @@
             :key="index"
             v-else-if="item.form_item_type_label === 'switch'"
             v-model="form[item.key]"
+            :inactive-value="false"
             active-color="#13ce66"
             inactive-color="#ff4949">
           </el-switch>
@@ -182,17 +183,12 @@
               </vxe-column>
               <vxe-column title="操作" width="100" show-overflow>
                 <template #default="{ row,index }">
-                  <el-popover
-                    placement="top"
-                    width="160"
-                    v-model="childRemoveVisible">
-                    <p>删除后无法恢复,确定删除吗？</p>
-                    <div style="text-align: right; margin: 0">
-                      <el-button size="mini" type="text" @click="childRemoveVisible = false">取消</el-button>
-                      <el-button type="primary" size="mini" @click="onRemoveChild(row,index,item.key)">确定</el-button>
-                    </div>
-                    <el-button type="text" slot="reference">删除</el-button>
-                  </el-popover>
+                  <el-popconfirm
+                    title="删除后无法恢复,确定删除吗？"
+                    @confirm="onRemoveChild(row,index,item.key)"
+                  >
+                    <el-button slot="reference" type="text" >删除</el-button>
+                  </el-popconfirm>
                 </template>
               </vxe-column>
             </vxe-table>
@@ -315,7 +311,7 @@ export default {
             if ([5, 12, 14].indexOf(item.form_item_type) !== -1) {
               form[key] = []
             } else {
-              form[key] = undefined
+              form[key] = item.value
             }
           }
           if (item.form_item_type_label === 'array') {
@@ -326,7 +322,7 @@ export default {
             })
           }
         }
-        this.form = JSON.parse(JSON.stringify(form))
+        this.form = Object.assign({}, form)
       })
     },
     // 提交数据
@@ -335,6 +331,7 @@ export default {
       const form = JSON.parse(JSON.stringify(this.form))
       const keys = Object.keys(form)
       const values = Object.values(form)
+      let submitForm = Object.assign([],this.formList)
       for (const index in this.formList) {
         const item = this.formList[index]
         // eslint-disable-next-line camelcase
@@ -350,8 +347,8 @@ export default {
             if (!child.id && child.key && child.value) {
               child.parent = parentId
               child.id = null
-              this.formList.push(child)
             }
+            submitForm.push(child)
           }
           // 必填项的判断
           for (const arr of item.rule) {
@@ -384,7 +381,7 @@ export default {
       that.$refs.form.validate((valid) => {
         if (valid) {
           api.saveContent(this.options.id,
-            this.formList).then(res => {
+            submitForm).then(res => {
             this.$message.success('保存成功')
             this.refreshView()
           })
@@ -400,21 +397,19 @@ export default {
       const { tableData } = $table.getTableData()
       const tableLength = tableData.length
       if (tableLength === 0) {
-        const { row: newRow } = $table.insert()
-        console.log(newRow)
+        const { row } = $table.insert()
       } else {
         const errMap = await $table.validate().catch(errMap => errMap)
         if (errMap) {
           this.$message.error('校验不通过！')
         } else {
-          const { row: newRow } = $table.insert()
-          console.log(newRow)
+          const { row } = $table.insert()
+
         }
       }
     },
     // 子表删除
     onRemoveChild (row, index, refName) {
-      console.log(row, index)
       if (row.id) {
         api.DelObj(row.id).then(res => {
           this.refreshView()
@@ -422,8 +417,7 @@ export default {
       } else {
         this.childTableData.splice(index, 1)
         const tableName = 'xTable_' + refName
-        const tableData = this.$refs[tableName][0].remove(row)
-        console.log(tableData)
+        this.$refs[tableName][0].remove(row)
       }
     },
     // 图片预览
@@ -456,7 +450,7 @@ export default {
           if (!uploadImgKey || uploadImgKey === '') {
             that.form[imgKey] = []
           }
-          // console.log(len)
+
           const dict = {
             name: name,
             url: util.baseURL() + url

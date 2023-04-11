@@ -4,6 +4,7 @@ from rest_framework import routers
 from application import settings
 from dvadmin.system.views.api_white_list import ApiWhiteListViewSet
 from dvadmin.system.views.area import AreaViewSet
+from dvadmin.system.views.clause import PrivacyView, TermsServiceView
 from dvadmin.system.views.dept import DeptViewSet
 from dvadmin.system.views.dictionary import DictionaryViewSet
 from dvadmin.system.views.file_list import FileViewSet
@@ -28,11 +29,9 @@ system_url.register(r'area', AreaViewSet)
 system_url.register(r'file', FileViewSet)
 system_url.register(r'api_white_list', ApiWhiteListViewSet)
 system_url.register(r'system_config', SystemConfigViewSet)
-system_url.register(r'message_center',MessageCenterViewSet)
+system_url.register(r'message_center', MessageCenterViewSet)
 
 urlpatterns = [
-    path('user/export/', UserViewSet.as_view({'post': 'export_data', })),
-    path('user/import/', UserViewSet.as_view({'get': 'import_data', 'post': 'import_data'})),
     path('system_config/save_content/', SystemConfigViewSet.as_view({'put': 'save_content'})),
     path('system_config/get_association_table/', SystemConfigViewSet.as_view({'get': 'get_association_table'})),
     path('system_config/get_table_data/<int:pk>/', SystemConfigViewSet.as_view({'get': 'get_table_data'})),
@@ -40,5 +39,7 @@ urlpatterns = [
     path('login_log/', LoginLogViewSet.as_view({'get': 'list'})),
     path('login_log/<int:pk>/', LoginLogViewSet.as_view({'get': 'retrieve'})),
     path('dept_lazy_tree/', DeptViewSet.as_view({'get': 'dept_lazy_tree'})),
+    path('clause/privacy.html', PrivacyView.as_view()),
+    path('clause/terms_service.html', TermsServiceView.as_view()),
 ]
 urlpatterns += system_url.urls

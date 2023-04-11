@@ -1,34 +1,28 @@
 <template>
-  <el-card shadow="hover" header="欢迎">
+  <el-card shadow="hover" header="欢迎" style="background: linear-gradient(150deg, #3b88ec 0%, #accaff 100%);color: #fff;">
     <div class="welcome">
       <div class="logo">
-        <img src="img/logo.png">
-        <h2>欢迎体验 SCUI</h2>
+        <img src="/image/django-vue-admin.png">
+        <h2>欢迎体验 Dvadmin</h2>
       </div>
       <div class="tips">
         <div class="tips-item">
           <div class="tips-item-icon">
-            <el-icon>
-              <el-icon-menu/>
-            </el-icon>
+            <i class="el-icon-menu"></i>
           </div>
           <div class="tips-item-message">这里是项目控制台，你可以点击右上方的“自定义”按钮来添加移除或者移动部件。</div>
         </div>
         <div class="tips-item">
           <div class="tips-item-icon">
-            <el-icon>
-              <el-icon-promotion/>
-            </el-icon>
+            <i class="el-icon-star-on"></i>
           </div>
-          <div class="tips-item-message">在提高前端算力、减少带宽请求和代码执行力上多次优化，并且持续着。</div>
+          <div class="tips-item-message">热爱Python和Vue,打造一个低代码开源平台，并且持续着。</div>
         </div>
         <div class="tips-item">
           <div class="tips-item-icon">
-            <el-icon>
-              <el-icon-milk-tea/>
-            </el-icon>
+            <i class="el-icon-milk-tea"></i>
           </div>
-          <div class="tips-item-message">项目目的：让前端工作更快乐</div>
+          <div class="tips-item-message">项目目的：让前端和后端工作更快乐</div>
         </div>
       </div>
       <div class="actions">
@@ -43,26 +37,30 @@ export default {
   title: '欢迎',
   icon: 'el-icon-present',
   description: '项目特色以及文档链接',
-  height: 5,
   width: 8,
-  maxH: 1,
-  maxW: Infinity,
+  height: 45,
+  minH: 45,
+  minW: 1,
   isResizable: true,
   data () {
     return {}
   },
   methods: {
     godoc () {
-      window.open('https://lolicode.gitee.io/scui-doc/')
+      window.open('https://www.django-vue-admin.com/')
+    },
+    // 生成一个颜色
+    randomColor () {
+      if (this.config?.color?.value) {
+        return this.config.color.value
+      }
+      return this.color || this.$util.randomColor()
     }
   }
 }
 </script>
 
 <style scoped>
-.welcome {
-}
-
 .welcome .logo {
   text-align: center;
 }
@@ -114,6 +112,9 @@ export default {
 
 .actions {
   text-align: center;
-  margin: 40px 0 20px 0;
+  margin: 40rpx 0 20rpx 0;
+}
+.el-card{
+  height: 100%;
 }
 </style>

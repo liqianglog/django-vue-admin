@@ -92,7 +92,7 @@ export const crudOptions = (vm) => {
     {
       title: '字典名称',
       key: 'label',
-
+      minWidth: 100,
       search: {
         disabled: false,
         component: {
@@ -121,6 +121,7 @@ export const crudOptions = (vm) => {
     {
       title: '字典编号',
       key: 'value',
+      minWidth: 100,
       search: {
         disabled: true,
         component: {
@@ -197,8 +198,8 @@ export const crudOptions = (vm) => {
     }
     ].concat(vm.commonEndColumns({
       description: {
-        showForm: true,
-        showTable: true
+        showForm: false,
+        showTable: false
       }
     }))
   }

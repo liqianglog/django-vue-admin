@@ -19,9 +19,7 @@ export const crudOptions = (vm) => {
       edit: {
         thin: true,
         text: '',
-        show () {
-          return vm.tabActivted !== 'receive'
-        },
+        show: false,
         disabled () {
           return !vm.hasPermissions('Update')
         }

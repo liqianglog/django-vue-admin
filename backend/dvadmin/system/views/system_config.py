@@ -13,6 +13,7 @@ from rest_framework import serializers
 from rest_framework.views import APIView
 
 from application import dispatch
+from application.websocketConfig import websocket_push
 from dvadmin.system.models import SystemConfig
 from dvadmin.utils.json_response import DetailResponse, SuccessResponse, ErrorResponse
 from dvadmin.utils.models import get_all_models_objects
@@ -26,6 +27,7 @@ class SystemConfigCreateSerializer(CustomModelSerializer):
     系统配置-新增时使用-序列化器
     """
     form_item_type_label = serializers.CharField(source='get_form_item_type_display', read_only=True)
+
 
     class Meta:
         model = SystemConfig
@@ -178,6 +180,8 @@ class SystemConfigViewSet(CustomModelViewSet):
                 serializer = SystemConfigCreateSerializer(instance_obj, data=data)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
+        websocket_push("dvadmin", message={"sender": 'system', "contentType": 'SYSTEM',
+                                           "content": '系统配置有变化~', "systemConfig": True})
         return DetailResponse(msg="保存成功")
 
     def get_association_table(self, request):
