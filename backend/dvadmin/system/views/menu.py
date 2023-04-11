@@ -117,7 +117,6 @@ class MenuViewSet(CustomModelViewSet):
         """前端拖拽菜单之后重写parent"""
         menu_id = request.data['menu_id']
         parent_id = request.data['parent_id']
-        print(parent_id)
         menu = Menu.objects.get(id=menu_id)
         menu.parent_id = parent_id
         menu.save()

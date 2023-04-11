@@ -6,10 +6,9 @@
 				<el-card shadow="hover" header="个人信息">
 					<div class="personal-user">
 						<div class="personal-user-left">
-							<el-upload class="h100 personal-user-left-upload" :action="uploadAvatar.action" :headers="uploadAvatar.headers" multiple :limit="1">
-								<img v-if="state.personalForm.avatar" :src="state.personalForm.avatar" />
-								<img v-else src="https://img2.baidu.com/it/u=1978192862,2048448374&fm=253&fmt=auto&app=138&f=JPEG?w=504&h=500" />
-							</el-upload>
+							<!-- <el-avatar :size="100" v-if="state.personalForm.avatar" :src="state.personalForm.avatar" /> -->
+							<!-- <el-avatar :size="100" v-else src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" /> -->
+							<avatarSelector @uploadImg="uploadImg"></avatarSelector>
 						</div>
 						<div class="personal-user-right">
 							<el-row>
@@ -174,13 +173,18 @@
 </template>
 
 <script setup lang="ts" name="personal">
-import { reactive, computed, onMounted, ref } from 'vue';
+import { reactive, computed, onMounted, ref, defineAsyncComponent } from 'vue';
 import { formatAxis } from '/@/utils/formatTime';
 import * as api from './api';
 import { ElMessage } from 'element-plus';
 import { getBaseURL } from '/@/utils/baseUrl';
 import { Session } from '/@/utils/storage';
 import { useRouter } from 'vue-router';
+import { useUserInfo } from '/@/stores/userInfo';
+const userStore = useUserInfo();
+
+// 头像裁剪组件
+const avatarSelector = defineAsyncComponent(() => import('/@/components/avatarSelector/index.vue'));
 
 // 当前时间提示语
 const currentTime = computed(() => {
@@ -337,6 +341,17 @@ const settingPassword = () => {
 			// 登录表单校验失败
 			ElMessage.error('表单校验失败，请检查');
 		}
+	});
+};
+
+const uploadImg = (data: any) => {
+	console.log(data);
+	let formdata = new FormData();
+	formdata.append('key', 'test_file');
+	formdata.append('file', data);
+	api.uploadAvatar(formdata).then((res: any) => {
+		// userStore.setUserInfos()
+		console.log(res);
 	});
 };
 </script>
