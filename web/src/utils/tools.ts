@@ -67,6 +67,11 @@ export function errorCreate(msg: any, notification = true) {
 	// throw error;
 }
 
+/**
+ * @description base64转file
+ * @param {String} base64 base64字符串
+ * @param {String} fileName 文件名
+ */
 export function base64ToFile(base64: any, fileName: string) {
 	// 将base64按照 , 进行分割 将前缀  与后续内容分隔开
 	let data = base64.split(',');
