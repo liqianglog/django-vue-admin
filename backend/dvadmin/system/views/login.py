@@ -1,11 +1,9 @@
 import base64
 import hashlib
 from datetime import datetime, timedelta
-
 from captcha.views import CaptchaStore, captcha_image
 from django.contrib import auth
 from django.contrib.auth import login
-from django.contrib.auth.hashers import make_password, check_password
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 from drf_yasg import openapi
@@ -14,9 +12,7 @@ from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-
 from django.conf import settings
-
 from application import dispatch
 from dvadmin.system.models import Users
 from dvadmin.utils.json_response import ErrorResponse, DetailResponse
@@ -58,6 +54,7 @@ class LoginSerializer(TokenObtainPairSerializer):
     captcha = serializers.CharField(
         max_length=6, required=False, allow_null=True, allow_blank=True
     )
+
     class Meta:
         model = Users
         fields = "__all__"
@@ -79,13 +76,18 @@ class LoginSerializer(TokenObtainPairSerializer):
                 raise CustomValidationError("验证码过期")
             else:
                 if self.image_code and (
-                        self.image_code.response == captcha
-                        or self.image_code.challenge == captcha
+                    self.image_code.response == captcha
+                    or self.image_code.challenge == captcha
                 ):
                     self.image_code and self.image_code.delete()
                 else:
                     self.image_code and self.image_code.delete()
                     raise CustomValidationError("图片验证码错误")
+
+        user = Users.objects.get(username=attrs['username'])
+        if not user.is_active:
+            raise CustomValidationError("账号被锁定")
+
         data = super().validate(attrs)
         data["name"] = self.user.name
         data["userId"] = self.user.id
@@ -106,6 +108,7 @@ class LoginSerializer(TokenObtainPairSerializer):
         # 记录登录日志
         save_login_log(request=request)
         return {"code": 2000, "msg": "请求成功", "data": data}
+
 
 class LoginView(TokenObtainPairView):
     """
