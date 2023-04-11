@@ -41,6 +41,7 @@ class UserSerializer(CustomModelSerializer):
         exclude = ["password"]
         extra_kwargs = {
             "post": {"required": False},
+            "mobile": {"required": False},
         }
 
     def get_dept_name_all(self, instance):
@@ -58,9 +59,6 @@ class UserSerializer(CustomModelSerializer):
             parsed_query=parsed_query
         )
         return serializer.data
-
-
-
 
 
 class UserCreateSerializer(CustomModelSerializer):
@@ -82,10 +80,10 @@ class UserCreateSerializer(CustomModelSerializer):
         """
         对密码进行验证
         """
-        password = self.initial_data.get("password")
-        if password:
-            return make_password(value)
-        return value
+        md5 = hashlib.md5()
+        md5.update(value.encode('utf-8'))
+        md5_password = md5.hexdigest()
+        return make_password(md5_password)
 
     def save(self, **kwargs):
         data = super().save(**kwargs)
@@ -100,6 +98,7 @@ class UserCreateSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
         extra_kwargs = {
             "post": {"required": False},
+            "mobile": {"required": False},
         }
 
 
@@ -114,14 +113,15 @@ class UserUpdateSerializer(CustomModelSerializer):
             CustomUniqueValidator(queryset=Users.objects.all(), message="账号必须唯一")
         ],
     )
+
     # password = serializers.CharField(required=False, allow_blank=True)
-    mobile = serializers.CharField(
-        max_length=50,
-        validators=[
-            CustomUniqueValidator(queryset=Users.objects.all(), message="手机号必须唯一")
-        ],
-        allow_blank=True
-    )
+    # mobile = serializers.CharField(
+    #     max_length=50,
+    #     validators=[
+    #         CustomUniqueValidator(queryset=Users.objects.all(), message="手机号必须唯一")
+    #     ],
+    #     allow_blank=True
+    # )
 
     def save(self, **kwargs):
         data = super().save(**kwargs)
@@ -136,6 +136,7 @@ class UserUpdateSerializer(CustomModelSerializer):
         fields = "__all__"
         extra_kwargs = {
             "post": {"required": False, "read_only": True},
+            "mobile": {"required": False},
         }
 
 
@@ -159,6 +160,7 @@ class UserInfoUpdateSerializer(CustomModelSerializer):
         fields = ['email', 'mobile', 'avatar', 'name', 'gender']
         extra_kwargs = {
             "post": {"required": False, "read_only": True},
+            "mobile": {"required": False},
         }
 
 
