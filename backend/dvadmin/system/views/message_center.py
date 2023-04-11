@@ -85,7 +85,7 @@ class MessageCenterTargetUserListSerializer(CustomModelSerializer):
     def get_is_read(self, instance):
         user_id = self.request.user.id
         message_center_id = instance.id
-        queryset = MessageCenterTargetUser.objects.filter(messagecenter__id=message_center_id,users_id=user_id).first()
+        queryset = MessageCenterTargetUser.objects.filter(messagecenter__id=message_center_id, users_id=user_id).first()
         if queryset:
             return queryset.is_read
         return False
@@ -95,20 +95,21 @@ class MessageCenterTargetUserListSerializer(CustomModelSerializer):
         fields = "__all__"
         read_only_fields = ["id"]
 
+
 def websocket_push(user_id, message):
     """
     主动推送消息
     """
-    username = "user_"+str(user_id)
-    print(103,message)
+    username = "user_" + str(user_id)
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
-    username,
-    {
-      "type": "push.message",
-      "json": message
-    }
+        username,
+        {
+            "type": "push.message",
+            "json": message
+        }
     )
+
 
 class MessageCenterCreateSerializer(CustomModelSerializer):
     """
@@ -122,10 +123,10 @@ class MessageCenterCreateSerializer(CustomModelSerializer):
         # 在保存之前,根据目标类型,把目标用户查询出来并保存
         users = initial_data.get('target_user', [])
         if target_type in [1]:  # 按角色
-            target_role = initial_data.get('target_role',[])
+            target_role = initial_data.get('target_role', [])
             users = Users.objects.filter(role__id__in=target_role).values_list('id', flat=True)
         if target_type in [2]:  # 按部门
-            target_dept = initial_data.get('target_dept',[])
+            target_dept = initial_data.get('target_dept', [])
             users = Users.objects.filter(dept__id__in=target_dept).values_list('id', flat=True)
         if target_type in [3]:  # 系统通知
             users = Users.objects.values_list('id', flat=True)
@@ -141,7 +142,7 @@ class MessageCenterCreateSerializer(CustomModelSerializer):
         for user in users:
             unread_count = MessageCenterTargetUser.objects.filter(users__id=user, is_read=False).count()
             websocket_push(user, message={"sender": 'system', "contentType": 'SYSTEM',
-                                  "content": '您有一条新消息~', "unread": unread_count})
+                                          "content": '您有一条新消息~', "unread": unread_count})
         return data
 
     class Meta:
@@ -184,7 +185,7 @@ class MessageCenterViewSet(CustomModelViewSet):
         # 主动推送消息
         unread_count = MessageCenterTargetUser.objects.filter(users__id=user_id, is_read=False).count()
         websocket_push(user_id, message={"sender": 'system', "contentType": 'TEXT',
-                                 "content": '您查看了一条消息~', "unread": unread_count})
+                                         "content": '您查看了一条消息~', "unread": unread_count})
         return DetailResponse(data=serializer.data, msg="获取成功")
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
@@ -195,7 +196,6 @@ class MessageCenterViewSet(CustomModelViewSet):
         self_user_id = self.request.user.id
         # queryset = MessageCenterTargetUser.objects.filter(users__id=self_user_id).order_by('-create_datetime')
         queryset = MessageCenter.objects.filter(target_user__id=self_user_id)
-        print(queryset)
         # queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:

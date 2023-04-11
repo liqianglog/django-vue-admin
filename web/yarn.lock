@@ -5045,6 +5045,11 @@ vue-clipboard3@^2.0.0:
   dependencies:
     clipboard "^2.0.6"
 
+vue-cropper@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.npmjs.org/vue-cropper/-/vue-cropper-1.0.8.tgz#05853bb7702557d05a4784a8d0cd072b57dd8e4f"
+  integrity sha512-EX9XoT5a/PQ62J6KDZz8hhaFi9ME1k2yBZlRfYCm8iySzTcjw0nDBq8Y65HtyHaH2jJwUKgYfD6mdFCE0GhUzA==
+
 vue-cropperjs@^5.0.0:
   version "5.0.0"
   resolved "https://registry.npmjs.org/vue-cropperjs/-/vue-cropperjs-5.0.0.tgz#7f8cbc460737af3831b4ded634c95905198e329e"

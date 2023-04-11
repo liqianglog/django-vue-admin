@@ -5,11 +5,17 @@
 
 // 用户信息
 export interface UserInfosState {
-	authBtnList: string[];
-	photo: string;
-	roles: string[];
-	time: number;
+	avatar: string;
 	userName: string;
+	name: string;
+	email: string;
+	mobile: string;
+	gender: string;
+	dept_info: {
+		dept_id: number;
+		dept_name: string;
+	};
+	role_info: any[];
 }
 export interface UserInfosStates {
 	userInfos: UserInfosState;
