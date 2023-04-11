@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.decorators import action
-from rest_framework.parsers import FileUploadParser
+from rest_framework.parsers import FileUploadParser, FormParser, MultiPartParser
 
 from dvadmin.system.models import FileList
 from dvadmin.utils.json_response import SuccessResponse
@@ -12,14 +12,13 @@ class FileSerializer(CustomModelSerializer):
     url = serializers.SerializerMethodField(read_only=True)
 
     def get_url(self, instance):
-        return 'media/' + str(instance.url)
+        return f'media/{str(instance.url)}'
 
     class Meta:
         model = FileList
         fields = "__all__"
 
     def create(self, validated_data):
-        print(self.context['request'])
         validated_data['name'] = str(self.initial_data.get('file'))
         validated_data['url'] = self.initial_data.get('file')
         return super().create(validated_data)
@@ -38,8 +37,3 @@ class FileViewSet(CustomModelViewSet):
     serializer_class = FileSerializer
     filter_fields = ['name', ]
     permission_classes = []
-
-    @action(detail=False, methods=['post'])
-    def test_post_file(self, request):
-
-        return SuccessResponse(msg='test_is_ok')
