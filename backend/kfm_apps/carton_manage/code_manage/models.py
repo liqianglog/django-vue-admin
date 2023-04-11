@@ -9,7 +9,7 @@ from django.db import models
 from django.utils import timezone
 
 from dvadmin.utils.models import CoreModel
-from basics_manage.models import CodePackageTemplate, DeviceManage
+from basics_manage.models import CodePackageTemplate, DeviceManage, ProductInfo, CustomerInfo, FactoryInfo
 from utils.currency import get_code_package_import_txt_path, zip_compress_file, des_encrypt_file, md5_file, \
     get_code_package_import_fail_path
 
@@ -38,19 +38,23 @@ class CodePackage(CoreModel):
     zip_name = models.CharField(max_length=100, blank=True, help_text="压缩包名称", verbose_name="压缩包名称")
     no = models.CharField(max_length=255, unique=True, blank=True, help_text="码包编号", verbose_name="码包编号")
     order_id = models.CharField(max_length=100, blank=True, help_text="订单编号", verbose_name="订单编号")
-    product_name = models.CharField(max_length=100, blank=True, help_text="产品名称", verbose_name="产品名称")
-    arrival_factory = models.CharField(max_length=100, blank=True, help_text="到货工厂", verbose_name="到货工厂")
+    product_info = models.ForeignKey(ProductInfo, db_constraint=False, on_delete=models.PROTECT, help_text="关联产品",
+                                     verbose_name="关联产品")
+    customer_info = models.ForeignKey(CustomerInfo, db_constraint=False, on_delete=models.PROTECT, help_text="关联客户",
+                                      verbose_name="关联客户")
+    factory_info = models.ForeignKey(FactoryInfo, db_constraint=False, on_delete=models.PROTECT, help_text="生产工厂",
+                                     verbose_name="生产工厂")
     source = models.IntegerField(choices=SOURCE, default=1, blank=True, help_text="来源", verbose_name="来源")
-    total_number = models.IntegerField(default=0, blank=True, help_text="码包总数", verbose_name="码包总数")
-    code_package_template = models.ForeignKey(CodePackageTemplate, db_constraint=False, on_delete=models.CASCADE,
+
+    code_package_template = models.ForeignKey(CodePackageTemplate, db_constraint=False, on_delete=models.PROTECT,
                                               related_name="code_package_template", help_text="码包模板",
                                               verbose_name="码包模板")
-
     validate_status = models.IntegerField(choices=VALIDATE_STATUS, default=1, blank=True, help_text="校验状态",
                                           verbose_name="校验状态")
-    # 码类型
-    code_type = models.IntegerField(choices=CODE_TYPE_STATUS, default=1, blank=True, help_text="码类型",
-                                    verbose_name="码类型")
+    # 根据关联客户携带出
+    attribute_fields = models.JSONField(null=True, blank=True, help_text="其他字段属性", verbose_name="其他字段属性")
+    # 自动匹配字段
+    total_number = models.IntegerField(default=0, blank=True, help_text="码包总数", verbose_name="码包总数")
     key_id = models.IntegerField(default=0, blank=True, help_text="加密ID索引", verbose_name="加密ID索引")
     package_repetition_number = models.IntegerField(default=0, blank=True, help_text="码包重码数",
                                                     verbose_name="码包重码数")

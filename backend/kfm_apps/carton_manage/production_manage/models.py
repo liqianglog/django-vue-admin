@@ -1,5 +1,5 @@
 from django.db import models
-from basics_manage.models import DeviceManage, ProductionLine, FactoryInfo
+from basics_manage.models import DeviceManage, ProductionLine, FactoryInfo, CodePackageTemplate, JetPrintTemplate
 from dvadmin.utils.models import CoreModel
 from carton_manage.code_manage.models import CodePackage
 
@@ -18,11 +18,14 @@ WORK_STATUS = (
 
 
 class ProductionWork(CoreModel):
+    no = models.CharField(max_length=200, help_text="工单编号", verbose_name="工单编号")
+    name = models.CharField(max_length=200, help_text="工单名称", verbose_name="工单名称")
     code_package = models.ForeignKey(CodePackage, db_constraint=False, on_delete=models.PROTECT,
                                      related_name="work_code_package", help_text="关联码包", verbose_name="关联码包")
-    no = models.CharField(max_length=200, help_text="工单编号", verbose_name="工单编号")
-    order_id = models.CharField(max_length=100, blank=True, help_text="订单编号", verbose_name="订单编号")
+    code_package_template = models.ForeignKey(CodePackageTemplate, db_constraint=False, on_delete=models.PROTECT, help_text="关联码包模板", verbose_name="关联码包模板")
+    jet_print_template = models.ForeignKey(JetPrintTemplate, db_constraint=False, on_delete=models.PROTECT, help_text="关联喷码模板", verbose_name="关联喷码模板")
     batch_no = models.CharField(max_length=100, null=True, blank=True, help_text="批次号", verbose_name="批次号")
+
     device = models.ForeignKey(DeviceManage, db_constraint=False, on_delete=models.CASCADE, related_name="prod_device",
                                help_text="关联设备", verbose_name="关联设备")
     production_line = models.ForeignKey(ProductionLine, db_constraint=False, on_delete=models.PROTECT,

@@ -26,7 +26,7 @@ class FactoryInfo(CoreModel):
 
     class Meta:
         db_table = table_prefix + "factory_info"
-        verbose_name = '工厂'
+        verbose_name = '工厂管理'
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
 
@@ -45,7 +45,7 @@ class ProductionLine(CoreModel):
 
     class Meta:
         db_table = table_prefix + "production_line"
-        verbose_name = '产线'
+        verbose_name = '产线管理'
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
 
@@ -81,15 +81,48 @@ class DeviceManage(CoreModel):
         (1, "检测管理端")
     )
     type = models.IntegerField(choices=TYPE_LIST, default=0, help_text="设备类型", verbose_name="设备类型")
-    user = models.ForeignKey(Users, db_constraint=False, related_name="user_device", on_delete=models.CASCADE,
+    user = models.ForeignKey(Users, db_constraint=False, related_name="user_device", on_delete=models.PROTECT,
                              blank=True,
                              help_text="操作用户", verbose_name="操作用户")
     production_line = models.ForeignKey(ProductionLine, db_constraint=False, related_name="device_prodline",
-                                        on_delete=models.CASCADE, help_text="所属产线", verbose_name="所属产线")
+                                        on_delete=models.PROTECT, help_text="所属产线", verbose_name="所属产线")
 
     class Meta:
         db_table = table_prefix + "device_manage"
         verbose_name = '生产设备管理'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return str(self.name)
+
+
+class CustomerInfo(CoreModel):
+    no = models.CharField(max_length=100, unique=True, help_text="客户编号", verbose_name="客户编号")
+    name = models.CharField(max_length=50, help_text="客户名称", verbose_name="客户名称")
+    contacts = models.CharField(max_length=20, verbose_name="联系人", help_text="联系人", null=True, blank=True)
+    telephone = models.CharField(max_length=20, verbose_name="手机号码", help_text="手机号码", null=True, blank=True)
+    address = models.CharField(max_length=200, verbose_name="详细地址", help_text="详细地址", null=True, blank=True)
+    attribute_fields = models.JSONField(null=True, blank=True, help_text="其他字段属性", verbose_name="其他字段属性")
+    status = models.IntegerField(choices=STATUS_CHOICES, default=1, verbose_name="状态", help_text="状态")
+
+    class Meta:
+        db_table = table_prefix + "customer_info"
+        verbose_name = '客户管理'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return str(self.name)
+
+
+class ProductInfo(CoreModel):
+    no = models.CharField(max_length=100, unique=True, help_text="产品编号", verbose_name="产品编号")
+    name = models.CharField(max_length=50, help_text="产品名称", verbose_name="产品名称")
+    img = models.CharField(max_length=255, verbose_name="产品图片", null=True, blank=True, help_text="产品图片")
+    status = models.IntegerField(choices=STATUS_CHOICES, default=1, verbose_name="状态", help_text="状态")
+
+    class Meta:
+        db_table = table_prefix + "product_info"
+        verbose_name = '产品管理'
         verbose_name_plural = verbose_name
 
     def __str__(self):
@@ -113,14 +146,17 @@ CODE_TYPE = (
 
 
 class CodePackageTemplate(CoreModel):
-    no = models.CharField(max_length=100, unique=True, help_text="编号", verbose_name="编号")
-    code_version = models.CharField(max_length=50, null=True, blank=True, help_text="模板版号", verbose_name="模板版号")
-    code_source = models.IntegerField(choices=CODE_SOURCE, default=1, blank=True, help_text="编码来源",
-                                      verbose_name="编码来源")
-    separator = models.CharField(max_length=20, blank=True, default=",", help_text="分隔符", verbose_name="分隔符")
-    fields = models.IntegerField(default=0, blank=True, help_text="字段数", verbose_name="字段数")
-    char_length = models.IntegerField(default=0, blank=True, help_text="字符长度(不含换行)", verbose_name="字符长度")
+    no = models.CharField(max_length=100, unique=True, help_text="模板编号", verbose_name="模板编号")
+    name = models.CharField(max_length=100, unique=True, help_text="模板名称", verbose_name="模板名称")
+    customer = models.ForeignKey(CustomerInfo, db_constraint=False, on_delete=models.PROTECT, help_text="归属客户",
+                                 verbose_name="归属客户")
+    char_length = models.IntegerField(default=0, blank=True, help_text="每行字符数(含换行符)",
+                                      verbose_name="每行字符数")
+    fields = models.IntegerField(default=0, blank=True, help_text="每行字段数", verbose_name="每行字段数")
+    separator = models.CharField(max_length=20, blank=True, default=",", help_text="字段分割符",
+                                 verbose_name="字段分割符")
     line_feed = models.IntegerField(choices=LINE_FEED, help_text="换行符", verbose_name="换行符")
+
     code_type = models.IntegerField(choices=CODE_TYPE, help_text="码类型", verbose_name="码类型")
     w_url_prefix = models.CharField(max_length=200, help_text="外码地址", verbose_name="外码地址")
     w_url_length = models.IntegerField(default=0, help_text="外码内容长度", verbose_name="外码长度")
@@ -135,6 +171,50 @@ class CodePackageTemplate(CoreModel):
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
 
+
+class CodePackageTemplateAttribute(CoreModel):
+    name = models.CharField(max_length=50, null=True, blank=True, help_text="字段名称", verbose_name="字段名称")
+    code_package_template = models.ForeignKey(CodePackageTemplate, db_constraint=False, on_delete=models.PROTECT,
+                                              help_text="所属码包模板", verbose_name="所属码包模板")
+    char_length = models.IntegerField(default=-1, blank=True, help_text="字段长度", verbose_name="字段长度")
+    verify_matches = models.CharField(max_length=100, blank=True, default="", help_text="验证匹配符",
+                                      verbose_name="验证匹配符")
+
+    class Meta:
+        db_table = table_prefix + "code_package_template_attribute"
+        verbose_name = '码包模板字段属性'
+        verbose_name_plural = verbose_name
+        ordering = ('-create_datetime',)
+
+
+class JetPrintTemplate(CoreModel):
+    no = models.CharField(max_length=100, unique=True, help_text="模板编号", verbose_name="模板编号")
+    name = models.CharField(max_length=100, unique=True, help_text="模板名称", verbose_name="模板名称")
+    code_package_template = models.ManyToManyField(CodePackageTemplate, blank=True, db_constraint=False,
+                                                   help_text="关联码包模板", verbose_name="关联码包模板")
+    char_length = models.IntegerField(default=0, blank=True, help_text="每张输出字段数", verbose_name="每张输出字段数")
+    carton_number = models.IntegerField(default=0, blank=True, help_text="每张纸箱数", verbose_name="每张纸箱数")
+    img = models.CharField(max_length=200, blank=True, null=True, help_text="排版样图", verbose_name="排版样图")
+
+    class Meta:
+        db_table = table_prefix + "jet_print_template"
+        verbose_name = '喷印模板'
+        verbose_name_plural = verbose_name
+        ordering = ('-create_datetime',)
+
+
+class JetPrintTemplateAttribute(CoreModel):
+    name = models.CharField(max_length=50, null=True, blank=True, help_text="字段名称", verbose_name="字段名称")
+    code_package_template = models.ForeignKey(JetPrintTemplate, db_constraint=False, on_delete=models.PROTECT,
+                                              help_text="所属喷印模板", verbose_name="所属喷印模板")
+    char_length = models.IntegerField(default=0, blank=True, help_text="每次行号", verbose_name="每次行号")
+    column_number = models.IntegerField(default=0, blank=True, help_text="列号", verbose_name="列号")
+
+    class Meta:
+        db_table = table_prefix + "jet_print_template_attribute"
+        verbose_name = '喷印模板字段属性'
+        verbose_name_plural = verbose_name
+        ordering = ('-create_datetime',)
 
 class CodePackageFormat(CoreModel):
     no = models.CharField(max_length=100, unique=True, help_text="编号", verbose_name="编号")
