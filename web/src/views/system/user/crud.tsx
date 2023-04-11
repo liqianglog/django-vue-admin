@@ -25,6 +25,11 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 
 	return {
 		crudOptions: {
+			table: {
+				remove: {
+					confirmMessage: '是否删除该用户？',
+				},
+			},
 			request: {
 				pageRequest,
 				addRequest,
