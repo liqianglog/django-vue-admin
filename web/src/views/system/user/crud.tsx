@@ -3,7 +3,7 @@ import { dict, PageQuery, AddReq, DelReq, EditReq, CrudExpose, CrudOptions, comp
 import { request } from '/@/utils/service';
 import { dictionary } from '/@/utils/dictionary';
 import { successMessage } from '/@/utils/message';
-import {inject} from "vue";
+import { inject } from 'vue';
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
@@ -24,7 +24,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 	};
 
 	//权限判定
-	const hasPermissions = inject("$hasPermissions")
+	const hasPermissions = inject('$hasPermissions');
 
 	return {
 		crudOptions: {
@@ -45,12 +45,12 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 					edit: {
 						iconRight: 'Edit',
 						type: 'text',
-						show:hasPermissions('user:Update')
+						show: hasPermissions('user:Update'),
 					},
 					remove: {
 						iconRight: 'Delete',
 						type: 'text',
-						show:hasPermissions('user:Delete')
+						show: hasPermissions('user:Delete'),
 					},
 				},
 			},
@@ -71,8 +71,8 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 						show: true,
 					},
 					type: 'input',
-					column:{
-						minWidth: 100 //最小列宽
+					column: {
+						minWidth: 100, //最小列宽
 					},
 					form: {
 						rules: [
@@ -123,8 +123,8 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 						show: true,
 					},
 					type: 'input',
-					column:{
-						minWidth: 100 //最小列宽
+					column: {
+						minWidth: 100, //最小列宽
 					},
 					form: {
 						rules: [
@@ -159,8 +159,8 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 							});
 						},
 					}),
-					column:{
-						minWidth: 150 //最小列宽
+					column: {
+						minWidth: 150, //最小列宽
 					},
 					form: {
 						rules: [
@@ -205,8 +205,8 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 							});
 						},
 					}),
-					column:{
-						minWidth: 100 //最小列宽
+					column: {
+						minWidth: 100, //最小列宽
 					},
 					form: {
 						rules: [
@@ -229,8 +229,8 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 						show: true,
 					},
 					type: 'input',
-					column:{
-						minWidth: 120 //最小列宽
+					column: {
+						minWidth: 120, //最小列宽
 					},
 					form: {
 						rules: [
@@ -269,7 +269,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 				},
 				gender: {
 					title: '性别',
-					type: 'dict-radio',
+					type: 'dict-select',
 					dict: dict({
 						data: dictionary('gender'),
 					}),
@@ -290,8 +290,8 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 					dict: dict({
 						data: dictionary('user_type'),
 					}),
-					column:{
-						minWidth: 100 //最小列宽
+					column: {
+						minWidth: 100, //最小列宽
 					},
 					form: {
 						show: false,
@@ -302,7 +302,7 @@ export const createCrudOptions = function ({ crudExpose }: { crudExpose: CrudExp
 					},
 				},
 				is_active: {
-					title: '状态',
+					title: '锁定',
 					search: {
 						show: true,
 					},
