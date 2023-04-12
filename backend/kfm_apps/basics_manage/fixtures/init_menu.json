@@ -151,9 +151,55 @@
         ]
       },
       {
+        "name": "客户管理",
+        "icon": "user",
+        "sort": 4,
+        "is_link": false,
+        "is_catalog": false,
+        "web_path": "/customerInfo",
+        "component": "basicsManage/customerInfo/index",
+        "component_name": "customerInfo",
+        "status": true,
+        "cache": false,
+        "visible": true,
+        "children": [],
+        "menu_button": [
+           {
+            "name": "查询",
+            "value": "Search",
+            "api": "/api/basics_manage/customer_info/",
+            "method": 0
+          },
+          {
+            "name": "详情",
+            "value": "Retrieve",
+            "api": "/api/basics_manage/customer_info/{id}/",
+            "method": 0
+          },
+          {
+            "name": "新增",
+            "value": "Create",
+            "api": "/api/basics_manage/customer_info/",
+            "method": 1
+          },
+          {
+            "name": "编辑",
+            "value": "Update",
+            "api": "/api/basics_manage/customer_info/{id}/",
+            "method": 2
+          },
+          {
+            "name": "删除",
+            "value": "Delete",
+            "api": "/api/basics_manage/customer_info/{id}/",
+            "method": 3
+          }
+        ]
+      },
+      {
         "name": "码包模板管理",
         "icon": "desktop",
-        "sort": 4,
+        "sort": 5,
         "is_link": false,
         "is_catalog": false,
         "web_path": "/codePackageTemplate",
@@ -199,7 +245,7 @@
       {
         "name": "码包回传格式",
         "icon": "desktop",
-        "sort": 5,
+        "sort": 6,
         "is_link": false,
         "is_catalog": false,
         "web_path": "/codePackageFormat",
