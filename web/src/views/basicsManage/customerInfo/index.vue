@@ -34,7 +34,6 @@
         <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="0px" class="demo-dynamic">
           <el-form-item
             v-for="(field, index) in dynamicValidateForm.attribute_fields"
-            label=""
             style="margin-bottom: 20px"
             :key="index"
             :prop="'attribute_fields.' + index + '.label'"
@@ -166,9 +165,11 @@ export default {
     },
     // 监听表单打开事件,给自定义字段赋值
     handleDialogOpened ({ mode, form, template, groupTemplate }) {
-      const {attribute_fields} = form
-      this.dynamicValidateForm.attribute_fields = attribute_fields
-    },
+      if (mode === 'edit') {
+        const { attribute_fields } = form
+        this.dynamicValidateForm.attribute_fields = attribute_fields
+      }
+    }
   }
 }
 </script>

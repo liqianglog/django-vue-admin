@@ -240,11 +240,8 @@ export const crudOptions = (vm) => {
           },
           slot: true
         },
-        show: false,//不在单元格显示
-        // valueBuilder (row,{key}){
-        //   vm.dynamicValidateForm.attribute_fields = row[key]
-        // }
-      },
+        show: false// 不在单元格显示
+      }
     ]
   }
 }

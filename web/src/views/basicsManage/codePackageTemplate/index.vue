@@ -17,6 +17,9 @@
                       @columns-filter-changed="handleColumnsFilterChanged"/>
 
       </div>
+      <template slot="attr_fieldsFormSlot" slot-scope="scope">
+       <attrFieldForm ref="attrFieldFormRef" :formData="formData" :scope="scope" ></attrFieldForm>
+      </template>
     </d2-crud-x>
   </d2-container>
 </template>
@@ -25,14 +28,30 @@
 import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
+import { BUTTON_WHETHER_BOOL } from '@/config/button'
+import attrFieldForm from './components/attrFieldForm.vue'
 export default {
   name: 'codePackageTemplate',
   mixins: [d2CrudPlus.crud],
+  components: {
+    attrFieldForm
+  },
   data () {
     return {
+      formData: {
+        fieldList: [{
+          number: 1,
+          name: '',
+          char_length: '',
+          verify_matches: ''
+        }]
+      }
     }
   },
   methods: {
+    BUTTON_WHETHER_BOOL () {
+      return BUTTON_WHETHER_BOOL
+    },
     getCrudOptions () {
       return crudOptions(this)
     },
@@ -40,13 +59,45 @@ export default {
       return api.GetList(query)
     },
     addRequest (row) {
-      return api.createObj(row)
+      const fields = this.$refs.attrFieldFormRef.submitForm()
+      if (fields) {
+        row.attr_fields = fields
+        row.fields = fields.length
+        return api.createObj(row)
+      } else {
+        return false
+      }
     },
     updateRequest (row) {
-      return api.UpdateObj(row)
+      const fields = this.$refs.attrFieldFormRef.submitForm()
+      if (fields) {
+        row.attr_fields = fields
+        row.fields = fields.length
+        return api.UpdateObj(row)
+      } else {
+        return false
+      }
+
     },
     delRequest (row) {
       return api.DelObj(row.id)
+    },
+    // 监听表单打开事件,给自定义字段赋值
+    handleDialogOpened ({ mode, form, template, groupTemplate }) {
+      if(mode==='add') {
+        this.formData = {
+          fieldList: [{
+            number: 1,
+            name: '',
+            char_length: '',
+            verify_matches: ''
+          }]
+        }
+      }
+      if (mode === 'edit' || mode === 'view') {
+        const { attr_fields } = form
+        this.formData.fieldList = attr_fields
+      }
     }
   }
 }
