@@ -157,13 +157,6 @@ class CodePackageTemplate(CoreModel):
                                  verbose_name="字段分割符")
     line_feed = models.IntegerField(choices=LINE_FEED, help_text="换行符", verbose_name="换行符")
 
-    code_type = models.IntegerField(choices=CODE_TYPE, help_text="码类型", verbose_name="码类型")
-    w_url_prefix = models.CharField(max_length=200, help_text="外码地址", verbose_name="外码地址")
-    w_url_length = models.IntegerField(default=0, help_text="外码内容长度", verbose_name="外码长度")
-    w_field_position = models.IntegerField(default=0, help_text="外码位置", verbose_name="外码位置")
-    n_url_prefix = models.CharField(max_length=200, help_text="内码地址", verbose_name="内码地址")
-    n_url_length = models.IntegerField(default=0, help_text="内码内码长度", verbose_name="内码长度")
-    n_field_position = models.IntegerField(default=0, help_text="内码位置", verbose_name="内码位置")
 
     class Meta:
         db_table = table_prefix + "code_package_template"
@@ -173,6 +166,7 @@ class CodePackageTemplate(CoreModel):
 
 
 class CodePackageTemplateAttribute(CoreModel):
+    number = models.IntegerField(default=0, blank=True, help_text="字段序号", verbose_name="字段序号")
     name = models.CharField(max_length=50, null=True, blank=True, help_text="字段名称", verbose_name="字段名称")
     code_package_template = models.ForeignKey(CodePackageTemplate, db_constraint=False, on_delete=models.PROTECT,
                                               help_text="所属码包模板", verbose_name="所属码包模板")
@@ -204,6 +198,7 @@ class JetPrintTemplate(CoreModel):
 
 
 class JetPrintTemplateAttribute(CoreModel):
+    number = models.IntegerField(default=0, blank=True, help_text="字段序号", verbose_name="字段序号")
     name = models.CharField(max_length=50, null=True, blank=True, help_text="字段名称", verbose_name="字段名称")
     code_package_template = models.ForeignKey(JetPrintTemplate, db_constraint=False, on_delete=models.PROTECT,
                                               help_text="所属喷印模板", verbose_name="所属喷印模板")
