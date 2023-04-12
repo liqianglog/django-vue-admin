@@ -197,6 +197,52 @@
         ]
       },
       {
+        "name": "产品管理",
+        "icon": "cubes",
+        "sort": 4,
+        "is_link": false,
+        "is_catalog": false,
+        "web_path": "/productInfo",
+        "component": "basicsManage/productInfo/index",
+        "component_name": "productInfo",
+        "status": true,
+        "cache": false,
+        "visible": true,
+        "children": [],
+        "menu_button": [
+           {
+            "name": "查询",
+            "value": "Search",
+            "api": "/api/basics_manage/product_info/",
+            "method": 0
+          },
+          {
+            "name": "详情",
+            "value": "Retrieve",
+            "api": "/api/basics_manage/product_info/{id}/",
+            "method": 0
+          },
+          {
+            "name": "新增",
+            "value": "Create",
+            "api": "/api/basics_manage/product_info/",
+            "method": 1
+          },
+          {
+            "name": "编辑",
+            "value": "Update",
+            "api": "/api/basics_manage/product_info/{id}/",
+            "method": 2
+          },
+          {
+            "name": "删除",
+            "value": "Delete",
+            "api": "/api/basics_manage/product_info/{id}/",
+            "method": 3
+          }
+        ]
+      },
+      {
         "name": "码包模板管理",
         "icon": "desktop",
         "sort": 5,
