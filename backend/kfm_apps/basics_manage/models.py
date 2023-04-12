@@ -198,7 +198,7 @@ class JetPrintTemplate(CoreModel):
 
 
 class JetPrintTemplateAttribute(CoreModel):
-    number = models.IntegerField(default=0, blank=True, help_text="字段序号", verbose_name="字段序号")
+    number = models.IntegerField(default=1, blank=True, help_text="字段序号", verbose_name="字段序号")
     name = models.CharField(max_length=50, null=True, blank=True, help_text="字段名称", verbose_name="字段名称")
     code_package_template = models.ForeignKey(JetPrintTemplate, db_constraint=False, on_delete=models.PROTECT,
                                               help_text="所属喷印模板", verbose_name="所属喷印模板")
