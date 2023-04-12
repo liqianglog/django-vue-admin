@@ -202,7 +202,7 @@ class JetPrintTemplateAttribute(CoreModel):
     name = models.CharField(max_length=50, null=True, blank=True, help_text="字段名称", verbose_name="字段名称")
     code_package_template = models.ForeignKey(JetPrintTemplate, db_constraint=False, on_delete=models.PROTECT,
                                               help_text="所属喷印模板", verbose_name="所属喷印模板")
-    char_length = models.IntegerField(default=0, blank=True, help_text="每次行号", verbose_name="每次行号")
+    line_number = models.IntegerField(default=0, blank=True, help_text="每次行号", verbose_name="每次行号")
     column_number = models.IntegerField(default=0, blank=True, help_text="列号", verbose_name="列号")
 
     class Meta:
