@@ -186,7 +186,7 @@ class JetPrintTemplate(CoreModel):
     name = models.CharField(max_length=100, unique=True, help_text="模板名称", verbose_name="模板名称")
     code_package_template = models.ManyToManyField(CodePackageTemplate, blank=True, db_constraint=False,
                                                    help_text="关联码包模板", verbose_name="关联码包模板")
-    char_length = models.IntegerField(default=0, blank=True, help_text="每张输出字段数", verbose_name="每张输出字段数")
+    fields = models.IntegerField(default=0, blank=True, help_text="每张输出字段数", verbose_name="每张输出字段数")
     carton_number = models.IntegerField(default=0, blank=True, help_text="每张纸箱数", verbose_name="每张纸箱数")
     img = models.CharField(max_length=200, blank=True, null=True, help_text="排版样图", verbose_name="排版样图")
 
@@ -198,11 +198,11 @@ class JetPrintTemplate(CoreModel):
 
 
 class JetPrintTemplateAttribute(CoreModel):
-    number = models.IntegerField(default=0, blank=True, help_text="字段序号", verbose_name="字段序号")
+    number = models.IntegerField(default=1, blank=True, help_text="字段序号", verbose_name="字段序号")
     name = models.CharField(max_length=50, null=True, blank=True, help_text="字段名称", verbose_name="字段名称")
     code_package_template = models.ForeignKey(JetPrintTemplate, db_constraint=False, on_delete=models.PROTECT,
                                               help_text="所属喷印模板", verbose_name="所属喷印模板")
-    char_length = models.IntegerField(default=0, blank=True, help_text="每次行号", verbose_name="每次行号")
+    line_number = models.IntegerField(default=0, blank=True, help_text="每次行号", verbose_name="每次行号")
     column_number = models.IntegerField(default=0, blank=True, help_text="列号", verbose_name="列号")
 
     class Meta:
