@@ -274,6 +274,8 @@ export const crudOptions = (vm) => {
         type: 'number',
         minWidth: 70,
         form: {
+          addDisabled: true, //是否仅在添加编辑框中关闭该字段
+          editDisabled: true, //是否仅在修改编辑框中关闭该字段
           component: {
             disabled: true,
             placeholder: '字段数',

@@ -46,7 +46,7 @@
           <el-form-item
             :prop="'fieldList.' + index + '.verify_matches'"
             :rules="[
-                { required: true, message: '不能为空', trigger: 'blur' }
+                { required: false, message: '不能为空', trigger: 'blur' }
               ]"
           >
             <el-input v-model="field.verify_matches" :disabled="scope.mode==='view'" placeholder="请输入验证匹配符"
@@ -65,6 +65,20 @@
         </el-col>
       </el-form-item>
     </el-form>
+    <div>
+      <el-alert
+        title="说明"
+        type="error">
+        <div>
+          <div>
+            1.匹配符为字符中包含(或左匹配);
+            2.根据字段属性,自动生成字段数;
+            3.字段长度-1时,不验证;
+            4.匹配符为空,不验证;
+          </div>
+        </div>
+        </el-alert>
+    </div>
   </div>
 </template>
 
