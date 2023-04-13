@@ -144,7 +144,7 @@ export const crudOptions = (vm) => {
         },
         search: {
           disabled: false,
-          key: 'customer_name',
+          key: 'code_package_template_name',
           component: {
             name: 'el-input',
             placeholder: '请输入码包模板名称'
@@ -182,8 +182,9 @@ export const crudOptions = (vm) => {
           }
         },
         component: {
-          name: 'foreignKey',
-          valueBinding: 'customer_name',
+          name: 'manyToMany',
+          valueBinding: 'code_package_template_list',
+          children: 'name',
           props: { color: 'auto' }
         } // 自动染色
       },{

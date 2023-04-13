@@ -77,4 +77,5 @@ class CodePackageTemplateViewSet(CustomModelViewSet):
     serializer_class = CodePackageTemplateSerializer
     create_serializer_class = CodePackageTemplateCreateUpdateSerializer
     update_serializer_class = CodePackageTemplateCreateUpdateSerializer
+    filter_class = CodePackageTemplateFilter
     search_fields = ['no', 'name']

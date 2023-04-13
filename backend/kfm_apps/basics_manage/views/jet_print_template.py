@@ -1,26 +1,47 @@
+import django_filters
+from django_restql.fields import DynamicSerializerMethodField
 from rest_framework import serializers
 
-from basics_manage.models import JetPrintTemplate, JetPrintTemplateAttribute
+from basics_manage.models import JetPrintTemplate, JetPrintTemplateAttribute, CodePackageTemplate
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
+
+
+class JPTCodePackageTemplateSerializer(CustomModelSerializer):
+    """
+    码包模板-序列化器
+    """
+    class Meta:
+            model = CodePackageTemplate
+            fields = ['id','name']
+            read_only_fields = ["id"]
 
 class JPTAttributeFiledSerializer(CustomModelSerializer):
 
     class Meta:
         model = JetPrintTemplateAttribute
         fields = '__all__'
-        extra_kwargs = {'code_package_template': {'required': False,'allow_null':True}}
+        extra_kwargs = {'jet_print_template': {'required': False,'allow_null':True}}
 
 class JetPrintTemplateSerializer(CustomModelSerializer):
     """
     喷码模板-序列化器
     """
-    customer_name = serializers.CharField(source="customer.name",read_only=True)
+    code_package_template_list = DynamicSerializerMethodField()
     attr_fields = serializers.SerializerMethodField()
 
     def get_attr_fields(self, instance):
-        fields = JPTAttributeFiledSerializer(instance.JetPrintTemplateattribute_set.all(),many=True)
+        fields = JPTAttributeFiledSerializer(instance.jetprinttemplateattribute_set.all(),many=True)
         return fields.data
+
+    def get_code_package_template_list(self, instance, parsed_query):
+        queryset = instance.code_package_template.all()
+        serializer = JPTCodePackageTemplateSerializer(
+            queryset,
+            many=True,
+            parsed_query=parsed_query
+        )
+        return serializer.data
     class Meta:
             model = JetPrintTemplate
             fields = "__all__"
@@ -42,7 +63,7 @@ class JetPrintTemplateCreateUpdateSerializer(CustomModelSerializer):
         attr_fields = init_data.get("attr_fields",[])
         serializer = JPTAttributeFiledSerializer(data=attr_fields,many=True,request=self.request)
         serializer.is_valid(raise_exception=True)
-        serializer.save(code_package_template=instance)
+        serializer.save(jet_print_template=instance)
         return instance
 
     def update(self, instance, validated_data):
@@ -60,9 +81,16 @@ class JetPrintTemplateCreateUpdateSerializer(CustomModelSerializer):
             else:
                 serializer = JPTAttributeFiledSerializer(data=item, many=False, request=self.request)
                 serializer.is_valid(raise_exception=True)
-                serializer.save(code_package_template=instance)
+                serializer.save(jet_print_template=instance)
         JetPrintTemplateAttribute.objects.exclude(id__in=need_update_id).delete()
         return super().update(instance, validated_data)
+
+class JetPrintTemplateFilter(django_filters.FilterSet):
+    id = django_filters.AllValuesMultipleFilter(field_name="id",lookup_expr='in')
+    code_package_template_name = django_filters.CharFilter(field_name="code_package_template__name",lookup_expr='icontains')
+    class Meta:
+        model = JetPrintTemplate
+        fields = "__all__"
 
 class JetPrintTemplateViewSet(CustomModelViewSet):
     """
@@ -72,4 +100,5 @@ class JetPrintTemplateViewSet(CustomModelViewSet):
     serializer_class = JetPrintTemplateSerializer
     create_serializer_class = JetPrintTemplateCreateUpdateSerializer
     update_serializer_class = JetPrintTemplateCreateUpdateSerializer
+    filter_class = JetPrintTemplateFilter
     search_fields = ['no', 'name']
