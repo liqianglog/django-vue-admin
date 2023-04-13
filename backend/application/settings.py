@@ -255,20 +255,10 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
-        'celery': {
-            'handlers': ["console", "error", "file"],
-            'propagate': False,
-            'level': "INFO"
-        },
         'django.db.backends': {
             'handlers': ["console", "error", "file"],
             'propagate': False,
             'level': "INFO"
-        },
-        'django.request': {
-            'handlers': ["console", "error", "file"],
-            'propagate': False,
-            'level': "DEBUG"
         },
         "uvicorn.error": {
             "level": "INFO",
