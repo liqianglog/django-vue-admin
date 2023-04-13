@@ -289,6 +289,52 @@
         ]
       },
       {
+        "name": "喷码模板管理",
+        "icon": "desktop",
+        "sort": 5,
+        "is_link": false,
+        "is_catalog": false,
+        "web_path": "/jetPrintTemplate",
+        "component": "basicsManage/jetPrintTemplate/index",
+        "component_name": "jetPrintTemplate",
+        "status": true,
+        "cache": false,
+        "visible": true,
+        "children": [],
+        "menu_button": [
+           {
+            "name": "查询",
+            "value": "Search",
+            "api": "/api/basics_manage/jet_print_template/",
+            "method": 0
+          },
+          {
+            "name": "详情",
+            "value": "Retrieve",
+            "api": "/api/basics_manage/jet_print_template/{id}/",
+            "method": 0
+          },
+          {
+            "name": "新增",
+            "value": "Create",
+            "api": "/api/basics_manage/jet_print_template/",
+            "method": 1
+          },
+          {
+            "name": "编辑",
+            "value": "Update",
+            "api": "/api/basics_manage/jet_print_template/{id}/",
+            "method": 2
+          },
+          {
+            "name": "删除",
+            "value": "Delete",
+            "api": "/api/basics_manage/jet_print_template/{id}/",
+            "method": 3
+          }
+        ]
+      },
+      {
         "name": "码包回传格式",
         "icon": "desktop",
         "sort": 6,

@@ -1,3 +1,4 @@
+import django_filters
 from rest_framework import serializers
 
 from basics_manage.models import CodePackageTemplate, CodePackageTemplateAttribute
@@ -61,6 +62,12 @@ class CodePackageTemplateCreateUpdateSerializer(CustomModelSerializer):
                 serializer.save(code_package_template=instance)
         CodePackageTemplateAttribute.objects.exclude(id__in=need_update_id).delete()
         return super().update(instance, validated_data)
+
+class CodePackageTemplateFilter(django_filters.FilterSet):
+    id = django_filters.AllValuesMultipleFilter(field_name="id",lookup_expr='in')
+    class Meta:
+        model = CodePackageTemplate
+        fields = "__all__"
 
 class CodePackageTemplateViewSet(CustomModelViewSet):
     """
