@@ -227,96 +227,230 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '产品名称',
-        key: 'product_name',
-        search: {
-          disabled: false
-        },
-        type: 'input',
-        width: 150,
-        form: {
-          rules: [ // 表单校验规则
-            {
-              required: true,
-              message: '必填项'
-            }
-          ],
-          component: {
-            placeholder: '请输入产品名称',
-            span: 24,
-            props: {
-              clearable: true
-            }
-          }
-        }
-      },
-      {
-        title: '到货工厂',
-        key: 'arrival_factory',
-        search: {
-          disabled: false
-        },
-        type: 'input',
-        width: 150,
-        form: {
-          rules: [ // 表单校验规则
-            {
-              required: true,
-              message: '必填项'
-            }
-          ],
-          component: {
-            placeholder: '请输入到货工厂',
-            span: 24,
-            props: {
-              clearable: true
-            }
-          }
-        }
-      },
-      {
-        title: '码包模板',
-        key: 'code_package_template',
-        search: {
-          disabled: false
-        },
-        type: 'select',
-        width: 100,
+        title: '关联客户',
+        key: 'customer_info',
+        type: 'selector-table',
+        minWidth: 120,
         dict: {
-          url: '/api/basics_manage/code_package_template/',
-          label: 'no',
-          value: 'id',
-          getData: (url, dict, { form, component }) => {
-            return request({ url: url, params: { page: 1, limit: 999 } }).then(ret => {
-              return ret.data.data
-            })
+          cache: false, // 表单的dict可以禁用缓存
+          url: '/api/basics_manage/customer_info/',
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'name' // 数据字典中label字段的属性名
+        },
+        search: {
+          disabled: false,
+          key: 'customer_name',
+          component: {
+            name: 'el-input',
+            placeholder: '请输入客户'
           }
         },
         form: {
-          rules: [ // 表单校验规则
-
+          rules: [
             {
               required: true,
-              message: '必填项'
+              message: '必填项',
+              trigger: 'blur'
             }
           ],
           component: {
-            placeholder: '请选择码包模板',
             span: 24,
-            props: {
-              clearable: true
+            placeholder: '请选择客户',
+            elProps: {
+              tableConfig: {
+                pagination: true,
+                multiple: false,
+                columns: [
+                  {
+                    prop: 'id',
+                    label: '编号'
+                  },
+                  {
+                    prop: 'name',
+                    label: '客户名称'
+                  }
+                ]
+              }
             }
           },
           valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
-            const dict = { url: '/api/basics_manage/code_package_template/' }
-            d2CrudPlus.util.dict.get(dict).then((data) => {
-              if (data.length === 1) {
-                form.code_package_template = data[0].id
-              }
-            })
+            // form表单数据change事件，表单值有改动将触发此事件
+            if (value) {
+              vm.isAttrShow = true
+              vm.getCusomerInfoAttr(value)
+            } else {
+              vm.isAttrShow = false
+            }
           },
-          valueChangeImmediate: true // 是否在打开对话框后触发一次valueChange事件
-        }
+          valueChangeImmediate: false
+        },
+        component: {
+          name: 'foreignKey',
+          valueBinding: 'customer_name',
+          props: { color: 'auto' }
+        } // 自动染色
+      },
+      {
+        title: '关联产品',
+        key: 'product_info',
+        type: 'selector-table',
+        minWidth: 120,
+        dict: {
+          cache: false, // 表单的dict可以禁用缓存
+          url: '/api/basics_manage/product_info/',
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'name' // 数据字典中label字段的属性名
+        },
+        search: {
+          disabled: false,
+          key: 'product_name',
+          component: {
+            name: 'el-input',
+            placeholder: '请输入产品'
+          }
+        },
+        form: {
+          rules: [
+            {
+              required: true,
+              message: '必填项',
+              trigger: 'blur'
+            }
+          ],
+          component: {
+            span: 24,
+            placeholder: '请选择产品',
+            elProps: {
+              tableConfig: {
+                pagination: true,
+                multiple: false,
+                columns: [
+                  {
+                    prop: 'id',
+                    label: '编号'
+                  },
+                  {
+                    prop: 'name',
+                    label: '产品名称'
+                  }
+                ]
+              }
+            }
+          }
+        },
+        component: {
+          name: 'foreignKey',
+          valueBinding: 'product_name',
+          props: { color: 'auto' }
+        } // 自动染色
+      },
+      {
+        title: '生产工厂',
+        key: 'factory_info',
+        type: 'selector-table',
+        minWidth: 120,
+        dict: {
+          cache: false, // 表单的dict可以禁用缓存
+          url: '/api/basics_manage/factory_info/',
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'name' // 数据字典中label字段的属性名
+        },
+        search: {
+          disabled: false,
+          key: 'factory_name',
+          component: {
+            name: 'el-input',
+            placeholder: '请输入工厂名称'
+          }
+        },
+        form: {
+          rules: [
+            {
+              required: true,
+              message: '必填项',
+              trigger: 'blur'
+            }
+          ],
+          component: {
+            span: 24,
+            placeholder: '请选择工厂',
+            elProps: {
+              tableConfig: {
+                pagination: true,
+                multiple: false,
+                columns: [
+                  {
+                    prop: 'id',
+                    label: '编号'
+                  },
+                  {
+                    prop: 'name',
+                    label: '工厂名称'
+                  }
+                ]
+              }
+            }
+          }
+        },
+        component: {
+          name: 'foreignKey',
+          valueBinding: 'factory_name',
+          props: { color: 'auto' }
+        } // 自动染色
+      },
+      {
+        title: '关联码包模板',
+        key: 'code_package_template',
+        type: 'selector-table',
+        minWidth: 120,
+        dict: {
+          cache: false, // 表单的dict可以禁用缓存
+          url: '/api/basics_manage/code_package_template/',
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'name' // 数据字典中label字段的属性名
+        },
+        search: {
+          disabled: false,
+          key: 'code_package_template_name',
+          component: {
+            name: 'el-input',
+            placeholder: '请输入码包模板名称'
+          }
+        },
+        form: {
+          rules: [
+            {
+              required: true,
+              message: '必填项',
+              trigger: 'blur'
+            }
+          ],
+          component: {
+            span: 24,
+            placeholder: '请选择码包模板',
+            elProps: {
+              tableConfig: {
+                pagination: true,
+                multiple: false,
+                columns: [
+                  {
+                    prop: 'id',
+                    label: '编号'
+                  },
+                  {
+                    prop: 'name',
+                    label: '模板名称'
+                  }
+                ]
+              }
+            }
+          }
+        },
+        component: {
+          name: 'foreignKey',
+          valueBinding: 'code_package_template_name',
+          props: { color: 'auto' }
+        } // 自动染色
       },
       {
         title: '码包总数',
@@ -340,28 +474,6 @@ export const crudOptions = (vm) => {
         key: 'database_repetition_number',
         type: 'number',
         width: 120,
-        form: {
-          disabled: true
-        }
-      },
-      {
-        title: '码类型',
-        key: 'code_type',
-        type: 'select',
-        width: 100,
-        dict: {
-          data: [
-            { value: 0, label: '外码' },
-            { value: 1, label: '内码' },
-            { value: 2, label: '外码+内码' }
-          ]
-        },
-        search: {
-          disabled: false,
-          component: {
-            placeholder: '请选择码类型'
-          }
-        },
         form: {
           disabled: true
         }
@@ -433,6 +545,19 @@ export const crudOptions = (vm) => {
         form: {
           disabled: true
         }
+      },
+      {
+        title: '其他字段属性',
+        key: 'attribute_fields',
+        type: 'input',
+        form: {
+          component: {
+            show () { return vm.isAttrShow },
+            span: 24
+          },
+          slot: true
+        },
+        show: false// 不在单元格显示
       }
     ].concat(vm.commonEndColumns({
       create_datetime: { showTable: true },

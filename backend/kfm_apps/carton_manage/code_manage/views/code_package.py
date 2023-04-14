@@ -3,6 +3,7 @@ import random
 import shutil
 import zipfile
 
+import django_filters
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.decorators import action
@@ -25,8 +26,12 @@ class CodePackageSerializer(CustomModelSerializer):
     """
     码包管理-序列化器
     """
-    code_type_label = serializers.CharField(source="get_code_type_display", read_only=True)
     source_label = serializers.CharField(source="get_source_display", read_only=True)
+    customer_name = serializers.CharField(source='customer_info.name', read_only=True)
+    product_name = serializers.CharField(source='product_info.name', read_only=True)
+    factory_name = serializers.CharField(source='factory_info.name',read_only=True)
+    code_package_template_name = serializers.CharField(source='code_package_template.name',
+                                                           read_only=True)
 
     class Meta:
         model = CodePackage
@@ -55,6 +60,17 @@ class CodePackageUpdateSerializer(CustomModelSerializer):
         fields = '__all__'
 
 
+class CodePackageFilter(django_filters.FilterSet):
+    id = django_filters.AllValuesMultipleFilter(field_name="id",lookup_expr='in')
+    customer_name = django_filters.CharFilter(field_name='customer_info__name',lookup_expr='icontains')
+    product_name = django_filters.CharFilter(field_name='product_info__name',lookup_expr='icontains')
+    factory_name = django_filters.CharFilter(field_name='factory_info__name', lookup_expr='icontains')
+    code_package_template_name = django_filters.CharFilter(field_name='code_package_template__name', lookup_expr='icontains')
+
+    class Meta:
+        model = CodePackage
+        fields = ['id', 'factory_name', 'code_package_template_name', 'product_name', 'customer_name']
+
 class CodePackageViewSet(CustomModelViewSet):
     """
     码包管理接口:
@@ -63,6 +79,7 @@ class CodePackageViewSet(CustomModelViewSet):
     serializer_class = CodePackageSerializer
     create_serializer_class = CodePackageCreateSerializer
     update_serializer_class = CodePackageUpdateSerializer
+    filter_class = CodePackageFilter
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -171,11 +188,12 @@ class CodePackageViewSet(CustomModelViewSet):
                     "zip_name": data.get("file_path").split(os.sep)[-1],
                     "no": file_name.strip('.txt'),
                     "order_id": data.get("order_id"),
-                    "product_name": data.get("product_name"),
-                    "arrival_factory": data.get("arrival_factory"),
+                    "product_info": data.get("product_info"),
+                    "factory_info": data.get("factory_info"),
+                    "customer_info": data.get("customer_info"),
+                    "attribute_fields": data.get("attribute_fields"),
                     "total_number": total_number,
                     "code_package_template": data.get('code_package_template'),
-                    "code_type": code_package_template_obj.code_type,
                     "key_id": settings.ENCRYPTION_KEY_ID.index(random.choice(settings.ENCRYPTION_KEY_ID)),
                     "file_position": os.path.join(file_now_date, file_name),
                     "file_md5": file_md5,

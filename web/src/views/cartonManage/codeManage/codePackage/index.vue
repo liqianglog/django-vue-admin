@@ -7,7 +7,6 @@
       @onOrderLog="onOrderLog"
       @onImportLog="onImportLog"
     >
-
       <div slot="header">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="全部" name="0"></el-tab-pane>
@@ -26,8 +25,11 @@
                       :columns="crud.columns"
                       @refresh="doRefresh()"
                       @columns-filter-changed="handleColumnsFilterChanged"/>
-
       </div>
+<!--      其他字段属性-->
+      <template slot="attribute_fieldsFormSlot" slot-scope="scope">
+        <attrFieldForm ref="attrFieldFormRef" :formData="formData" :scope="scope"></attrFieldForm>
+      </template>
     </d2-crud-x>
     <orderLog ref="orderLog" :options="selectRow"></orderLog>
     <importLog ref="importLog"></importLog>
@@ -40,18 +42,30 @@ import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import orderLog from './component/orderLog'
 import importLog from './component/importLog'
+import attrFieldForm from './component/attrFieldForm'
+import { request } from '@/api/service'
 export default {
   name: 'codePackage',
   mixins: [d2CrudPlus.crud],
   components: {
     orderLog,
-    importLog
+    importLog,
+    attrFieldForm
   },
   data () {
     return {
       is_encrypted: false,
       selectRow: {},
-      activeName: '0'
+      activeName: '0',
+      isAttrShow: false,
+      formData: {
+        attribute_fields: [{
+          label: '',
+          required: false,
+          value: ''
+        }]
+
+      }
     }
   },
   methods: {
@@ -68,7 +82,14 @@ export default {
       return api.GetList(query)
     },
     addRequest (row) {
-      return api.AddObj(row)
+      const fields = this.$refs.attrFieldFormRef.submitForm()
+      if (fields) {
+        row.attribute_fields = fields
+        return api.AddObj(row)
+      } else {
+        return false
+      }
+
     },
     updateRequest (row) {
       return api.UpdateObj(row)
@@ -87,6 +108,18 @@ export default {
       this.$refs.importLog.options = row
       this.$refs.importLog.drawer = true
       this.$refs.importLog.getInit()
+    },
+    // 获取客户信息的其他属性值
+    getCusomerInfoAttr (id) {
+      request(
+        {
+          url: `/api/basics_manage/customer_info/${id}/get_attr_json/`,
+          method: 'get'
+        }
+      ).then(res => {
+        const { attribute_fields } = res.data
+        this.formData.attribute_fields = attribute_fields
+      })
     }
   }
 }
