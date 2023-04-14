@@ -70,6 +70,7 @@ class LoginSerializer(TokenObtainPairSerializer):
     default_error_messages = {"no_active_account": _("账号/密码错误")}
 
     def validate(self, attrs):
+
         captcha = self.initial_data.get("captcha", None)
         if dispatch.get_system_config_values("base.captcha_state"):
             if captcha is None:
