@@ -50,16 +50,17 @@ class CodePackageTemplateCreateUpdateSerializer(CustomModelSerializer):
         need_update_id = []
         for item in attr_fields:
             id = item.get("id", None)
-            need_update_id.append(id)
             queryset = CodePackageTemplateAttribute.objects.filter(id=id).first()
             if queryset:
                 serializer = AttributeFiledSerializer(instance=queryset,data=item, many=False, request=self.request)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
+                need_update_id.append(id)
             else:
                 serializer = AttributeFiledSerializer(data=item, many=False, request=self.request)
                 serializer.is_valid(raise_exception=True)
                 serializer.save(code_package_template=instance)
+                need_update_id.append(serializer.instance.id)
         CodePackageTemplateAttribute.objects.exclude(id__in=need_update_id).delete()
         return super().update(instance, validated_data)
 

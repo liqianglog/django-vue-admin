@@ -61,6 +61,7 @@ class JetPrintTemplateCreateUpdateSerializer(CustomModelSerializer):
         instance.code_package_template.set(code_package_template)
         init_data = self.initial_data
         attr_fields = init_data.get("attr_fields",[])
+        print(attr_fields)
         serializer = JPTAttributeFiledSerializer(data=attr_fields,many=True,request=self.request)
         serializer.is_valid(raise_exception=True)
         serializer.save(jet_print_template=instance)
@@ -69,19 +70,21 @@ class JetPrintTemplateCreateUpdateSerializer(CustomModelSerializer):
     def update(self, instance, validated_data):
         init_data = self.initial_data
         attr_fields = init_data.get("attr_fields", [])
+        print(attr_fields)
         need_update_id = []
         for item in attr_fields:
             id = item.get("id", None)
-            need_update_id.append(id)
             queryset = JetPrintTemplateAttribute.objects.filter(id=id).first()
             if queryset:
                 serializer = JPTAttributeFiledSerializer(instance=queryset,data=item, many=False, request=self.request)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
+                need_update_id.append(id)
             else:
                 serializer = JPTAttributeFiledSerializer(data=item, many=False, request=self.request)
                 serializer.is_valid(raise_exception=True)
                 serializer.save(jet_print_template=instance)
+                need_update_id.append(serializer.instance.id)
         JetPrintTemplateAttribute.objects.exclude(id__in=need_update_id).delete()
         return super().update(instance, validated_data)
 
