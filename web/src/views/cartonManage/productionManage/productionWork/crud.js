@@ -66,10 +66,10 @@ export const crudOptions = (vm) => {
     //   }
     // },
     viewOptions: {
-      componentType: 'row'
+      componentType: 'form'
     },
     formOptions: {
-      defaultSpan: 12 // 默认的表单 span
+      defaultSpan: 24 // 默认的表单 span
     },
     indexRow: { // 或者直接传true,不显示title，不居中
       title: '序号',
@@ -141,6 +141,132 @@ export const crudOptions = (vm) => {
         }
       },
       {
+        title: '生产码包',
+        key: 'code_package',
+        type: 'selector-table',
+        minWidth: 120,
+        dict: {
+          cache: false, // 表单的dict可以禁用缓存
+          url: '/api/carton/code_manage/code_package/?validate_status=4',
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'no' // 数据字典中label字段的属性名
+        },
+        search: {
+          disabled: false,
+          key: 'code_package_no',
+          component: {
+            name: 'el-input',
+            placeholder: '请输入码包编号'
+          }
+        },
+        form: {
+          rules: [
+            {
+              required: true,
+              message: '必填项',
+              trigger: 'blur'
+            }
+          ],
+          component: {
+            span: 24,
+            placeholder: '请选择码包',
+            on: {
+              // 单选事件
+              radioChange ({ event }) {
+                console.log(111, event)
+              }
+            },
+            elProps: {
+              tableConfig: {
+                pagination: true,
+                multiple: false,
+                columns: [
+                  {
+                    prop: 'id',
+                    label: '编号'
+                  },
+                  {
+                    prop: 'no',
+                    label: '码包名称'
+                  }
+                ]
+              }
+            }
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        },
+        component: {
+          name: 'foreignKey',
+          valueBinding: 'customer_name',
+          props: { color: 'auto' }
+        } // 自动染色
+      },
+      {
+        title: '喷印模板',
+        key: 'jet_print_template',
+        type: 'selector-table',
+        minWidth: 120,
+        dict: {
+          cache: false, // 表单的dict可以禁用缓存
+          url: '/api/basics_manage/jet_print_template/',
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'name' // 数据字典中label字段的属性名
+        },
+        search: {
+          disabled: false,
+          key: 'jet_print_template_name',
+          component: {
+            name: 'el-input',
+            placeholder: '请输入喷印模板名称'
+          }
+        },
+        form: {
+          rules: [
+            {
+              required: true,
+              message: '必填项',
+              trigger: 'blur'
+            }
+          ],
+          component: {
+            span: 24,
+            placeholder: '请选择码包',
+            on: {
+              // 单选事件
+              radioChange ({ event }) {
+                console.log(111, event)
+              }
+            },
+            elProps: {
+              tableConfig: {
+                pagination: true,
+                multiple: false,
+                columns: [
+                  {
+                    prop: 'id',
+                    label: '编号'
+                  },
+                  {
+                    prop: 'name',
+                    label: '喷印模板名称'
+                  }
+                ]
+              }
+            }
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        },
+        component: {
+          name: 'foreignKey',
+          valueBinding: 'jet_print_template_name',
+          props: { color: 'auto' }
+        } // 自动染色
+      },
+      {
         title: '批次号',
         key: 'batch_no',
         minWidth: 200,
@@ -161,56 +287,15 @@ export const crudOptions = (vm) => {
             placeholder: '请输入批次号'
           }
         }
-      },
-      {
-        title: '码类型',
-        key: 'code_type',
-        minWidth: 100,
-        type: 'select',
-        dict: {
-          data: [
-            { value: 0, label: '外码' },
-            { value: 1, label: '内码' },
-            { value: 2, label: '外码+内码' }
-          ]
-        }
-      },
-      {
-        title: '码包总数',
-        key: 'total_number',
-        minWidth: 160,
-        search: {
-          disabled: true,
-          component: {
-            props: {
-              clearable: true
-            }
-          }
-        },
-        type: 'number',
-        form: {
-          itemProps: {
-            class: { yxtInput: true }
-          },
-          component: {
-            placeholder: '请输入码包总数'
-          }
-        }
       }, {
         title: '打印位置',
         key: 'print_position',
         minWidth: 100,
-        type: 'number'
-      }, {
-        title: '产品名称',
-        key: 'product_name',
-        minWidth: 180,
-        type: 'input'
-      }, {
-        title: '到货工厂',
-        key: 'arrival_factory',
-        minWidth: 180,
-        type: 'input'
+        type: 'number',
+        form: {
+          addDisabled: true,
+          editDisabled: true
+        }
       }, {
         title: '生产工厂',
         key: 'factory_info_name',
@@ -225,6 +310,8 @@ export const crudOptions = (vm) => {
         },
         type: 'input',
         form: {
+          addDisabled: true,
+          editDisabled: true,
           itemProps: {
             class: { yxtInput: true }
           },
@@ -246,22 +333,76 @@ export const crudOptions = (vm) => {
               clearable: true
             }
           }
+        },
+        form: {
+          addDisabled: true,
+          editDisabled: true
         }
       },
       {
         title: '生产设备',
-        key: 'device_name',
-        width: 160,
-        type: 'input',
+        key: 'device',
+        type: 'selector-table',
+        minWidth: 120,
+        dict: {
+          cache: false, // 表单的dict可以禁用缓存
+          url: '/api/basics_manage/device_manage/',
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'name' // 数据字典中label字段的属性名
+        },
         search: {
           disabled: false,
+          key: 'device_name',
           component: {
-            placeholder: '请输入生产设备',
-            props: {
-              clearable: true
-            }
+            name: 'el-input',
+            placeholder: '请输入设备名称'
           }
-        }
+        },
+        form: {
+          rules: [
+            {
+              required: true,
+              message: '必填项',
+              trigger: 'blur'
+            }
+          ],
+          component: {
+            span: 24,
+            placeholder: '请选择设备',
+            on: {
+              // 单选事件
+              radioChange (context) {
+                const { event, scope } = context
+                scope.form.factory_info = event.factory_id
+                scope.form.production_line = event.production_line
+              }
+            },
+            elProps: {
+              tableConfig: {
+                pagination: true,
+                multiple: false,
+                columns: [
+                  {
+                    prop: 'id',
+                    label: '编号'
+                  },
+                  {
+                    prop: 'name',
+                    label: '设备名称'
+                  }
+                ]
+              }
+            }
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        },
+        component: {
+          name: 'foreignKey',
+          valueBinding: 'device_name',
+          props: { color: 'auto' }
+        } // 自动染色
       },
       {
         title: '生产状态',
@@ -284,6 +425,8 @@ export const crudOptions = (vm) => {
           ]
         },
         form: {
+          addDisabled: true,
+          editDisabled: true,
           value: 1,
           component: {
             span: 12

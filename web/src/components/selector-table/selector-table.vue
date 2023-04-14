@@ -271,6 +271,7 @@ export default {
      */
     handleSelectionChange (val) {
       this.multipleSelection = val
+      this.$emit('checkChange', val)
     },
     /**
      * 表格单选
@@ -280,6 +281,7 @@ export default {
       const { tableConfig } = this._elProps
       if (!tableConfig.multiple) {
         this.multipleSelection = val
+        this.$emit('radioChange', val)
       }
     },
     /***

@@ -10,7 +10,7 @@
       <div slot="header">
         <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
         <el-button-group>
-<!--          <el-button size="small" type="primary" v-permission="'Create'" @click="addRow"><i class="el-icon-plus"/> 新增</el-button>-->
+          <el-button size="small" type="primary" v-permission="'Create'" @click="addRow"><i class="el-icon-plus"/> 新增</el-button>
         </el-button-group>
         <crud-toolbar :search.sync="crud.searchOptions.show"
                       :compact.sync="crud.pageOptions.compact"
