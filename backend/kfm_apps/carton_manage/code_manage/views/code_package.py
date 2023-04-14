@@ -69,7 +69,7 @@ class CodePackageFilter(django_filters.FilterSet):
 
     class Meta:
         model = CodePackage
-        fields = ['id', 'factory_name', 'code_package_template_name', 'product_name', 'customer_name']
+        fields = ['id', 'factory_name', 'code_package_template_name', 'product_name', 'customer_name','validate_status']
 
 class CodePackageViewSet(CustomModelViewSet):
     """

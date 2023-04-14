@@ -94,8 +94,9 @@ class DeviceManageSerializer(CustomModelSerializer):
     """
     生产设备管理-序列化器
     """
-    production_line_name = serializers.CharField(source='production_line.name')
-    factory_name = serializers.CharField(source='production_line.belong_to_factory.name')
+    production_line_name = serializers.CharField(source='production_line.name',read_only=True)
+    factory_name = serializers.CharField(source='production_line.belong_to_factory.name',read_only=True)
+    factory_id = serializers.CharField(source='production_line.belong_to_factory.id', read_only=True)
 
     class Meta:
         model = DeviceManage

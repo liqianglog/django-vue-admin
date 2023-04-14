@@ -70,6 +70,7 @@ export default {
     },
     updateRequest (row) {
       const fields = this.$refs.attrFieldFormRef.submitForm()
+      console.log(fields)
       if (fields) {
         row.attr_fields = fields
         row.fields = fields.length
