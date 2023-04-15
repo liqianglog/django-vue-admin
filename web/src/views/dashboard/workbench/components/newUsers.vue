@@ -116,7 +116,7 @@
     methods: {
         initGet () {
       request({
-        url: ''
+        url: '/api/system/homepage_statistics/'
       }).then(res => {
         const { data } = res
         // this.total = data.total
