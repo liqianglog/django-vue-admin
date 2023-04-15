@@ -172,8 +172,10 @@ export const crudOptions = (vm) => {
             placeholder: '请选择码包',
             on: {
               // 单选事件
-              radioChange ({ event }) {
-                console.log(111, event)
+              radioChange (context) {
+                const { event, scope } = context
+                vm.code_package_displayForm = event
+                scope.form.code_package_template = event.code_package_template
               }
             },
             elProps: {
@@ -204,13 +206,38 @@ export const crudOptions = (vm) => {
         } // 自动染色
       },
       {
+        title: '码包展示',
+        key: 'code_package_display',
+        type: 'input',
+        form: {
+          show (context) {
+            const { form } = context
+            if (form.code_package) {
+              return true
+            }
+            return false
+          },
+          component: {
+            span: 24
+          },
+          slot: true
+        },
+        show: false// 不在单元格显示
+      },
+      {
         title: '喷印模板',
         key: 'jet_print_template',
-        type: 'selector-table',
+        type: 'select',
         minWidth: 120,
         dict: {
           cache: false, // 表单的dict可以禁用缓存
-          url: '/api/basics_manage/jet_print_template/',
+          // url: '/api/basics_manage/jet_print_template/',
+          url (dict, { form, component }) {
+            if (form && form.code_package_template != null) { // 本数据字典的url是通过前一个select的选项决定的
+              return '/api/basics_manage/jet_print_template/?code_package_template_id=' + form.code_package_template
+            }
+            return undefined // 返回undefined 将不加载字典
+          },
           value: 'id', // 数据字典中value字段的属性名
           label: 'name' // 数据字典中label字段的属性名
         },
@@ -231,14 +258,18 @@ export const crudOptions = (vm) => {
             }
           ],
           component: {
-            span: 24,
-            placeholder: '请选择码包',
-            on: {
-              // 单选事件
-              radioChange ({ event }) {
-                console.log(111, event)
+            show (context) {
+              const { form } = context
+              if (form.code_package_template) {
+                return true
               }
+              return false
             },
+            on:{ //除input change事件外，更多组件事件监听
+              select(event){console.log(event)} //监听表单组件的select事件
+            },
+            span: 24,
+            placeholder: '请选择喷印模板',
             elProps: {
               tableConfig: {
                 pagination: true,

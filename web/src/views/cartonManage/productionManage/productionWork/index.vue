@@ -19,6 +19,19 @@
                       @columns-filter-changed="handleColumnsFilterChanged"/>
 
       </div>
+<!--      码包展示-->
+      <template slot="code_package_displayFormSlot" slot-scope="scope">
+        <div style="border: 1px solid #DCDFE6;padding-left: 15px;border-radius: 5px">
+        <div  v-if="scope.form.code_package">
+          <div>码包名称:{{code_package_displayForm.zip_name}}</div>
+          <div>码包订单号:{{code_package_displayForm.order_id}}</div>
+          <div>客户名称:{{code_package_displayForm.customer_name}}</div>
+          <div>产品名称:{{code_package_displayForm.product_name}}</div>
+          <div>码包模板名称:{{code_package_displayForm.code_package_template_name}}</div>
+        </div>
+        <div >请选择码包</div>
+        </div>
+      </template>
     </d2-crud-x>
     <statusLog ref="statusLog"></statusLog>
     <production-report ref="productionReport"></production-report>
@@ -40,6 +53,14 @@ export default {
   },
   data () {
     return {
+      code_package_displayForm: {
+        zip_name:'',
+        order_id:'',
+        customer_name:'',
+        product_name:'',
+        code_package_template_name:'',
+
+      },
     }
   },
   methods: {

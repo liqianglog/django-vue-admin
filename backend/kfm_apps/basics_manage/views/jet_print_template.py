@@ -91,6 +91,7 @@ class JetPrintTemplateCreateUpdateSerializer(CustomModelSerializer):
 class JetPrintTemplateFilter(django_filters.FilterSet):
     id = django_filters.AllValuesMultipleFilter(field_name="id",lookup_expr='in')
     code_package_template_name = django_filters.CharFilter(field_name="code_package_template__name",lookup_expr='icontains')
+    code_package_template_id = django_filters.NumberFilter(field_name="code_package_template__id",lookup_expr='exact')
     class Meta:
         model = JetPrintTemplate
         fields = "__all__"

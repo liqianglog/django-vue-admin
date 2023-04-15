@@ -166,15 +166,19 @@ export default {
     currentValue (newValue, oldVal) {
       const { tableConfig } = this._elProps
       const { value } = this.dict
-      if (!tableConfig.multiple) {
-        this.$emit('input', newValue[0][value])
-        this.$emit('change', newValue[0][value])
-      } else {
-        const result = newValue.map((item) => {
-          return item[value]
-        })
-        this.$emit('input', result)
-        this.$emit('change', result)
+      if (newValue) {
+        if (!tableConfig.multiple) {
+          if (newValue[0]) {
+            this.$emit('input', newValue[0][value])
+            this.$emit('change', newValue[0][value])
+          }
+        } else {
+          const result = newValue.map((item) => {
+            return item[value]
+          })
+          this.$emit('input', result)
+          this.$emit('change', result)
+        }
       }
     }
   },
@@ -209,7 +213,13 @@ export default {
     // 获取数据
     getDict () {
       const that = this
-      const url = that.dict.url
+      let url
+      if (typeof that.dict.url === 'function') {
+        const form = that.d2CrudContext.getForm()
+        url = that.dict.url(that.dict, { form })
+      } else {
+        url = that.dict.url
+      }
       let dictParams = {}
       if (that.dict.params) {
         dictParams = { ...that.dict.params }
@@ -303,12 +313,12 @@ export default {
      */
     itemClosed (obj, index) {
       const { tableConfig } = this._elProps
+      XEUtils.remove(this.multipleSelection, index)
+      XEUtils.remove(this.currentValue, index)
       if (!tableConfig.multiple) {
         this.$emit('input', '')
         this.$emit('change', '')
       } else {
-        XEUtils.remove(this.multipleSelection, index)
-        XEUtils.remove(this.currentValue, index)
         this.$refs.tableRef?.toggleRowSelection(obj, false)
         // const { value } = this.dict
         // const result = this.currentValue.map((item) => {

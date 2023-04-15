@@ -66,6 +66,7 @@ class CodePackageTemplateCreateUpdateSerializer(CustomModelSerializer):
 
 class CodePackageTemplateFilter(django_filters.FilterSet):
     id = django_filters.AllValuesMultipleFilter(field_name="id",lookup_expr='in')
+    jet_print_template = django_filters.NumberFilter(field_name="jetprinttemplate__id", lookup_expr='exact')
     class Meta:
         model = CodePackageTemplate
         fields = "__all__"
