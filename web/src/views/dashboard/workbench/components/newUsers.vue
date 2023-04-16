@@ -9,7 +9,7 @@
             </el-col>
             <el-col :span="20" class="orange-box">
               <div class="enroll-time">
-                  <div class="enroll-number"><h3>{{total || 0}}</h3>
+                  <div class="enroll-number"><h3>{{ newName }}</h3>
                   </div>
                   <div class="enroll-text">今日注册
                   </div>
@@ -24,7 +24,7 @@
             </el-col>
             <el-col :span="20" class="orange-box">
               <div class="enroll-time">
-                  <div class="enroll-number"><h3>{{total || 1}}</h3>
+                  <div class="enroll-number"><h3>{{today_login}}</h3>
                   </div>
                   <div class="enroll-text">今日登录
                   </div>
@@ -39,7 +39,7 @@
             </el-col>
             <el-col :span="20" class="orange-box">
               <div class="enroll-time">
-                  <div class="enroll-number"><h3>{{total || 7}}</h3>
+                  <div class="enroll-number"><h3>{{Three_days_register}}</h3>
                   </div>
                   <div class="enroll-text">三日新增
                   </div>
@@ -54,7 +54,7 @@
             </el-col>
             <el-col :span="20" class="orange-box">
               <div class="enroll-time">
-                  <div class="enroll-number"><h3>{{total || 15}}</h3>
+                  <div class="enroll-number"><h3>{{Seven_days_register}}</h3>
                   </div>
                   <div class="enroll-text">七日新增
                   </div>
@@ -69,7 +69,7 @@
             </el-col>
             <el-col :span="20" class="orange-box">
               <div class="enroll-time">
-                  <div class="enroll-number"><h3>{{total || 24}}</h3>
+                  <div class="enroll-number"><h3>{{Seven_days_login}}</h3>
                   </div>
                   <div class="enroll-text">七日活跃
                   </div>
@@ -84,7 +84,7 @@
             </el-col>
             <el-col :span="20" class="orange-box">
               <div class="enroll-time">
-                  <div class="enroll-number"><h3>{{total || 89}}</h3>
+                  <div class="enroll-number"><h3>{{month_login}}</h3>
                   </div>
                   <div class="enroll-text">月活跃
                   </div>
@@ -96,6 +96,8 @@
   </template>
   
   <script>
+  import { request } from '@/api/service'
+import log from '../init'
   export default {
     title: '用户新增活跃图',
     icon: 'el-icon-user-solid',
@@ -107,19 +109,29 @@
     isResizable: true,
     data () {
       return {
-        total: 0
+       newName:"",
+       today_login:"",
+       Three_days_register:"",
+       Seven_days_register:"",
+       Seven_days_login:"",
+       month_login:"",
       }
     },
     mounted () {
         this.initGet()
     },
     methods: {
-        initGet () {
+      initGet () {
       request({
         url: '/api/system/homepage_statistics/'
-      }).then(res => {
-        const { data } = res
-        // this.total = data.total
+      }).then((res)=>{
+       this.newName=res.data.today_register;
+       this. today_login=res.data.today_login;
+       this. Three_days_register=res.data.Three_days_register;
+       this. Seven_days_register=res.data.Seven_days_register;
+       this. Seven_days_login=res.data.Seven_days_login;
+       this. month_login=res.data.month_login;
+;
       })
     },
     // 生成一个随机整数
