@@ -9,7 +9,7 @@
           <el-col :span="12">
             <div class="card-content-label">数据库统计</div>
             <div class="card-content">
-              <div class="card-content-value">{{ total || 0 }}</div>
+              <div class="card-content-value">{{count }}</div>
               <div class="el-icon-coin">
                 数据库数量</div>
             </div>
@@ -17,7 +17,7 @@
           <el-col :span="12" :offset="6" style="text-align: right">
             <i class="real-time">实时</i>
             <div class="card-content-time">
-              <div class="attachment-value">{{ total || 0 }}MB</div>
+              <div class="attachment-value">{{ occupy_space}}MB</div>
               <div class="el-icon-s-flag">
                 占用空间</div>
             </div>
@@ -41,18 +41,19 @@
     isResizable: true,
     data() {
       return {
-        total: 0,
+        count:"",
+        occupy_space:"",
       };
     },
     methods: {
-      initGet() {
-        request({
-          url: "",
-        }).then((res) => {
-          const { data } = res;
-          // this.total = data.total;
-        });
-      },
+      initGet () {
+      request({
+        url: '/api/system/homepage_statistics/'
+      }).then((res)=>{
+     this.count=res.data.sum_file.count;
+      this.occupy_space=res.data.sum_file.occupy_space;
+      })
+    },
       // 生成一个随机整数
       randomColor() {
         const color = ["#50A8F4FF", "#FD6165FF", "#E679D8FF", "#F9AB5BFF"];

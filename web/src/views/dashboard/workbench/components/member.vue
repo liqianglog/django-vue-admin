@@ -5,7 +5,7 @@
           <el-col :span="12">
             <div class="card-content">
               <div class="card-content-label">用户总数</div>
-              <div class="card-content-value">{{total || 0}}</div>
+              <div class="card-content-value">{{sum_register}}</div>
             </div>
           </el-col>
           <el-col :span="6" :offset="6" style="text-align: right;">
@@ -31,18 +31,17 @@
     isResizable: true,
     data () {
       return {
-        total: 0
+        sum_register:"",
       }
     },
     methods: {
       initGet () {
-        request({
-          url: ''
-        }).then(res => {
-          const { data } = res
-          // this.total = data.total
-        })
-      },
+      request({
+        url: '/api/system/homepage_statistics/'
+      }).then((res)=>{
+     this.sum_register=res.data.sum_register
+      })
+    },
       // 生成一个随机整数
       randomColor () {
         const color = [
