@@ -107,7 +107,8 @@ export default {
           })
             .then(() => {
               // 重定向对象不存在则返回顶层路径
-              this.$router.replace(this.$route.query.redirect || '/')
+              // this.$router.replace(this.$route.query.redirect || '/')
+              this.$router.replace('/')
             })
             .catch(() => {
               this.getCaptcha()
