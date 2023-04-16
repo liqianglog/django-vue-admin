@@ -202,7 +202,7 @@ def get_ip_analysis(ip):
     return data
 
 
-def save_login_log(request):
+def save_login_log(request, login_type=1):
     """
     保存登录日志
     :return:
@@ -214,6 +214,7 @@ def save_login_log(request):
     analysis_data['agent'] = str(parse(request.META['HTTP_USER_AGENT']))
     analysis_data['browser'] = get_browser(request)
     analysis_data['os'] = get_os(request)
+    analysis_data['login_type'] = login_type
     analysis_data['creator_id'] = request.user.id
     analysis_data['dept_belong_id'] = getattr(request.user, 'dept_id', '')
     LoginLog.objects.create(**analysis_data)

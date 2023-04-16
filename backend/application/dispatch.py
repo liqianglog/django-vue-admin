@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.db import connection
 from django.core.cache import cache
+from dvadmin.utils.validator import CustomValidationError
 
 dispatch_db_type = getattr(settings, 'DISPATCH_DB_TYPE', 'memory')  # redis
 
@@ -159,7 +160,7 @@ def get_dictionary_config(schema_name=None):
         init_dictionary_data = cache.get(f"init_dictionary")
         if not init_dictionary_data:
             refresh_dictionary()
-        return cache.get(f"init_dictionary")  or {}
+        return cache.get(f"init_dictionary") or {}
     if not settings.DICTIONARY_CONFIG:
         refresh_dictionary()
     if is_tenants_mode():
@@ -241,6 +242,22 @@ def get_system_config_values(key, schema_name=None):
         return system_config.get(key)
     system_config = get_system_config(schema_name)
     return system_config.get(key)
+
+
+def get_system_config_values_to_dict(key, schema_name=None):
+    """
+    获取系统配置数据并转换为字典 **仅限于数组类型系统配置
+    :param key: 对应系统配置的key值(字典编号)
+    :param schema_name: 对应系统配置的租户schema_name值
+    :return:
+    """
+    values_dict = {}
+    config_values = get_system_config_values(key, schema_name)
+    if not isinstance(config_values, list):
+        raise CustomValidationError("该方式仅限于数组类型系统配置")
+    for ele in get_system_config_values(key, schema_name):
+        values_dict[ele.get('key')] = ele.get('value')
+    return values_dict
 
 
 def get_system_config_label(key, name, schema_name=None):

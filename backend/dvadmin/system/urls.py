@@ -5,6 +5,7 @@ from application import settings
 from dvadmin.system.views.api_white_list import ApiWhiteListViewSet
 from dvadmin.system.views.area import AreaViewSet
 from dvadmin.system.views.clause import PrivacyView, TermsServiceView
+from dvadmin.system.views.datav import DataVViewSet
 from dvadmin.system.views.dept import DeptViewSet
 from dvadmin.system.views.dictionary import DictionaryViewSet
 from dvadmin.system.views.file_list import FileViewSet
@@ -41,5 +42,6 @@ urlpatterns = [
     path('dept_lazy_tree/', DeptViewSet.as_view({'get': 'dept_lazy_tree'})),
     path('clause/privacy.html', PrivacyView.as_view()),
     path('clause/terms_service.html', TermsServiceView.as_view()),
+    path('homepage_statistics/', DataVViewSet.as_view({'get': 'homepage_statistics'})),
 ]
 urlpatterns += system_url.urls

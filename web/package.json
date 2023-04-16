@@ -23,7 +23,7 @@
     "d2-crud-x": "^2.17.9",
     "d2p-extends": "^2.17.9",
     "dayjs": "^1.8.17",
-    "echarts": "^5.1.2",
+    "echarts": "^5.4.2",
     "el-phone-number-input": "^1.1.5",
     "element-ui": "^2.15.5",
     "faker": "^4.1.0",
