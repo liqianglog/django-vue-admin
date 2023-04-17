@@ -4,6 +4,7 @@
 # @Author  : harry
 import datetime
 import json
+import re
 import time
 
 from django.db.models import Count
@@ -11,9 +12,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
+from conf.env import DATABASE_USER, DATABASE_NAME
 from dvadmin.system.models import Users, LoginLog, FileList
 from dvadmin.system.views.login_log import LoginLogSerializer
 from dvadmin.utils.json_response import DetailResponse
+from django.db import connection
 
 
 def jx_timestamp():
@@ -79,6 +82,29 @@ class DataVViewSet(GenericViewSet):
         today_file = {'count': today_f_l, "occupy_space": 0}
         # 总附件
         sum_file = {'count': sum_f_l, "occupy_space": 0}
+
+        # 获取游标对象
+
+        cursor = connection.cursor()
+
+        # 拿到游标对象后执行sql语句
+
+        cursor.execute("show tables;")
+
+        # 获取所有的数据
+
+        rows = cursor.fetchall()
+        tables_list = []
+        for row in rows:
+            tables_list.append(row)
+        cursor.execute(
+            "select table_schema as db, table_name as tb, table_rows as data_rows, index_length / 1024 as 'storage(KB)' from information_schema.tables where table_schema='{}';".format(
+                DATABASE_NAME))
+        rows = cursor.fetchall()
+        sum_space = 0
+        for row in rows:
+            sum_space += row[3]
+        database_info = {"count": len(tables_list), "space": round(sum_space / 1024, 2)}
         data = {
             "today_register": today_register,
             "today_login": today_login,
@@ -91,5 +117,6 @@ class DataVViewSet(GenericViewSet):
             "sum_register": sum_register,
             "today_file": today_file,
             "sum_file": sum_file,
+            "database_info": database_info,
         }
         return DetailResponse(data=data, msg="获取成功")
