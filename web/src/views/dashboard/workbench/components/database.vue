@@ -17,7 +17,7 @@
           <el-col :span="12" :offset="6" style="text-align: right">
             <i class="real-time">实时</i>
             <div class="card-content-time">
-              <div class="attachment-value">{{ occupy_space}}MB</div>
+              <div class="attachment-value">{{ space}}MB</div>
               <div class="el-icon-s-flag">
                 占用空间</div>
             </div>
@@ -42,7 +42,7 @@
     data() {
       return {
         count:"",
-        occupy_space:"",
+        space:"",
       };
     },
     methods: {
@@ -50,8 +50,9 @@
       request({
         url: '/api/system/homepage_statistics/'
       }).then((res)=>{
-     this.count=res.data.sum_file.count;
-      this.occupy_space=res.data.sum_file.occupy_space;
+     this.count=res.data.database_info.count;
+      this.space=res.data.database_info.space;
+;
       })
     },
       // 生成一个随机整数
@@ -95,7 +96,7 @@
     }
     .el-icon-s-flag {
       font-size: 12px;
-      margin-right: 132px;
+      margin-right: 130px;
     }
   }
   .real-time {
