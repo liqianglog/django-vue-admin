@@ -29,9 +29,9 @@ class CodePackageSerializer(CustomModelSerializer):
     source_label = serializers.CharField(source="get_source_display", read_only=True)
     customer_name = serializers.CharField(source='customer_info.name', read_only=True)
     product_name = serializers.CharField(source='product_info.name', read_only=True)
-    factory_name = serializers.CharField(source='factory_info.name',read_only=True)
+    factory_name = serializers.CharField(source='factory_info.name', read_only=True)
     code_package_template_name = serializers.CharField(source='code_package_template.name',
-                                                           read_only=True)
+                                                       read_only=True)
 
     class Meta:
         model = CodePackage
@@ -61,15 +61,18 @@ class CodePackageUpdateSerializer(CustomModelSerializer):
 
 
 class CodePackageFilter(django_filters.FilterSet):
-    id = django_filters.AllValuesMultipleFilter(field_name="id",lookup_expr='in')
-    customer_name = django_filters.CharFilter(field_name='customer_info__name',lookup_expr='icontains')
-    product_name = django_filters.CharFilter(field_name='product_info__name',lookup_expr='icontains')
+    id = django_filters.AllValuesMultipleFilter(field_name="id", lookup_expr='in')
+    customer_name = django_filters.CharFilter(field_name='customer_info__name', lookup_expr='icontains')
+    product_name = django_filters.CharFilter(field_name='product_info__name', lookup_expr='icontains')
     factory_name = django_filters.CharFilter(field_name='factory_info__name', lookup_expr='icontains')
-    code_package_template_name = django_filters.CharFilter(field_name='code_package_template__name', lookup_expr='icontains')
+    code_package_template_name = django_filters.CharFilter(field_name='code_package_template__name',
+                                                           lookup_expr='icontains')
 
     class Meta:
         model = CodePackage
-        fields = ['id', 'factory_name', 'code_package_template_name', 'product_name', 'customer_name','validate_status']
+        fields = ['id', 'factory_name', 'code_package_template_name', 'product_name', 'customer_name',
+                  'validate_status']
+
 
 class CodePackageViewSet(CustomModelViewSet):
     """
@@ -143,6 +146,7 @@ class CodePackageViewSet(CustomModelViewSet):
                 file_name_list = zip_file.namelist()  # 得到压缩包里所有文件
                 file_name_list = [ele for ele in file_name_list if not ele.startswith("_")]
                 is_txt = zip_is_txt(file_name_list)  # 判断是否全是txt文件
+                print("file_name_list", file_name_list)
                 if not is_txt:
                     return ErrorResponse(code=2001, msg="zip包中内部文件格式不正确")
                 try:
@@ -226,14 +230,15 @@ class CodePackageViewSet(CustomModelViewSet):
             return ErrorResponse(msg="未查询到码包")
         else:
             # 获取所有重码记录数据
-            repetition_data = CodeRepetitionRecord.objects.filter(code_package_id=pk).values('code_content', 'code_type',
-                                                                           'create_datetime')
+            repetition_data = CodeRepetitionRecord.objects.filter(code_package_id=pk).values('code_content',
+                                                                                             'code_type',
+                                                                                             'create_datetime')
             data = {
                 "no": _CodePackage.no,
                 "order_id": _CodePackage.order_id,
                 "zip_name": _CodePackage.zip_name,
                 "total_number": _CodePackage.total_number,
-                "code_type": _CodePackage.get_code_type_display(),
+                "code_type": '未知',
                 "product_name": _CodePackage.product_name,
                 "arrival_factory": _CodePackage.arrival_factory,
                 "import_start_datetime": _CodePackage.import_start_datetime,

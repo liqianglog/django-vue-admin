@@ -1,6 +1,7 @@
 import datetime
 import functools
 import os
+import re
 import shutil
 
 import django
@@ -123,56 +124,51 @@ def code_package_import_check(code_package_id):
             })
             return "规则验证-字段数校验失败"
         code_package_obj.write_log({"content": f"规则验证-字段数", "step": 2.4})
-        if code_package_template_obj.code_type in [0, 2]:  # 外码
-            # 2.5.外码内容长度
-            print(1, readline_list)
-            if len(readline_list[code_package_template_obj.w_field_position].split(os.sep)[
-                       -1]) != code_package_template_obj.w_url_length:
+        #
+        # 根据码包模板校验字段属性
+        template_attribute = code_package_template_obj.codepackagetemplateattribute_set.order_by('number').all()
+        is_code_content_number = []
+        for attribute in template_attribute:
+            """
+            2.5 根据字段属性，根据字段序号排序，校验所有的字段属性是否符合规则
+            2.5.0 判断字段序号是否超出
+            2.5.1 校验字段长度是否符合
+            2.5.2 验证匹配字符，先校验是否开头，如果不是则校验是否是正则匹配
+            """
+            pass
+            if attribute.number + 1 > len(readline_list):
                 code_package_obj.write_log({
-                    "content": '规则验证-外码内容长度',
-                    "step": 2.5,
+                    "content": '规则验证-字段属性',
+                    "step": 2.50,
                     "type": 'error'
                 })
-                return "规则验证-外码内容长度校验失败"
-            code_package_obj.write_log({"content": f"规则验证-外码内容长度", "step": 2.5})
-        if code_package_template_obj.code_type in [1, 2]:  # 内码
-            # 2.6.内码内容长度
-            if len(readline_list[code_package_template_obj.n_field_position].split(os.sep)[
-                       -1]) != code_package_template_obj.n_url_length:
+                return "规则验证-字段序号超出"
+            string = readline_list[attribute.number]
+            if attribute.char_length != -1 and attribute.char_length != len(string):
                 code_package_obj.write_log({
-                    "content": '规则验证-内码内容长度',
-                    "step": 2.6,
+                    "content": '规则验证-字段属性',
+                    "step": 2.51,
                     "type": 'error'
                 })
-                return "规则验证-内码内容长度校验失败"
-            code_package_obj.write_log({"content": f"规则验证-内码内容长度", "step": 2.6})
-        # 2.7.外码网址校验
-        if code_package_template_obj.code_type in [0, 2]:  # 外码
-            w_url = readline_list[code_package_template_obj.w_field_position]
-            if not w_url.startswith(code_package_template_obj.w_url_prefix):
+                return "规则验证-字段长度不符"
+
+            if attribute.verify_matches and not (
+                    string.startswith(attribute.verify_matches) or re.fullmatch(attribute.verify_matches, string)):
                 code_package_obj.write_log({
-                    "content": '规则验证-外码网址',
-                    "step": 2.7,
+                    "content": '规则验证-字段属性',
+                    "step": 2.52,
                     "type": 'error'
                 })
-                return "规则验证-外码网址校验失败"
-            code_package_obj.write_log({"content": f"规则验证-外码网址", "step": 2.7})
-        # 2.8.内码网址校验
-        if code_package_template_obj.code_type in [1, 2]:  # 内码
-            n_url = readline_list[code_package_template_obj.n_field_position]
-            if not n_url.startswith(code_package_template_obj.n_url_prefix):
-                code_package_obj.write_log({
-                    "content": '规则验证-内码网址',
-                    "step": 2.8,
-                    "type": 'error'
-                })
-                return "规则验证-内码网址校验失败"
-            code_package_obj.write_log({"content": f"规则验证-内码网址", "step": 2.8})
+                return "规则验证-验证匹配符不符"
+            code_package_obj.write_log({"content": f"规则验证-字段属性", "step": 2.6})
+            if attribute.is_code_content:
+                is_code_content_number.append(attribute.number)
     code_data_list = []
     # 码数据先入临时表中
     _HistoryTemporaryCode = HistoryTemporaryCode.set_db(timeout=60 * 30)
     _HistoryTemporaryCode.create_table(table_suffix=code_package_obj.id)
     tenant_id = Client.objects.get(schema_name=connection.tenant.schema_name).id
+    code_package_template_obj.codepackagetemplateattribute_set.order_by('number').all()
     with open(source_file_path) as file:
         for readline in file:
             readline = readline.replace('\r\n', '').replace('\n', '')
@@ -180,22 +176,14 @@ def code_package_import_check(code_package_id):
                 readline_list = [readline]
             else:
                 readline_list = readline.split(code_package_template_obj.separator)
-            if code_package_template_obj.code_type in [0, 2]:  # 外码
-                w_url = readline_list[code_package_template_obj.w_field_position]
+            for code_content_number in is_code_content_number:
+
+            # if code_package_template_obj.code_type in [0, 2]:  # 外码
+            #     w_url = readline_list[code_package_template_obj.w_field_position]
                 code_data_list.append(_HistoryTemporaryCode(
-                    code=md5_value(w_url),
-                    code_type='1',
-                    content=w_url,
-                    tenant_id=f"{tenant_id}",
-                    package_id=f"{code_package_obj.id}",
-                    timestamp=datetime.datetime.now()
-                ))
-            if code_package_template_obj.code_type in [1, 2]:  # 内码
-                n_url = readline_list[code_package_template_obj.n_field_position]
-                code_data_list.append(_HistoryTemporaryCode(
-                    code=md5_value(n_url),
-                    code_type='0',
-                    content=n_url,
+                    code=md5_value(readline_list[code_content_number]),
+                    code_type='2',
+                    content=readline_list[code_content_number],
                     tenant_id=f"{tenant_id}",
                     package_id=f"{code_package_obj.id}",
                     timestamp=datetime.datetime.now()
@@ -305,6 +293,6 @@ def code_package_import_check(code_package_id):
 
 if __name__ == '__main__':
     with schema_context("demo"):
-        HistoryCodeInfo.set_db().create_table()
-        code_package_import_check([2])
+        # HistoryCodeInfo.set_db().create_table()
+        code_package_import_check(5)
         # print(json.loads(CodePackage.objects.get(id=2).import_log))
