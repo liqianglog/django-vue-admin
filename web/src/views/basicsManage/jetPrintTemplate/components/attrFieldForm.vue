@@ -13,14 +13,16 @@
       <el-col :span="4">
         <div style="text-align: center">列号</div>
       </el-col>
-      <el-col :span="3" v-show="scope.mode==='add'||scope.mode==='edit'">
+      <el-col :span="2" v-show="scope.mode==='add'||scope.mode==='edit'">
         <div style="text-align: center">操作</div>
       </el-col>
     </el-row>
-    <el-form :model="currentForm" ref="currentFormRef" label-width="0px">
-      <el-row style="margin-bottom: 20px" :gutter="10" v-for="(field, index) in currentForm.fieldList" :key="index">
+    <el-form :model="currentForm" ref="currentFormRef" label-width="0px" size="mini">
+      <el-row style="margin-bottom: 0px" :gutter="10" v-for="(field, index) in currentForm.fieldList" :key="index">
         <el-col :span="4">
+          <el-form-item>
           <el-input-number style="width: 120px" controls-position="right" v-model="field.number" :disabled="scope.mode==='view'" :min="-1" :max="99"></el-input-number>
+          </el-form-item>
         </el-col>
         <el-col :span="5">
           <el-form-item
@@ -53,8 +55,10 @@
 
           </el-form-item>
         </el-col>
-        <el-col :span="3" v-show="scope.mode==='add'||scope.mode==='edit'">
+        <el-col :span="2" v-show="scope.mode==='add'||scope.mode==='edit'">
+          <el-form-item>
           <el-button @click.prevent="removeDomain(field)">删除</el-button>
+          </el-form-item>
         </el-col>
       </el-row>
       <el-form-item>
@@ -67,9 +71,11 @@
     </el-form>
     <div>
       <el-alert
-        title="说明"
         type="error">
-        <div>
+        <div style="line-height: 1.5em">
+          <template slot:title>
+            <span style="font-size: 1.2em">说明</span>
+          </template>
           <div>
             1.每个版面需要打印两个纸箱为每次提取2行，分别为0和1;
           </div>
@@ -81,6 +87,7 @@
 
 <script>
 import { BUTTON_WHETHER_BOOL } from '@/config/button'
+import XEUtils from "xe-utils";
 
 export default {
   name: 'attrFieldForm',
@@ -93,7 +100,7 @@ export default {
       default () {
         return {
           fieldList: [{
-            number: 1,
+            number: 0,
             name: '',
             line_number: 0,
             column_number: 0
@@ -104,6 +111,7 @@ export default {
   },
   computed: {
     currentForm () {
+      this.formData.fieldList = XEUtils.orderBy(this.formData.fieldList, 'number')
       return this.formData
     }
   },
@@ -136,7 +144,10 @@ export default {
       }
     },
     addDomain () {
-      const index = this.currentForm.fieldList.length + 1
+      let index = this.currentForm.fieldList.length
+      if (this.scope.mode === 'edit') {
+        index = index + 1
+      }
       this.currentForm.fieldList.push({
         number: index,
         name: '',

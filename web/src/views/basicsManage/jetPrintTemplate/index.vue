@@ -40,7 +40,7 @@ export default {
     return {
       formData: {
         fieldList: [{
-          number: 1,
+          number: 0,
           name: '',
           line_number: 0,
           column_number: 0
@@ -70,7 +70,6 @@ export default {
     },
     updateRequest (row) {
       const fields = this.$refs.attrFieldFormRef.submitForm()
-      console.log(fields)
       if (fields) {
         row.attr_fields = fields
         row.fields = fields.length
@@ -78,17 +77,16 @@ export default {
       } else {
         return false
       }
-
     },
     delRequest (row) {
       return api.DelObj(row.id)
     },
     // 监听表单打开事件,给自定义字段赋值
     handleDialogOpened ({ mode, form, template, groupTemplate }) {
-      if(mode==='add') {
+      if (mode === 'add') {
         this.formData = {
           fieldList: [{
-            number: 1,
+            number: 0,
             name: '',
             line_number: 0,
             column_number: 0

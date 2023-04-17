@@ -27,11 +27,11 @@
           <el-col :span="6">
             <div style="text-align: center">是否必填</div>
           </el-col>
-          <el-col :span="3" v-show="scope.mode==='add'||scope.mode==='edit'">
+          <el-col :span="2" v-show="scope.mode==='add'||scope.mode==='edit'">
             <div style="text-align: center">操作</div>
           </el-col>
         </el-row>
-        <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="0px" class="demo-dynamic">
+        <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="0px" size="mini">
           <el-form-item
             v-for="(field, index) in dynamicValidateForm.attribute_fields"
             style="margin-bottom: 20px"
@@ -54,7 +54,7 @@
                 </el-option>
               </el-select>
             </el-col>
-            <el-col :span="3" v-show="scope.mode==='add'||scope.mode==='edit'">
+            <el-col :span="2" v-show="scope.mode==='add'||scope.mode==='edit'">
               <el-button  @click.prevent="removeDomain(field)">删除</el-button>
             </el-col>
 

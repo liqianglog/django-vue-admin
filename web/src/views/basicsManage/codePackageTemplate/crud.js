@@ -234,7 +234,7 @@ export const crudOptions = (vm) => {
           },
           helper: {
             render (h) {
-              return (< el-alert type="warning" description="文本中每行不包含换行符的字符长度"/>
+              return (< el-alert type="warning" description="文本中每行包含换行符的字符长度"/>
               )
             }
           }
@@ -304,6 +304,9 @@ export const crudOptions = (vm) => {
         form: {
           component: {
             span: 24
+          },
+          itemProps: {
+            class: { yxtInput: true }
           },
           slot: true
         },

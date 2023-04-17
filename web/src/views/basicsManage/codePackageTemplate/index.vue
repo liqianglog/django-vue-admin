@@ -40,7 +40,7 @@ export default {
     return {
       formData: {
         fieldList: [{
-          number: 1,
+          number: 0,
           name: '',
           char_length: '',
           verify_matches: ''
@@ -77,17 +77,16 @@ export default {
       } else {
         return false
       }
-
     },
     delRequest (row) {
       return api.DelObj(row.id)
     },
     // 监听表单打开事件,给自定义字段赋值
     handleDialogOpened ({ mode, form, template, groupTemplate }) {
-      if(mode==='add') {
+      if (mode === 'add') {
         this.formData = {
           fieldList: [{
-            number: 1,
+            number: 0,
             name: '',
             char_length: '',
             verify_matches: ''

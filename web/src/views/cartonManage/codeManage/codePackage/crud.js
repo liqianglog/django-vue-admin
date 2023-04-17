@@ -87,7 +87,7 @@ export const crudOptions = (vm) => {
             },
             {
               pattern: /^[A-Za-z0-9]{4,40}$/,
-              message: '格式为:字母、数字'
+              message: '格式为:字母、数字;至少4位;最多40位'
             }
           ],
           component: {
@@ -96,6 +96,9 @@ export const crudOptions = (vm) => {
             props: {
               clearable: true
             }
+          },
+          itemProps: {
+            class: { yxtInput: true }
           },
           valueChange (key, value, form, {
             getColumn,
@@ -176,6 +179,9 @@ export const crudOptions = (vm) => {
             },
             span: 24
           },
+          itemProps: {
+            class: { yxtInput: true }
+          },
           valueChange (key, value, form) { // 当返回值有变化时触发
             if (value != null) {
               form.zip_name = value.name
@@ -223,7 +229,10 @@ export const crudOptions = (vm) => {
             show (context) {
               return vm.is_encrypted
             }
-          }
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          },
         }
       },
       {
@@ -272,6 +281,9 @@ export const crudOptions = (vm) => {
                 ]
               }
             }
+          },
+          itemProps: {
+            class: { yxtInput: true }
           },
           valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
             // form表单数据change事件，表单值有改动将触发此事件
@@ -336,7 +348,10 @@ export const crudOptions = (vm) => {
                 ]
               }
             }
-          }
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          },
         },
         component: {
           name: 'foreignKey',
@@ -390,7 +405,10 @@ export const crudOptions = (vm) => {
                 ]
               }
             }
-          }
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          },
         },
         component: {
           name: 'foreignKey',
@@ -444,7 +462,10 @@ export const crudOptions = (vm) => {
                 ]
               }
             }
-          }
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          },
         },
         component: {
           name: 'foreignKey',
@@ -554,6 +575,9 @@ export const crudOptions = (vm) => {
           component: {
             show () { return vm.isAttrShow },
             span: 24
+          },
+          itemProps: {
+            class: { yxtInput: true }
           },
           slot: true
         },

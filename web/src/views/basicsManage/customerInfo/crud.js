@@ -238,6 +238,9 @@ export const crudOptions = (vm) => {
           component: {
             span: 24
           },
+          itemProps: {
+            class: { yxtInput: true }
+          },
           slot: true
         },
         show: false// 不在单元格显示

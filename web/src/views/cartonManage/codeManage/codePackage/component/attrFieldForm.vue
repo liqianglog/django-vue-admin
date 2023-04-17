@@ -8,10 +8,10 @@
         <div style="text-align: center">字段值</div>
       </el-col>
     </el-row>
-    <el-form :model="currentForm" ref="currentFormRef" label-width="0px">
+    <el-form :model="currentForm" ref="currentFormRef" label-width="0px" size="mini">
       <el-row style="margin-bottom: 20px" :gutter="10" v-for="(field, index) in currentForm.attribute_fields" :key="index">
         <el-col :span="4">
-         <div style="text-align: center">{{field.label}}</div>
+         <div style="text-align: center;line-height: 2em">{{field.label}}</div>
         </el-col>
         <el-col :span="6">
           <el-form-item
