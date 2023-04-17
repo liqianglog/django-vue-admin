@@ -157,7 +157,6 @@ class CodePackageTemplate(CoreModel):
                                  verbose_name="字段分割符")
     line_feed = models.IntegerField(choices=LINE_FEED, help_text="换行符", verbose_name="换行符")
 
-
     class Meta:
         db_table = table_prefix + "code_package_template"
         verbose_name = '码包模板'
@@ -170,6 +169,7 @@ class CodePackageTemplateAttribute(CoreModel):
     name = models.CharField(max_length=50, null=True, blank=True, help_text="字段名称", verbose_name="字段名称")
     code_package_template = models.ForeignKey(CodePackageTemplate, db_constraint=False, on_delete=models.PROTECT,
                                               help_text="所属码包模板", verbose_name="所属码包模板")
+    is_code_content = models.BooleanField(default=False, help_text="是否是码内容", verbose_name="是否是码内容")
     char_length = models.IntegerField(default=-1, blank=True, help_text="字段长度", verbose_name="字段长度")
     verify_matches = models.CharField(max_length=100, blank=True, default="", help_text="验证匹配符",
                                       verbose_name="验证匹配符")
@@ -201,7 +201,7 @@ class JetPrintTemplateAttribute(CoreModel):
     number = models.IntegerField(default=1, blank=True, help_text="字段序号", verbose_name="字段序号")
     name = models.CharField(max_length=50, null=True, blank=True, help_text="字段名称", verbose_name="字段名称")
     jet_print_template = models.ForeignKey(JetPrintTemplate, db_constraint=False, on_delete=models.PROTECT,
-                                              help_text="所属喷印模板", verbose_name="所属喷印模板")
+                                           help_text="所属喷印模板", verbose_name="所属喷印模板")
     line_number = models.IntegerField(default=0, blank=True, help_text="每次行号", verbose_name="每次行号")
     column_number = models.IntegerField(default=0, blank=True, help_text="列号", verbose_name="列号")
 
@@ -211,6 +211,7 @@ class JetPrintTemplateAttribute(CoreModel):
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
 
+
 class CodePackageFormat(CoreModel):
     no = models.CharField(max_length=100, unique=True, help_text="编号", verbose_name="编号")
     separator = models.CharField(max_length=20, blank=True, default=",", help_text="分隔符", verbose_name="分隔符")
@@ -219,6 +220,7 @@ class CodePackageFormat(CoreModel):
     line_feed = models.IntegerField(choices=LINE_FEED, help_text="换行符", verbose_name="换行符")
     code_position = models.IntegerField(default=0, help_text="码字段位置", verbose_name="码字段位置")
     time_position = models.IntegerField(default=0, help_text="时间字段位置", verbose_name="时间字段位置")
+
     class Meta:
         db_table = table_prefix + "code_package_format"
         verbose_name = '检测回传码包格式'
