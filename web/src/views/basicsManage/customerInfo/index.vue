@@ -57,10 +57,8 @@
             <el-col :span="2" v-show="scope.mode==='add'||scope.mode==='edit'">
               <el-button  @click.prevent="removeDomain(field)">删除</el-button>
             </el-col>
-
           </el-form-item>
           <el-form-item>
-            <!--            <el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>-->
             <el-col :span="6" v-show="scope.mode==='add'||scope.mode==='edit'">
               <el-button type="primary"  @click="addDomain">新增</el-button>
               <el-button @click="resetForm('dynamicValidateForm')" >重置</el-button>
@@ -77,6 +75,7 @@ import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import { BUTTON_WHETHER_BOOL } from '@/config/button'
+import util from '@/libs/util'
 
 export default {
   name: 'customerInfo',
@@ -165,6 +164,9 @@ export default {
     },
     // 监听表单打开事件,给自定义字段赋值
     handleDialogOpened ({ mode, form, template, groupTemplate }) {
+      if (mode === 'add') {
+        form.no = util.autoShortCreateCode()
+      }
       if (mode === 'edit') {
         const { attribute_fields } = form
         this.dynamicValidateForm.attribute_fields = attribute_fields
