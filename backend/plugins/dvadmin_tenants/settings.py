@@ -23,7 +23,10 @@ plugins_url_patterns = [
     {"re_path": r'api/tenant/', "include": "dvadmin_tenants.urls"}
 ]
 # app 配置
-apps = ['django_tenants', 'tenant_schemas_celery', 'dvadmin_tenants', 'psqlextra']
+apps = ['django_tenants', 'tenant_schemas_celery', 'django_celery_beat', 'django_celery_results', 'dvadmin_celery',
+        'dvadmin_tenants', 'psqlextra']
+if 'rest_framework_simplejwt.token_blacklist' in settings.INSTALLED_APPS:
+    apps.append('rest_framework_simplejwt.token_blacklist')
 # 租户模式中，public模式共享app配置
 tenant_shared_apps = apps
 # 租户独享app，只在普通租户有
@@ -60,9 +63,9 @@ for ele in authentication_backends:
 AUTHENTICATION_BACKENDS = sorted(list(set(_AUTHENTICATION_BACKENDS)), key=_AUTHENTICATION_BACKENDS.index)
 
 # ********** APPS管理 **********
-if not hasattr(settings,'TENANT_SHARED_APPS'):
+if not hasattr(settings, 'TENANT_SHARED_APPS'):
     settings.TENANT_SHARED_APPS = []
-if not hasattr(settings,'TENANT_EXCLUSIVE_APPS'):
+if not hasattr(settings, 'TENANT_EXCLUSIVE_APPS'):
     settings.TENANT_EXCLUSIVE_APPS = []
 settings.TENANT_SHARED_APPS += tenant_shared_apps  # 共享apps, 表不在普通租户建，读取表默认走public的表
 settings.TENANT_EXCLUSIVE_APPS += exclusive_apps  # 独享apps

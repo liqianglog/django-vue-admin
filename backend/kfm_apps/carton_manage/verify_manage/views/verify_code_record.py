@@ -44,7 +44,6 @@ class VerifyCodeRecordExportSerializer(CustomModelSerializer):
     factory_info_name = serializers.CharField(source="back_haul_file.device.production_line.factory_info.name", read_only=True,default="")
     production_line_name = serializers.CharField(source="back_haul_file.device.production_line.name", read_only=True,default="")
     device_name = serializers.CharField(source="back_haul_file.device.name", read_only=True,default="")
-    code_type_label = serializers.CharField(source='get_code_type_display',read_only=True)
     error_type_label = serializers.CharField(source='get_error_type_display', read_only=True)
     class Meta:
         model = VerifyCodeRecord

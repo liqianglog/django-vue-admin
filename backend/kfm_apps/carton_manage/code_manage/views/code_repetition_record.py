@@ -50,7 +50,6 @@ class CodeRepetitionRecordExportSerializer(CustomModelSerializer):
     code_package_order_id = serializers.CharField(source='code_package.order_id', read_only=True)
     repetition_code_package_no = serializers.CharField(source='repetition_code_package.no', read_only=True)
     repetition_code_package_order_id = serializers.CharField(source='repetition_code_package.order_id', read_only=True)
-    code_type = serializers.CharField(source='get_code_type_display',read_only=True)
     repetition_type = serializers.CharField(source='get_repetition_type_display',read_only=True)
 
     class Meta:
