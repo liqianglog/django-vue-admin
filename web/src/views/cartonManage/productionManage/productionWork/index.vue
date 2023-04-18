@@ -29,7 +29,7 @@
           <div>产品名称:{{code_package_displayForm.product_name}}</div>
           <div>码包模板名称:{{code_package_displayForm.code_package_template_name}}</div>
         </div>
-        <div >请选择码包</div>
+        <div v-else>请选择码包</div>
         </div>
       </template>
     </d2-crud-x>
@@ -44,6 +44,7 @@ import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import statusLog from './components/productionWorkStatusRecord'
 import ProductionReport from '@/views/cartonManage/productionManage/productionWork/components/productionReport'
+import util from "@/libs/util";
 export default {
   name: 'productionWork',
   mixins: [d2CrudPlus.crud],
@@ -89,6 +90,12 @@ export default {
       this.$refs.productionReport.options = row
       this.$refs.productionReport.drawer = true
       this.$refs.productionReport.getInit()
+    },
+    // 监听表单打开事件,给自定义字段赋值
+    handleDialogOpened ({ mode, form, template, groupTemplate }){
+      if (mode === 'add') {
+        form.no = util.autoShortCreateCode()
+      }
     }
   }
 }

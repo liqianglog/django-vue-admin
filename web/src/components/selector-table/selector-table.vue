@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="selectedTableRef">
     <el-popover
       placement="bottom"
       width="400"
@@ -64,13 +64,14 @@
 <script>
 import { request } from '@/api/service'
 import XEUtils from 'xe-utils'
-
+import { d2CrudPlus } from 'd2-crud-plus'
 export default {
   name: 'selector-table-input',
   model: {
     prop: 'value',
-    event: ['change','input']
+    event: ['change', 'input']
   },
+  mixins: [d2CrudPlus.input, d2CrudPlus.inputDict],
   props: {
     // 值
     value: {
@@ -139,12 +140,17 @@ export default {
         // 父组件收到input事件后会通过v-model改变value参数的值
         // 然后此处会watch到value的改变，发出change事件
         // change事件放在此处发射的好处是，当外部修改value值时，也能够触发form-data-change事件
+
         this.$emit('change', value)
         this.$emit('input', value)
         // 如果值是被外部改变的，则修改本组件的currentValue
         if (Array.isArray(value) && value.length === 0) {
           this.currentValue = null
           this.multipleSelection = null
+        } else {
+          if (value && this.dispatch) {
+            this.dispatch('ElFormItem', 'el.form.blur')
+          }
         }
       },
       deep: true,

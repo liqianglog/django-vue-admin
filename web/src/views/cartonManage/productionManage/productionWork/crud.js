@@ -100,20 +100,14 @@ export const crudOptions = (vm) => {
         type: 'input',
         form: {
           rules: [
-            { required: true, message: '工厂编号不能为空', trigger: 'blur' }
+            { required: true, message: '生产工单号不能为空', trigger: 'blur' }
           ],
           component: {
-            placeholder: '请输入工厂编号'
+            placeholder: '请输入生产工单号'
           },
           itemProps: {
             class: { yxtInput: true }
-          },
-          valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
-            if (mode === 'add') {
-              form.code = util.autoShortCreateCode()
-            }
-          },
-          valueChangeImmediate: true
+          }
         }
       }, {
         title: '生产订单号',
@@ -188,8 +182,14 @@ export const crudOptions = (vm) => {
                     label: '编号'
                   },
                   {
+                    prop:'order_id',
+                    label:'码包订单号',
+                    width:200
+                  },
+                  {
                     prop: 'no',
-                    label: '码包名称'
+                    label: '码包名称',
+                    width:200
                   }
                 ]
               }
@@ -206,7 +206,7 @@ export const crudOptions = (vm) => {
         } // 自动染色
       },
       {
-        title: '码包展示',
+        title: '码包详情',
         key: 'code_package_display',
         type: 'input',
         form: {

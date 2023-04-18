@@ -18,7 +18,7 @@
       </el-col>
     </el-row>
     <el-form :model="currentForm" ref="currentFormRef" label-width="0px" size="mini">
-      <el-row style="margin-bottom: 0px" :gutter="10" v-for="(field, index) in currentForm.fieldList" :key="index">
+      <el-row  style="margin-bottom: 0px" :gutter="15" v-for="(field, index) in currentForm.fieldList" :key="index">
         <el-col :span="4">
           <el-form-item>
           <el-input-number style="width: 120px" controls-position="right" v-model="field.number" :disabled="scope.mode==='view'" :min="-1" :max="99"></el-input-number>

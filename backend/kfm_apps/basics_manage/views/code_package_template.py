@@ -2,6 +2,7 @@ import django_filters
 from rest_framework import serializers
 
 from basics_manage.models import CodePackageTemplate, CodePackageTemplateAttribute
+from carton_manage.code_manage.models import CodePackage
 from carton_manage.production_manage.models import ProductionWork
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.validator import CustomValidationError
@@ -47,9 +48,9 @@ class CodePackageTemplateCreateUpdateSerializer(CustomModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        _ProductionWork = ProductionWork.objects.filter(code_package_template=instance.id).exists()
-        if _ProductionWork:
-            raise CustomValidationError("码包模板已被生产工单使用,无法修改")
+        _CodePackage = CodePackage.objects.filter(code_package_template=instance.id).exists()
+        if _CodePackage:
+            raise CustomValidationError("码包模板已被码包订单使用,无法修改")
         init_data = self.initial_data
         attr_fields = init_data.get("attr_fields", [])
         need_update_id = []

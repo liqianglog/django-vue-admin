@@ -1,4 +1,4 @@
-import util from "@/libs/util";
+import util from '@/libs/util'
 
 export const crudOptions = (vm) => {
   return {
@@ -154,7 +154,8 @@ export const crudOptions = (vm) => {
           rules: [
             {
               required: true,
-              message: '必填项'
+              message: '必填项',
+              trigger: 'blur'
             }
           ],
           component: {
@@ -185,7 +186,7 @@ export const crudOptions = (vm) => {
           valueBinding: 'customer_name',
           props: { color: 'auto' }
         } // 自动染色
-      },{
+      }, {
         title: '换行符',
         key: 'line_feed',
         search: {
@@ -213,7 +214,7 @@ export const crudOptions = (vm) => {
             }
           }
         }
-      },{
+      }, {
         title: '字符长度',
         key: 'char_length',
         type: 'number',
@@ -238,7 +239,7 @@ export const crudOptions = (vm) => {
             }
           }
         }
-      },{
+      }, {
         title: '分隔符',
         key: 'separator',
         search: {
@@ -273,8 +274,8 @@ export const crudOptions = (vm) => {
         type: 'number',
         minWidth: 70,
         form: {
-          //addDisabled: true, //是否仅在添加编辑框中关闭该字段
-          //editDisabled: true, //是否仅在修改编辑框中关闭该字段
+          // addDisabled: true, //是否仅在添加编辑框中关闭该字段
+          // editDisabled: true, //是否仅在修改编辑框中关闭该字段
           component: {
             disabled: true,
             placeholder: '字段数',
@@ -309,8 +310,8 @@ export const crudOptions = (vm) => {
           },
           slot: true
         },
-        show: false,//不在单元格显示
-      },
+        show: false// 不在单元格显示
+      }
     ].concat(vm.commonEndColumns({
       update_datetime: { showTable: false },
       dept_belong_id: { showForm: false },
