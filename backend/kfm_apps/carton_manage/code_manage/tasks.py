@@ -160,9 +160,9 @@ def code_package_import_check(code_package_id):
                     "type": 'error'
                 })
                 return "规则验证-验证匹配符不符"
-            code_package_obj.write_log({"content": f"规则验证-字段属性", "step": 2.6})
             if attribute.is_code_content:
                 is_code_content_number.append(attribute.number)
+        code_package_obj.write_log({"content": f"规则验证-字段属性", "step": 2.5})
     code_data_list = []
     # 码数据先入临时表中
     _HistoryTemporaryCode = HistoryTemporaryCode.set_db(timeout=60 * 30)
