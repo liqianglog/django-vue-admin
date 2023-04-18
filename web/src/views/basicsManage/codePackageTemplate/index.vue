@@ -42,6 +42,7 @@ export default {
         fieldList: [{
           number: 0,
           name: '',
+          is_code_content: false,
           char_length: '',
           verify_matches: ''
         }]
@@ -89,6 +90,7 @@ export default {
             number: 0,
             name: '',
             char_length: '',
+            is_code_content: false,
             verify_matches: ''
           }]
         }

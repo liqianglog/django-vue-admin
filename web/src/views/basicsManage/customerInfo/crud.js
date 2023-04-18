@@ -106,13 +106,7 @@ export const crudOptions = (vm) => {
           },
           itemProps: {
             class: { yxtInput: true }
-          },
-          valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
-            if (mode === 'add') {
-              form.no = util.autoShortCreateCode()
-            }
-          },
-          valueChangeImmediate: true
+          }
         }
       }, {
         title: '客户名称',
@@ -243,7 +237,7 @@ export const crudOptions = (vm) => {
           },
           slot: true
         },
-        show: false// 不在单元格显示
+        show: false
       }
     ]
   }

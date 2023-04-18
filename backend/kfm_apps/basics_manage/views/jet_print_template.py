@@ -3,7 +3,9 @@ from django_restql.fields import DynamicSerializerMethodField
 from rest_framework import serializers
 
 from basics_manage.models import JetPrintTemplate, JetPrintTemplateAttribute, CodePackageTemplate
+from carton_manage.production_manage.models import ProductionWork
 from dvadmin.utils.serializers import CustomModelSerializer
+from dvadmin.utils.validator import CustomValidationError
 from dvadmin.utils.viewset import CustomModelViewSet
 
 
@@ -68,9 +70,11 @@ class JetPrintTemplateCreateUpdateSerializer(CustomModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
+        _ProductionWork = ProductionWork.objects.filter(jet_print_template=instance.id).exists()
+        if _ProductionWork:
+            raise CustomValidationError("喷码模板已被生产工单使用,无法修改")
         init_data = self.initial_data
         attr_fields = init_data.get("attr_fields", [])
-        print(attr_fields)
         need_update_id = []
         for item in attr_fields:
             id = item.get("id", None)

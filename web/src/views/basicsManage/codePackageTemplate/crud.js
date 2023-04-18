@@ -154,8 +154,7 @@ export const crudOptions = (vm) => {
           rules: [
             {
               required: true,
-              message: '必填项',
-              trigger: 'blur'
+              message: '必填项'
             }
           ],
           component: {
@@ -274,8 +273,8 @@ export const crudOptions = (vm) => {
         type: 'number',
         minWidth: 70,
         form: {
-          addDisabled: true, //是否仅在添加编辑框中关闭该字段
-          editDisabled: true, //是否仅在修改编辑框中关闭该字段
+          //addDisabled: true, //是否仅在添加编辑框中关闭该字段
+          //editDisabled: true, //是否仅在修改编辑框中关闭该字段
           component: {
             disabled: true,
             placeholder: '字段数',
@@ -283,9 +282,9 @@ export const crudOptions = (vm) => {
               min: 0
             }
           },
-          rules: [
-            { required: true, message: '字段数不能为空', trigger: 'blur' }
-          ],
+          // rules: [
+          //   { required: true, message: '字段数不能为空', trigger: 'blur' }
+          // ],
           itemProps: {
             class: { yxtInput: true }
           },
