@@ -29,7 +29,6 @@ def jx_timestamp():
 
 
 class DataVViewSet(GenericViewSet):
-    permission_classes = []
     queryset = LoginLog.objects.all()
     serializer_class = LoginLogSerializer
     extra_filter_backends = []
