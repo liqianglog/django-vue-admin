@@ -25,6 +25,8 @@ plugins_url_patterns = [
 # app 配置
 apps = ['django_tenants', 'tenant_schemas_celery', 'django_celery_beat', 'django_celery_results', 'dvadmin_celery',
         'dvadmin_tenants', 'psqlextra']
+if 'rest_framework_simplejwt.token_blacklist' in settings.INSTALLED_APPS:
+    apps.append('rest_framework_simplejwt.token_blacklist')
 # 租户模式中，public模式共享app配置
 tenant_shared_apps = apps
 # 租户独享app，只在普通租户有
