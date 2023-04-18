@@ -1,6 +1,8 @@
 from django.db import connection
 from django_tenants.utils import tenant_context
 
+from application import dispatch
+from dvadmin.system.management.commands import init_area
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 from dvadmin_tenants.models import Client, HistoryCodeInfo
@@ -23,7 +25,16 @@ class ClientSerializer(CustomModelSerializer):
             from dvadmin_tenants.management.commands.tenant_init import Command
             res = Command()
             res.run()
+            print("初始化数据初始完毕")
+            # 初始化省份城市
+            init_area.main()
+            print("省份数据初始化完毕")
             # 初始化ck表
+            # =========== 初始化系统配置 =================
+            dispatch.init_system_config()
+            dispatch.init_dictionary()
+            print("租户所有初始化完成!")
+            # ==========================================
             HistoryCodeInfo.set_db().create_table()
         return instance
 
