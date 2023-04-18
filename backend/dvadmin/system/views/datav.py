@@ -29,6 +29,7 @@ def jx_timestamp():
 
 
 class DataVViewSet(GenericViewSet):
+    permission_classes = []
     queryset = LoginLog.objects.all()
     serializer_class = LoginLogSerializer
     extra_filter_backends = []
@@ -97,14 +98,19 @@ class DataVViewSet(GenericViewSet):
         tables_list = []
         for row in rows:
             tables_list.append(row)
+        # cursor.execute(
+        #     "select table_schema as db, table_name as tb, table_rows as data_rows, index_length / 1024 as 'storage(KB)' from information_schema.tables where table_schema='{}';".format(
+        #         DATABASE_NAME))
         cursor.execute(
-            "select table_schema as db, table_name as tb, table_rows as data_rows, index_length / 1024 as 'storage(KB)' from information_schema.tables where table_schema='{}';".format(
+            "select table_schema as table_db, sum(index_length) as storage,count(table_name ) as tables  from information_schema.tables group by table_schema having table_db='{}';".format(
                 DATABASE_NAME))
         rows = cursor.fetchall()
-        sum_space = 0
+        count = 0
+        space = 0
         for row in rows:
-            sum_space += row[3]
-        database_info = {"count": len(tables_list), "space": round(sum_space / 1024, 2)}
+            count = row[2]
+            space = round(row[1] / 1024 / 1024, 2)
+        database_info = {"count": count, "space": space}
         data = {
             "today_register": today_register,
             "today_login": today_login,
