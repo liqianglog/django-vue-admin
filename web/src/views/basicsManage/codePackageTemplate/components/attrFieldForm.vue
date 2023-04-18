@@ -1,16 +1,19 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="4">
+      <el-col :span="3">
         <div style="text-align: center">字段序号</div>
       </el-col>
       <el-col :span="5">
         <div style="text-align: center">字段名称</div>
       </el-col>
       <el-col :span="4">
+        <div style="text-align: center">是否为码内容</div>
+      </el-col>
+      <el-col :span="4">
         <div style="text-align: center">字段长度</div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="6">
         <div style="text-align: center">验证匹配符</div>
       </el-col>
       <el-col :span="2" v-show="scope.mode==='add'||scope.mode==='edit'">
@@ -19,9 +22,9 @@
     </el-row>
     <el-form :model="currentForm" ref="currentFormRef" label-width="0px" size="mini">
       <el-row style="margin-bottom: 0px" :gutter="10" v-for="(field, index) in currentForm.fieldList" :key="index">
-        <el-col :span="4">
+        <el-col :span="3">
           <el-form-item  :prop="'fieldList.' + index + '.number'">
-          <el-input-number style="width: 120px" controls-position="right" v-model="field.number" :disabled="scope.mode==='view'" :min="-1" :max="99"></el-input-number>
+          <el-input-number style="width: 90px" controls-position="right" v-model="field.number" :disabled="scope.mode==='view'" :min="-1" :max="99"></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="5">
@@ -36,6 +39,20 @@
         </el-col>
         <el-col :span="4">
           <el-form-item
+            :prop="'fieldList.' + index + '.is_code_content'"
+            :rules="[
+                { required: true, message: '不能为空', trigger: 'blur' }
+              ]"
+          >
+            <el-switch
+              v-model="field.is_code_content"
+              active-text="是"
+              inactive-text="否">
+            </el-switch>
+           </el-form-item>
+        </el-col>
+        <el-col :span="4">
+          <el-form-item
             :prop="'fieldList.' + index + '.char_length'"
             :rules="[
                 { required: true, message: '不能为空', trigger: 'blur' }
@@ -44,7 +61,7 @@
             <el-input-number style="width: 120px" controls-position="right" v-model="field.char_length" :disabled="scope.mode==='view'" :min="-1" :max="99"></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item
             :prop="'fieldList.' + index + '.verify_matches'"
             :rules="[
@@ -103,6 +120,7 @@ export default {
             number: 0,
             name: '',
             char_length: '',
+            is_code_content: false,
             verify_matches: ''
           }]
         }
@@ -125,7 +143,13 @@ export default {
         if (valid) {
           // alert('submit!')
           const { fieldList } = this.currentForm
-          res = fieldList
+          if (fieldList.some(item => { return item.is_code_content })) {
+            res = fieldList
+          } else {
+            this.$message.error('字段属性中必须包含码内容!')
+            return false
+          }
+
           // return true
         } else {
           console.log('error submit!!')
@@ -152,6 +176,7 @@ export default {
         number: index,
         name: '',
         char_length: '',
+        is_code_content: false,
         verify_matches: ''
       })
     }
