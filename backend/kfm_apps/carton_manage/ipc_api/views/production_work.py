@@ -29,7 +29,22 @@ class IpcProductionWorkSerializer(CustomModelSerializer):
     """
     生产工单管理-序列化器
     """
-    package_template_no = serializers.CharField(source="no", read_only=True)
+    code_package_no = serializers.CharField(source="code_package.no", read_only=True,help_text="码包编号")
+    code_package_name = serializers.CharField(source="code_package.zip_name", read_only=True, help_text="码包名称")
+    order_id = serializers.CharField(source="code_package.order_id", read_only=True, help_text="码包订单ID")
+    customer_name = serializers.CharField(source="code_package.customer_info.name", read_only=True, help_text="客户名称")
+    total_number = serializers.IntegerField(source="code_package.total_number", read_only=True, help_text="码数量")
+    factory_info_name = serializers.CharField(source="factory_info.name", read_only=True, help_text="生产工厂")
+    key_id = serializers.IntegerField(source="code_package.key_id", read_only=True, help_text="keyID")
+    file_md5 = serializers.CharField(source="code_package.file_md5", read_only=True, help_text="码包MD5")
+    first_line_md5 = serializers.CharField(source="code_package.first_line_md5", read_only=True, help_text="码包首行MD5")
+    product_name = serializers.CharField(source="code_package.product_info.name", read_only=True, help_text="产品名称")
+    code_package_template_no = serializers.CharField(source="code_package_template.no", read_only=True, help_text="码包模板编号")
+    jet_print_template_no = serializers.CharField(source="jet_print_template.no", read_only=True, help_text="喷码模板编号")
+    code_package_last_update_time = serializers.CharField(source="code_package_template.update_datetime", read_only=True, help_text="码包模板更新时间")
+    jet_print_last_update_time = serializers.CharField(source="jet_print_template.update_datetime", read_only=True, help_text="喷码模板更新时间")
+    file_path = serializers.CharField(source="code_package.file_position", read_only=True, help_text="码包地址")
+
 
     class Meta:
         model = ProductionWork
@@ -108,6 +123,13 @@ class ProductionWorkViewSet(CustomModelViewSet):
     update_serializer_class = IpcProductionWorkUpdateSerializer
     extra_filter_backends = []
     permission_classes = [DeviceManagePermission]
+
+    @action(methods=['post'],detail=False)
+    def table(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True, request=request)
+        return DetailResponse(data=serializer.data, msg="获取成功")
+
 
     @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated])
     def bind_code_package(self, request, *args, **kwargs):

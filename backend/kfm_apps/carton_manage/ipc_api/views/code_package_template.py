@@ -14,46 +14,29 @@ class IpcCodePackageTemplateSerializer(CustomModelSerializer):
     """
     码包模板管理-序列化器
     """
-    package_template_no = serializers.CharField(source="no", read_only=True)
-
     def to_representation(self, instance):
         result = {
-            'package_template_no': instance.no,
+            'no': instance.no,
+            'name':instance.name,
             "char_length": instance.char_length,
             "fields": instance.fields,
             "separator": instance.separator,
             "line_feed": instance.line_feed,
-            "code_type": instance.code_type
+            "attribute": instance.codepackagetemplateattribute_set.values('number','name','char_length','verify_matches','is_code_content').order_by('number')
         }
-        code_type = instance.code_type
-        if code_type == 0:
-            result["w_url_prefix"] = instance.w_url_prefix
-            result["w_url_length"] = instance.w_url_length
-            result["w_field_position"] = instance.w_field_position
-            return result
-        elif code_type == 1:
-            result["n_url_prefix"] = instance.n_url_prefix
-            result["n_url_length"] = instance.n_url_length
-            result["n_field_position"] = instance.n_field_position
-            return result
-        else:
-            return super().to_representation(instance=instance)
+        return result
+
 
     class Meta:
         model = CodePackageTemplate
         fields = [
-            'package_template_no',
+            'no',
             "char_length",
             "fields",
             "separator",
             "line_feed",
-            "code_type",
-            "w_url_prefix",
-            "w_url_length",
-            "w_field_position",
-            "n_url_prefix",
-            "n_url_length",
-            "n_field_position",
+            'name',
+            'attribute'
         ]
         read_only_fields = ["id"]
 

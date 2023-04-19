@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework import routers
 
 from carton_manage.ipc_api.views.back_haul_file import IpcBackHaulFileViewSet
+from carton_manage.ipc_api.views.jet_print_template import JetPrintTemplateViewSet
 from carton_manage.ipc_api.views.production_work import ProductionWorkViewSet
 from carton_manage.ipc_api.views.code_package import CodePackageViewSet
 from carton_manage.ipc_api.views.code_package_template import CodePackageTemplateViewSet
@@ -9,6 +10,9 @@ from carton_manage.ipc_api.views.code_package_template import CodePackageTemplat
 url = routers.SimpleRouter()
 url.register(r'code_package_template', CodePackageTemplateViewSet)
 url.register(r'production_work', ProductionWorkViewSet)
+url.register(r'jet_print_template', JetPrintTemplateViewSet)
+
+
 
 urlpatterns = [
     path('code_package/', CodePackageViewSet.as_view({'post': 'list'})),
@@ -22,3 +26,4 @@ urlpatterns = [
     path(r'check/check_file_upload_all/', IpcBackHaulFileViewSet.as_view({'post': 'check_file_upload_all'})),
 ]
 urlpatterns += url.urls
+
