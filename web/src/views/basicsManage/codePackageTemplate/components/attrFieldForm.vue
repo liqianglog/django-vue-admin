@@ -166,6 +166,7 @@ export default {
       if (index !== -1) {
         this.currentForm.fieldList.splice(index, 1)
       }
+      this.scope.form.fields = this.currentForm.fieldList.length
     },
     addDomain () {
       let index = this.currentForm.fieldList.length
@@ -179,6 +180,7 @@ export default {
         is_code_content: false,
         verify_matches: ''
       })
+      this.scope.form.fields = this.currentForm.fieldList.length
     }
   }
 }

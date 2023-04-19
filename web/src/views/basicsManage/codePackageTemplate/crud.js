@@ -283,6 +283,7 @@ export const crudOptions = (vm) => {
               min: 0
             }
           },
+          value: 1,
           // rules: [
           //   { required: true, message: '字段数不能为空', trigger: 'blur' }
           // ],
