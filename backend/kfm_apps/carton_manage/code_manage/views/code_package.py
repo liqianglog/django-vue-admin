@@ -239,8 +239,7 @@ class CodePackageViewSet(CustomModelViewSet):
                 "zip_name": _CodePackage.zip_name,
                 "total_number": _CodePackage.total_number,
                 "code_type": '未知',
-                "product_name": _CodePackage.product_name,
-                "arrival_factory": _CodePackage.arrival_factory,
+                "product_name": _CodePackage.product_info.name,
                 "import_start_datetime": _CodePackage.import_start_datetime,
                 "import_end_datetime": _CodePackage.import_end_datetime,
                 "import_run_time": _CodePackage.import_run_time,
@@ -248,7 +247,5 @@ class CodePackageViewSet(CustomModelViewSet):
                 "repetition_data": repetition_data,
                 "char_length": _CodePackage.code_package_template.char_length,
                 "fields": _CodePackage.code_package_template.fields,
-                "w_url_prefix": _CodePackage.code_package_template.w_url_prefix,
-                "n_url_prefix": _CodePackage.code_package_template.n_url_prefix
             }
             return DetailResponse(data=data)

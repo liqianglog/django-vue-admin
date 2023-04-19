@@ -34,10 +34,10 @@
                 </el-row>
                 <br>
                 <el-row :gutter="20">
-                  <el-col :span="8">
-                    <div class="title">码类型</div>
-                    <div class="content">{{ {0: '外码', 1: '内码', 2: '外码+内码'}[options.code_type] }}</div>
-                  </el-col>
+<!--                  <el-col :span="8">-->
+<!--                    <div class="title">码类型</div>-->
+<!--                    <div class="content">{{ {0: '外码', 1: '内码', 2: '外码+内码'}[options.code_type] }}</div>-->
+<!--                  </el-col>-->
                   <el-col :span="8">
                     <div class="title">来源</div>
                     <div class="content">{{ options.source_label }}</div>
@@ -84,10 +84,6 @@
                     <span>{{ objData.zip_name }} </span>
                   </li>
                   <li>
-                    <span class="item_title">到货工厂：</span>
-                    <span>{{ objData.arrival_factory }} </span>
-                  </li>
-                  <li>
                     <el-row :gutter="20" style="margin-bottom: 10px;">
                       <el-col :span="12">
                         <span class="item_title">订单编号：</span>
@@ -96,18 +92,6 @@
                       <el-col :span="12">
                         <span class="item_title">产品名称：</span>
                         <span>{{ objData.product_name }} </span>
-                      </el-col>
-                    </el-row>
-                  </li>
-                  <li>
-                    <el-row :gutter="20" style="margin-bottom: 10px;">
-                      <el-col :span="12">
-                        <span class="item_title">外码网址：</span>
-                        <span>{{ objData.w_url_prefix }}</span>
-                      </el-col>
-                      <el-col :span="12">
-                        <span class="item_title">内码网址：</span>
-                        <span>{{ objData.n_url_prefix }}</span>
                       </el-col>
                     </el-row>
                   </li>
@@ -183,7 +167,7 @@
                   <thead>
                   <tr>
                     <th width="260">重码内容</th>
-                    <th width="100" style="text-align: center">码类型</th>
+<!--                    <th width="100" style="text-align: center">码类型</th>-->
                     <th width="180" style="text-align: center">重码时间</th>
                     <th width="20" style="text-align: center"></th>
                   </tr>
