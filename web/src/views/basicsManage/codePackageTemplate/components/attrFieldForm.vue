@@ -20,11 +20,11 @@
         <div style="text-align: center">操作</div>
       </el-col>
     </el-row>
-    <el-form :model="currentForm" ref="currentFormRef" label-width="0px" size="mini">
-      <el-row style="margin-bottom: 0px" :gutter="10" v-for="(field, index) in currentForm.fieldList" :key="index">
+    <el-form :model="currentForm" ref="currentFormRef" label-width="0px" size="mini" type="flex">
+      <el-row style="margin-bottom: 0px" :gutter="5" v-for="(field, index) in currentForm.fieldList" :key="index">
         <el-col :span="3">
           <el-form-item  :prop="'fieldList.' + index + '.number'">
-          <el-input-number style="width: 90px" controls-position="right" v-model="field.number" :disabled="scope.mode==='view'" :min="-1" :max="99"></el-input-number>
+          <el-input-number style="width: 100%" controls-position="right" v-model="field.number" :disabled="scope.mode==='view'" :min="-1" :max="99"></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="5">
@@ -37,7 +37,7 @@
             <el-input v-model="field.name" :disabled="scope.mode==='view'" placeholder="请输入字段名称"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="3" :offset="1" justify="center">
           <el-form-item
             :prop="'fieldList.' + index + '.is_code_content'"
             :rules="[
@@ -58,7 +58,7 @@
                 { required: true, message: '不能为空', trigger: 'blur' }
               ]"
           >
-            <el-input-number style="width: 120px" controls-position="right" v-model="field.char_length" :disabled="scope.mode==='view'" :min="-1" :max="99"></el-input-number>
+            <el-input-number style="width: 100%" controls-position="right" v-model="field.char_length" :disabled="scope.mode==='view'" :min="-1" :max="99"></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -80,7 +80,7 @@
       </el-row>
       <el-form-item>
 <!--        <el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>-->
-        <el-col :span="6" v-show="scope.mode==='add'||scope.mode==='edit'">
+        <el-col :span="12" v-show="scope.mode==='add'||scope.mode==='edit'">
           <el-button type="primary" @click="addDomain">新增</el-button>
           <el-button @click="resetForm('currentFormRef')">重置</el-button>
         </el-col>

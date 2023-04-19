@@ -42,7 +42,8 @@ export const crudOptions = (vm) => {
       componentType: 'form'
     },
     formOptions: {
-      defaultSpan: 24 // 默认的表单 span
+      defaultSpan: 24, // 默认的表单 span
+      width: '700px'
     },
     indexRow: { // 或者直接传true,不显示title，不居中
       title: '序号',
