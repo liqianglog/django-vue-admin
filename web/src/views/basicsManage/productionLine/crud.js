@@ -85,6 +85,7 @@ export const crudOptions = (vm) => {
         },
         type: 'input',
         form: {
+
           rules: [
             { required: true, message: '产线编号不能为空', trigger: 'blur' }
           ],

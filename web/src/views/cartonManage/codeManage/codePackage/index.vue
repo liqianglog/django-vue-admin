@@ -64,8 +64,8 @@ export default {
           required: false,
           value: ''
         }]
-
-      }
+      },
+      factoryInfo:[]
     }
   },
   methods: {
@@ -120,7 +120,31 @@ export default {
         const { attribute_fields } = res.data
         this.formData.attribute_fields = attribute_fields
       })
+    },
+    // 获取生产工厂
+    getFactory () {
+      request({
+        url: '/api/basics_manage/factory_info/',
+        method: 'get',
+        params: { status: 1 }
+      }).then(res => {
+        const { data } = res.data
+        this.factoryInfo = data
+      })
+    },
+    // form打开事件
+    handleDialogOpened ({ mode, form, template, groupTemplate }) {
+      if (mode === 'add') {
+        if (this.factoryInfo.length === 1) {
+          console.log(1111)
+          template.factory_info.component.disabled = true
+          form.factory_info = this.factoryInfo[0].id
+        }
+      }
     }
+  },
+  mounted() {
+    this.getFactory()
   }
 }
 </script>

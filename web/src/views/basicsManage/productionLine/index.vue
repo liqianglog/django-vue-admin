@@ -26,11 +26,13 @@
 import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
+import { request } from '@/api/service'
 export default {
   name: 'productionLine',
   mixins: [d2CrudPlus.crud],
   data () {
     return {
+      factoryInfo: []
     }
   },
   methods: {
@@ -50,7 +52,30 @@ export default {
     },
     delRequest (row) {
       return api.DelObj(row.id)
+    },
+    // 获取生产工厂
+    getFactory () {
+      request({
+        url: '/api/basics_manage/factory_info/',
+        method: 'get',
+        params: { status: 1 }
+      }).then(res => {
+        const { data } = res.data
+        this.factoryInfo = data
+      })
+    },
+    // form打开事件
+    handleDialogOpened ({ mode, form, template, groupTemplate }) {
+      if (mode === 'add') {
+        if (this.factoryInfo.length === 1) {
+          template.belong_to_factory.component.disabled = true
+          form.belong_to_factory = this.factoryInfo[0].id
+        }
+      }
     }
+  },
+  mounted () {
+    this.getFactory()
   }
 }
 </script>

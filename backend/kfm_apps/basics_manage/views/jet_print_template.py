@@ -29,21 +29,13 @@ class JetPrintTemplateSerializer(CustomModelSerializer):
     """
     喷码模板-序列化器
     """
-    code_package_template_list = DynamicSerializerMethodField()
+    code_package_template_name = serializers.CharField(read_only=True,source="code_package_template.name")
     attr_fields = serializers.SerializerMethodField()
 
     def get_attr_fields(self, instance):
         fields = JPTAttributeFiledSerializer(instance.jetprinttemplateattribute_set.all(),many=True)
         return fields.data
 
-    def get_code_package_template_list(self, instance, parsed_query):
-        queryset = instance.code_package_template.all()
-        serializer = JPTCodePackageTemplateSerializer(
-            queryset,
-            many=True,
-            parsed_query=parsed_query
-        )
-        return serializer.data
     class Meta:
             model = JetPrintTemplate
             fields = "__all__"
