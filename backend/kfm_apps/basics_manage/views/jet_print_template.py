@@ -53,7 +53,6 @@ class JetPrintTemplateCreateUpdateSerializer(CustomModelSerializer):
         instance = JetPrintTemplate.objects.create(**validated_data)
         init_data = self.initial_data
         attr_fields = init_data.get("attr_fields",[])
-        print(attr_fields)
         serializer = JPTAttributeFiledSerializer(data=attr_fields,many=True,request=self.request)
         serializer.is_valid(raise_exception=True)
         serializer.save(jet_print_template=instance)
