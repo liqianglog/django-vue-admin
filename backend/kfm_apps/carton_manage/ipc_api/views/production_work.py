@@ -29,26 +29,48 @@ class IpcProductionWorkSerializer(CustomModelSerializer):
     """
     生产工单管理-序列化器
     """
-    code_package_no = serializers.CharField(source="code_package.no", read_only=True,help_text="码包编号")
+    code_package_no = serializers.CharField(source="code_package.no", read_only=True, help_text="码包编号")
     code_package_name = serializers.CharField(source="code_package.zip_name", read_only=True, help_text="码包名称")
     order_id = serializers.CharField(source="code_package.order_id", read_only=True, help_text="码包订单ID")
-    customer_name = serializers.CharField(source="code_package.customer_info.name", read_only=True, help_text="客户名称")
+    customer_name = serializers.CharField(source="code_package.customer_info.name", read_only=True,
+                                          help_text="客户名称")
     total_number = serializers.IntegerField(source="code_package.total_number", read_only=True, help_text="码数量")
     factory_info_name = serializers.CharField(source="factory_info.name", read_only=True, help_text="生产工厂")
     key_id = serializers.IntegerField(source="code_package.key_id", read_only=True, help_text="keyID")
     file_md5 = serializers.CharField(source="code_package.file_md5", read_only=True, help_text="码包MD5")
-    first_line_md5 = serializers.CharField(source="code_package.first_line_md5", read_only=True, help_text="码包首行MD5")
+    first_line_md5 = serializers.CharField(source="code_package.first_line_md5", read_only=True,
+                                           help_text="码包首行MD5")
     product_name = serializers.CharField(source="code_package.product_info.name", read_only=True, help_text="产品名称")
-    code_package_template_no = serializers.CharField(source="code_package_template.no", read_only=True, help_text="码包模板编号")
-    jet_print_template_no = serializers.CharField(source="jet_print_template.no", read_only=True, help_text="喷码模板编号")
-    code_package_last_update_time = serializers.CharField(source="code_package_template.update_datetime", read_only=True, help_text="码包模板更新时间")
-    jet_print_last_update_time = serializers.CharField(source="jet_print_template.update_datetime", read_only=True, help_text="喷码模板更新时间")
-    file_path = serializers.CharField(source="code_package.file_position", read_only=True, help_text="码包地址")
+    code_package_template_no = serializers.CharField(source="code_package_template.no", read_only=True,
+                                                     help_text="码包模板编号")
+    jet_print_template_no = serializers.CharField(source="jet_print_template.no", read_only=True,
+                                                  help_text="喷码模板编号")
+    code_package_last_update_time = serializers.CharField(source="code_package_template.update_datetime",
+                                                          read_only=True, help_text="码包模板更新时间")
+    jet_print_last_update_time = serializers.CharField(source="jet_print_template.update_datetime", read_only=True,
+                                                       help_text="喷码模板更新时间")
+    file_path = serializers.SerializerMethodField(help_text='下载路径')
 
+    def get_file_path(self, instance):
+
+        http = urlsplit(self.request.build_absolute_uri(None)).scheme
+        schema_name = connection.tenant.schema_name
+        domain_obj = Domain.objects.filter(is_primary=True, tenant__schema_name=schema_name).first()
+        file_position = str(instance.code_package.file_position).replace('\\', '/')
+        if settings.ENVIRONMENT == "prod":
+            file_path = f"https://{domain_obj.domain}/api/api/carton/ipc/download_code_package_file/{schema_name}/{file_position}"
+        elif settings.ENVIRONMENT == "test":
+            file_path = f"http://{domain_obj.domain}/api/api/carton/ipc/download_code_package_file/{schema_name}/{file_position}"
+        else:
+            file_path = f"{http}://{domain_obj.domain}:{self.request.META['SERVER_PORT']}/api/carton/ipc/download_code_package_file/{schema_name}/{file_position}"
+        return file_path
 
     class Meta:
         model = ProductionWork
-        fields = "__all__"
+        fields = ['id', 'no', 'name', 'code_package_no', 'code_package_name', 'order_id', 'customer_name',
+                  'total_number', 'factory_info_name', 'key_id', 'file_md5', 'first_line_md5', 'product_name',
+                  'code_package_template_no', 'code_package_last_update_time', 'jet_print_last_update_time', 'batch_no',
+                  'file_path', 'update_datetime', 'create_datetime']
         read_only_fields = ["id"]
 
 
@@ -124,12 +146,11 @@ class ProductionWorkViewSet(CustomModelViewSet):
     extra_filter_backends = []
     permission_classes = [DeviceManagePermission]
 
-    @action(methods=['post'],detail=False)
+    @action(methods=['post'], detail=False)
     def table(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True, request=request)
         return DetailResponse(data=serializer.data, msg="获取成功")
-
 
     @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated])
     def bind_code_package(self, request, *args, **kwargs):
