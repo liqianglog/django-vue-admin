@@ -164,7 +164,7 @@ export const crudOptions = (vm) => {
             elProps: {
               tableConfig: {
                 pagination: true,
-                multiple: true,
+                multiple: false,
                 columns: [
                   {
                     prop: 'id',
@@ -183,9 +183,8 @@ export const crudOptions = (vm) => {
           }
         },
         component: {
-          name: 'manyToMany',
-          valueBinding: 'code_package_template_list',
-          children: 'name',
+          name: 'foreignKey',
+          valueBinding: 'code_package_template_name',
           props: { color: 'auto' }
         } // 自动染色
       }, {
