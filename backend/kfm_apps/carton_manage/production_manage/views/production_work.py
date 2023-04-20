@@ -98,8 +98,8 @@ class ProductionWorkViewSet(CustomModelViewSet):
             "device_no": _ProductionWork.device.no,
             "production_line_name": _ProductionWork.production_line.name,
             "factory_info_name": _ProductionWork.factory_info.name,
-            "create_datetime": _ProductionWork.create_datetime,
-            "update_datetime": _ProductionWork.update_datetime,
+            "create_datetime": _ProductionWork.create_datetime.strftime("%Y-%m-%d %H:%M:%S" ),
+            "update_datetime": _ProductionWork.update_datetime.strftime("%Y-%m-%d %H:%M:%S" ),
             "code_verify_record": ProductionWorkVerifyRecord.objects.filter(production_work_id=pk).values('code_list',
                                                                                                           'result',
                                                                                                           'record_datetime')
