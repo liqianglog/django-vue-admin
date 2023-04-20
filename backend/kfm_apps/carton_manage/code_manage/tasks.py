@@ -93,7 +93,6 @@ def code_package_import_check(code_package_id):
             return "规则验证-换行符校验失败"
         code_package_obj.write_log({"content": f"规则验证-换行符", "step": 2.1})
         # 2.2.校验整体字符长度
-        readline = readline.replace('\r\n', '').replace('\n', '')
         if len(readline) != code_package_template_obj.char_length:
             code_package_obj.write_log({
                 "content": '规则验证-整体字符长度',
@@ -101,6 +100,7 @@ def code_package_import_check(code_package_id):
                 "type": 'error'
             })
             return "规则验证-整体字符长度校验失败"
+        readline = readline.replace('\r\n', '').replace('\n', '')
         code_package_obj.write_log({"content": f"规则验证-整体字符长度", "step": 2.2})
         # 2.3.分隔符
         if code_package_template_obj.separator == '无':
