@@ -196,7 +196,7 @@ export const crudOptions = (vm) => {
         minWidth: 110,
         type: 'select',
         dict: {
-          data: [{ label: '回车换行(\\r\\n)', value: 1 }, { label: '换行(\\n)', value: 0 }]
+          data: [{ label: '回车换行(\\r\\n)', value: 2 }, { label: '换行(\\n)', value: 1 }]
         },
         form: {
           component: {

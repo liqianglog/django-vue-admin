@@ -82,8 +82,8 @@ def code_package_import_check(code_package_id):
     with open(source_file_path, 'rb') as file:
         readline = file.readline().decode('utf-8')
         # 2.1.校验换行符
-        if (code_package_template_obj.line_feed == 1 and not readline.endswith(
-                '\r\n')) or (code_package_template_obj.line_feed == 0 and readline.endswith('\r\n')):  # 回车换行
+        if (code_package_template_obj.line_feed == 2 and not readline.endswith(
+                '\r\n')) or (code_package_template_obj.line_feed == 1 and readline.endswith('\r\n')):  # 回车换行
             # 换行符校验失败
             code_package_obj.write_log({
                 "content": '规则验证-换行符',
@@ -294,5 +294,5 @@ def code_package_import_check(code_package_id):
 if __name__ == '__main__':
     with schema_context("demo"):
         # HistoryCodeInfo.set_db().create_table()
-        code_package_import_check(5)
+        code_package_import_check(10)
         # print(json.loads(CodePackage.objects.get(id=2).import_log))
