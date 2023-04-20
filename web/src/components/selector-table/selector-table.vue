@@ -37,14 +37,14 @@
                        @current-change="handlePageChange"
         />
       </div>
-      <div slot="reference" ref="divRef">
-        <div v-if="currentValue" class="div-input el-input__inner">
+      <div slot="reference" ref="divRef" :style="{'pointerEvents': disabled?'none':''}">
+        <div v-if="currentValue" class="div-input el-input__inner" :class="disabled?'div-disabled':''">
           <div>
             <el-tag
               style="margin-right: 5px"
               v-for="(item,index) in currentValue"
               :key="index"
-              :closable="true"
+              :closable="disabled"
               size="small"
               :hit="false"
               type="info"
@@ -55,7 +55,7 @@
             </el-tag>
           </div>
         </div>
-        <el-input v-else placeholder="请选择" slot:reference></el-input>
+        <el-input v-else placeholder="请选择" slot:reference  :disabled="disabled"></el-input>
       </div>
     </el-popover>
   </div>
@@ -141,7 +141,6 @@ export default {
         // 父组件收到input事件后会通过v-model改变value参数的值
         // 然后此处会watch到value的改变，发出change事件
         // change事件放在此处发射的好处是，当外部修改value值时，也能够触发form-data-change事件
-
         this.$emit('change', value)
         this.$emit('input', value)
         // 如果值是被外部改变的，则修改本组件的currentValue
@@ -387,5 +386,12 @@ export default {
   -webkit-transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
   transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
   min-width: 120px;
+}
+.div-disabled{
+  background-color: #F5F7FA;
+  border-color: #E4E7ED;
+  color: #C0C4CC;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 </style>
