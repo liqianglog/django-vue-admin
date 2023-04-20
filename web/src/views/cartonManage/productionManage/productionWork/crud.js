@@ -135,6 +135,31 @@ export const crudOptions = (vm) => {
         }
       },
       {
+        title: '工单名称',
+        key: 'name',
+        minWidth: 200,
+        search: {
+          disabled: false,
+          component: {
+            props: {
+              clearable: true
+            }
+          }
+        },
+        type: 'input',
+        form: {
+          rules: [
+            { required: true, message: '不能为空', trigger: 'blur' }
+          ],
+          component: {
+            placeholder: '请输入工单名称'
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        }
+      },
+      {
         title: '生产码包',
         key: 'code_package',
         type: 'selector-table',

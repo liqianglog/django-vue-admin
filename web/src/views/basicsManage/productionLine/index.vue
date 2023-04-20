@@ -27,6 +27,7 @@ import * as api from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import { request } from '@/api/service'
+import util from "@/libs/util";
 export default {
   name: 'productionLine',
   mixins: [d2CrudPlus.crud],
@@ -70,6 +71,7 @@ export default {
         if (this.factoryInfo.length === 1) {
           template.belong_to_factory.component.disabled = true
           form.belong_to_factory = this.factoryInfo[0].id
+          form.code = util.autoShortCreateCode()
         }
       }
     }
