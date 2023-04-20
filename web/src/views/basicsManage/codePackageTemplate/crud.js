@@ -42,7 +42,8 @@ export const crudOptions = (vm) => {
       componentType: 'form'
     },
     formOptions: {
-      defaultSpan: 12 // 默认的表单 span
+      defaultSpan: 12, // 默认的表单 span
+      width: '900px'
     },
     indexRow: { // 或者直接传true,不显示title，不居中
       title: '序号',
@@ -283,6 +284,7 @@ export const crudOptions = (vm) => {
               min: 0
             }
           },
+          value: 1,
           // rules: [
           //   { required: true, message: '字段数不能为空', trigger: 'blur' }
           // ],

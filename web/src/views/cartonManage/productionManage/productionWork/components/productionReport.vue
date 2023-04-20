@@ -96,10 +96,6 @@
                     <span>{{ objData.order_id }} </span>
                   </li>
                   <li>
-                    <span class="item_title">到货工厂：</span>
-                    <span>{{ objData.arrival_factory }} </span>
-                  </li>
-                  <li>
                     <el-row :gutter="20" style="margin-bottom: 10px;">
                       <el-col :span="12">
                         <span class="item_title">产品名称：</span>

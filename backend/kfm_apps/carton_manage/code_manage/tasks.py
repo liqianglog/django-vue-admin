@@ -79,8 +79,8 @@ def code_package_import_check(code_package_id):
     # 2.根据规则验证码包是否合格
     source_file_path = os.path.join(get_code_package_import_txt_path(), code_package_obj.file_position)
     code_package_template_obj = code_package_obj.code_package_template
-    with open(source_file_path) as file:
-        readline = file.readline()
+    with open(source_file_path, 'rb') as file:
+        readline = file.readline().decode('utf-8')
         # 2.1.校验换行符
         if (code_package_template_obj.line_feed == 1 and not readline.endswith(
                 '\r\n')) or (code_package_template_obj.line_feed == 0 and readline.endswith('\r\n')):  # 回车换行

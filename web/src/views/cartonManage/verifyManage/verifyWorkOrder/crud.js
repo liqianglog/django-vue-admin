@@ -281,11 +281,6 @@ export const crudOptions = (vm) => {
         minWidth: 100,
         type: 'input'
       }, {
-        title: '到货工厂',
-        key: 'arrival_factory',
-        minWidth: 100,
-        type: 'input'
-      }, {
         title: '生产工厂',
         key: 'factory_info_name',
         width: 180,

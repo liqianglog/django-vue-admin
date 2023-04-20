@@ -4,7 +4,7 @@
       <el-col :span="4">
         <div style="text-align: center">字段序号</div>
       </el-col>
-      <el-col :span="5">
+      <el-col :span="8">
         <div style="text-align: center">字段名称</div>
       </el-col>
       <el-col :span="4">
@@ -18,13 +18,13 @@
       </el-col>
     </el-row>
     <el-form :model="currentForm" ref="currentFormRef" label-width="0px" size="mini">
-      <el-row  style="margin-bottom: 0px" :gutter="15" v-for="(field, index) in currentForm.fieldList" :key="index">
+      <el-row  style="margin-bottom: 0px" :gutter="5" v-for="(field, index) in currentForm.fieldList" :key="index">
         <el-col :span="4">
           <el-form-item>
-          <el-input-number style="width: 120px" controls-position="right" v-model="field.number" :disabled="scope.mode==='view'" :min="-1" :max="99"></el-input-number>
+          <el-input-number style="width: 100%" controls-position="right" v-model="field.number" :disabled="scope.mode==='view'" :min="-1" :max="99"></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="8">
           <el-form-item
             :prop="'fieldList.' + index + '.name'"
             :rules="[
@@ -41,7 +41,7 @@
                 { required: true, message: '不能为空', trigger: 'blur' }
               ]"
           >
-            <el-input-number style="width: 120px" controls-position="right" v-model="field.line_number" :disabled="scope.mode==='view'" :min="0" :max="99"></el-input-number>
+            <el-input-number style="width: 100%" controls-position="right" v-model="field.line_number" :disabled="scope.mode==='view'" :min="0" :max="99"></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="4">
@@ -51,7 +51,7 @@
                 { required: false, message: '不能为空', trigger: 'blur' }
               ]"
           >
-            <el-input-number style="width: 120px" controls-position="right" v-model="field.column_number" :disabled="scope.mode==='view'" :min="0" :max="99"></el-input-number>
+            <el-input-number style="width: 100%" controls-position="right" v-model="field.column_number" :disabled="scope.mode==='view'" :min="0" :max="99"></el-input-number>
 
           </el-form-item>
         </el-col>
@@ -63,7 +63,7 @@
       </el-row>
       <el-form-item>
 <!--        <el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>-->
-        <el-col :span="6" v-show="scope.mode==='add'||scope.mode==='edit'">
+        <el-col :span="12" v-show="scope.mode==='add'||scope.mode==='edit'">
           <el-button type="primary" @click="addDomain">新增</el-button>
           <el-button @click="resetForm('currentFormRef')">重置</el-button>
         </el-col>
@@ -87,7 +87,7 @@
 
 <script>
 import { BUTTON_WHETHER_BOOL } from '@/config/button'
-import XEUtils from "xe-utils";
+import XEUtils from 'xe-utils'
 
 export default {
   name: 'attrFieldForm',
@@ -120,7 +120,7 @@ export default {
   },
   methods: {
     submitForm () {
-      let res =""
+      let res = ''
       this.$refs.currentFormRef.validate((valid) => {
         if (valid) {
           // alert('submit!')
