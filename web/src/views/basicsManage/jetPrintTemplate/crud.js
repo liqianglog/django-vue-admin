@@ -167,7 +167,7 @@ export const crudOptions = (vm) => {
                 multiple: false,
                 columns: [
                   {
-                    prop: 'id',
+                    prop: 'no',
                     label: '编号'
                   },
                   {
