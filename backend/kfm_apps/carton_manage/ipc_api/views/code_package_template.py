@@ -22,7 +22,7 @@ class IpcCodePackageTemplateSerializer(CustomModelSerializer):
             "fields": instance.fields,
             "separator": instance.separator,
             "line_feed": instance.line_feed,
-            "update_datetime":instance.update_datetime,
+            "update_datetime":instance.update_datetime.strftime("%Y-%m-%d %H:%M:%S" ),
             "attribute": instance.codepackagetemplateattribute_set.values('number','name','char_length','verify_matches','is_code_content').order_by('number')
         }
         return result

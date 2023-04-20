@@ -135,8 +135,8 @@ CODE_SOURCE = (
     (2, "其他")
 )
 LINE_FEED = (
-    (0, "换行"),
-    (1, "回车换行")
+    (1, "换行"),
+    (2, "回车换行")
 )
 CODE_TYPE = (
     (0, "外码"),
@@ -184,8 +184,9 @@ class CodePackageTemplateAttribute(CoreModel):
 class JetPrintTemplate(CoreModel):
     no = models.CharField(max_length=100, unique=True, help_text="模板编号", verbose_name="模板编号")
     name = models.CharField(max_length=100, unique=True, help_text="模板名称", verbose_name="模板名称")
-    code_package_template = models.ForeignKey(CodePackageTemplate, blank=True, db_constraint=False,on_delete=models.PROTECT,
-                                                   help_text="关联码包模板", verbose_name="关联码包模板")
+    code_package_template = models.ForeignKey(CodePackageTemplate, blank=True, null=True, db_constraint=False,
+                                              on_delete=models.PROTECT, help_text="关联码包模板",
+                                              verbose_name="关联码包模板")
     fields = models.IntegerField(default=0, blank=True, help_text="每张输出字段数", verbose_name="每张输出字段数")
     carton_number = models.IntegerField(default=0, blank=True, help_text="每张纸箱数", verbose_name="每张纸箱数")
     img = models.CharField(max_length=200, blank=True, null=True, help_text="排版样图", verbose_name="排版样图")

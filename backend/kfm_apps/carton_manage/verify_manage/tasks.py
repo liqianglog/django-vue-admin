@@ -52,7 +52,7 @@ def back_haul_file_check(back_haul_file_id):
         for file in file_name_list:
             with zip_file.open(file, 'r') as myfile:  # 得到压缩包里所有文件
                 for ele in myfile.readlines():
-                    line_data = ele.decode('utf-8').replace('\n' if code_package_format_obj.line_feed == 0 else '\r\n',
+                    line_data = ele.decode('utf-8').replace('\n' if code_package_format_obj.line_feed == 1 else '\r\n',
                                                             '')
                     if not line_data:
                         continue
