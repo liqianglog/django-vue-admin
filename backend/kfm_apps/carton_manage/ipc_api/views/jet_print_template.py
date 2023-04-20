@@ -21,6 +21,8 @@ class IpcJetPrintTemplateSerializer(CustomModelSerializer):
             "fields": instance.fields,
             "carton_number": instance.carton_number,
             "img": instance.img,
+            "update_datetime":instance.update_datetime,
+            "code_package_template_no": instance.code_package_template.no,
             "attribute": instance.jetprinttemplateattribute_set.values('number','name','line_number','column_number').order_by('number')
         }
         return result
