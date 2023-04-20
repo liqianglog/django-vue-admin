@@ -50,9 +50,7 @@ class JetPrintTemplateCreateUpdateSerializer(CustomModelSerializer):
         model = JetPrintTemplate
         fields = '__all__'
     def create(self, validated_data):
-        code_package_template = validated_data.pop('code_package_template')
         instance = JetPrintTemplate.objects.create(**validated_data)
-        instance.code_package_template.set(code_package_template)
         init_data = self.initial_data
         attr_fields = init_data.get("attr_fields",[])
         print(attr_fields)
