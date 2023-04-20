@@ -186,6 +186,12 @@ export const crudOptions = (vm) => {
               trigger: 'blur'
             }
           ],
+          valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
+            if (value) {
+              form.jet_print_template = null
+              getComponent('jet_print_template').reloadDict()
+            }
+          },
           component: {
             span: 24,
             placeholder: '请选择码包',
@@ -195,7 +201,6 @@ export const crudOptions = (vm) => {
                 const { event, scope } = context
                 vm.code_package_displayForm = event
                 scope.form.code_package_template = event.code_package_template
-
               }
             },
             elProps: {
@@ -257,9 +262,8 @@ export const crudOptions = (vm) => {
         type: 'select',
         minWidth: 120,
         dict: {
-          cache: false, // 表单的dict可以禁用缓存
-          // url: '/api/basics_manage/jet_print_template/',
           url (dict, { form, component }) {
+            console.log(11122,form.code_package_template)
             if (form && form.code_package_template != null) { // 本数据字典的url是通过前一个select的选项决定的
               return '/api/basics_manage/jet_print_template/?code_package_template_id=' + form.code_package_template
             }
@@ -322,7 +326,7 @@ export const crudOptions = (vm) => {
           name: 'foreignKey',
           valueBinding: 'jet_print_template_name',
           props: { color: 'auto' }
-        } // 自动染色
+        }
       },
       {
         title: '批次号',
