@@ -6,14 +6,13 @@
 
 <script>
 export default {
+  sort: 8,
   title: '宣传图',
+  name: 'dashboardImg',
   icon: 'el-icon-medal',
+  description: '用于展示各种图片宣传页',
   height: 10,
-  width: 8,
-  minH: 10,
-  minW: 1,
-  maxW: 24,
-  maxH: 100,
+  width: 16,
   isResizable: true,
   config: {
     src: {
@@ -37,7 +36,6 @@ export default {
       required: false
     }
   },
-  description: '用于展示各种图片宣传页',
   data () {
     return {
     }

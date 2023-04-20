@@ -5,19 +5,19 @@
       backgroundColor: randomColor(),
     }"
   >
-    <div id="main" :style="{width: wpx+'px',height: hpx+'px'}"></div>
+    <!-- shadow="always" -->
+    <div id="myChart" :style="{width: wpx+'px',height: hpx+'px'}"></div>
   </el-card>
 </template>
 
 <script>
 import { request } from '@/api/service'
-
 export default {
-  sort: 7,
-  title: '注册用户趋势',
-  name: 'registeredUser',
+  sort: 6,
+  title: '用户登录趋势',
+  name: 'userLogin',
   icon: 'el-icon-s-data',
-  description: '用户注册',
+  description: '用户登陆',
   height: 28,
   width: 20,
   isResizable: true,
@@ -32,7 +32,9 @@ export default {
   data () {
     this.myChart = null
     return {
-      time: []
+      time: [],
+      radio: '7'
+
     }
   },
   methods: {
@@ -40,37 +42,8 @@ export default {
       request({
         url: '/api/system/homepage_statistics/'
       }).then((res) => {
-        this.time = [
-          {
-            time: '2023-04-20',
-            count: 1
-          },
-          {
-            time: '2023-04-19',
-            count: 0
-          },
-          {
-            time: '2023-04-18',
-            count: 0
-          },
-          {
-            time: '2023-04-17',
-            count: 10
-          },
-          {
-            time: '2023-04-16',
-            count: 0
-          },
-          {
-            time: '2023-04-15',
-            count: 2
-          },
-          {
-            time: '2023-04-14',
-            count: 3
-          }
-        ]
-        console.log(this.time)
+        this.time = res.data.sum_days_login_list
+        console.log(2, this.time)
         this.drawLine(this.time)
       })
     },
@@ -85,6 +58,7 @@ export default {
       // 绘制图表
       const xAxisData = this.time.map(item => item.time)
       const seriesData = this.time.map(item => item.count)
+
       const option = {
         tooltip: {
           trigger: 'axis',
@@ -105,7 +79,7 @@ export default {
           }
         },
         legend: {
-          data: ['用户注册数'],
+          data: ['用户登陆数'],
           textStyle: {
             color: '#666',
             fontSize: 12
@@ -161,19 +135,19 @@ export default {
         },
         series: [
           {
-            name: '用户注册数',
+            name: '用户登陆数',
             type: 'line',
             data: seriesData,
             symbol: 'circle',
-            symbolSize: 6,
             smooth: true,
+            symbolSize: 6,
             lineStyle: {
-              color: 'rgba(38,204,164, 0.8)',
+              color: 'rgba(0, 128, 255, 0.8)',
               width: 2
             },
             itemStyle: {
-              color: 'rgba(98,206,178, 0.8)',
-              borderColor: 'rgba(38,204,164, 1)',
+              color: 'rgba(0, 128, 255, 0.8)',
+              borderColor: 'rgba(0, 128, 255, 1)',
               borderWidth: 1
             },
             areaStyle: {
@@ -198,24 +172,34 @@ export default {
           }
         ]
       }
+
       this.myChart.setOption(option)
     }
   },
   mounted () {
-    this.myChart = this.$echarts.init(document.getElementById('main'))
+    this.myChart = this.$echarts.init(document.getElementById('myChart'))
     this.initGet()
     this.drawLine()
+    console.log(111, this.wpx, this.hpx)
+    this.myChart.resize({ width: this.wpx, height: this.hpx })
   }
 }
 </script>
 
-<style scoped lang="scss">
+  <style scoped lang="scss">
 .card-view {
   //border-radius: 10px;
   color: #ffffff;
 }
-
-.el-card {
+.el-card{
   height: 100%;
+}
+::v-deep .el-card__body {
+  width: 100%;
+  height: 100%;
+}
+
+.el-radio-button__inner {
+  border-radius: 20px;
 }
 </style>

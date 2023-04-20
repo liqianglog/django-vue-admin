@@ -1,5 +1,5 @@
 <template>
-  <el-card shadow="hover" header="时钟" class="item-background">
+  <el-card shadow="hover" class="item-background" :style="{backgroundColor: randomColor(),color: config?.fontColor?.value}">
     <div class="time">
       <h2>{{ time }}</h2>
       <p>{{ day }}</p>
@@ -11,14 +11,34 @@
 import dayjs from 'dayjs'
 
 export default {
+  sort: 12,
   title: '时钟',
+  name: 'myTime',
   icon: 'el-icon-alarm-clock',
   description: '演示部件效果',
-  height: 20,
-  minH: 10,
-  width: 8,
-  minW: 4,
+  height: 14,
+  width: 16,
   isResizable: true,
+  config: {
+    color: {
+      label: '背景颜色',
+      type: 'color',
+      value: '',
+      placeholder: '颜色为空则随机变换颜色'
+    },
+    fontColor: {
+      label: '字体颜色',
+      type: 'color',
+      value: '#ffffff',
+      placeholder: '请选择字体颜色'
+    }
+  },
+  props: {
+    config: {
+      type: Object,
+      required: false
+    }
+  },
   data () {
     return {
       time: '',
@@ -35,16 +55,19 @@ export default {
     showTime () {
       this.time = dayjs().format('HH:mm:ss')
       this.day = dayjs().format('YYYY年MM月DD日')
+    },
+    // 生成一个颜色
+    randomColor () {
+      if (this.config?.color?.value) {
+        return this.config.color.value
+      }
+      return 'linear-gradient(to right, #8E54E9, #4776E6)'
     }
   }
 }
 </script>
 
 <style scoped>
-.item-background {
-  background: linear-gradient(to right, #8E54E9, #4776E6);
-  color: #fff;
-}
 
 .time h2 {
   font-size: 24px;

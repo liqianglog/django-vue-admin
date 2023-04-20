@@ -9,6 +9,10 @@
         </el-button>
       </div>
       <div slot="operateButton">
+        <el-tooltip class="item" effect="dark" content="清空画布" placement="top">
+          <el-button v-if="customizing" type="danger" icon="el-icon-delete" circle size="mini"
+                     @click="clickEmpty"></el-button>
+        </el-tooltip>
         <el-tooltip class="item" effect="dark" content="最小化" placement="top">
           <el-button v-if="customizing" type="success" icon="el-icon-minus" circle size="mini"
                      @click="clickMinimize"></el-button>
@@ -30,7 +34,8 @@
           <span v-for="item in myCompsList" :key="item.title">
             <el-tooltip class="item" effect="dark" :content="item.description" placement="top">
               <div class="widgetsListItem" :style="{background: $util.randomBackground()}">
-                <span style="position: relative;right: 8px;float: right;top: -22px;cursor: pointer;" @click="push(item)">
+                <span style="position: relative;right: 8px;float: right;top: -22px;cursor: pointer;"
+                      @click="push(item)">
                   <i class="el-icon-plus"></i>
                 </span>
                 <i :class="item.icon"></i> &nbsp;{{ item.title }}
@@ -55,20 +60,17 @@
           :use-css-transforms="true"
           :autoSize="true"
         >
-          <grid-item v-for="(item, index) in layout"
-                     :static="item.static"
-                     :x="item.x"
-                     :y="item.y"
-                     :w="item.w"
-                     :h="item.h"
-                     :i="item.i"
-                     :minW="item.minW"
-                     :minH="item.minH"
-                     :maxW="item.maxW"
-                     :maxH="item.maxH"
-                     :key="index"
-                     :isResizable="customizing"
-
+          <grid-item
+            v-for="(item, index) in layout"
+            :static="item.static"
+            :x="item.x"
+            :y="item.y"
+            :w="item.w"
+            :h="item.h"
+            :i="item.i"
+            :key="index"
+            :isResizable="customizing"
+            @container-resized="containerResizedEvent"
           >
             <div v-if="customizing" class="customize-overlay">
               <el-button v-if="item.config && Object.keys(item.config).length!==0" class="close" style="right: 60px;"
@@ -79,14 +81,16 @@
               <label>
                 <i :class="allComps[item.element].icon"></i>
                 {{ allComps[item.element].title }}</label>
+              <div style="color:#000;">宽{{ item.w }} x 高{{ item.h }}</div>
             </div>
             <component :class="customizing?'set-component-bg':''" :is="allComps[item.element]"
-                       :config="item.config || {}"></component>
+                       :config="item.config || {}" :width="item.w" :height="item.h" :wpx="item.wpx"
+                       :hpx="item.hpx"></component>
           </grid-item>
         </grid-layout>
       </div>
     </div>
-    <dashboard-config ref="dashboardConfig"></dashboard-config>
+    <dashboard-config ref="dashboardConfig" @saveConfig="saveConfig"></dashboard-config>
   </d2-container>
 </template>
 
@@ -114,12 +118,18 @@ export default {
       selectLayout: [],
       defaultLayout: initData,
       layout: [],
-      colNum: 24,
+      colNum: 48,
       minimize: false
     }
   },
-  created () {
-    this.layout = JSON.parse(util.cookies.get('grid-layout') || JSON.stringify(this.defaultLayout))
+  async created () {
+    this.layout = await this.$store.dispatch('d2admin/db/get', {
+      dbName: 'sys',
+      path: 'grid-layout',
+      defaultValue: JSON.parse(JSON.stringify(this.defaultLayout)),
+      user: true
+    }, { root: true })
+    console.log(this.layout)
   },
   mounted () {
     this.$emit('on-mounted')
@@ -130,19 +140,19 @@ export default {
       for (var key in this.allComps) {
         allCompsList.push({
           key: key,
+          sort: allComps[key].sort,
           title: allComps[key].title,
           icon: allComps[key].icon,
           height: allComps[key].height,
           width: allComps[key].width,
-          minH: allComps[key].minH || 1,
-          minW: allComps[key].minW || 1,
-          maxH: allComps[key].maxH || 100,
-          maxW: (allComps[key].maxW > this.colNum ? this.colNum : allComps[key].maxW) || Infinity,
           config: allComps[key].config || {},
           isResizable: allComps[key].isResizable || null,
           description: allComps[key].description
         })
       }
+      allCompsList.sort(function (a, b) {
+        return (a.sort || 0) - (b.sort || 0)
+      })
       return allCompsList
     },
     myCompsList () {
@@ -168,17 +178,12 @@ export default {
     },
     // 追加
     push (item) {
-      console.log(1, item)
       this.layout.push({
         i: this.getLayoutElementNumber(item.key),
-        x: (this.layout.length * 2) % (this.colNum || 12),
-        y: this.layout.length + (this.colNum || 12),
+        x: (this.layout.length * 2) % (this.colNum || 24),
+        y: this.layout.length + (this.colNum || 24),
         w: item.width,
         h: item.height,
-        minW: item.minW,
-        minH: item.minH,
-        maxW: item.maxW,
-        maxH: item.maxH,
         config: item.config || {},
         isResizable: item.isResizable || null,
         element: item.key
@@ -189,13 +194,18 @@ export default {
       this.layout.splice(index, 1)
     },
     // 保存
-    save () {
+    async save () {
       console.log(this.layout)
       this.customizing = false
       this.minimize = false
       this.$refs.suspendedLibrary.menu = false
       this.$refs.widgets.style.removeProperty('transform')
-      util.cookies.set('grid-layout', this.layout)
+      await this.$store.dispatch('d2admin/db/set', {
+        dbName: 'sys',
+        path: 'grid-layout',
+        value: this.layout,
+        user: true
+      }, { root: true })
     },
     // 恢复默认
     backDefault () {
@@ -204,33 +214,68 @@ export default {
       this.$refs.suspendedLibrary.menu = false
       this.$refs.widgets.style.removeProperty('transform')
       this.layout = JSON.parse(JSON.stringify(this.defaultLayout))
-      util.cookies.remove('grid-layout')
+      // 设为默认
+      this.$store.dispatch('d2admin/db/set', {
+        dbName: 'sys',
+        path: 'grid-layout',
+        value: this.layout,
+        user: true
+      }, { root: true })
     },
     // 关闭
-    close () {
+    async close () {
       this.customizing = false
       this.minimize = false
       this.$refs.suspendedLibrary.menu = false
       this.$refs.widgets.style.removeProperty('transform')
+      this.layout = await this.$store.dispatch('d2admin/db/get', {
+        dbName: 'sys',
+        path: 'grid-layout',
+        defaultValue: JSON.stringify(this.defaultLayout),
+        user: true
+      }, { root: true })
+    },
+    // 清空画布
+    clickEmpty () {
+      this.layout = []
+    },
+    // 保存配置
+    saveConfig (myComp, items) {
+      this.layout.map(val => {
+        if (val.i === items.i) {
+          val.config = JSON.parse(JSON.stringify(items.config))
+        }
+      })
     },
     // 最小化
     clickMinimize () {
       this.minimize = !this.minimize
       this.$refs.suspendedLibrary.menu = !this.$refs.suspendedLibrary.menu
     },
-    // 系统配置
+    // 打开系统配置
     clickConfig (itme) {
       this.$refs.dashboardConfig.deviceUpgradeDrawer = true
-      this.$refs.dashboardConfig.initData(this.allComps[itme.element], itme)
+      this.$refs.dashboardConfig.initData(this.allComps[itme.element], JSON.parse(JSON.stringify(itme)))
       this.minimize = false
+    },
+    // 设置实际的宽度和高度
+    containerResizedEvent: function (i, newH, newW, newHPx, newWPx) {
+      console.log('CONTAINER RESIZED i=' + i + ', H=' + newH + ', W=' + newW + ', H(px)=' + newHPx + ', W(px)=' + newWPx)
+      this.layout.map(val => {
+        if (val.i === i) {
+          val.hpx = Number(newHPx)
+          val.wpx = Number(newWPx)
+        }
+      })
     }
   }
 }
 </script>
 <style scoped lang="scss">
-::v-deep .d2-container-full__body{
+::v-deep .d2-container-full__body {
   padding: 0!important;
 }
+
 .widgetsListItem {
   width: 168px;
   height: 75px;
@@ -294,7 +339,7 @@ export default {
 }
 
 .set-component-bg {
-  background: rgba(255, 255, 255, 0.5);
+  //background: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(0, 0, 0, .5);
 }
 
