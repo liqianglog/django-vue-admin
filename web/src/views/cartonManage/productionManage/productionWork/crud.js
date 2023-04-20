@@ -195,6 +195,7 @@ export const crudOptions = (vm) => {
                 const { event, scope } = context
                 vm.code_package_displayForm = event
                 scope.form.code_package_template = event.code_package_template
+
               }
             },
             elProps: {
@@ -203,18 +204,19 @@ export const crudOptions = (vm) => {
                 multiple: false,
                 columns: [
                   {
-                    prop: 'id',
-                    label: '编号'
-                  },
-                  {
-                    prop:'order_id',
-                    label:'码包订单号',
-                    width:200
-                  },
-                  {
                     prop: 'no',
+                    label: '编号',
+                    width: 200
+                  },
+                  {
+                    prop: 'order_id',
+                    label: '码包订单号',
+                    width: 200
+                  },
+                  {
+                    prop: 'zip_name',
                     label: '码包名称',
-                    width:200
+                    width: 200
                   }
                 ]
               }
@@ -226,7 +228,7 @@ export const crudOptions = (vm) => {
         },
         component: {
           name: 'foreignKey',
-          valueBinding: 'customer_name',
+          valueBinding: 'code_package_no',
           props: { color: 'auto' }
         } // 自动染色
       },
@@ -290,8 +292,8 @@ export const crudOptions = (vm) => {
               }
               return false
             },
-            on:{ //除input change事件外，更多组件事件监听
-              select(event){console.log(event)} //监听表单组件的select事件
+            on: { // 除input change事件外，更多组件事件监听
+              select (event) { console.log(event) } // 监听表单组件的select事件
             },
             span: 24,
             placeholder: '请选择喷印模板',
