@@ -263,7 +263,6 @@ export const crudOptions = (vm) => {
         minWidth: 120,
         dict: {
           url (dict, { form, component }) {
-            console.log(11122,form.code_package_template)
             if (form && form.code_package_template != null) { // 本数据字典的url是通过前一个select的选项决定的
               return '/api/basics_manage/jet_print_template/?code_package_template_id=' + form.code_package_template
             }
