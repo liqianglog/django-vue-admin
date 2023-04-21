@@ -25,11 +25,11 @@ class FileSerializer(CustomModelSerializer):
         file_backup = dispatch.get_system_config_values("fileStorageConfig.file_backup")
         file = self.initial_data.get('file')
         file_size = file.size
-        validated_data['name'] = str(self.initial_data.get('file'))
+        validated_data['name'] = file.name
         validated_data['size'] = file_size
         validated_data['md5sum'] = hashlib.md5().hexdigest()
         validated_data['engine'] = file_engine
-        validated_data['mime_type'] = mimetypes.guess_type(str(file))[0]
+        validated_data['mime_type'] = file.content_type
         if file_backup:
             validated_data['url'] = file
         if file_engine =='oss':
