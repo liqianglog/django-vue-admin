@@ -302,6 +302,17 @@ const log = [
     isResizable: true,
     element: 'ver',
     moved: false
+  },
+  {
+    i: 'loginRegion12',
+    x: 0,
+    y: 75,
+    w: 48,
+    h: 30,
+    config: {},
+    isResizable: true,
+    element: 'loginRegion',
+    moved: false
   }
 ]
 export default log
