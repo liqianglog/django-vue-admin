@@ -163,7 +163,7 @@ export const crudOptions = (vm) => {
         title: '生产码包',
         key: 'code_package',
         type: 'selector-table',
-        minWidth: 120,
+        minWidth: 300,
         dict: {
           cache: false, // 表单的dict可以禁用缓存
           url: '/api/carton/code_manage/code_package/?validate_status=4',
@@ -260,7 +260,7 @@ export const crudOptions = (vm) => {
         title: '喷印模板',
         key: 'jet_print_template',
         type: 'select',
-        minWidth: 120,
+        minWidth: 300,
         dict: {
           url (dict, { form, component }) {
             if (form && form.code_package_template != null) { // 本数据字典的url是通过前一个select的选项决定的
