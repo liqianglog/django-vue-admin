@@ -6,29 +6,23 @@
 					<p class="font-mono font-black text-center text-xl pb-5">
 						菜单列表
 						<el-tooltip effect="dark" :content="content" placement="right">
-							<el-icon> <QuestionFilled /> </el-icon>
+							<el-icon>
+								<QuestionFilled />
+							</el-icon>
 						</el-tooltip>
 					</p>
 					<el-input v-model="filterText" :placeholder="placeholder" />
-					<el-tree
-						ref="treeRef"
-						class="font-mono font-bold leading-6 text-7xl"
-						:data="data"
-						:props="treeProps"
-						:filter-node-method="filterNode"
-						:load="loadNode"
-						:allow-drag="allowDrag"
-						:allow-drop="allowDrop"
-						@node-drop="nodeDrop"
-						lazy
-						icon="ArrowRightBold"
-						:indent="12"
-						draggable
-						@node-click="handleNodeClick"
-					>
+					<el-tree ref="treeRef" class="font-mono font-bold leading-6 text-7xl" :data="data" :props="treeProps"
+						:filter-node-method="filterNode" :load="loadNode" :allow-drag="allowDrag" :allow-drop="allowDrop"
+						@node-drop="nodeDrop" lazy icon="ArrowRightBold" :indent="12" draggable
+						@node-click="handleNodeClick">
 						<template #default="{ node, data }">
-							<span v-if="data.status" class="text-center font-black text-xl"><SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}</span>
-							<span v-else class="text-center font-black text-xl text-red-700"><SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}</span>
+							<span v-if="data.status" class="text-center font-black text-xl">
+								<SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}
+							</span>
+							<span v-else class="text-center font-black text-xl text-red-700">
+								<SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}
+							</span>
 						</template>
 					</el-tree>
 				</el-card>
@@ -42,29 +36,26 @@
 						</el-divider>
 						<el-row>
 							<el-col :span="10">
-								<el-form-item label="菜单ID" prop="id"> <el-input v-model="form.id" disabled /> </el-form-item>
+								<el-form-item label="菜单ID" prop="id"> <el-input v-model="form.id" disabled />
+								</el-form-item>
 							</el-col>
 							<el-col :span="10">
 								<el-form-item label="父级ID" prop="parent"> <el-input v-model="form.parent" /> </el-form-item>
 							</el-col>
 							<el-col :span="10">
-								<el-form-item required label="菜单名称" prop="name"> <el-input v-model="form.name" /> </el-form-item>
-							</el-col>
-							<el-col :span="10">
-								<el-form-item label="组件地址" prop="component">
-									<el-autocomplete
-										class="w-full"
-										v-model="form.component"
-										:fetch-suggestions="querySearch"
-										:trigger-on-focus="false"
-										clearable
-										debounce="100"
-										placeholder="输入组件地址"
-									/>
+								<el-form-item required label="菜单名称" prop="name"> <el-input v-model="form.name" />
 								</el-form-item>
 							</el-col>
 							<el-col :span="10">
-								<el-form-item required label="Url" prop="web_path"> <el-input v-model="form.web_path" /> </el-form-item>
+								<el-form-item label="组件地址" prop="component">
+									<el-autocomplete class="w-full" v-model="form.component"
+										:fetch-suggestions="querySearch" :trigger-on-focus="false" clearable debounce="100"
+										placeholder="输入组件地址" />
+								</el-form-item>
+							</el-col>
+							<el-col :span="10">
+								<el-form-item required label="Url" prop="web_path"> <el-input v-model="form.web_path" />
+								</el-form-item>
 							</el-col>
 							<el-col :span="10">
 								<el-form-item label="排序" prop="sort">
@@ -74,6 +65,14 @@
 							<el-col :span="10">
 								<el-form-item label="状态">
 									<el-radio-group v-model="form.status">
+										<el-radio :label="true">启用</el-radio>
+										<el-radio :label="false">禁用</el-radio>
+									</el-radio-group>
+								</el-form-item>
+							</el-col>
+							<el-col :span="10">
+								<el-form-item label="侧边可见">
+									<el-radio-group v-model="form.visible">
 										<el-radio :label="true">启用</el-radio>
 										<el-radio :label="false">禁用</el-radio>
 									</el-radio-group>
@@ -97,7 +96,9 @@
 						</el-row>
 						<el-row>
 							<el-col class="h-full">
-								<el-card :body-style="{ height: '100%' }" class="mt-10"><menuButton :select-menu="form" /></el-card>
+								<el-card :body-style="{ height: '100%' }" class="mt-10">
+									<menuButton :select-menu="form" />
+								</el-card>
 							</el-col>
 						</el-row>
 					</el-form>
@@ -240,6 +241,7 @@ let form: Form<any> = reactive({
 	is_catalog: false,
 	permission: '',
 	icon: '',
+	visible: ''
 });
 
 let menuPermissonList = ref([]);
