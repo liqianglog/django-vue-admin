@@ -9,6 +9,7 @@ import { request } from '/@/utils/service';
 //扩展包
 import { FsExtendsEditor } from '@fast-crud/fast-extends';
 import '@fast-crud/fast-extends/dist/style.css';
+import { successMessage, successNotification } from '/@/utils/message';
 export default {
 	async install(app: any, options: any) {
 		// 先安装ui
@@ -38,6 +39,14 @@ export default {
 							//将pageRequest的返回数据，转换为fast-crud所需要的格式
 							//return {records,currentPage,pageSize,total};
 							return { records: res.data, currentPage: res.page, pageSize: res.limit, total: res.total };
+						},
+					},
+					form: {
+						afterSubmit(ctx: any) {
+							// 增加crud提示
+							if (ctx.res.code == 2000) {
+								successNotification(ctx.res.msg);
+							}
 						},
 					},
 					/* search: {
