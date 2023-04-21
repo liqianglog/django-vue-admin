@@ -51,7 +51,7 @@ export default {
     fontColor: {
       label: '字体颜色',
       type: 'color',
-      value: '#ffffff',
+      value: '',
       placeholder: '请选择字体颜色'
     }
   },
@@ -81,7 +81,7 @@ export default {
       if (this.config?.color?.value) {
         return this.config.color.value
       }
-      return this.color || this.$util.randomColor()
+      return this.$util.randomColor()
     }
   },
   mounted () {
@@ -93,7 +93,7 @@ export default {
 <style scoped lang="scss">
 .card-view {
   //border-radius: 10px;
-  color: #ffffff;
+  color: $color-primary;
 
   .card-content {
     .card-content-label {

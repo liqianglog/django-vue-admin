@@ -36,7 +36,7 @@ export default {
     fontColor: {
       label: '字体颜色',
       type: 'color',
-      value: '#ffffff',
+      value: '',
       placeholder: '请选择字体颜色'
     }
   },
@@ -55,7 +55,7 @@ export default {
       if (this.config?.color?.value) {
         return this.config.color.value
       }
-      return this.color || this.$util.randomColor()
+      return this.$util.randomColor()
     }
   }
 }
@@ -63,11 +63,11 @@ export default {
 
 <style scoped lang="scss">
 .card-view {
-  color: #FFFFFF;
+  color: $color-primary;
 
   p {
-    font-size: 0.7em;
-    color: #FFFFFF;
+    font-size: 0.8em;
+    color: $color-primary;
   }
 }
 .el-card{

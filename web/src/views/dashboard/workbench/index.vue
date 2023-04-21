@@ -84,8 +84,7 @@
               <div style="color:#000;">宽{{ item.w }} x 高{{ item.h }}</div>
             </div>
             <component :class="customizing?'set-component-bg':''" :is="allComps[item.element]"
-                       :config="item.config || {}" :width="item.w" :height="item.h" :wpx="item.wpx"
-                       :hpx="item.hpx"></component>
+                       :config="item.config || {}" :width="item.w" :height="item.h" :pxData="pxData[item.i]"></component>
           </grid-item>
         </grid-layout>
       </div>
@@ -97,7 +96,6 @@
 <script>
 import draggable from 'vuedraggable'
 import allComps from './components'
-import util from '@/libs/util'
 import VueGridLayout from 'vue-grid-layout'
 import SuspendedLibrary from '@/views/dashboard/workbench/suspendedLibrary'
 import DashboardConfig from '@/views/dashboard/workbench/config'
@@ -119,7 +117,8 @@ export default {
       defaultLayout: initData,
       layout: [],
       colNum: 48,
-      minimize: false
+      minimize: false,
+      pxData: {}
     }
   },
   async created () {
@@ -129,7 +128,6 @@ export default {
       defaultValue: JSON.parse(JSON.stringify(this.defaultLayout)),
       user: true
     }, { root: true })
-    console.log(this.layout)
   },
   mounted () {
     this.$emit('on-mounted')
@@ -180,8 +178,8 @@ export default {
     push (item) {
       this.layout.push({
         i: this.getLayoutElementNumber(item.key),
-        x: (this.layout.length * 2) % (this.colNum || 24),
-        y: this.layout.length + (this.colNum || 24),
+        x: (this.layout.length * 2) % (this.colNum || 12),
+        y: this.layout.length + (this.colNum || 12),
         w: item.width,
         h: item.height,
         config: item.config || {},
@@ -200,10 +198,14 @@ export default {
       this.minimize = false
       this.$refs.suspendedLibrary.menu = false
       this.$refs.widgets.style.removeProperty('transform')
+      var layout = JSON.parse(JSON.stringify(this.layout))
+      layout.map(val => {
+        delete val.pxData
+      })
       await this.$store.dispatch('d2admin/db/set', {
         dbName: 'sys',
         path: 'grid-layout',
-        value: this.layout,
+        value: layout,
         user: true
       }, { root: true })
     },
@@ -260,11 +262,13 @@ export default {
     },
     // 设置实际的宽度和高度
     containerResizedEvent: function (i, newH, newW, newHPx, newWPx) {
-      console.log('CONTAINER RESIZED i=' + i + ', H=' + newH + ', W=' + newW + ', H(px)=' + newHPx + ', W(px)=' + newWPx)
+      console.log(this.layout, 'CONTAINER RESIZED i=' + i + ', H=' + newH + ', W=' + newW + ', H(px)=' + newHPx + ', W(px)=' + newWPx)
       this.layout.map(val => {
         if (val.i === i) {
-          val.hpx = Number(newHPx)
-          val.wpx = Number(newWPx)
+          this.$set(this.pxData, val.i, {
+            hpx: Number(newHPx),
+            wpx: Number(newWPx)
+          })
         }
       })
     }

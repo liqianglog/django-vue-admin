@@ -1,6 +1,8 @@
 <template>
-  <el-card class="card-view" :style="{backgroundColor:randomColor()}" shadow="always">
-    <div style="display:flex;flex: 1; flex-wrap: wrap;justify-content: space-between; margin-top: 10px;">
+  <el-card class="card-view" shadow="always"
+           :style="{backgroundColor:randomColor(),color: config?.fontColor?.value}">
+    <div style="display:flex;flex: 1; flex-wrap: wrap;justify-content: space-between; margin-top: 10px;"
+         :style="{color: config?.fontColor?.value}">
       <div style="flex: 1; min-width: 180px;max-width:180px;height: 80px; display: flex;">
         <el-col :span="4" class="lightgreen-box">
           <div class="underline">
@@ -107,6 +109,26 @@ export default {
   height: 18,
   width: 20,
   isResizable: true,
+  config: {
+    color: {
+      label: '背景颜色',
+      type: 'color',
+      value: '',
+      placeholder: '颜色为空则随机变换颜色'
+    },
+    fontColor: {
+      label: '字体颜色',
+      type: 'color',
+      value: '',
+      placeholder: '请选择字体颜色'
+    }
+  },
+  props: {
+    config: {
+      type: Object,
+      required: false
+    }
+  },
   data () {
     return {
       newName: '',
@@ -148,11 +170,11 @@ export default {
 <style scoped lang="scss">
 .card-view {
   // border-radius: 10px;
-  color: rgb(37, 176, 138);
+  color: $color-primary;
 }
 
 .lightgreen-box {
-  border-bottom: 2px solid rgb(37, 176, 138);
+  border-bottom: 2px solid;
   height: 60px;
   margin-bottom: 10px;
 }

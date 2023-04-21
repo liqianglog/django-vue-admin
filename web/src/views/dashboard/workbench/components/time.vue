@@ -1,5 +1,5 @@
 <template>
-  <el-card shadow="hover" class="item-background" :style="{backgroundColor: randomColor(),color: config?.fontColor?.value}">
+  <el-card shadow="hover" class="card-view" :style="{backgroundColor: randomColor(),color: config?.fontColor?.value}">
     <div class="time">
       <h2>{{ time }}</h2>
       <p>{{ day }}</p>
@@ -29,7 +29,7 @@ export default {
     fontColor: {
       label: '字体颜色',
       type: 'color',
-      value: '#ffffff',
+      value: '',
       placeholder: '请选择字体颜色'
     }
   },
@@ -67,7 +67,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.card-view {
+  color: $color-primary;
+}
 
 .time h2 {
   font-size: 24px;

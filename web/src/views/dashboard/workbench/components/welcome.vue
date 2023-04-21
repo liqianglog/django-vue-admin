@@ -1,5 +1,9 @@
 <template>
-  <el-card shadow="hover" :header="config?.showHeader?.value ? '欢迎使用' : ''" :style="{background: randomColor(), color: config?.fontColor?.value}">
+  <el-card
+    shadow="hover"
+    :header="config?.showHeader?.value ? '欢迎使用' : ''"
+    class="card-view"
+    :style="{background: randomColor(), color: config?.fontColor?.value}">
     <div class="welcome">
       <div class="logo">
         <img src="/image/django-vue-admin.png">
@@ -58,7 +62,7 @@ export default {
     fontColor: {
       label: '字体颜色',
       type: 'color',
-      value: '#ffffff',
+      value: '',
       placeholder: '请选择字体颜色'
     }
   },
@@ -86,7 +90,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.card-view {
+  color: $color-primary;
+}
 .welcome .logo {
   text-align: center;
 }

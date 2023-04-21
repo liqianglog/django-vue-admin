@@ -15,15 +15,13 @@ const log = [
       fontColor: {
         label: '字体颜色',
         type: 'color',
-        value: 'rgba(70, 183, 146, 1)',
+        value: null,
         placeholder: '请选择字体颜色'
       }
     },
     isResizable: true,
     element: 'usersTotal',
-    moved: false,
-    hpx: 122,
-    wpx: 397
+    moved: false
   },
   {
     i: 'loginTotal1',
@@ -41,15 +39,13 @@ const log = [
       fontColor: {
         label: '字体颜色',
         type: 'color',
-        value: 'rgba(30, 144, 255, 1)',
+        value: null,
         placeholder: '请选择字体颜色'
       }
     },
     isResizable: true,
     element: 'loginTotal',
-    moved: false,
-    hpx: 122,
-    wpx: 397
+    moved: false
   },
   {
     i: 'attachmentTotal2',
@@ -67,15 +63,13 @@ const log = [
       fontColor: {
         label: '字体颜色',
         type: 'color',
-        value: 'rgba(255, 140, 0, 1)',
+        value: null,
         placeholder: '请选择字体颜色'
       }
     },
     isResizable: true,
     element: 'attachmentTotal',
-    moved: false,
-    hpx: 122,
-    wpx: 397
+    moved: false
   },
   {
     i: 'databaseTotal3',
@@ -93,59 +87,40 @@ const log = [
       fontColor: {
         label: '字体颜色',
         type: 'color',
-        value: 'rgba(0, 186, 189, 1)',
+        value: null,
         placeholder: '请选择字体颜色'
       }
     },
     isResizable: true,
     element: 'databaseTotal',
-    moved: false,
-    hpx: 122,
-    wpx: 397
-  },
-  {
-    i: 'usersActive5',
-    x: 33,
-    y: 12,
-    w: 15,
-    h: 24,
-    config: {},
-    isResizable: true,
-    element: 'usersActive',
-    moved: false,
-    hpx: 254,
-    wpx: 498
+    moved: false
   },
   {
     i: 'userLogin6',
-    x: 0,
+    x: 14,
     y: 12,
-    w: 16,
+    w: 17,
     h: 24,
     config: {},
     isResizable: true,
     element: 'userLogin',
-    moved: false,
-    hpx: 254,
-    wpx: 532
+    moved: false
   },
   {
     i: 'registeredUser7',
-    x: 16,
+    x: 31,
     y: 12,
     w: 17,
     h: 24,
     config: {},
     isResizable: true,
     element: 'registeredUser',
-    moved: false,
-    hpx: 254,
-    wpx: 566
+    moved: false
   },
   {
     i: 'dashboardImg8',
     x: 32,
-    y: 36,
+    y: 51,
     w: 16,
     h: 24,
     config: {
@@ -176,15 +151,13 @@ const log = [
     },
     isResizable: true,
     element: 'dashboardImg',
-    moved: false,
-    hpx: 254,
-    wpx: 532
+    moved: false
   },
   {
     i: 'dashboardImg9',
-    x: 16,
-    y: 36,
-    w: 16,
+    x: 15,
+    y: 51,
+    w: 17,
     h: 24,
     config: {
       src: {
@@ -214,15 +187,13 @@ const log = [
     },
     isResizable: true,
     element: 'dashboardImg',
-    moved: false,
-    hpx: 254,
-    wpx: 532
+    moved: false
   },
   {
     i: 'dashboardImg10',
-    x: 16,
-    y: 60,
-    w: 22,
+    x: 15,
+    y: 36,
+    w: 20,
     h: 15,
     config: {
       src: {
@@ -252,15 +223,13 @@ const log = [
     },
     isResizable: true,
     element: 'dashboardImg',
-    moved: false,
-    hpx: 155,
-    wpx: 736
+    moved: false
   },
   {
     i: 'welcome10',
     x: 0,
     y: 36,
-    w: 16,
+    w: 15,
     h: 39,
     config: {
       color: {
@@ -272,23 +241,51 @@ const log = [
       fontColor: {
         label: '字体颜色',
         type: 'color',
-        value: 'rgba(0, 0, 0, 1)',
+        value: null,
         placeholder: '请选择字体颜色'
       }
     },
     isResizable: true,
     element: 'welcome',
-    moved: false,
-    hpx: 419,
-    wpx: 532
+    moved: false
+  },
+  {
+    i: 'usersActive11',
+    x: 0,
+    y: 12,
+    w: 14,
+    h: 24,
+    config: {
+      color: {
+        label: '背景颜色',
+        type: 'color',
+        value: '',
+        placeholder: '颜色为空则随机变换颜色'
+      },
+      fontColor: {
+        label: '字体颜色',
+        type: 'color',
+        value: null,
+        placeholder: '请选择字体颜色'
+      }
+    },
+    isResizable: true,
+    element: 'usersActive',
+    moved: false
   },
   {
     i: 'ver11',
-    x: 38,
-    y: 60,
-    w: 10,
+    x: 35,
+    y: 36,
+    w: 13,
     h: 15,
     config: {
+      showHeader: {
+        label: '显示头部信息',
+        type: 'boot',
+        value: true,
+        placeholder: '颜色为空则随机变换颜色'
+      },
       color: {
         label: '背景颜色',
         type: 'color',
@@ -298,15 +295,13 @@ const log = [
       fontColor: {
         label: '字体颜色',
         type: 'color',
-        value: 'rgba(30, 144, 255, 1)',
+        value: null,
         placeholder: '请选择字体颜色'
       }
     },
     isResizable: true,
     element: 'ver',
-    moved: false,
-    hpx: 155,
-    wpx: 329
+    moved: false
   }
 ]
 export default log

@@ -5,7 +5,7 @@
       backgroundColor: randomColor(),
     }"
   >
-    <div id="main" :style="{width: wpx+'px',height: hpx+'px'}"></div>
+    <div id="main" :style="{width: pxData.wpx+'px',height: pxData.hpx+'px'}"></div>
   </el-card>
 </template>
 
@@ -22,11 +22,23 @@ export default {
   width: 20,
   isResizable: true,
   props: {
-    hpx: {
-      type: Number
-    },
-    wpx: {
-      type: Number
+    pxData: {
+      type: Object,
+      require: false,
+      default: () => ({
+        wpx: 0,
+        hpx: 0
+      })
+    }
+  },
+  watch: {
+    pxData: {
+      handler () {
+        // eslint-disable-next-line no-unused-expressions
+        this.myChart?.resize({ width: this.pxData.wpx, height: this.pxData.hpx })
+      },
+      immediate: true,
+      deep: true
     }
   },
   data () {
@@ -212,7 +224,7 @@ export default {
 <style scoped lang="scss">
 .card-view {
   //border-radius: 10px;
-  color: #ffffff;
+  color: $color-primary;
 }
 
 .el-card {
