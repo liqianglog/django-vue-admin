@@ -1,3 +1,5 @@
+import mimetypes
+
 from rest_framework import serializers
 
 from dvadmin.system.models import FileList
@@ -18,7 +20,17 @@ class FileSerializer(CustomModelSerializer):
 
     def create(self, validated_data):
         validated_data['name'] = str(self.initial_data.get('file'))
+        # 1. 是否需要备份到本地服务器
+        # 2. 需要备份就把 validated_data['url'] 赋值
         validated_data['url'] = self.initial_data.get('file')
+        # 3. 上传到云对象存储
+        # 4. 如果不需要备份，需要把
+        # validated_data['size']
+        # validated_data['file_url']
+        # validated_data['md5']
+        # validated_data['engine']
+        # 5. 获取一下媒体类型 mime_type 进行保存
+        validated_data['mime_type'] = mimetypes.guess_type(self.initial_data.get('file'))[0]
         return super().create(validated_data)
 
 
