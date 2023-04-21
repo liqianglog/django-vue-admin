@@ -314,8 +314,10 @@ class FileList(CoreModel):
             for chunk in self.url.chunks():
                 md5.update(chunk)
             self.md5sum = md5.hexdigest()
-        self.size = self.url.size
-        self.file_url = 'media/' + str(self.url)
+        if not self.size:
+            self.size = self.url.size
+        if not self.file_url:
+            self.file_url = 'media/' + str(self.url)
         super(FileList, self).save(*args, **kwargs)
 
     class Meta:
