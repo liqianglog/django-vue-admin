@@ -19,7 +19,7 @@
       </div>
       <div class="absolute-right">
         <div class="card-content-time">
-          <div class="attachment-value">{{ space }}MB</div>
+          <div class="attachment-value">{{ space }}</div>
           <div class="el-icon-s-flag">
             占用空间
           </div>
@@ -70,10 +70,10 @@ export default {
   methods: {
     initGet () {
       request({
-        url: '/api/system/homepage_statistics/'
+        url: '/api/system/datav/database_total/'
       }).then((res) => {
-        this.count = res.data.database_info.count
-        this.space = res.data.database_info.space
+        this.count = res.data.count
+        this.space = this.$util.formatBytes(res.data.space)
       })
     },
     randomColor () {

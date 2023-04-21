@@ -44,46 +44,16 @@ export default {
   data () {
     this.myChart = null
     return {
-      time: []
+      data: []
     }
   },
   methods: {
     initGet () {
       request({
-        url: '/api/system/homepage_statistics/'
+        url: '/api/system/datav/registered_user/'
       }).then((res) => {
-        this.time = [
-          {
-            time: '2023-04-20',
-            count: 1
-          },
-          {
-            time: '2023-04-19',
-            count: 0
-          },
-          {
-            time: '2023-04-18',
-            count: 0
-          },
-          {
-            time: '2023-04-17',
-            count: 10
-          },
-          {
-            time: '2023-04-16',
-            count: 0
-          },
-          {
-            time: '2023-04-15',
-            count: 2
-          },
-          {
-            time: '2023-04-14',
-            count: 3
-          }
-        ]
-        console.log(this.time)
-        this.drawLine(this.time)
+        this.data = res.data.registered_user_list
+        this.drawLine(this.data)
       })
     },
     // 生成一个随机整数
@@ -95,8 +65,8 @@ export default {
     drawLine () {
       // 基于准备好的dom，初始化echarts实例
       // 绘制图表
-      const xAxisData = this.time.map(item => item.time)
-      const seriesData = this.time.map(item => item.count)
+      const xAxisData = this.data.map(item => item.day)
+      const seriesData = this.data.map(item => item.count)
       const option = {
         tooltip: {
           trigger: 'axis',
@@ -139,10 +109,8 @@ export default {
             }
           },
           axisLabel: {
-            interval: function (index, value) {
-              // 控制 x 轴上的刻度标签每隔一定数量显示一次
-              return index % 2 === 0
-            }, // 强制显示所有刻度
+            interval: 'auto',
+            maxInterval: 1,
             rotate: 0,
             textStyle: {
               color: '#333',

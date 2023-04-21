@@ -30,6 +30,7 @@ system_url.register(r'file', FileViewSet)
 system_url.register(r'api_white_list', ApiWhiteListViewSet)
 system_url.register(r'system_config', SystemConfigViewSet)
 system_url.register(r'message_center', MessageCenterViewSet)
+system_url.register(r'datav', DataVViewSet)
 
 urlpatterns = [
     path('system_config/save_content/', SystemConfigViewSet.as_view({'put': 'save_content'})),
@@ -41,6 +42,5 @@ urlpatterns = [
     path('dept_lazy_tree/', DeptViewSet.as_view({'get': 'dept_lazy_tree'})),
     path('clause/privacy.html', PrivacyView.as_view()),
     path('clause/terms_service.html', TermsServiceView.as_view()),
-    path('homepage_statistics/', DataVViewSet.as_view({'get': 'homepage_statistics'})),
 ]
 urlpatterns += system_url.urls
