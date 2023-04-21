@@ -1,5 +1,6 @@
 import hashlib
 import os
+from pathlib import PurePath, PureWindowsPath, PurePosixPath
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -296,7 +297,7 @@ class OperationLog(CoreModel):
 def media_file_name(instance, filename):
     h = instance.md5sum
     basename, ext = os.path.splitext(filename)
-    return os.path.join("files", h[0:1], h[1:2], h + ext.lower())
+    return PurePosixPath("files", h[:1], h[1:2], h + ext.lower())
 
 
 class FileList(CoreModel):
@@ -317,7 +318,8 @@ class FileList(CoreModel):
         if not self.size:
             self.size = self.url.size
         if not self.file_url:
-            self.file_url = 'media/' + str(self.url)
+            url = media_file_name(self,self.name)
+            self.file_url = f'media/{url}'
         super(FileList, self).save(*args, **kwargs)
 
     class Meta:

@@ -1,7 +1,9 @@
+import hashlib
 import mimetypes
 
 from rest_framework import serializers
 
+from application import dispatch
 from dvadmin.system.models import FileList
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -12,25 +14,45 @@ class FileSerializer(CustomModelSerializer):
 
     def get_url(self, instance):
         # return 'media/' + str(instance.url)
-        return instance.file_url or 'media/' + str(instance.url)
+        return instance.file_url or (f'media/{str(instance.url)}')
 
     class Meta:
         model = FileList
         fields = "__all__"
 
     def create(self, validated_data):
+        file_engine = dispatch.get_system_config_values("fileStorageConfig.file_engine")
+        file_backup = dispatch.get_system_config_values("fileStorageConfig.file_backup")
+        file = self.initial_data.get('file')
+        file_size = file.size
         validated_data['name'] = str(self.initial_data.get('file'))
-        # 1. 是否需要备份到本地服务器
-        # 2. 需要备份就把 validated_data['url'] 赋值
-        validated_data['url'] = self.initial_data.get('file')
-        # 3. 上传到云对象存储
-        # 4. 如果不需要备份，需要把
-        # validated_data['size']
-        # validated_data['file_url']
-        # validated_data['md5']
-        # validated_data['engine']
-        # 5. 获取一下媒体类型 mime_type 进行保存
-        validated_data['mime_type'] = mimetypes.guess_type(self.initial_data.get('file'))[0]
+        validated_data['size'] = file_size
+        validated_data['md5sum'] = hashlib.md5().hexdigest()
+        validated_data['engine'] = file_engine
+        validated_data['mime_type'] = mimetypes.guess_type(str(file))[0]
+        if file_backup:
+            validated_data['url'] = file
+        if file_engine =='oss':
+            from dvadmin_cloud_storage.views.aliyun import ali_oss_upload
+            file_path = ali_oss_upload(file)
+            if file_path:
+                validated_data['file_url'] = file_path
+            else:
+                raise ValueError("上传失败")
+        elif file_engine == 'cos':
+            from dvadmin_cloud_storage.views.tencent import tencent_cos_upload
+            file_path = tencent_cos_upload(file)
+            if file_path:
+                validated_data['file_url'] = file_path
+            else:
+                raise ValueError("上传失败")
+        else:
+            validated_data['url'] = file
+        # 审计字段
+        request_user = self.request.user
+        validated_data['dept_belong_id'] = request_user.dept.id
+        validated_data['creator'] = request_user.id
+        validated_data['modifier'] = request_user.id
         return super().create(validated_data)
 
 
