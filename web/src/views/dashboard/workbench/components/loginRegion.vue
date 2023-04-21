@@ -5,7 +5,7 @@
       backgroundColor: randomColor(),
     }"
   >
-    <div id="main" :style="{width: pxData.wpx+'px',height: pxData.hpx+'px'}"></div>
+    <div id="region" :style="{width: pxData.wpx+'px',height: pxData.hpx+'px'}"></div>
   </el-card>
 </template>
 
@@ -14,10 +14,10 @@ import { request } from '@/api/service'
 
 export default {
   sort: 7,
-  title: '注册用户趋势',
-  name: 'registeredUser',
+  title: '登录区域分布',
+  name: 'loginRegion',
   icon: 'el-icon-s-data',
-  description: '用户注册',
+  description: '登录区域分布详情',
   height: 28,
   width: 20,
   isResizable: true,
@@ -50,9 +50,9 @@ export default {
   methods: {
     initGet () {
       request({
-        url: '/api/system/datav/registered_user/'
+        url: '/api/system/datav/login_region/'
       }).then((res) => {
-        this.data = res.data.registered_user_list
+        this.data = res.data
         this.drawLine(this.data)
       })
     },
@@ -65,9 +65,18 @@ export default {
     drawLine () {
       // 基于准备好的dom，初始化echarts实例
       // 绘制图表
-      const xAxisData = this.data.map(item => item.day)
+      const xAxisData = this.data.map(item => item.region)
       const seriesData = this.data.map(item => item.count)
       const option = {
+        title: {
+          text: '登录区域分布',
+          textStyle: {
+            color: '#666666',
+            fontSize: 14,
+            fontWeight: '600'
+          },
+          left: 'left'
+        },
         tooltip: {
           trigger: 'axis',
           backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -83,11 +92,11 @@ export default {
           },
           formatter: params => {
             const param = params[0]
-            return `<div style="padding: 8px;"><div style="color: #333;">${param.name}</div><div style="color: #FFA500;">${param.value} 人</div></div>`
+            return `<div style="padding: 8px;"><div style="color: #333;">${param.name}</div><div style="color: #FFA500;">${param.value} 次</div></div>`
           }
         },
         legend: {
-          data: ['用户注册数'],
+          data: ['登录区域分布'],
           textStyle: {
             color: '#666',
             fontSize: 12
@@ -97,11 +106,11 @@ export default {
           top: 40,
           left: 40,
           right: 65,
-          bottom: 60
+          bottom: 75
         },
         xAxis: {
           data: xAxisData,
-          boundaryGap: false,
+          boundaryGap: true,
           axisLine: {
             lineStyle: {
               color: '#aaa',
@@ -109,12 +118,15 @@ export default {
             }
           },
           axisLabel: {
-            interval: 'auto',
+            interval: '0',
             maxInterval: 1,
             rotate: 0,
+            formatter: function (value) {
+              return value.split('').join('\n')
+            },
             textStyle: {
               color: '#333',
-              fontSize: 12
+              fontSize: 10
             }
           }
         },
@@ -142,21 +154,12 @@ export default {
         series: [
           {
             name: '用户注册数',
-            type: 'line',
+            type: 'bar',
             data: seriesData,
-            symbol: 'circle',
-            symbolSize: 6,
-            smooth: true,
-            lineStyle: {
-              color: 'rgba(38,204,164, 0.8)',
-              width: 2
-            },
+            barWidth: 16,
+            barGap: 0,
+            barCategoryGap: '20%',
             itemStyle: {
-              color: 'rgba(98,206,178, 0.8)',
-              borderColor: 'rgba(38,204,164, 1)',
-              borderWidth: 1
-            },
-            areaStyle: {
               color: {
                 type: 'linear',
                 x: 0,
@@ -166,11 +169,11 @@ export default {
                 colorStops: [
                   {
                     offset: 0,
-                    color: 'rgba(140,189,250, 0.8)'
+                    color: 'rgba(0, 128, 255, 1)'
                   },
                   {
                     offset: 1,
-                    color: 'rgba(0, 128, 255, 0)'
+                    color: 'rgba(0, 128, 255, 0.2)'
                   }
                 ]
               }
@@ -178,11 +181,12 @@ export default {
           }
         ]
       }
+
       this.myChart.setOption(option)
     }
   },
   mounted () {
-    this.myChart = this.$echarts.init(document.getElementById('main'))
+    this.myChart = this.$echarts.init(document.getElementById('region'))
     this.initGet()
     this.drawLine()
   }

@@ -5,7 +5,7 @@
         <el-col :span="12">
           <div class="card-content">
             <div class="card-content-label">用户总数</div>
-            <div class="card-content-value">{{ sum_register }}</div>
+            <div class="card-content-value">{{ usersTotal }}</div>
           </div>
         </el-col>
         <el-col :span="6" :offset="6" style="text-align: right;">
@@ -50,15 +50,15 @@ export default {
   },
   data () {
     return {
-      sum_register: ''
+      usersTotal: ''
     }
   },
   methods: {
     initGet () {
       request({
-        url: '/api/system/homepage_statistics/'
+        url: '/api/system/datav/users_total/'
       }).then((res) => {
-        this.sum_register = res.data.sum_register
+        this.usersTotal = res.data.users_total
       })
     },
     // 生成一个随机整数

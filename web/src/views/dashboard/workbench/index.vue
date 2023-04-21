@@ -262,7 +262,6 @@ export default {
     },
     // 设置实际的宽度和高度
     containerResizedEvent: function (i, newH, newW, newHPx, newWPx) {
-      console.log(this.layout, 'CONTAINER RESIZED i=' + i + ', H=' + newH + ', W=' + newW + ', H(px)=' + newHPx + ', W(px)=' + newWPx)
       this.layout.map(val => {
         if (val.i === i) {
           this.$set(this.pxData, val.i, {

@@ -4,8 +4,8 @@
       <el-row type="flex" justify="space-around" style="padding:10px">
         <el-col :span="12">
           <div class="card-content">
-            <div class="card-content-label">登录总数</div>
-            <div class="card-content-value">{{ sum_register }}</div>
+            <div class="card-content-label">登录次数</div>
+            <div class="card-content-value">{{ loginTotal }}</div>
           </div>
         </el-col>
         <el-col :span="6" :offset="6" style="text-align: right;">
@@ -21,7 +21,7 @@ import { request } from '@/api/service'
 
 export default {
   sort: 2,
-  title: '登录总数',
+  title: '登录总次数',
   name: 'loginTotal',
   icon: 'el-icon-user-solid',
   description: '用户登录平台总次数',
@@ -50,15 +50,15 @@ export default {
   },
   data () {
     return {
-      sum_register: ''
+      loginTotal: ''
     }
   },
   methods: {
     initGet () {
       request({
-        url: '/api/system/homepage_statistics/'
+        url: '/api/system/datav/users_login_total/'
       }).then((res) => {
-        this.sum_register = res.data.sum_register
+        this.loginTotal = res.data.login_total
       })
     },
     // 生成一个随机整数

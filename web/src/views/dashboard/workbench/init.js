@@ -119,10 +119,10 @@ const log = [
   },
   {
     i: 'dashboardImg8',
-    x: 32,
-    y: 51,
+    x: 14,
+    y: 58,
     w: 16,
-    h: 24,
+    h: 14,
     config: {
       src: {
         label: '图片地址',
@@ -155,10 +155,10 @@ const log = [
   },
   {
     i: 'dashboardImg9',
-    x: 15,
-    y: 51,
-    w: 17,
-    h: 24,
+    x: 0,
+    y: 58,
+    w: 14,
+    h: 14,
     config: {
       src: {
         label: '图片地址',
@@ -191,10 +191,10 @@ const log = [
   },
   {
     i: 'dashboardImg10',
-    x: 15,
-    y: 36,
-    w: 20,
-    h: 15,
+    x: 30,
+    y: 58,
+    w: 18,
+    h: 14,
     config: {
       src: {
         label: '图片地址',
@@ -226,30 +226,6 @@ const log = [
     moved: false
   },
   {
-    i: 'welcome10',
-    x: 0,
-    y: 36,
-    w: 15,
-    h: 39,
-    config: {
-      color: {
-        label: '背景颜色',
-        type: 'color',
-        value: 'rgba(255, 255, 255, 1)',
-        placeholder: '颜色为空则随机变换颜色'
-      },
-      fontColor: {
-        label: '字体颜色',
-        type: 'color',
-        value: null,
-        placeholder: '请选择字体颜色'
-      }
-    },
-    isResizable: true,
-    element: 'welcome',
-    moved: false
-  },
-  {
     i: 'usersActive11',
     x: 0,
     y: 12,
@@ -278,7 +254,7 @@ const log = [
     x: 35,
     y: 36,
     w: 13,
-    h: 15,
+    h: 22,
     config: {
       showHeader: {
         label: '显示头部信息',
@@ -301,6 +277,17 @@ const log = [
     },
     isResizable: true,
     element: 'ver',
+    moved: false
+  },
+  {
+    i: 'loginRegion12',
+    x: 0,
+    y: 36,
+    w: 35,
+    h: 22,
+    config: {},
+    isResizable: true,
+    element: 'loginRegion',
     moved: false
   }
 ]

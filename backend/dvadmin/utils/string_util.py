@@ -8,6 +8,7 @@
 """
 import hashlib
 import random
+from decimal import Decimal
 
 CHAR_SET = ("2", "3", "4", "5",
             "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H",
@@ -40,3 +41,25 @@ def has_md5(str, salt='123456'):
     md.update(str.encode())
     res = md.hexdigest()
     return res
+
+
+def format_bytes(size, decimals=2):
+    """
+    格式化字节大小
+    :param size:
+    :param decimals:
+    :return:
+    """
+    if isinstance(size, (str)) and size.isnumeric():
+        size = int(size)
+    elif not isinstance(size, (int, float, Decimal)):
+        return size
+    if size == 0:
+        return "0 Bytes"
+    units = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+    i = 0
+    while size >= 1024:
+        size /= 1024
+        i += 1
+
+    return f"{round(size, decimals)} {units[i]}"

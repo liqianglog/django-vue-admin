@@ -19,7 +19,7 @@
       </div>
       <div class="absolute-right">
         <div class="card-content-time">
-          <div class="attachment-value">{{ occupy_space }}MB</div>
+          <div class="attachment-value">{{ occupy_space }}</div>
           <div class="el-icon-s-flag">
             附件大小
           </div>
@@ -70,10 +70,10 @@ export default {
   methods: {
     initGet () {
       request({
-        url: '/api/system/homepage_statistics/'
+        url: '/api/system/datav/attachment_total/'
       }).then((res) => {
-        this.count = res.data.sum_file.count
-        this.occupy_space = res.data.sum_file.occupy_space
+        this.count = res.data.count
+        this.occupy_space = this.$util.formatBytes(res.data.occupy_space)
       })
     },
     // 生成一个随机整数

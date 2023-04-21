@@ -11,7 +11,7 @@
         </el-col>
         <el-col :span="20" class="orange-box">
           <div class="enroll-time">
-            <div class="enroll-number"><h3>{{ newName }}</h3>
+            <div class="enroll-number"><h3>{{ data.today_users || 0 }}</h3>
             </div>
             <div class="enroll-text">今日注册
             </div>
@@ -26,7 +26,7 @@
         </el-col>
         <el-col :span="20" class="orange-box">
           <div class="enroll-time">
-            <div class="enroll-number"><h3>{{ today_login }}</h3>
+            <div class="enroll-number"><h3>{{ data.today_logins || 0 }}</h3>
             </div>
             <div class="enroll-text">今日登录
             </div>
@@ -41,24 +41,9 @@
         </el-col>
         <el-col :span="20" class="orange-box">
           <div class="enroll-time">
-            <div class="enroll-number"><h3>{{ Three_days_register }}</h3>
+            <div class="enroll-number"><h3>{{ data.three_days || 0 }}</h3>
             </div>
             <div class="enroll-text">三日新增
-            </div>
-          </div>
-        </el-col>
-      </div>
-      <div style="flex: 1;min-width: 180px;max-width:180px;height: 80px;display: flex;">
-        <el-col :span="4" class="lightgreen-box">
-          <div class="underline">
-            <i class="el-icon-folder-add"></i>
-          </div>
-        </el-col>
-        <el-col :span="20" class="orange-box">
-          <div class="enroll-time">
-            <div class="enroll-number"><h3>{{ Seven_days_register }}</h3>
-            </div>
-            <div class="enroll-text">七日新增
             </div>
           </div>
         </el-col>
@@ -71,9 +56,24 @@
         </el-col>
         <el-col :span="20" class="orange-box">
           <div class="enroll-time">
-            <div class="enroll-number"><h3>{{ Seven_days_login }}</h3>
+            <div class="enroll-number"><h3>{{ data.seven_days || 0 }}</h3>
             </div>
             <div class="enroll-text">七日活跃
+            </div>
+          </div>
+        </el-col>
+      </div>
+      <div style="flex: 1;min-width: 180px;max-width:180px;height: 80px;display: flex;">
+        <el-col :span="4" class="lightgreen-box">
+          <div class="underline">
+            <i class="el-icon-folder-add"></i>
+          </div>
+        </el-col>
+        <el-col :span="20" class="orange-box">
+          <div class="enroll-time">
+            <div class="enroll-number"><h3>{{ data.seven_days_active || 0 }}</h3>
+            </div>
+            <div class="enroll-text">七日新增
             </div>
           </div>
         </el-col>
@@ -86,7 +86,7 @@
         </el-col>
         <el-col :span="20" class="orange-box">
           <div class="enroll-time">
-            <div class="enroll-number"><h3>{{ month_login }}</h3>
+            <div class="enroll-number"><h3>{{ data.monthly_active || 0 }}</h3>
             </div>
             <div class="enroll-text">月活跃
             </div>
@@ -131,12 +131,7 @@ export default {
   },
   data () {
     return {
-      newName: '',
-      today_login: '',
-      Three_days_register: '',
-      Seven_days_register: '',
-      Seven_days_login: '',
-      month_login: ''
+      data: {}
     }
   },
   mounted () {
@@ -145,14 +140,9 @@ export default {
   methods: {
     initGet () {
       request({
-        url: '/api/system/homepage_statistics/'
+        url: '/api/system/datav/users_active/'
       }).then((res) => {
-        this.newName = res.data.today_register
-        this.today_login = res.data.today_login
-        this.Three_days_register = res.data.Three_days_register
-        this.Seven_days_register = res.data.Seven_days_register
-        this.Seven_days_login = res.data.Seven_days_login
-        this.month_login = res.data.month_login
+        this.data = res.data
       })
     },
     // 生成一个随机整数
@@ -172,7 +162,9 @@ export default {
   // border-radius: 10px;
   color: $color-primary;
 }
-
+.enroll-number{
+  color: $color-primary;
+}
 .lightgreen-box {
   border-bottom: 2px solid;
   height: 60px;
