@@ -301,7 +301,11 @@ def media_file_name(instance, filename):
 
 class FileList(CoreModel):
     name = models.CharField(max_length=200, null=True, blank=True, verbose_name="名称", help_text="名称")
-    url = models.FileField(upload_to=media_file_name)
+    url = models.FileField(upload_to=media_file_name, null=True, blank=True,)
+    file_url = models.CharField(max_length=255, blank=True, verbose_name="文件地址", help_text="文件地址")
+    engine = models.CharField(max_length=100, default='local', blank=True, verbose_name="引擎", help_text="引擎")
+    mime_type = models.CharField(max_length=100, blank=True, verbose_name="Mime类型", help_text="Mime类型")
+    size = models.CharField(max_length=36, blank=True, verbose_name="文件大小", help_text="文件大小")
     md5sum = models.CharField(max_length=36, blank=True, verbose_name="文件md5", help_text="文件md5")
 
     def save(self, *args, **kwargs):
@@ -310,6 +314,8 @@ class FileList(CoreModel):
             for chunk in self.url.chunks():
                 md5.update(chunk)
             self.md5sum = md5.hexdigest()
+        self.size = self.url.size
+        self.file_url = 'media/' + str(self.url)
         super(FileList, self).save(*args, **kwargs)
 
     class Meta:
@@ -446,7 +452,8 @@ class LoginLog(CoreModel):
         (5, "钉钉扫码登录"),
         (6, "短信登录")
     )
-    username = models.CharField(max_length=150, verbose_name="登录用户名", null=True, blank=True, help_text="登录用户名")
+    username = models.CharField(max_length=150, verbose_name="登录用户名", null=True, blank=True,
+                                help_text="登录用户名")
     ip = models.CharField(max_length=32, verbose_name="登录ip", null=True, blank=True, help_text="登录ip")
     agent = models.TextField(verbose_name="agent信息", null=True, blank=True, help_text="agent信息")
     browser = models.CharField(max_length=200, verbose_name="浏览器名", null=True, blank=True, help_text="浏览器名")

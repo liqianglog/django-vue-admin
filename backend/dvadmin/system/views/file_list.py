@@ -9,7 +9,8 @@ class FileSerializer(CustomModelSerializer):
     url = serializers.SerializerMethodField(read_only=True)
 
     def get_url(self, instance):
-        return 'media/' + str(instance.url)
+        # return 'media/' + str(instance.url)
+        return instance.file_url or 'media/' + str(instance.url)
 
     class Meta:
         model = FileList
