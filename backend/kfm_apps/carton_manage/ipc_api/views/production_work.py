@@ -69,7 +69,7 @@ class IpcProductionWorkSerializer(CustomModelSerializer):
         model = ProductionWork
         fields = ['id', 'no', 'name', 'code_package_no', 'code_package_name', 'order_id', 'customer_name',
                   'total_number', 'factory_info_name', 'key_id', 'file_md5', 'first_line_md5', 'product_name',
-                  'code_package_template_no', 'code_package_last_update_time', 'jet_print_last_update_time', 'batch_no',
+                  'code_package_template_no', 'code_package_last_update_time','jet_print_template_no', 'jet_print_last_update_time', 'batch_no',
                   'file_path', 'update_datetime', 'create_datetime']
         read_only_fields = ["id"]
 
