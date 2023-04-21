@@ -49,10 +49,13 @@ class FileSerializer(CustomModelSerializer):
         else:
             validated_data['url'] = file
         # 审计字段
-        request_user = self.request.user
-        validated_data['dept_belong_id'] = request_user.dept.id
-        validated_data['creator'] = request_user.id
-        validated_data['modifier'] = request_user.id
+        try:
+            request_user = self.request.user
+            validated_data['dept_belong_id'] = request_user.dept.id
+            validated_data['creator'] = request_user.id
+            validated_data['modifier'] = request_user.id
+        except:
+            pass
         return super().create(validated_data)
 
 
