@@ -70,7 +70,7 @@ class DataVViewSet(GenericViewSet):
         """
         count = FileList.objects.all().count()
         data = FileList.objects.aggregate(sum_size=Sum('size'))
-        return DetailResponse(data={"count": count, "occupy_space": format_bytes(data.get('sum_size'))}, msg="获取成功")
+        return DetailResponse(data={"count": count, "occupy_space": format_bytes(data.get('sum_size') or 0)}, msg="获取成功")
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
     def database_total(self, request):
@@ -101,7 +101,7 @@ class DataVViewSet(GenericViewSet):
                 except Exception as e:
                     print(e)
                     space = '无权限'
-        return DetailResponse(data={"count": count, "space": format_bytes(space)}, msg="获取成功")
+        return DetailResponse(data={"count": count, "space": format_bytes(space or 0)}, msg="获取成功")
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
     def registered_user(self, request):
@@ -141,12 +141,13 @@ class DataVViewSet(GenericViewSet):
         seven_days_ago = today - datetime.timedelta(days=day)
         users = Users.objects.filter(create_datetime__gte=seven_days_ago).annotate(
             day=TruncDay('create_datetime')).values(
-            'day').annotate(count=Count('id'))
+            'day').annotate(count=Count('id')).order_by('-day')
         result = []
         data_dict = {ele.get('day').strftime('%Y-%m-%d'): ele.get('count') for ele in users}
         for i in range(day):
             date = (today - datetime.timedelta(days=i)).strftime('%Y-%m-%d')
             result.append({'day': date, 'count': data_dict[date] if date in data_dict else 0})
+        result = sorted(result, key=lambda x: x['day'])
         return DetailResponse(data={"registered_user_list": result}, msg="获取成功")
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
@@ -161,12 +162,13 @@ class DataVViewSet(GenericViewSet):
         seven_days_ago = today - datetime.timedelta(days=day)
         users = LoginLog.objects.filter(create_datetime__gte=seven_days_ago).annotate(
             day=TruncDay('create_datetime')).values(
-            'day').annotate(count=Count('id'))
+            'day').annotate(count=Count('id')).order_by('-day')
         result = []
         data_dict = {ele.get('day').strftime('%Y-%m-%d'): ele.get('count') for ele in users}
         for i in range(day):
             date = (today - datetime.timedelta(days=i)).strftime('%Y-%m-%d')
             result.append({'day': date, 'count': data_dict[date] if date in data_dict else 0})
+        result = sorted(result, key=lambda x: x['day'])
         return DetailResponse(data={"login_user": result}, msg="获取成功")
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
@@ -252,7 +254,7 @@ class DataVViewSet(GenericViewSet):
         province_dict = {p: 0 for p in provinces}
         for ele in province_data:
             if ele.get('province') in province_dict:
-                province_dict[ele.get('province')] += 1
+                province_dict[ele.get('province')] += ele.get('count')
             else:
                 province_dict['未知区域'] += ele.get('count')
         data = [{'region': key, 'count': val} for key, val in province_dict.items()]
