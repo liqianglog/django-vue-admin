@@ -147,11 +147,11 @@ docker-compose up -d --build
 
 ## Demo screenshot✅
 
-![image-01](https://foruda.gitee.com/images/1681118295661653899/12b2f755_5074988.jpeg)
+![image-01](https://foruda.gitee.com/images/1682179942561449504/020863bb_5074988.jpeg)
 
-![image-02](https://foruda.gitee.com/images/1681118320563350469/311f888b_5074988.jpeg)
+![image-02](https://foruda.gitee.com/images/1682179701820334814/f20eb5e8_5074988.png)
 
-![image-03](https://foruda.gitee.com/images/1681118339552860024/780a4e11_5074988.jpeg)
+![image-03](https://foruda.gitee.com/images/1682179718209143602/e6b6a4b1_5074988.png)
 
 ![image-04](https://foruda.gitee.com/images/1681118349561624452/d917f8bc_5074988.jpeg)
 
