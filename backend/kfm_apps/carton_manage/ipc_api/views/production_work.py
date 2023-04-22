@@ -148,6 +148,9 @@ class ProductionWorkViewSet(CustomModelViewSet):
 
     @action(methods=['post'], detail=False)
     def table(self, request, *args, **kwargs):
+        """
+        生产工单管理-列表页面
+        """
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True, request=request)
         return DetailResponse(data=serializer.data, msg="获取成功")

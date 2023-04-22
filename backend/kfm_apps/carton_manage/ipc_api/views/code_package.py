@@ -102,6 +102,10 @@ class CodePackageViewSet(CustomModelViewSet):
             ret = HttpResponseBadRequest('非当前设备的生产工单')
             ret["STATUS-CODE"] = 400
             return ret
+        if _ProductionWork.status!= 0:
+            ret = HttpResponseBadRequest('生产工单已被下载,请勿重新下载')
+            ret["STATUS-CODE"] = 400
+            return ret
         # 防止目录遍历漏洞
         path = posixpath.normpath(
             os.path.join(kwargs.get('day'), kwargs.get('file_name'))).lstrip('/')
