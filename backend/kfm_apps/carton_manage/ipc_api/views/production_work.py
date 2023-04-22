@@ -64,10 +64,10 @@ class IpcProductionWorkSerializer(CustomModelSerializer):
         return file_path
 
     def get_code_package_last_update_time(self, instance):
-        return instance.code_package_template.update_datetime.strftime("%Y-%m-%d %H:%M:%S"),
+        return instance.code_package_template.update_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
     def get_jet_print_last_update_time(self, instance):
-        return instance.jet_print_template.update_datetime.strftime("%Y-%m-%d %H:%M:%S"),
+        return instance.jet_print_template.update_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = ProductionWork
