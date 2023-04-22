@@ -4,6 +4,7 @@ from rest_framework import routers
 from dvadmin.system.views.api_white_list import ApiWhiteListViewSet
 from dvadmin.system.views.area import AreaViewSet
 from dvadmin.system.views.clause import PrivacyView, TermsServiceView
+from dvadmin.system.views.datav import DataVViewSet
 from dvadmin.system.views.dept import DeptViewSet
 from dvadmin.system.views.dictionary import DictionaryViewSet
 from dvadmin.system.views.file_list import FileViewSet
@@ -29,6 +30,7 @@ system_url.register(r'file', FileViewSet)
 system_url.register(r'api_white_list', ApiWhiteListViewSet)
 system_url.register(r'system_config', SystemConfigViewSet)
 system_url.register(r'message_center', MessageCenterViewSet)
+system_url.register(r'datav', DataVViewSet)
 
 urlpatterns = [
     path('system_config/save_content/', SystemConfigViewSet.as_view({'put': 'save_content'})),

@@ -8,8 +8,10 @@ django-comment-migrate==0.1.7
 django-cors-headers==3.10.1
 django-filter==22.1
 django-ranged-response==0.2.0
+django-redis==5.2.0
 django-restql==0.15.3
 django-simple-captcha==0.5.17
+django-tenants==3.4.8
 django-timezone-field==4.2.3
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
