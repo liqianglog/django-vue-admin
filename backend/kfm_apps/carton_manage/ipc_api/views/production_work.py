@@ -156,7 +156,9 @@ class ProductionWorkViewSet(CustomModelViewSet):
         """
         生产工单管理-列表页面
         """
-        queryset = self.filter_queryset(self.get_queryset())
+        device = request.user.device_id
+        queryset = ProductionWork.objects.filter(device__id=device)
+        queryset = self.filter_queryset(queryset)
         serializer = self.get_serializer(queryset, many=True, request=request)
         return DetailResponse(data=serializer.data, msg="获取成功")
 
