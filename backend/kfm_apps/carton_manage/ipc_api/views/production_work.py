@@ -45,10 +45,8 @@ class IpcProductionWorkSerializer(CustomModelSerializer):
                                                      help_text="码包模板编号")
     jet_print_template_no = serializers.CharField(source="jet_print_template.no", read_only=True,
                                                   help_text="喷码模板编号")
-    code_package_last_update_time = serializers.CharField(source="code_package_template.update_datetime",
-                                                          read_only=True, help_text="码包模板更新时间")
-    jet_print_last_update_time = serializers.CharField(source="jet_print_template.update_datetime", read_only=True,
-                                                       help_text="喷码模板更新时间")
+    code_package_last_update_time = serializers.SerializerMethodField(help_text='码包模板更新时间')
+    jet_print_last_update_time = serializers.SerializerMethodField(help_text='喷码模板更新时间')
     file_path = serializers.SerializerMethodField(help_text='下载路径')
 
     def get_file_path(self, instance):
@@ -65,11 +63,18 @@ class IpcProductionWorkSerializer(CustomModelSerializer):
             file_path = f"{http}://{domain_obj.domain}:{self.request.META['SERVER_PORT']}/api/carton/ipc/download_code_package_file/{schema_name}/{file_position}"
         return file_path
 
+    def get_code_package_last_update_time(self, instance):
+        return instance.code_package_template.update_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+    def get_jet_print_last_update_time(self, instance):
+        return instance.jet_print_template.update_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
     class Meta:
         model = ProductionWork
         fields = ['id', 'no', 'name', 'code_package_no', 'code_package_name', 'order_id', 'customer_name',
                   'total_number', 'factory_info_name', 'key_id', 'file_md5', 'first_line_md5', 'product_name',
-                  'code_package_template_no', 'code_package_last_update_time', 'jet_print_last_update_time', 'batch_no',
+                  'code_package_template_no', 'code_package_last_update_time', 'jet_print_template_no',
+                  'jet_print_last_update_time', 'batch_no',
                   'file_path', 'update_datetime', 'create_datetime']
         read_only_fields = ["id"]
 
