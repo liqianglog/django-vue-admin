@@ -78,7 +78,7 @@ class JetPrintTemplateCreateUpdateSerializer(CustomModelSerializer):
                 serializer.is_valid(raise_exception=True)
                 serializer.save(jet_print_template=instance)
                 need_update_id.append(serializer.instance.id)
-        JetPrintTemplateAttribute.objects.exclude(id__in=need_update_id).delete()
+        JetPrintTemplateAttribute.objects.filter(jet_print_template=instance.id).exclude(id__in=need_update_id).delete()
         return super().update(instance, validated_data)
 
 class JetPrintTemplateFilter(django_filters.FilterSet):

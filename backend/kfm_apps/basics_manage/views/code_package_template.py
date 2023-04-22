@@ -67,7 +67,7 @@ class CodePackageTemplateCreateUpdateSerializer(CustomModelSerializer):
                 serializer.is_valid(raise_exception=True)
                 serializer.save(code_package_template=instance)
                 need_update_id.append(serializer.instance.id)
-        CodePackageTemplateAttribute.objects.exclude(id__in=need_update_id).delete()
+        CodePackageTemplateAttribute.objects.filter(code_package_template=instance.id).exclude(id__in=need_update_id).delete()
         return super().update(instance, validated_data)
 
 class CodePackageTemplateFilter(django_filters.FilterSet):
