@@ -165,6 +165,9 @@ export default {
 .enroll-number{
   color: $color-primary;
 }
+h3 {
+  margin: 0;
+}
 .lightgreen-box {
   border-bottom: 2px solid;
   height: 60px;
