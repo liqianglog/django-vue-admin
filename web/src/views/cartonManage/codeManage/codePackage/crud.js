@@ -1,6 +1,4 @@
 import util from '@/libs/util'
-import { request } from '@/api/service'
-import { d2CrudPlus } from 'd2-crud-plus'
 
 const uploadUrl = util.baseURL() + 'api/carton/code_manage/code_package/upload_file/'
 export const crudOptions = (vm) => {
@@ -86,8 +84,8 @@ export const crudOptions = (vm) => {
               message: '必填项'
             },
             {
-              pattern: /^[A-Za-z0-9]{4,40}$/,
-              message: '格式为:字母、数字;至少4位;最多40位'
+              pattern: /^[A-Za-z0-9_-]{4,40}$/,
+              message: '格式为:字母、数字、-、_;至少4位;最多40位'
             }
           ],
           component: {
@@ -100,20 +98,6 @@ export const crudOptions = (vm) => {
           itemProps: {
             class: { yxtInput: true }
           },
-          valueChange (key, value, form, {
-            getColumn,
-            mode,
-            component,
-            immediate,
-            getComponent
-          }) {
-            if (value) {
-              form.order_id = value
-            } else {
-              form.order_id = util.autoCreateCode()
-            }
-          },
-          valueChangeImmediate: true,
           helper: {
             render (h) {
               return (< el-alert title="如有实际订单号，请重新输入" type="warning"/>
@@ -290,6 +274,8 @@ export const crudOptions = (vm) => {
             if (value) {
               vm.isAttrShow = true
               vm.getCusomerInfoAttr(value)
+              form.product_info = null
+              getComponent('product_info').reloadDict()
             } else {
               vm.isAttrShow = false
             }
@@ -309,7 +295,13 @@ export const crudOptions = (vm) => {
         minWidth: 120,
         dict: {
           cache: false, // 表单的dict可以禁用缓存
-          url: '/api/basics_manage/product_info/',
+          // url: '/api/basics_manage/product_info/',
+          url (dict, { form, component }) {
+            if (form && form.customer_info != null) { // 本数据字典的url是通过前一个select的选项决定的
+              return '/api/basics_manage/product_info/?customer_info=' + form.customer_info
+            }
+            return undefined // 返回undefined 将不加载字典
+          },
           value: 'id', // 数据字典中value字段的属性名
           label: 'name' // 数据字典中label字段的属性名
         },
@@ -330,6 +322,9 @@ export const crudOptions = (vm) => {
             }
           ],
           component: {
+            show(){
+              return vm.isAttrShow
+            },
             span: 24,
             placeholder: '请选择产品',
             elProps: {
@@ -351,7 +346,7 @@ export const crudOptions = (vm) => {
           },
           itemProps: {
             class: { yxtInput: true }
-          },
+          }
         },
         component: {
           name: 'foreignKey',

@@ -225,7 +225,8 @@ export default {
         fields: null,
         w_url_prefix: null,
         n_url_prefix: null
-      }
+      },
+      timer:null
     }
   },
   methods: {
@@ -247,6 +248,12 @@ export default {
     }
   },
   created () {
+    this.timer = setTimeout(() => {
+      this.getInit()
+    }, 3000)
+  },
+  beforeDestroy() {
+    clearTimeout(this.timer)
   }
 }
 </script>

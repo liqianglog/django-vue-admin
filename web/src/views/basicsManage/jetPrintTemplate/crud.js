@@ -196,6 +196,13 @@ export const crudOptions = (vm) => {
           disabled: true
         },
         form: {
+          rules: [
+            {
+              required: true,
+              message: '必填项',
+              trigger: 'blur'
+            }
+          ],
           component: {
             props: {
               clearable: true

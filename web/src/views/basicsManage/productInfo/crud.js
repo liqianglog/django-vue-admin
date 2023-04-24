@@ -160,6 +160,63 @@ export const crudOptions = (vm) => {
         }
       },
       {
+        title: '关联客户',
+        key: 'customer_info',
+        type: 'selector-table',
+        minWidth: 120,
+        dict: {
+          cache: false, // 表单的dict可以禁用缓存
+          url: '/api/basics_manage/customer_info/',
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'name' // 数据字典中label字段的属性名
+        },
+        search: {
+          disabled: false,
+          key: 'customer_name',
+          component: {
+            name: 'el-input',
+            placeholder: '请输入客户'
+          }
+        },
+        form: {
+          rules: [
+            {
+              required: true,
+              message: '必填项',
+              trigger: 'blur'
+            }
+          ],
+          component: {
+            span: 24,
+            placeholder: '请选择客户',
+            elProps: {
+              tableConfig: {
+                pagination: true,
+                multiple: false,
+                columns: [
+                  {
+                    prop: 'id',
+                    label: '编号'
+                  },
+                  {
+                    prop: 'name',
+                    label: '客户名称'
+                  }
+                ]
+              }
+            }
+          },
+          itemProps: {
+            class: { yxtInput: true }
+          }
+        },
+        component: {
+          name: 'foreignKey',
+          valueBinding: 'customer_name',
+          props: { color: 'auto' }
+        } // 自动染色
+      },
+      {
         title: '状态',
         key: 'status',
         search: {

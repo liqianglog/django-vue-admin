@@ -16,7 +16,13 @@ export const crudOptions = (vm) => {
     rowHandle: {
       width: 200,
       fixed: 'right',
-      view: false,
+      view: {
+        thin: true,
+        text: '',
+        disabled () {
+          return !vm.hasPermissions('Retrieve')
+        }
+      },
       edit: false,
       remove: false,
       custom: [

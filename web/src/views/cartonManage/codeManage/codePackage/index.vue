@@ -44,6 +44,7 @@ import orderLog from './component/orderLog'
 import importLog from './component/importLog'
 import attrFieldForm from './component/attrFieldForm'
 import { request } from '@/api/service'
+import util from "@/libs/util";
 export default {
   name: 'codePackage',
   mixins: [d2CrudPlus.crud],
@@ -136,10 +137,10 @@ export default {
     handleDialogOpened ({ mode, form, template, groupTemplate }) {
       if (mode === 'add') {
         if (this.factoryInfo.length === 1) {
-          console.log(1111)
           template.factory_info.component.disabled = true
           form.factory_info = this.factoryInfo[0].id
         }
+        form.order_id = util.autoCreateCode()
       }
     }
   },
