@@ -14,7 +14,7 @@ export const crudOptions = (vm) => {
 
     },
     rowHandle: {
-      width: 200,
+      width: 260,
       fixed: 'right',
       view: {
         thin: true,
