@@ -94,9 +94,9 @@ class ProductionWorkViewSet(CustomModelViewSet):
         data = {
             "no": _ProductionWork.no,
             "code_package": _ProductionWork.code_package.no,
-            "product_name": _ProductionWork.code_package.product_name,
+            "product_name": _ProductionWork.code_package.product_info.name,
             "arrival_factory": _ProductionWork.code_package.arrival_factory,
-            "order_id": _ProductionWork.order_id,
+            "order_id": _ProductionWork.code_package.order_id,
             "status": _ProductionWork.status,
             "device_no": _ProductionWork.device.no,
             "production_line_name": _ProductionWork.production_line.name,

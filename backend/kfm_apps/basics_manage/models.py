@@ -119,7 +119,8 @@ class ProductInfo(CoreModel):
     name = models.CharField(max_length=50, help_text="产品名称", verbose_name="产品名称")
     img = models.CharField(max_length=255, verbose_name="产品图片", null=True, blank=True, help_text="产品图片")
     status = models.IntegerField(choices=STATUS_CHOICES, default=1, verbose_name="状态", help_text="状态")
-
+    customer_info = models.ForeignKey(CustomerInfo,db_constraint=False, related_name="product_customer",
+                                        on_delete=models.PROTECT, help_text="关联客户", verbose_name="关联客户")
     class Meta:
         db_table = table_prefix + "product_info"
         verbose_name = '产品管理'
