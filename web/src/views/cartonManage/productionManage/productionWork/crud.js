@@ -238,6 +238,7 @@ export const crudOptions = (vm) => {
           }
         },
         component: {
+          minWidth:300,
           name: 'foreignKey',
           valueBinding: 'code_package_no',
           props: { color: 'auto' }
