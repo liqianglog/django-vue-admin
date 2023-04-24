@@ -90,28 +90,6 @@ export const crudOptions = (vm) => {
         type: 'input'
       },
       {
-        title: '码类型',
-        key: 'code_type',
-        width: 120,
-        search: {
-          disabled: false,
-          component: {
-            placeholder: '请选择码类型',
-            props: {
-              clearable: true
-            }
-          }
-        },
-        type: 'select',
-        dict: {
-          data: [
-            { value: 0, label: '外码' },
-            { value: 1, label: '内码' },
-            { value: 2, label: '外码+内码' }
-          ]
-        }
-      },
-      {
         title: '校验码内容集合',
         key: 'code_list',
         minWidth: 270,
