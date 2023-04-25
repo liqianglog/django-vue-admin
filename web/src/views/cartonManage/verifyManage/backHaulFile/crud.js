@@ -97,28 +97,6 @@ export const crudOptions = (vm) => {
         }
       },
       {
-        title: '码类型',
-        key: 'code_type',
-        width: 100,
-        search: {
-          disabled: false,
-          component: {
-            placeholder: '请选择码类型',
-            props: {
-              clearable: true
-            }
-          }
-        },
-        type: 'select',
-        dict: {
-          data: [
-            { value: 0, label: '内码' },
-            { value: 1, label: '外码' },
-            { value: 2, label: '未知' }
-          ]
-        }
-      },
-      {
         title: '设备名称',
         key: 'device_name',
         minWidth: 120,

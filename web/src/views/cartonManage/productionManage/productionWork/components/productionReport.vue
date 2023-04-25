@@ -37,10 +37,6 @@
                 <br>
                 <el-row :gutter="20">
                   <el-col :span="8">
-                    <div class="title">码类型</div>
-                    <div class="content">{{ {0: '外码', 1: '内码', 2: '外码+内码'}[options.code_type] }}</div>
-                  </el-col>
-                  <el-col :span="8">
                     <div class="title">来源</div>
                     <div class="content">{{ options.source_label }}</div>
                   </el-col>

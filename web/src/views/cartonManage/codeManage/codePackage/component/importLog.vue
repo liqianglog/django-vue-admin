@@ -34,10 +34,6 @@
                 </el-row>
                 <br>
                 <el-row :gutter="20">
-<!--                  <el-col :span="8">-->
-<!--                    <div class="title">码类型</div>-->
-<!--                    <div class="content">{{ {0: '外码', 1: '内码', 2: '外码+内码'}[options.code_type] }}</div>-->
-<!--                  </el-col>-->
                   <el-col :span="8">
                     <div class="title">来源</div>
                     <div class="content">{{ options.source_label }}</div>
@@ -176,9 +172,6 @@
                   <tr v-for="(item,index) in objData.repetition_data" :key="index"
                       :style="{'border-bottom': objData.repetition_data.length === index+1 ?'none':''}">
                     <td width="260">{{ item.code_content }}</td>
-                    <td width="100" style="text-align: center;">
-                      <el-tag size="mini">{{ {0: '内码', 1: '外码'}[item.code_type] }}</el-tag>
-                    </td>
                     <td width="180" style="text-align: center">{{ formatDatetime(item.create_datetime) }}</td>
                     <td width="20" style="text-align: center"></td>
                   </tr>
@@ -213,7 +206,6 @@ export default {
       objData: {
         zip_name: null,
         total_number: null,
-        code_type: null,
         product_name: null,
         arrival_factory: null,
         import_start_datetime: null,
