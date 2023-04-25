@@ -15,8 +15,7 @@ class ProductionWorkVerifyRecordSerializer(CustomModelSerializer):
     生产校验记录-序列化器
     """
     production_work_no = serializers.CharField(source="production_work.no", read_only=True)
-    code_type = serializers.IntegerField(source="production_work.code_package.code_type", read_only=True)
-    order_id = serializers.CharField(source="production_work.order_id", read_only=True)
+    order_id = serializers.CharField(source="production_work.code_package.order_id", read_only=True)
     factory_info_name = serializers.CharField(source="production_work.factory_info.name", read_only=True)
     production_line_name = serializers.CharField(source="production_work.production_line.name", read_only=True)
     device_name = serializers.CharField(source="production_work.device.name", read_only=True)
