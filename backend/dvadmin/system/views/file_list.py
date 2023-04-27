@@ -27,7 +27,10 @@ class FileSerializer(CustomModelSerializer):
         file_size = file.size
         validated_data['name'] = file.name
         validated_data['size'] = file_size
-        validated_data['md5sum'] = hashlib.md5().hexdigest()
+        md5 = hashlib.md5()
+        for chunk in file.chunks():
+            md5.update(chunk)
+        validated_data['md5sum'] = md5.hexdigest()
         validated_data['engine'] = file_engine
         validated_data['mime_type'] = file.content_type
         if file_backup:
