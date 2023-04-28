@@ -12,7 +12,6 @@
 				:type="isShowPassword ? 'text' : 'password'"
 				:placeholder="$t('message.account.accountPlaceholder2')"
 				v-model="ruleForm.password"
-				autocomplete="off"
 			>
 				<template #prefix>
 					<el-icon class="el-input__icon"><ele-Unlock /></el-icon>
@@ -50,7 +49,7 @@
 			</el-col>
 		</el-form-item>
 		<el-form-item class="login-animation4">
-			<el-button type="primary" class="login-content-submit" round @click="loginClick" :loading="loading.signIn">
+			<el-button type="primary" class="login-content-submit" round @click.enter="loginClick" :loading="loading.signIn">
 				<span>{{ $t('message.account.accountBtnText') }}</span>
 			</el-button>
 		</el-form-item>
@@ -182,10 +181,10 @@ export default defineComponent({
 			getCaptcha();
 			//获取系统配置
 			SystemConfigStore().getSystemConfigs();
-			window.addEventListener('keyup', enterClickLogin, false);
+			// window.addEventListener('keyup', enterClickLogin, false);
 		});
 		onUnmounted(() => {
-			window.removeEventListener('keyup', enterClickLogin, false);
+			// window.removeEventListener('keyup', enterClickLogin, false);
 		});
 
 		return {

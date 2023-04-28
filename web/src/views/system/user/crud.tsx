@@ -21,7 +21,7 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 	};
 
 	//权限判定
-	const hasPermissions = inject('$hasPermissions');
+	const hasPermissions:any = inject('$hasPermissions');
 
 	return {
 		crudOptions: {
@@ -35,6 +35,14 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				addRequest,
 				editRequest,
 				delRequest,
+			},
+			actionbar: {
+				buttons: {
+					add: {
+						show: hasPermissions('user:Create')
+						// show:true
+					}
+				}
 			},
 			rowHandle: {
 				//固定右侧
