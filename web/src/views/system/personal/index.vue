@@ -84,9 +84,10 @@
 							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
 								<el-form-item label="性别">
 									<el-select v-model="state.personalForm.gender" placeholder="请选择性别" clearable class="w100">
-										<el-option label="男" :value="1"></el-option>
-										<el-option label="女" :value="0"></el-option>
-										<el-option label="保密" :value="2"></el-option>
+<!--										<el-option label="男" :value="1"></el-option>-->
+<!--										<el-option label="女" :value="0"></el-option>-->
+<!--										<el-option label="保密" :value="2"></el-option>-->
+                    <el-option v-for="(item,index) in genderList" :key="index" :label="item.label" :value="item.value"></el-option>
 									</el-select>
 								</el-form-item>
 							</el-col>
@@ -180,6 +181,7 @@ import { Session } from '/@/utils/storage';
 import { useRouter } from 'vue-router';
 import { useUserInfo } from '/@/stores/userInfo';
 import { successMessage } from '/@/utils/message';
+import {dictionary} from "/@/utils/dictionary";
 
 // 头像裁剪组件
 const avatarSelector = defineAsyncComponent(() => import('/@/components/avatarSelector/index.vue'));
@@ -226,12 +228,14 @@ const msgMore = () => {
 	route.push({ path: '/messageCenter' });
 };
 
+const genderList = ref();
 /**
  * 获取用户个人信息
  */
 const getUserInfo = function () {
 	api.GetUserInfo({}).then((res: any) => {
 		const { data } = res;
+    genderList.value = dictionary('gender')
 		state.personalForm.avatar = data.avatar || '';
 		state.personalForm.username = data.username || '';
 		state.personalForm.name = data.name || '';
