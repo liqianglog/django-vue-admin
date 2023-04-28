@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { get } from 'lodash-es';
-import { ElMessage, ElMessageBox } from 'element-plus'
-import type { Action } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus';
+import type { Action } from 'element-plus';
 
 // @ts-ignore
 import { errorLog, errorCreate } from './tools.ts';
@@ -9,6 +9,7 @@ import { errorLog, errorCreate } from './tools.ts';
 // import { useUserStore } from "../store/modules/user";
 import { Local, Session } from '/@/utils/storage';
 import qs from 'qs';
+import { getBaseURL } from './baseUrl';
 /**
  * @description 创建请求实例
  */
@@ -17,16 +18,19 @@ function createService() {
 	const service = axios.create({
 		timeout: 20000,
 		headers: {
-			'Content-Type': 'application/json;charset=utf-8'
+			'Content-Type': 'application/json;charset=utf-8',
 		},
 		paramsSerializer: {
 			serialize(params) {
-				return qs.stringify(params, {  indices: false,encoder: (val:string) => {
+				return qs.stringify(params, {
+					indices: false,
+					encoder: (val: string) => {
 						if (typeof val === 'boolean') {
 							return val ? 1 : 0;
 						}
 						return val;
-					} });
+					},
+				});
 			},
 		},
 	});
@@ -76,7 +80,7 @@ function createService() {
 							callback: (action: Action) => {
 								window.location.reload();
 							},
-						})
+						});
 						errorCreate(`${dataAxios.msg}: ${response.config.url}`);
 						break;
 					case 2000:
@@ -108,7 +112,7 @@ function createService() {
 						callback: (action: Action) => {
 							window.location.reload();
 						},
-					})
+					});
 					break;
 				case 403:
 					error.message = '拒绝访问';
@@ -162,7 +166,7 @@ function createRequestFunction(service: any) {
 				'Content-Type': get(config, 'headers.Content-Type', 'application/json'),
 			},
 			timeout: 5000,
-			baseURL: import.meta.env.VITE_API_URL as any,
+			baseURL: getBaseURL(),
 			data: {},
 		};
 

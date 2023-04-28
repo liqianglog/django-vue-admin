@@ -1,5 +1,5 @@
 import { defineAsyncComponent, AsyncComponentLoader } from 'vue';
-
+export let pluginsAll: any = [];
 // 扫描插件目录并注册插件
 export const scanAndInstallPlugins = (app: any) => {
 	const components = import.meta.glob('./**/*.vue');
@@ -11,5 +11,6 @@ export const scanAndInstallPlugins = (app: any) => {
 		const pluginsName = key.match(/\/([^\/]*)\//)?.[1];
 		pluginNames.add(pluginsName);
 	}
-	console.log('已发现插件：', Array.from(pluginNames));
+	pluginsAll = Array.from(pluginNames);
+	console.log('已发现插件：', pluginsAll);
 };
