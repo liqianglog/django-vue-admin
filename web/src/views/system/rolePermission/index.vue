@@ -323,7 +323,8 @@ const onSaveButtonForm = async () => {
   await buttonFormRef.value.validate((valid, fields) => {
     if (valid) {
       api.CreatePermission(form).then((res: any) => {
-        buttonPermissionData.value.push(form)
+        const {data} = res
+        buttonPermissionData.value.push(data)
         dialogFormVisible.value = false
         ElMessage({
           type: 'success',
@@ -353,7 +354,7 @@ const onDeleteBtn = (scope: any) => {
         type: 'warning',
       }
   ).then(() => {
-    api.DeletePermission({id: row.id}).then(res => {
+    api.DeletePermission({id: row.id}).then((res:any) => {
       buttonPermissionData.value.splice($index, 1)
       ElMessage({
         type: 'success',
