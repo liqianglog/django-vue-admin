@@ -7,7 +7,7 @@ import { setLogger } from '@fast-crud/fast-crud';
 import ui from '@fast-crud/ui-element';
 import { request } from '/@/utils/service';
 //扩展包
-import { FsExtendsEditor } from '@fast-crud/fast-extends';
+import { FsExtendsEditor,FsExtendsUploader } from '@fast-crud/fast-extends';
 import '@fast-crud/fast-extends/dist/style.css';
 import { successMessage, successNotification } from '/@/utils/message';
 export default {
@@ -19,7 +19,10 @@ export default {
 			//i18n, //i18n配置，可选，默认使用中文，具体用法请看demo里的 src/i18n/index.js 文件
 			// 此处配置公共的dictRequest（字典请求）
 			async dictRequest({ dict }: any) {
-				return await request({ url: dict.url, params: dict.params || {} }); //根据dict的url，异步返回一个字典数组
+				//根据dict的url，异步返回一个字典数组
+				return await request({ url: dict.url, params: dict.params || {} }).then((res:any)=>{
+					return res.data
+				});
 			},
 			//公共crud配置
 			commonOptions() {
@@ -72,6 +75,39 @@ export default {
 				width: 300,
 			},
 		});
+		// 文件上传
+		app.use(FsExtendsUploader, {
+			defaultType: "form",
+			form: {
+				action: `/api/system/file/`,
+				name: "file",
+				withCredentials: false,
+				uploadRequest: async ({ action, file, onProgress }) => {
+					// @ts-ignore
+					const data = new FormData();
+					data.append("file", file);
+					return await request({
+						url: action,
+						method: "post",
+						timeout: 60000,
+						headers: {
+							"Content-Type": "multipart/form-data"
+						},
+						data,
+						onUploadProgress: (p) => {
+							onProgress({ percent: Math.round((p.loaded / p.total) * 100) });
+						}
+					});
+				},
+				successHandle(ret) {
+					// 上传完成后的结果处理， 此处应返回格式为{url:xxx,key:xxx}
+					return {
+						url: getBaseURL() + ret.data.url,
+						key: ret.data.id
+					};
+				}
+			}
+		})
 		setLogger({ level: 'error' });
 		// 设置自动染色
 		const dictComponentList = ['dict-cascader', 'dict-checkbox', 'dict-radio', 'dict-select', 'dict-switch', 'dict-tree'];
