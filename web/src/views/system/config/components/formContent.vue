@@ -85,6 +85,7 @@
               :key="index + 6"
               v-else-if="item.form_item_type_label === 'switch'"
               v-model="formData[item.key]"
+              :inactive-value="false"
               active-color="#13ce66"
               inactive-color="#ff4949"
           >
@@ -296,7 +297,7 @@ const getInit = () => {
         if ([5, 12, 14].indexOf(item.form_item_type) !== -1) {
           _formData[key] = [];
         } else {
-          _formData[key] = undefined;
+          _formData[key] = item.value;
         }
       }
       if (item.form_item_type_label === 'array') {
