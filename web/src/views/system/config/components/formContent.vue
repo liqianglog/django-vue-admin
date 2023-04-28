@@ -275,7 +275,7 @@ const validRules = reactive<FormRules>({
   ],
 });
 const formRef =  ref<FormInstance>()
-let uploadUrl = ref(getBaseURL + 'api/system/file/');
+let uploadUrl = ref(getBaseURL() + 'api/system/file/');
 let uploadHeaders = ref({
   Authorization: 'JWT ' + Session.get('token'),
 });

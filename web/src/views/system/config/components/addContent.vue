@@ -40,7 +40,7 @@
 				<el-input-number v-model="form.sort" :min="0" :max="99"></el-input-number>
 			</el-form-item>
 			<el-form-item>
-				<el-button type="primary" @click="onSubmit">立即创建</el-button>
+				<el-button type="primary" @click="onSubmit(formRef)">立即创建</el-button>
 			</el-form-item>
 		</el-form>
 	</div>
@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import * as api from '../api';
 import associationTable from './components/associationTable.vue';
-import { ref, reactive, onMounted } from 'vue';
+import {ref, reactive, onMounted, inject} from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { successMessage } from '/@/utils/message';
 import { dictionary } from '/@/utils/dictionary';
@@ -118,12 +118,17 @@ const getParent = () => {
 			parentOptions.value = res.data;
 		});
 };
+
+const refreshView:any = inject('refreshView')
 const onSubmit = async (formEl: FormInstance | undefined) => {
 	if (!formEl) return;
 	await formEl.validate((valid, fields) => {
 		if (valid) {
 			api.AddObj(form).then((res: any) => {
-				if (res.code == 2000) successMessage('新增成功');
+				if (res.code == 2000) {
+          successMessage('新增成功');
+          refreshView()
+        }
 			});
 		} else {
 			console.log('error submit!', fields);

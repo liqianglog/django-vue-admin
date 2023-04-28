@@ -17,9 +17,10 @@
 
 <script setup lang="ts">
 import * as api from '../api';
-import { ref, reactive } from 'vue';
+import {ref, reactive, inject} from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { successMessage } from '/@/utils/message';
+
 let form = reactive({
 	title: null,
 	key: null,
@@ -43,12 +44,19 @@ const rules = reactive<FormRules>({
 		},
 	],
 });
+
+
+const refreshView:any = inject('refreshView')
 const onSubmit = async (formEl: FormInstance | undefined) => {
 	if (!formEl) return;
 	await formEl.validate((valid, fields) => {
 		if (valid) {
 			api.AddObj(form).then((res: any) => {
-				if (res.code == 2000) successMessage('新增成功');
+				if (res.code == 2000) {
+          successMessage('新增成功');
+          refreshView()
+        }
+
 			});
 		} else {
 			console.log('error submit!', fields);
