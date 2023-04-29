@@ -21,18 +21,21 @@ class FileSerializer(CustomModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
-        file_engine = dispatch.get_system_config_values("fileStorageConfig.file_engine")
+        file_engine = dispatch.get_system_config_values("fileStorageConfig.file_engine") or 'local'
         file_backup = dispatch.get_system_config_values("fileStorageConfig.file_backup")
         file = self.initial_data.get('file')
         file_size = file.size
         validated_data['name'] = file.name
         validated_data['size'] = file_size
-        validated_data['md5sum'] = hashlib.md5().hexdigest()
+        md5 = hashlib.md5()
+        for chunk in file.chunks():
+            md5.update(chunk)
+        validated_data['md5sum'] = md5.hexdigest()
         validated_data['engine'] = file_engine
         validated_data['mime_type'] = file.content_type
         if file_backup:
             validated_data['url'] = file
-        if file_engine =='oss':
+        if file_engine == 'oss':
             from dvadmin_cloud_storage.views.aliyun import ali_oss_upload
             file_path = ali_oss_upload(file)
             if file_path:
