@@ -16,7 +16,12 @@ import { request } from '/@/utils/service';
 //此处为crudOptions配置
 export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOptionsProps): CreateCrudOptionsRet {
 	const pageRequest = async (query: UserPageQuery) => {
-		return await api.GetList({ menu: context!.selectOptions.value.id } as any);
+		if(context!.selectOptions.value.id){
+			return await api.GetList({ menu: context!.selectOptions.value.id } as any);
+		}else{
+			return undefined
+		}
+
 	};
 	const editRequest = async ({ form, row }: EditReq) => {
 		form.id = row.id;

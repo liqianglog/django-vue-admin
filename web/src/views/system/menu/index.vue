@@ -27,83 +27,59 @@
 					</el-tree>
 				</el-card>
 			</el-col>
-			<el-col :span="20" class="p-1">
+			<el-col :span="6" class="p-1">
 				<el-card :body-style="{ height: '100%' }">
 					<el-form ref="formRef" :rules="rules" :model="form" label-width="80px" label-position="right">
 						<el-alert :title="content" type="success" effect="dark" :closable="false" center />
 						<el-divider>
 							<strong>菜单配置</strong>
 						</el-divider>
-						<el-row>
-							<el-col :span="10">
 								<el-form-item label="菜单ID" prop="id"> <el-input v-model="form.id" disabled />
 								</el-form-item>
-							</el-col>
-							<el-col :span="10">
 								<el-form-item label="父级ID" prop="parent"> <el-input v-model="form.parent" /> </el-form-item>
-							</el-col>
-							<el-col :span="10">
 								<el-form-item required label="菜单名称" prop="name"> <el-input v-model="form.name" />
 								</el-form-item>
-							</el-col>
-							<el-col :span="10">
 								<el-form-item label="组件地址" prop="component">
 									<el-autocomplete class="w-full" v-model="form.component"
 										:fetch-suggestions="querySearch" :trigger-on-focus="false" clearable debounce="100"
 										placeholder="输入组件地址" />
 								</el-form-item>
-							</el-col>
-							<el-col :span="10">
 								<el-form-item required label="Url" prop="web_path"> <el-input v-model="form.web_path" />
 								</el-form-item>
-							</el-col>
-							<el-col :span="10">
 								<el-form-item label="排序" prop="sort">
 									<el-input-number v-model="form.sort" controls-position="right" />
 								</el-form-item>
-							</el-col>
-							<el-col :span="10">
 								<el-form-item label="状态">
 									<el-radio-group v-model="form.status">
 										<el-radio :label="true">启用</el-radio>
 										<el-radio :label="false">禁用</el-radio>
 									</el-radio-group>
 								</el-form-item>
-							</el-col>
-							<el-col :span="10">
 								<el-form-item label="侧边可见">
 									<el-radio-group v-model="form.visible">
 										<el-radio :label="true">启用</el-radio>
 										<el-radio :label="false">禁用</el-radio>
 									</el-radio-group>
 								</el-form-item>
-							</el-col>
-
-							<el-col :span="20">
 								<el-form-item label="图标" prop="icon">
 									<IconSelector clearable v-model="form.icon" />
 								</el-form-item>
-							</el-col>
-							<el-col class="center">
-								<el-divider>
-									<el-button @click="saveMenu()" type="primary" round>保存</el-button>
-									<el-button @click="newMenu()" type="success" round>新建</el-button>
-									<el-button @click="addChildMenu()" type="info" round>添加子级</el-button>
-									<el-button @click="addSameLevelMenu()" type="warning" round>添加同级</el-button>
-									<el-button @click="deleteMenu()" type="danger" round>删除菜单</el-button>
-								</el-divider>
-							</el-col>
-						</el-row>
-						<el-row>
-							<el-col class="h-full">
-								<el-card :body-style="{ height: '100%' }" class="mt-10">
-									<menuButton :select-menu="form" />
-								</el-card>
-							</el-col>
-						</el-row>
 					</el-form>
+          <el-divider></el-divider>
+          <div>
+            <el-button @click="saveMenu()" type="primary" round>保存</el-button>
+            <el-button @click="newMenu()" type="success" round :disabled="!form.id">新建</el-button>
+            <el-button @click="addChildMenu()" type="warning" round :disabled="!form.id">添加子级</el-button>
+<!--            <el-button @click="addSameLevelMenu()" type="warning" round>添加同级</el-button>-->
+            <el-button @click="deleteMenu()" type="danger" round :disabled="!form.id">删除菜单</el-button>
+          </div>
 				</el-card>
 			</el-col>
+    <el-col :span="14" class="p-1">
+      <el-card :body-style="{ height: '100%' }" >
+        <menuButton :select-menu="form" />
+      </el-card>
+    </el-col>
 		</el-row>
 	</fs-page>
 </template>
@@ -111,7 +87,7 @@
 <script lang="ts" setup>
 import * as api from './api';
 import * as menuButoonApi from './components/menuButton/api';
-import { ElForm, ElTree, FormRules } from 'element-plus';
+import { ElForm, ElTree, FormRules,ElMessageBox } from 'element-plus';
 import { ref, onMounted, watch, reactive, toRaw, defineAsyncComponent, nextTick, shallowRef } from 'vue';
 import XEUtils from 'xe-utils';
 import { errorMessage, successMessage } from '../../../utils/message';
@@ -340,10 +316,21 @@ const addSameLevelMenu = () => {
 };
 
 const deleteMenu = () => {
-	api.DelObj(form).then((res: APIResponseData) => {
-		successMessage(res.msg as string);
-		getData();
-	});
+  ElMessageBox.confirm(
+      '您确认删除该菜单项吗?',
+      '温馨提示',
+      {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  ).then(() => {
+        api.DelObj(form).then((res: APIResponseData) => {
+          successMessage(res.msg as string);
+          getData();
+        });
+      })
+
 };
 
 const handleNodeClick = (data: any, node: any, prop: any) => {
@@ -355,7 +342,7 @@ const handleNodeClick = (data: any, node: any, prop: any) => {
 	isAddNewMenu.value = false;
 
 	// 点击tree node时，加载对应的权限菜单
-	getPermissions({ menu: form.id });
+	// getPermissions({ menu: form.id });
 };
 
 const addPermission = () => {

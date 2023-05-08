@@ -14,7 +14,15 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 		return await api.DelObj(row.id);
 	};
 	const addRequest = async ({ form }: AddReq) => {
-		return await api.AddObj(form);
+		const data = crudExpose.getSearchFormData()
+		const parent = data.parent
+		form.parent = parent
+		if(parent){
+			return await api.AddObj(form);
+		}else{
+			return undefined
+		}
+
 	};
 
 	return {

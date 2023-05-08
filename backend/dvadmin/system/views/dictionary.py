@@ -34,6 +34,19 @@ class DictionaryCreateUpdateSerializer(CustomModelSerializer):
     """
     字典管理 创建/更新时的列化器
     """
+    value = serializers.CharField(max_length=100)
+
+    def validate_value(self, value):
+        """
+        在父级的字典编号验证重复性
+        """
+        initial_data = self.initial_data
+        parent = initial_data.get('parent',None)
+        if parent is None:
+            unique =  Dictionary.objects.filter(value=value).exists()
+            if unique:
+                raise serializers.ValidationError("字典编号不能重复")
+        return value
 
     class Meta:
         model = Dictionary
@@ -51,20 +64,24 @@ class DictionaryViewSet(CustomModelViewSet):
     """
     queryset = Dictionary.objects.all()
     serializer_class = DictionarySerializer
+    create_serializer_class = DictionaryCreateUpdateSerializer
     extra_filter_class = []
     search_fields = ['label']
 
     def get_queryset(self):
-        params = self.request.query_params
-        parent = params.get('parent', None)
-        if params:
-            if parent:
-                queryset = self.queryset.filter(status=1, parent=parent)
+        if self.action =='list':
+            params = self.request.query_params
+            parent = params.get('parent', None)
+            if params:
+                if parent:
+                    queryset = self.queryset.filter(parent=parent)
+                else:
+                    queryset = self.queryset.filter(parent__isnull=True)
             else:
-                queryset = self.queryset.filter(status=1, parent__isnull=True)
+                queryset = self.queryset.filter(parent__isnull=True)
+            return queryset
         else:
-            queryset = self.queryset.filter(status=1, parent__isnull=True)
-        return queryset
+            return self.queryset
 
 
 class InitDictionaryViewSet(APIView):

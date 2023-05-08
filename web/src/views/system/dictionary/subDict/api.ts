@@ -11,7 +11,7 @@ export function GetList(query: UserPageQuery) {
 }
 export function GetObj(id: InfoReq) {
 	return request({
-		url: apiPrefix + id,
+		url: apiPrefix + id+'/',
 		method: 'get',
 	});
 }
@@ -36,6 +36,6 @@ export function DelObj(id: DelReq) {
 	return request({
 		url: apiPrefix + id + '/',
 		method: 'delete',
-		data: { id },
+		data: { },
 	});
 }

@@ -84,7 +84,7 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 					title: '序号',
 					form: { show: false },
 					column: {
-						//type: 'index',
+						type: 'index',
 						align: 'center',
 						width: '70px',
 						columnSetDisabled: true, //禁止在列设置中选择

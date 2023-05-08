@@ -11,16 +11,19 @@ let selectOptions: any = ref({ name: null });
 const props = defineProps<{
 	selectMenu: object;
 }>();
+const { crudRef, crudBinding, crudExpose, context } = useFs({ createCrudOptions, context: { selectOptions } });
+const { doRefresh,setTableData } = crudExpose;
 
 watch(props.selectMenu, (val: any) => {
-	if (!val.is_catalog) {
+	if (!val.is_catalog && val.id) {
 		selectOptions.value = val;
 		doRefresh();
-	}
+	}else{
+    //清空表格数据
+    setTableData([])
+  }
 });
 
-const { crudRef, crudBinding, crudExpose, context } = useFs({ createCrudOptions, context: { selectOptions } });
-const { doRefresh } = crudExpose;
 
 defineExpose({ selectOptions });
 </script>

@@ -63,10 +63,10 @@
 							<el-col class="center">
 								<el-divider>
 									<el-button @click="saveMenu()" type="primary" round>保存</el-button>
-									<el-button @click="newMenu()" type="success" round>新建</el-button>
-									<el-button @click="addChildMenu()" type="info" round>添加子级</el-button>
-									<el-button @click="addSameLevelMenu()" type="warning" round>添加同级</el-button>
-									<el-button @click="deleteMenu()" type="danger" round>删除部门</el-button>
+									<el-button @click="newMenu()" type="success" round :disabled="!form.id">新建</el-button>
+									<el-button @click="addChildMenu()" type="info" round :disabled="!form.id">添加子级</el-button>
+									<el-button @click="addSameLevelMenu()" type="warning" round :disabled="!form.id">添加同级</el-button>
+									<el-button @click="deleteMenu()" type="danger" round :disabled="!form.id">删除部门</el-button>
 								</el-divider>
 							</el-col>
 						</el-row>
@@ -79,7 +79,7 @@
 
 <script lang="ts" setup>
 import * as api from './api';
-import { ElForm, ElTree, FormRules } from 'element-plus';
+import {ElForm, ElMessageBox, ElTree, FormRules} from 'element-plus';
 import { ref, onMounted, reactive, toRaw, watch } from 'vue';
 import XEUtils from 'xe-utils';
 import { errorMessage, successMessage } from '../../../utils/message';
@@ -175,7 +175,6 @@ const formRef = ref<InstanceType<typeof ElForm>>();
 
 const rules = reactive<FormRules>({
 	// @ts-ignore
-	parent: [{ required: true, message: '父级部门名称必填', trigger: 'blur' }],
 	name: [{ required: true, message: '部门名称必填', trigger: 'blur' }],
 	key: [{ required: true, message: '部门标识必填', trigger: 'blur' }],
 });
@@ -236,10 +235,21 @@ const addSameLevelMenu = () => {
 };
 
 const deleteMenu = () => {
-	api.DelObj(form).then((res: APIResponseData) => {
-		successMessage(res.msg as string);
-		getData();
-	});
+  ElMessageBox.confirm(
+      '您确认删除该菜单项吗?',
+      '温馨提示',
+      {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  ).then(() => {
+    api.DelObj(form).then((res: APIResponseData) => {
+      successMessage(res.msg as string);
+      getData();
+    });
+  })
+
 };
 
 const handleNodeClick = (data: any, node: any, prop: any) => {
