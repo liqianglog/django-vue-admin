@@ -1,4 +1,4 @@
-import { request } from '/@/utils/service';
+import { request,downloadFile } from '/@/utils/service';
 import { PageQuery, AddReq, DelReq, EditReq, InfoReq } from '@fast-crud/fast-crud';
 
 export const apiPrefix = '/api/system/user/';
@@ -47,4 +47,12 @@ export function DelObj(id: DelReq) {
         method: 'delete',
         data: { id },
     });
+}
+
+export function exportData(params:any){
+    return downloadFile({
+        url: apiPrefix + 'export_data/',
+        params: params,
+        method: 'get'
+    })
 }

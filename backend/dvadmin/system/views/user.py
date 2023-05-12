@@ -196,10 +196,11 @@ class ExportUserProfileSerializer(CustomModelSerializer):
 
 
 class UserProfileImportSerializer(CustomModelSerializer):
+    password = serializers.CharField(read_only=True, required=False)
     def save(self, **kwargs):
         data = super().save(**kwargs)
         password = hashlib.new(
-            "md5", str(self.initial_data.get("password", "")).encode(encoding="UTF-8")
+            "md5", str(self.initial_data.get("password", "admin123456")).encode(encoding="UTF-8")
         ).hexdigest()
         data.set_password(password)
         data.save()
@@ -264,7 +265,6 @@ class UserViewSet(CustomModelViewSet):
                 "data": {"启用": True, "禁用": False},
             }
         },
-        "password": "登录密码",
         "dept": {"title": "部门", "choices": {"queryset": Dept.objects.filter(status=True), "values_name": "name"}},
         "role": {"title": "角色", "choices": {"queryset": Role.objects.filter(status=True), "values_name": "name"}},
     }

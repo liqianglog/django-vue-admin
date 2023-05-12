@@ -30,10 +30,15 @@
 			</el-col>
 			<el-col xs="24" :sm="16" :md="18" :lg="20" :xl="20" class="p-1">
 				<el-card :body-style="{ height: '100%' }">
-					<fs-crud ref="crudRef" v-bind="crudBinding"></fs-crud>
+					<fs-crud ref="crudRef" v-bind="crudBinding">
+            <template #actionbar-right>
+              <importExcel  api="api/system/user/" >导入 </importExcel>
+            </template>
+          </fs-crud>
 				</el-card>
 			</el-col>
 		</el-row>
+
 	</fs-page>
 </template>
 
@@ -42,11 +47,9 @@ import { useExpose, useCrud } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
 import * as api from './api';
 import { ElTree } from 'element-plus';
-import { ref, onMounted, watch, toRaw, defineAsyncComponent } from 'vue';
+import { ref, onMounted, watch, toRaw } from 'vue';
 import XEUtils from 'xe-utils';
-import { errorMessage, successMessage } from '../../../utils/message';
-import { GetDept } from './api';
-import { dictionary } from '/@/utils/dictionary';
+import importExcel from '/@/components/importExcel/index.vue'
 
 interface Tree {
 	id: number;

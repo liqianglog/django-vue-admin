@@ -90,6 +90,9 @@ function createService() {
 							return dataAxios;
 						}
 						return dataAxios;
+					case 4000:
+						errorCreate(`${dataAxios.msg}: ${response.config.url}`);
+						return Promise.reject(dataAxios.msg);
 					default:
 						// 不是正确的 code
 						errorCreate(`${dataAxios.msg}: ${response.config.url}`);
@@ -187,3 +190,34 @@ export const request = createRequestFunction(service);
 // 用于模拟网络请求的实例和请求方法
 export const serviceForMock = createService();
 export const requestForMock = createRequestFunction(serviceForMock);
+
+/**
+ * 下载文件
+ * @param url
+ * @param params
+ * @param method
+ * @param filename
+ */
+export const downloadFile = function ({url,params,method,filename = '文件导出'}:any) {
+	request({
+		url: url,
+		method: method,
+		params: params,
+		responseType: 'blob'
+		// headers: {Accept: 'application/vnd.openxmlformats-officedocument'}
+	}).then((res:any) => {
+		const xlsxName = window.decodeURI(res.headers['content-disposition'].split('=')[1])
+		const fileName = xlsxName || `${filename}.xlsx`
+		if (res) {
+			const blob = new Blob([res.data], { type: 'charset=utf-8' })
+			const elink = document.createElement('a')
+			elink.download = fileName
+			elink.style.display = 'none'
+			elink.href = URL.createObjectURL(blob)
+			document.body.appendChild(elink)
+			elink.click()
+			URL.revokeObjectURL(elink.href) // 释放URL 对象0
+			document.body.removeChild(elink)
+		}
+	})
+}

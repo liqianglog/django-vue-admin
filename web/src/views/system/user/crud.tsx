@@ -20,6 +20,10 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 		return await api.AddObj(form);
 	};
 
+	const exportRequest = async (query: UserPageQuery) => {
+		return await api.exportData(query)
+	}
+
 	//权限判定
 	const hasPermissions:any = inject('$hasPermissions');
 
@@ -41,6 +45,13 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 					add: {
 						show: hasPermissions('user:Create')
 						// show:true
+					},
+					export:{
+						text:"导出",//按钮文字
+						title:"导出",//鼠标停留显示的信息
+						click(){
+							return exportRequest(crudExpose.getSearchFormData())
+						}
 					}
 				}
 			},
