@@ -24,7 +24,7 @@
               style="width: 150px; height: 150px"
               :src="formatImgUrl(item.url)"
               :zoom-rate="1.2"
-              :preview-src-list="[item.url]"
+              :preview-src-list="[formatImgUrl(item.url)]"
               :initial-index="4"
               fit="fill"
           />
@@ -80,7 +80,7 @@
 </template>
 
 <script lang="ts" setup>
-import {DelObj, GetList, GetMimeType} from "./api";
+import {DelObj, GetList} from "./api";
 import {ref, onMounted,reactive} from "vue";
 import {getBaseURL} from "/@/utils/baseUrl";
 import {ElMessage} from "element-plus";
@@ -108,12 +108,6 @@ const getData = function () {
   })
 }
 
-const getMimeType = function () {
-  GetMimeType().then((res: any) => {
-    const {data} = res
-    mimeType.value = data
-  })
-}
 
 const onDel = function (item: any) {
   DelObj(item.id).then((res: any) => {
@@ -137,7 +131,6 @@ const handleCurrentChange = function (val: any) {
 
 onMounted(() => {
   getData()
-  getMimeType()
 })
 </script>
 <style scoped>
