@@ -289,8 +289,7 @@ class Dictionary(CoreModel):
         (7, "images"),
     )
     label = models.CharField(max_length=100, blank=True, null=True, verbose_name="字典名称", help_text="字典名称")
-    value = models.CharField(max_length=200, blank=True, null=True, verbose_name="字典编号",
-                             help_text="字典编号/实际值")
+    value = models.CharField(max_length=200, blank=True, null=True, verbose_name="字典编号",help_text="字典编号/实际值")
     parent = models.ForeignKey(
         to="self",
         related_name="sublist",
@@ -359,7 +358,11 @@ def media_file_name(instance, filename):
 
 class FileList(CoreModel):
     name = models.CharField(max_length=200, null=True, blank=True, verbose_name="名称", help_text="名称")
-    url = models.FileField(upload_to=media_file_name)
+    url = models.FileField(upload_to=media_file_name, null=True, blank=True,)
+    file_url = models.CharField(max_length=255, blank=True, verbose_name="文件地址", help_text="文件地址")
+    engine = models.CharField(max_length=100, default='local', blank=True, verbose_name="引擎", help_text="引擎")
+    mime_type = models.CharField(max_length=100, blank=True, verbose_name="Mime类型", help_text="Mime类型")
+    size = models.CharField(max_length=36, blank=True, verbose_name="文件大小", help_text="文件大小")
     md5sum = models.CharField(max_length=36, blank=True, verbose_name="文件md5", help_text="文件md5")
 
     def save(self, *args, **kwargs):
@@ -368,6 +371,11 @@ class FileList(CoreModel):
             for chunk in self.url.chunks():
                 md5.update(chunk)
             self.md5sum = md5.hexdigest()
+        if not self.size:
+            self.size = self.url.size
+        if not self.file_url:
+            url = media_file_name(self,self.name)
+            self.file_url = f'media/{url}'
         super(FileList, self).save(*args, **kwargs)
 
     class Meta:
