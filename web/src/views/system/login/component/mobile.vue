@@ -1,7 +1,7 @@
 <template>
 	<el-form size="large" class="login-content-form">
 		<el-form-item class="login-animation1">
-			<el-input type="text" :placeholder="$t('message.mobile.placeholder1')" v-model="ruleForm.userName" clearable autocomplete="off">
+			<el-input type="text" :placeholder="$t('message.mobile.placeholder1')" v-model="ruleForm.username" clearable autocomplete="off">
 				<template #prefix>
 					<i class="iconfont icon-dianhua el-input__icon"></i>
 				</template>
@@ -34,13 +34,13 @@ import { toRefs, reactive, defineComponent } from 'vue';
 
 // 定义接口来定义对象的类型
 interface LoginMobileState {
-	userName: any;
+	username: any;
 	code: string | number | undefined;
 }
 
 // 定义对象与类型
 const ruleForm: LoginMobileState = {
-	userName: '',
+	username: '',
 	code: '',
 };
 

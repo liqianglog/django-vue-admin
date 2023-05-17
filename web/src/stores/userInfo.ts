@@ -10,7 +10,7 @@ export const useUserInfo = defineStore('userInfo', {
 	state: (): UserInfosStates => ({
 		userInfos: {
 			avatar: '',
-			userName: '',
+			username: '',
 			name: '',
 			email: '',
 			mobile: '',
@@ -30,7 +30,7 @@ export const useUserInfo = defineStore('userInfo', {
 	actions: {
 		async updateUserInfos() {
 			let userInfos: any = await this.getApiUserInfo();
-			this.userInfos.userName = userInfos.data.name;
+			this.userInfos.username = userInfos.data.name;
 			this.userInfos.avatar = userInfos.data.avatar;
 			this.userInfos.name = userInfos.data.name;
 			this.userInfos.email = userInfos.data.email;
@@ -46,7 +46,7 @@ export const useUserInfo = defineStore('userInfo', {
 				this.userInfos = Session.get('userInfo');
 			} else {
 				let userInfos: any = await this.getApiUserInfo();
-				this.userInfos.userName = userInfos.data.name;
+				this.userInfos.username = userInfos.data.name;
 				this.userInfos.avatar = userInfos.data.avatar;
 				this.userInfos.name = userInfos.data.name;
 				this.userInfos.email = userInfos.data.email;

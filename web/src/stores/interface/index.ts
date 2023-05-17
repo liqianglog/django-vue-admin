@@ -6,7 +6,7 @@
 // 用户信息
 export interface UserInfosState {
 	avatar: string;
-	userName: string;
+	username: string;
 	name: string;
 	email: string;
 	mobile: string;

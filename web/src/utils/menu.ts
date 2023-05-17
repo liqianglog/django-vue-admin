@@ -45,6 +45,5 @@ export const handleMenu = (menuData: Array<any>) => {
         },
         ...data
     ]
-    console.log(menu)
     return menu
 }
