@@ -23,7 +23,7 @@ export const createCrudOptions = function ({crudExpose, context}: CreateCrudOpti
         return await api.DelObj(row.id);
     };
     const addRequest = async ({form}: AddReq) => {
-        const data = crudExpose.getSearchFormData()
+        const data = crudExpose!.getSearchFormData()
         const parent = data.parent
         form.parent = parent
         if (parent) {

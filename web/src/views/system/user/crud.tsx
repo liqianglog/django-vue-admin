@@ -50,7 +50,7 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						text:"导出",//按钮文字
 						title:"导出",//鼠标停留显示的信息
 						click(){
-							return exportRequest(crudExpose.getSearchFormData())
+							return exportRequest(crudExpose!.getSearchFormData())
 						}
 					}
 				}
@@ -58,7 +58,7 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 			rowHandle: {
 				//固定右侧
 				fixed: 'right',
-				width: 140,
+				width: 200,
 				buttons: {
 					view: {
 						show: false,
@@ -72,6 +72,19 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						iconRight: 'Delete',
 						type: 'text',
 						show: hasPermissions('user:Delete'),
+					},
+                    custom: {
+						text: '重设密码',
+						type: 'text',
+						show: hasPermissions('user:ResetPassword'),
+						tooltip: {
+							placement: 'top',
+							content: '重设密码',
+						},
+						//@ts-ignore
+						click: (ctx: any) => {
+							const { row } = ctx;
+						},
 					},
 				},
 			},
