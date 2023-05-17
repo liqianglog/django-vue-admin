@@ -1,7 +1,7 @@
 <template>
     <fs-page>
         <splitpanes>
-            <pane max-size="20" min-size="16" >
+            <pane max-size="20" min-size="16">
                 <el-card :body-style="{ height: '100%' }">
                     <p class="font-mono font-black text-center text-xl pb-5">
                         菜单列表
@@ -29,7 +29,7 @@
                     </el-tree>
                 </el-card>
             </pane>
-            <pane min-size="30" >
+            <pane min-size="30">
                 <el-card :body-style="{ height: '100%' }">
                     <el-form ref="formRef" :rules="rules" :model="form" label-width="80px"
                              label-position="right">
@@ -96,13 +96,13 @@
     </fs-page>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="menu">
 import {Splitpanes, Pane} from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
 import * as api from './api';
 import * as menuButoonApi from './components/menuButton/api';
 import {ElForm, ElTree, FormRules, ElMessageBox} from 'element-plus';
-import {ref, onMounted, watch, reactive, toRaw, defineAsyncComponent, nextTick, shallowRef} from 'vue';
+import {ref, onMounted, watch, reactive, toRaw, defineAsyncComponent, nextTick, shallowRef, onActivated} from 'vue';
 import XEUtils from 'xe-utils';
 import {errorMessage, successMessage} from '../../../utils/message';
 
@@ -369,6 +369,9 @@ const drawerClose = () => {
 // 页面打开后获取列表数据
 onMounted(() => {
     getData();
+});
+onActivated(() => {
+    console.log('keep-alive成功')
 });
 </script>
 

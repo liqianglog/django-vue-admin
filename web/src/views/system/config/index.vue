@@ -39,7 +39,7 @@
 	</el-card>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="config">
 import { Edit, FolderAdd } from '@element-plus/icons-vue';
 import * as api from './api';
 import addTabs from './components/addTabs.vue';

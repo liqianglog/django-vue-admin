@@ -5,7 +5,7 @@
 	</fs-page>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="dictionary">
 import { ref, onMounted, defineAsyncComponent } from 'vue';
 import { useFs } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';

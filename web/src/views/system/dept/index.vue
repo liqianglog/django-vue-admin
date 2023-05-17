@@ -98,7 +98,7 @@
     </fs-page>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="dept">
 import {Splitpanes, Pane} from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
 import * as api from './api';

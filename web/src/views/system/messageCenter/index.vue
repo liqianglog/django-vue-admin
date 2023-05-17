@@ -12,7 +12,7 @@
   </fs-page>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="messageCenter">
 import {ref, onMounted} from 'vue';
 import {useExpose, useCrud} from '@fast-crud/fast-crud';
 import {createCrudOptions} from './crud';

@@ -18,7 +18,7 @@ export const handleMenu = (menuData: Array<any>) => {
             roles: ['admin'],
             icon: item.icon
         }
-
+        item.name = item.component_name
         return item
     }
     menuData.forEach((val) => {
@@ -45,5 +45,6 @@ export const handleMenu = (menuData: Array<any>) => {
         },
         ...data
     ]
+    console.log(menu)
     return menu
 }

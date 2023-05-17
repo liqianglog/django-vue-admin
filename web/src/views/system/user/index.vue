@@ -42,7 +42,7 @@
 	</fs-page>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="user">
 import { useExpose, useCrud } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
 import * as api from './api';

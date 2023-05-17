@@ -9,7 +9,7 @@
 	</fs-page>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="role">
 import { ref, onMounted } from 'vue';
 import { useExpose, useCrud, dict } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';

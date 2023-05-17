@@ -79,7 +79,7 @@
   </fs-page>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="fileList">
 import {DelObj, GetList} from "./api";
 import {ref, onMounted,reactive} from "vue";
 import {getBaseURL} from "/@/utils/baseUrl";
