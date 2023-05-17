@@ -12,7 +12,7 @@ export const handleMenu = (menuData: Array<any>) => {
             title: item.title,
             isLink: item.is_link,
             isHide: !item.visible,
-            isKeepAlive: true,
+            isKeepAlive: item.cache,
             isAffix: false,
             isIframe: false,
             roles: ['admin'],

@@ -71,6 +71,12 @@
                                 <el-radio :label="false">禁用</el-radio>
                             </el-radio-group>
                         </el-form-item>
+                        <el-form-item label="缓存">
+                            <el-radio-group v-model="form.cache">
+                                <el-radio :label="true">启用</el-radio>
+                                <el-radio :label="false">禁用</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
                         <el-form-item label="图标" prop="icon">
                             <IconSelector clearable v-model="form.icon"/>
                         </el-form-item>
@@ -227,11 +233,12 @@ let form: Form<any> = reactive({
     component: '',
     web_path: '',
     sort: '',
-    status: '',
+    status: true,
     is_catalog: false,
     permission: '',
     icon: '',
-    visible: ''
+    visible: true,
+    cache: true,
 });
 
 let menuPermissonList = ref([]);
