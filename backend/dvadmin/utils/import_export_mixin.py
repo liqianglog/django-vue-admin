@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from types import FunctionType, MethodType
 from urllib.parse import quote
 
 from django.db import transaction
@@ -68,6 +69,8 @@ class ImportSerializerMixin:
         :return:
         """
         assert self.import_field_dict, "'%s' 请配置对应的导出模板字段。" % self.__class__.__name__
+        if isinstance(self.import_field_dict, MethodType) or isinstance(self.import_field_dict, FunctionType):
+            self.import_field_dict = self.import_field_dict()
         # 导出模板
         if request.method == "GET":
             # 示例数据
