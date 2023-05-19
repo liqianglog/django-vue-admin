@@ -163,6 +163,8 @@ class ImportSerializerMixin:
         assert self.import_field_dict, "'%s' 请配置对应的导入模板字段。" % self.__class__.__name__
         assert self.import_serializer_class, "'%s' 请配置对应的导入序列化器。" % self.__class__.__name__
         data = self.import_serializer_class(queryset, many=True, request=request).data
+        if isinstance(self.import_field_dict, MethodType) or isinstance(self.import_field_dict, FunctionType):
+            self.import_field_dict = self.import_field_dict()
         # 导出excel 表
         response = HttpResponse(content_type="application/msexcel")
         response["Access-Control-Expose-Headers"] = f"Content-Disposition"
