@@ -51,7 +51,7 @@
 
 - 二维码
 
-  <img src='https://images.gitee.com/uploads/images/2022/0530/233203_5fb11883_5074988.jpeg' width='200'>
+  <img src='https://foruda.gitee.com/images/1684571588696924229/2d16437f_7947594.png' width='200'>
 
 ## 源码地址
 
