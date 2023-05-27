@@ -39,6 +39,11 @@ DEBUG = True
 ENABLE_LOGIN_ANALYSIS_LOG = True
 # 登录接口 /api/token/ 是否需要验证码认证，用于测试，正式环境建议取消
 LOGIN_NO_CAPTCHA_AUTH = True
+# 是否启动API日志记录
+API_LOG_ENABLE = locals().get("API_LOG_ENABLE", True)
+# API 日志记录的请求方式
+API_LOG_METHODS = locals().get("API_LOG_METHODS", ["POST", "UPDATE", "DELETE", "PUT"])
+# API_LOG_METHODS = 'ALL' # ['POST', 'DELETE']
 # ================================================= #
 # ****************** 其他 配置  ******************* #
 # ================================================= #
