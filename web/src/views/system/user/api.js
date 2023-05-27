@@ -61,8 +61,8 @@ export function ResetPwd (obj) {
  */
 export function exportData (params) {
   return downloadFile({
-    url: urlPrefix + 'export/',
+    url: urlPrefix + 'export_data/',
     params: params,
-    method: 'post'
+    method: 'get'
   })
 }
