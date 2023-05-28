@@ -164,12 +164,14 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
         "~": "icontains",
     }
 
-    def construct_search(self, field_name):
+    def construct_search(self, field_name, lookup_expr=None):
         lookup = self.lookup_prefixes.get(field_name[0])
         if lookup:
             field_name = field_name[1:]
         else:
-            lookup = "icontains"
+            lookup = lookup_expr
+        if field_name.endswith(lookup):
+            return field_name
         return LOOKUP_SEP.join([field_name, lookup])
 
     def find_filter_lookups(self, orm_lookups, search_term_key):
@@ -249,7 +251,10 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
                         # warn if the field doesn't exist.
                         if field is None:
                             undefined.append(field_name)
-
+                        # 更新默认字符串搜索为模糊搜索
+                        if isinstance(field, (models.CharField)) and filterset_fields == '__all__' and lookups == [
+                            'exact']:
+                            lookups = ['icontains']
                         for lookup_expr in lookups:
                             filter_name = cls.get_filter_name(field_name, lookup_expr)
 
@@ -298,7 +303,7 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
             for search_field in filterset.filters:
                 if isinstance(filterset.filters[search_field], CharFilter):
                     orm_lookups.append(
-                        self.construct_search(six.text_type(search_field))
+                        self.construct_search(six.text_type(search_field), filterset.filters[search_field].lookup_expr)
                     )
                 else:
                     orm_lookups.append(search_field)
