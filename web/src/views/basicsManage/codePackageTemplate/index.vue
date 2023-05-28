@@ -82,23 +82,10 @@ export default {
     delRequest (row) {
       return api.DelObj(row.id)
     },
-    // 监听表单打开事件,给自定义字段赋值
-    handleDialogOpened ({ mode, form, template, groupTemplate }) {
-      if (mode === 'add') {
-        this.formData = {
-          fieldList: [{
-            number: 0,
-            name: '',
-            char_length: '',
-            is_code_content: false,
-            verify_matches: ''
-          }]
-        }
-      }
-      if (mode === 'edit' || mode === 'view') {
-        const { attr_fields } = form
-        this.formData.fieldList = attr_fields
-      }
+    nestIdSelected (value, form) {
+      this.$emit('selected', value)
+      form.nestId = value.id
+      this.currentNestName = value.name
     }
   }
 }

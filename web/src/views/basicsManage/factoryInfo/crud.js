@@ -108,7 +108,7 @@ export const crudOptions = (vm) => {
             class: { yxtInput: true }
           },
           valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
-            if (mode === 'add') {
+            if (mode === 'add' && !form.code) {
               form.code = util.autoShortCreateCode()
             }
           },

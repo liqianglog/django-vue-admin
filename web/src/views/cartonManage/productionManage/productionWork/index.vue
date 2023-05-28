@@ -44,7 +44,7 @@ import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import statusLog from './components/productionWorkStatusRecord'
 import ProductionReport from '@/views/cartonManage/productionManage/productionWork/components/productionReport'
-import util from "@/libs/util";
+import util from '@/libs/util'
 export default {
   name: 'productionWork',
   mixins: [d2CrudPlus.crud],
@@ -55,13 +55,13 @@ export default {
   data () {
     return {
       code_package_displayForm: {
-        zip_name:'',
-        order_id:'',
-        customer_name:'',
-        product_name:'',
-        code_package_template_name:'',
+        zip_name: '',
+        order_id: '',
+        customer_name: '',
+        product_name: '',
+        code_package_template_name: ''
 
-      },
+      }
     }
   },
   methods: {
@@ -92,8 +92,8 @@ export default {
       this.$refs.productionReport.getInit()
     },
     // 监听表单打开事件,给自定义字段赋值
-    handleDialogOpened ({ mode, form, template, groupTemplate }){
-      if (mode === 'add') {
+    handleDialogOpened ({ mode, form, template, groupTemplate }) {
+      if (mode === 'add' && !form.no) {
         form.no = util.autoShortCreateCode()
       }
     }
