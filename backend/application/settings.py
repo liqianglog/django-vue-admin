@@ -366,14 +366,17 @@ CAPTCHA_CHALLENGE_FUNCT = "captcha.helpers.math_challenge"  # 加减乘除验证
 # ================================================= #
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-API_LOG_ENABLE = True
+# 是否启动API日志记录
+API_LOG_ENABLE = locals().get("API_LOG_ENABLE", True)
+# API 日志记录的请求方式
+API_LOG_METHODS = locals().get("API_LOG_METHODS", ["POST", "UPDATE", "DELETE", "PUT"])
 # API_LOG_METHODS = 'ALL' # ['POST', 'DELETE']
-API_LOG_METHODS = ["POST", "UPDATE", "DELETE", "PUT"]  # ['POST', 'DELETE']
-API_MODEL_MAP = {
+# 在操作日志中详细记录的请求模块映射
+API_MODEL_MAP = locals().get("API_MODEL_MAP", {
     "/token/": "登录模块",
     "/api/login/": "登录模块",
-    "/api/plugins_market/plugins/": "插件市场",
-}
+    "/api/logout/": "登录模块",
+})
 
 DJANGO_CELERY_BEAT_TZ_AWARE = False
 CELERY_TIMEZONE = "Asia/Shanghai"  # celery 时区问题

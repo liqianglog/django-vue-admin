@@ -21,9 +21,9 @@ def import_to_data(file_url, field_data, m2m_fields=None):
     file_path_dir = os.path.join(settings.BASE_DIR, file_url)
     workbook = openpyxl.load_workbook(file_path_dir)
     table = workbook[workbook.sheetnames[0]]
-    theader = tuple(table.values)[0] #Excel的表头
-    is_update = '更新主键(勿改)' in theader #是否导入更新
-    if is_update is False: #不是更新时,删除id列
+    theader = tuple(table.values)[0]  # Excel的表头
+    is_update = '更新主键(勿改)' in theader  # 是否导入更新
+    if is_update is False:  # 不是更新时,删除id列
         field_data.pop('id')
     # 获取参数映射
     validation_data_dict = {}
@@ -35,9 +35,10 @@ def import_to_data(file_url, field_data, m2m_fields=None):
                 for k, v in choices.get("data").items():
                     data_dict[k] = v
             elif choices.get("queryset") and choices.get("values_name"):
-                data_list = choices.get("queryset").values(choices.get("values_name"), "id")
+                data_list = choices.get("queryset").values(choices.get("values_name"),
+                                                           choices.get("values_value", "id"))
                 for ele in data_list:
-                    data_dict[ele.get(choices.get("values_name"))] = ele.get("id")
+                    data_dict[ele.get(choices.get("values_name"))] = ele.get(choices.get("values_value", "id"))
             else:
                 continue
             validation_data_dict[key] = data_dict
@@ -53,12 +54,11 @@ def import_to_data(file_url, field_data, m2m_fields=None):
             values = items[1]
             value_type = 'str'
             if isinstance(values, dict):
-                value_type = values.get('type','str')
+                value_type = values.get('type', 'str')
             cell_value = table.cell(row=row + 1, column=index + 2).value
-            if cell_value is None or cell_value=='':
+            if cell_value is None or cell_value == '':
                 continue
             elif value_type == 'date':
-                print(61, datetime.strptime(str(cell_value), '%Y-%m-%d %H:%M:%S').date())
                 try:
                     cell_value = datetime.strptime(str(cell_value), '%Y-%m-%d %H:%M:%S').date()
                 except:
@@ -66,7 +66,7 @@ def import_to_data(file_url, field_data, m2m_fields=None):
             elif value_type == 'datetime':
                 cell_value = datetime.strptime(str(cell_value), '%Y-%m-%d %H:%M:%S')
             else:
-            # 由于excel导入数字类型后，会出现数字加 .0 的，进行处理
+                # 由于excel导入数字类型后，会出现数字加 .0 的，进行处理
                 if type(cell_value) is float and str(cell_value).split(".")[1] == "0":
                     cell_value = int(str(cell_value).split(".")[0])
                 elif type(cell_value) is str:

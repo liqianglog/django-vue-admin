@@ -12,6 +12,20 @@
 
 因为热爱，所以拥抱未来
 
+
+
+🗓️ **「开发线路」**
+
+请留下您宝贵建议，打造更加完善的dvadmin [需求提交](https://rgej2wr12o.feishu.cn/share/base/form/shrcnsHNfeC9URj6RIOR3xPPD3f) | [需求线路图](https://rgej2wr12o.feishu.cn/base/KevWbAzaEazgD2s8SmKc36PJnwb)
+
+
+
+👩‍👦‍👦 **「征文大赛」**
+
+为促进社区的更好发展，现开展dvadmin征文大赛，更有 **永久商业授权** 等丰厚奖品等你来拿 [点我查看详情](https://bbs.django-vue-admin.com/question/462.html)
+
+
+
 ## 平台简介
 
 💡 [django-vue-admin](https://gitee.com/dvadmin/django-vue-admin) 是一套全部开源的快速开发平台，毫无保留给个人及企业免费使用。
@@ -37,29 +51,21 @@
 
 👩‍👦‍👦文档地址：[https://django-vue-admin.com](https://django-vue-admin.com)
 
-
-
 ## 交流
 
 - 交流社区：[戳我](https://bbs.django-vue-admin.com)👩‍👦‍👦
 
 - 插件市场：[戳我](https://bbs.django-vue-admin.com/plugMarket.html)👩‍👦‍👦
 
--  django-vue-admin交流01群(已满)：812482043 [点击链接加入群聊](https://qm.qq.com/cgi-bin/qm/qr?k=aJVwjDvH-Es4MPJQuoO32N0SucK22TE5&jump_from=webapi)
+- django-vue-admin交流01群(已满)：812482043 [点击链接加入群聊](https://qm.qq.com/cgi-bin/qm/qr?k=aJVwjDvH-Es4MPJQuoO32N0SucK22TE5&jump_from=webapi)
+
 -  django-vue-admin交流02群(已满)：687252418  [点击链接加入群聊](https://qm.qq.com/cgi-bin/qm/qr?k=4jJN4IjWGfxJ8YJXbb_gTsuWjR34WLdc&jump_from=webapi)
--  django-vue-admin交流03群：442108213  [点击链接加入群聊](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=kwmm0yWKN927XnoMRrfpOM0WQFsrhRHX&authKey=8VzzQW73dHSI%2F2LnN%2Fsiffk%2FMRjesIO%2B6j7by1N%2BoizpAExQAjb887tXfWQa7wbT&noverify=0&group_code=442108213)
+
+-  django-vue-admin交流03群：442108213  [点击链接加入群聊](https://qm.qq.com/cgi-bin/qm/qr?k=ESpuF6A1Fcx0XrY4w6CzCvbnjI4kNsa0&jump_from=webapi)
 
 - 二维码
 
-  <img src='https://foruda.gitee.com/images/1684571588696924229/2d16437f_7947594.png' width='200'>
-
-## 源码地址
-
-gitee地址(主推)：[https://gitee.com/liqianglog/django-vue-admin](https://gitee.com/liqianglog/django-vue-admin)👩‍👦‍👦
-
-github地址：[https://github.com/liqianglog/django-vue-admin](https://github.com/liqianglog/django-vue-admin)👩‍👦‍👦
-
-
+  <img src='https://foruda.gitee.com/images/1685090287886551832/e3afa9e1_5074988.png' width='200'>
 
 ## 内置功能
 
@@ -75,13 +81,41 @@ github地址：[https://github.com/liqianglog/django-vue-admin](https://github.c
 10.  🗓️操作日志：系统正常操作日志记录和查询；系统异常信息日志记录和查询。
 11.  🔌[插件市场 ](https://bbs.django-vue-admin.com/plugMarket.html)：基于Django-Vue-Admin框架开发的应用和插件。
 
+## 源码地址
+
+gitee地址(主推)：[https://gitee.com/liqianglog/django-vue-admin](https://gitee.com/liqianglog/django-vue-admin)👩‍👦‍👦
+
+github地址：[https://github.com/liqianglog/django-vue-admin](https://github.com/liqianglog/django-vue-admin)👩‍👦‍👦
+
+| 项目                                                         | Star                                                         | 简介                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | -------------------------------------------- |
+| [django-vue-admin](https://gitee.com/liqianglog/django-vue-admin) | [![Gitee star](https://gitee.com/liqianglog/django-vue-admin/badge/star.svg?theme=white)](https://gitee.com/liqianglog/django-vue-admin) [![GitHub stars](https://img.shields.io/github/stars/liqianglog/django-vue-admin.svg?style=social&label=Stars)](https://github.com/liqianglog/django-vue-admin) | 基于 Vue2 + element + d2admin + django 实现的管理后台 |
+| [django-vue3-admin](https://gitee.com/huge-dream/django-vue3-admin) | [![Gitee star](https://gitee.com/huge-dream/django-vue3-admin/badge/star.svg?theme=white)](https://gitee.com/huge-dream/django-vue3-admin) [![GitHub stars](https://img.shields.io/github/stars/huge-dream/django-vue3-admin.svg?style=social&label=Stars)](https://github.com/huge-dream/django-vue3-admin) | 基于 Vue3 + vue-next-admin + fastcrud + django 实现的管理后台 |
+
 ##  插件市场 🔌
 
-- Celery异步任务：[dvadmin-celery](https://gitee.com/huge-dream/dvadmin-celery)
-- 升级中心后端：[dvadmin-upgrade-center](https://gitee.com/huge-dream/dvadmin-upgrade-center)
-- 升级中心前端：[dvadmin-upgrade-center-web](https://gitee.com/huge-dream/dvadmin-upgrade-center-web)
+#### [点我查看最新开发进度](https://rgej2wr12o.feishu.cn/base/KevWbAzaEazgD2s8SmKc36PJnwb?table=tblpongo56gp6zN9&view=vewpLA5Hdc) | [插件市场](https://bbs.django-vue-admin.com/plugMarket.html)
+
+| 插件名称                                                  |           开发状态  | 简介                                                         |
+| --------------------------------------------------------- | -------- | ------------------------------------------------------------ |
+| [dvadmin3-celery 定时任务](https://bbs.django-vue-admin.com/plugMarket/129.html) | 已发布 | 适用dvadmin3可快速使用异步任务，包含在线添加任务、任务记录等 |
+| [dvadmin-celery 定时任务](https://bbs.django-vue-admin.com/plugMarket/115.html) | 已发布   | 适用dvadmin3可快速使用异步任务，包含在线添加任务、任务记录等 |
+| [dvadmin-sms 短信服务](https://bbs.django-vue-admin.com/plugMarket/128.html) | 已发布   | 整合各端的短信服务插件 |
+| [dvadmin-vform 表单设计器](https://bbs.django-vue-admin.com/plugMarket/118.html) | 已发布   | 低代码表单设计器插件 |
+| [dvadmin-tenants 多租户管理](https://bbs.django-vue-admin.com/plugMarket/124.html) | 已发布   | 多租户的saas模式 |
+| [dvadmin-third 第三方用户管理](https://bbs.django-vue-admin.com/plugMarket/122.html) | 已发布   | 第三方用户管理插件 |
+| [dvadmin-ak-sk 加密密钥管理](https://bbs.django-vue-admin.com/plugMarket/120.html) | 已发布   | 用于加密认证字符串来验证认证字符串的密钥 |
+| [dvadmin-pay 支付插件]() | 已发布 | 适用于dvadmin的支付插件，支持微信支持、支付宝支付 |
+| [dvadmin-uniapp](https://bbs.django-vue-admin.com/plugMarket/130.html) | 已发布 | 适用于dvadmin的uniapp插件 |
+| dvadmin-cloud-storage 云存储插件 | 开发中 | 适用各种云存储进行存储插件 |
+| dvadmin-es 搜索插件 | 开发中 | 适用于es的搜索插件 |
+| dvadmin-low-code-crud 低代码生成 | 开发中 | 低代码生成插件 |
+| dvadmin-flow 工作流插件 | 开发中 | 工作流插件 |
+
+
 
 ## 准备工作
+
 ~~~
 Python >= 3.8.0 (推荐3.8+版本)
 nodejs >= 14.0 (推荐最新)
@@ -196,6 +230,8 @@ docker-compose up -d --build
 ![image-11](https://foruda.gitee.com/images/1681118492497719384/52a47252_5074988.png)
 
 ![image-12](https://foruda.gitee.com/images/1681118517168485285/f34152ba_5074988.png)
+
+#商业授权
 
 ![image-13](https://foruda.gitee.com/images/1681118527820910716/43a7c660_5074988.png)
 
