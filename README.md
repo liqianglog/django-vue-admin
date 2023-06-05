@@ -105,7 +105,7 @@ github地址：[https://github.com/liqianglog/django-vue-admin](https://github.c
 | [dvadmin-tenants 多租户管理](https://bbs.django-vue-admin.com/plugMarket/124.html) | 已发布   | 多租户的saas模式 |
 | [dvadmin-third 第三方用户管理](https://bbs.django-vue-admin.com/plugMarket/122.html) | 已发布   | 第三方用户管理插件 |
 | [dvadmin-ak-sk 加密密钥管理](https://bbs.django-vue-admin.com/plugMarket/120.html) | 已发布   | 用于加密认证字符串来验证认证字符串的密钥 |
-| [dvadmin-pay 支付插件]() | 已发布 | 适用于dvadmin的支付插件，支持微信支持、支付宝支付 |
+| [dvadmin-pay 支付插件](https://bbs.django-vue-admin.com/plugMarket/131.html) | 已发布 | 适用于dvadmin的支付插件，支持微信支持、支付宝支付 |
 | [dvadmin-uniapp](https://bbs.django-vue-admin.com/plugMarket/130.html) | 已发布 | 适用于dvadmin的uniapp插件 |
 | dvadmin-cloud-storage 云存储插件 | 开发中 | 适用各种云存储进行存储插件 |
 | dvadmin-es 搜索插件 | 开发中 | 适用于es的搜索插件 |
@@ -231,7 +231,7 @@ docker-compose up -d --build
 
 ![image-12](https://foruda.gitee.com/images/1681118517168485285/f34152ba_5074988.png)
 
-#商业授权
+## 商业授权
 
 ![image-13](https://foruda.gitee.com/images/1681118527820910716/43a7c660_5074988.png)
 

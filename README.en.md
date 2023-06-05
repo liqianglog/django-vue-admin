@@ -106,7 +106,7 @@ github：[https://github.com/liqianglog/django-vue-admin](https://github.com/liq
 | [dvadmin-tenants 多租户管理](https://bbs.django-vue-admin.com/plugMarket/124.html) | Released           | Saas mode for multi-tenancy management                       |
 | [dvadmin-third 第三方用户管理](https://bbs.django-vue-admin.com/plugMarket/122.html) | Released           | Plugin for managing third-party users                        |
 | [dvadmin-ak-sk 加密密钥管理](https://bbs.django-vue-admin.com/plugMarket/120.html) | Released           | Manages encryption keys for verifying authentication strings |
-| [dvadmin-pay 支付插件]()                                     | Released           | Payment plugin for dvadmin, supports WeChat Pay and Alipay   |
+| [dvadmin-pay 支付插件](https://bbs.django-vue-admin.com/plugMarket/131.html) | Released           | Payment plugin for dvadmin, supports WeChat Pay and Alipay   |
 | [dvadmin-uniapp](https://bbs.django-vue-admin.com/plugMarket/130.html) | Released           | Uniapp plugin for dvadmin                                    |
 | dvadmin-cloud-storage 云存储插件                             | Development        | Plugin for storing files using various cloud storage providers |
 | dvadmin-es 搜索插件                                          | Development        | Search plugin for Elasticsearch                              |
@@ -221,7 +221,7 @@ docker-compose up -d --build
 
 ![image-12](https://foruda.gitee.com/images/1681118517168485285/f34152ba_5074988.png)
 
-# Commercial License
+## Commercial License
 
 ![image-13](https://foruda.gitee.com/images/1681118527820910716/43a7c660_5074988.png)
 

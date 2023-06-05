@@ -16,11 +16,14 @@
               <el-form-item prop="avatar" label="头像">
                 <d2p-cropper-uploader :value="userInfo.avatar || '/image/avatar.png'" @input="handleAvatarSuccess"/>
               </el-form-item>
+              <el-form-item prop="username" label="账号">
+                <el-input v-model="userInfo.username" disabled></el-input>
+              </el-form-item>
               <el-form-item prop="name" required label="昵称">
                 <el-input v-model="userInfo.name" clearable></el-input>
               </el-form-item>
               <el-form-item label="电话号码" required prop="mobile">
-                <el-input v-model="userInfo.mobile" clearable></el-input>
+                <el-input v-model="userInfo.mobile" clearable disabled></el-input>
               </el-form-item>
               <el-form-item label="邮箱" prop="email">
                 <el-input v-model="userInfo.email" clearable></el-input>
@@ -39,7 +42,7 @@
                 <el-input :value="userInfo.dept_info && userInfo.dept_info.dept_name" clearable disabled></el-input>
               </el-form-item>
               <el-form-item label="当前角色" prop="role">
-                <el-select :value="userInfo.role" multiple placeholder="请选择" disabled style="width: 100%;">
+                <el-select :value="userInfo.role" multiple placeholder="请选择" disabled size="mini" style="width: 100%;">
                   <el-option
                     v-for="item in userInfo.role_info"
                     :key="item.id"
