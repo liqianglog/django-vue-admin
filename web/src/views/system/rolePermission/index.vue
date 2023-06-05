@@ -198,7 +198,7 @@ let menuData = ref<Tree>()
 const getMenuData = () => {
     api.GetMenu({}).then((res: any) => {
         const {data} = res
-        const list = XEUtils.toArrayTree(data, {parentKey: "parent", strict: true})
+        const list = XEUtils.toArrayTree(data, {parentKey: "parent", key:'menu_id',strict: true})
         menuData.value = list
     })
 }
@@ -212,11 +212,11 @@ const menuNodeClick = (node: any, obj: any) => {
     if (!node.is_catalog) {
         buttonOptions.value = []
         editedMenuInfo.value = node
-        api.GetMenuButton({menu: node.id}).then((res: any) => {
+        api.GetMenuButton({menu: node.menu_id}).then((res: any) => {
             const {data} = res
             buttonOptions.value = data
         })
-        api.getObj({menu: node.id, role: editedRoleInfo.value.id}).then((res: any) => {
+        api.getObj({menu: node.menu_id, role: editedRoleInfo.value.id}).then((res: any) => {
             const {data} = res
             buttonPermissionData.value = data
         })

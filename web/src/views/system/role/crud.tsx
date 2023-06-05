@@ -27,6 +27,8 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 	//权限判定
 	const hasPermissions = inject("$hasPermissions")
 
+	// @ts-ignore
+	// @ts-ignore
 	return {
 		crudOptions: {
 			request: {

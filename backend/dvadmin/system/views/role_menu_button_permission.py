@@ -6,11 +6,11 @@
 @Created on: 2021/6/3 003 0:30
 @Remark: 菜单按钮管理
 """
-from django.db.models import F
+from django.db.models import F, Subquery, OuterRef, Exists
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
-from dvadmin.system.models import RoleMenuButtonPermission, Menu, MenuButton, Dept
+from dvadmin.system.models import RoleMenuButtonPermission, Menu, MenuButton, Dept, RoleMenuPermission
 from dvadmin.utils.json_response import DetailResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -66,14 +66,23 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
     def role_get_menu(self, request):
         """根据当前用户的角色返回角色拥有的菜单"""
+        data = []
         is_superuser = request.user.is_superuser
         is_admin = request.user.role.values_list('admin', flat=True)
         if is_superuser or True in is_admin:
-            queryset = Menu.objects.filter(status=1).values('id','name','parent','is_catalog')
+            queryset = Menu.objects.filter(status=1).values('name','parent','is_catalog',menu_id=F('id'))
+            for item in queryset:
+                btn_name = MenuButton.objects.filter(menu=item['menu_id']).values_list(
+                    'name', flat=True)
+                data.append({'menu_id': item['menu_id'], 'name': item['name'], 'parent': item['parent'],
+                             'permission': ','.join(btn_name), 'is_catalog': item['is_catalog']})
         else:
             role_id = request.user.role.values_list('id',flat=True)
-            queryset = RoleMenuButtonPermission.objects.filter(role__in=role_id).values(id=F('menu__id'),name=F('menu__name'),parent=F('menu__parent'),is_catalog=F('menu__is_catalog'))
-        return DetailResponse(data=queryset)
+            queryset = RoleMenuPermission.objects.filter(role__in=role_id).values('menu_id',name=F('menu__name'),parent=F('menu__parent'),is_catalog=F('menu__is_catalog')).distinct()
+            for item in queryset:
+                btn_name = RoleMenuButtonPermission.objects.filter(menu_button__menu=item['menu_id']).values_list('menu_button__name',flat=True)
+                data.append({'menu_id':item['menu_id'], 'name':item['name'], 'parent':item['parent'],'permission':','.join(btn_name),'is_catalog':item['is_catalog']})
+        return DetailResponse(data=data)
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
     def role_menu_get_button(self,request):
@@ -82,18 +91,16 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
         :param request:
         :return:
         """
-        params = request.query_params
-        if params:
-            menu_id = params.get('menu',None)
-            if menu_id:
+        if params := request.query_params:
+            if menu_id := params.get('menu', None):
                 is_superuser = request.user.is_superuser
                 is_admin = request.user.role.values_list('admin', flat=True)
                 if is_superuser or True in is_admin:
                     queryset = MenuButton.objects.filter(menu=menu_id).values('id', 'name')
                 else:
                     role_list = request.user.role.values_list('id',flat=True)
-                    queryset = RoleMenuButtonPermission.objects.filter(role_in=role_list,menu_button__menu=menu_id).values(
-                        id=F('menu_button__id'),
+                    queryset = RoleMenuButtonPermission.objects.filter(role__in=role_list,menu_button__menu=menu_id).values(
+                        btn_id=F('menu_button__id'),
                         name=F('menu_button__name')
                     )
                 return DetailResponse(data=queryset)
@@ -133,12 +140,10 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
             return DetailResponse(data=data)
         else:
             data = []
-            role_id = request.user.role.id
-            params = request.query_params
-            if params:
-                menu_button_id = params.get('menu_button', None)
-                if menu_button_id:
-                    role_queryset = RoleMenuButtonPermission.objects.filter(role=role_id,menu_button=menu_button_id).values_list('data_range',flat=True)
+            role_list = request.user.role.values_list('id',flat=True)
+            if params := request.query_params:
+                if menu_button_id := params.get('menu_button', None):
+                    role_queryset = RoleMenuButtonPermission.objects.filter(role__in=role_list,menu_button__id=menu_button_id).values_list('data_range',flat=True)
                     data_range_list = list(set(role_queryset))
                     for item in data_range_list:
                         if item == 0:
@@ -202,21 +207,19 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
         is_admin = request.user.role.values_list('admin', flat=True)
         if is_superuser or True in is_admin:
             queryset = Dept.objects.values('id','name','parent')
-            return DetailResponse(data=queryset)
         else:
-            if params:
-                menu_button = params.get('menu_button')
-                if menu_button is None:
-                    return ErrorResponse(msg="参数错误")
-                role_list = request.user.role.values_list('id', flat=True)
-                queryset = RoleMenuButtonPermission.objects.filter(role_in=role_list,menu_button=None).values(
-                    id=F('dept__id'),
-                    name=F('dept__name'),
-                    parent=F('dept__parent')
-                )
-                return DetailResponse(data=queryset)
-            else:
+            if not params:
                 return ErrorResponse(msg="参数错误")
+            menu_button = params.get('menu_button')
+            if menu_button is None:
+                return ErrorResponse(msg="参数错误")
+            role_list = request.user.role.values_list('id', flat=True)
+            queryset = RoleMenuButtonPermission.objects.filter(role__in=role_list,menu_button=None).values(
+                dept_id=F('dept__id'),
+                name=F('dept__name'),
+                parent=F('dept__parent')
+            )
+        return DetailResponse(data=queryset)
 
 
 
@@ -228,17 +231,48 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
         :return:
         """
         params = request.query_params
-        if params:
-            menu_id = params.get('menu',None)
-            if menu_id is None:
-                return ErrorResponse(msg="未获取到参数")
-            role_id = params.get('role', None)
-            if role_id is None:
-                return ErrorResponse(msg="未获取到参数")
-            queryset = RoleMenuButtonPermission.objects.filter(role=role_id,menu_button__menu=menu_id).values(
+        menu_id = params.get('menu', None)
+        if menu_id is None:
+            return ErrorResponse(msg="未获取到参数")
+        is_superuser = request.user.is_superuser
+        is_admin = request.user.role.values_list('admin', flat=True)
+        if is_superuser or True in is_admin:
+            queryset = RoleMenuButtonPermission.objects.filter(menu_button__menu=menu_id).values(
                 'id',
                 'data_range',
-                'menu_button'
+                'menu_button',
+                'menu_button__name',
+                'menu_button__value'
             )
             return DetailResponse(data=queryset)
+        else:
+            if params:
+
+                role_id = params.get('role', None)
+                if role_id is None:
+                    return ErrorResponse(msg="未获取到参数")
+                queryset = RoleMenuButtonPermission.objects.filter(role=role_id,menu_button__menu=menu_id).values(
+                    'id',
+                    'data_range',
+                    'menu_button',
+                    'menu_button__name',
+                    'menu_button__value'
+                )
+                return DetailResponse(data=queryset)
         return ErrorResponse(msg="未获取到参数")
+
+    @action(methods=['get'], detail=False, permission_classes=[IsAuthenticated])
+    def role_to_menu(self, request):
+        """
+        获取角色对应的按钮权限
+        :param request:
+        :return:
+        """
+        params = request.query_params
+        role_id = params.get('role', None)
+        if role_id is None:
+            return ErrorResponse(msg="未获取到参数")
+        queryset = RoleMenuPermission.objects.filter(role_id=role_id).values_list('menu_id',flat=True).distinct()
+
+        return DetailResponse(data=queryset)
+

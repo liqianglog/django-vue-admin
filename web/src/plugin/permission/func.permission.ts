@@ -9,7 +9,7 @@ export default {
         return XEUtils.includeArrays(BtnPermission, value)
       }else if(typeof value === 'string'){
         const index = XEUtils.arrayIndexOf(BtnPermission, value)
-        return index>0?true:false
+        return index>-1?true:false
       }
      }
     return true

@@ -236,7 +236,7 @@ class RoleMenuPermission(CoreModel):
         db_table = table_prefix + "role_menu_permission"
         verbose_name = "角色菜单权限表"
         verbose_name_plural = verbose_name
-        ordering = ("-create_datetime",)
+        # ordering = ("-create_datetime",)
 
 
 class RoleMenuButtonPermission(CoreModel):
