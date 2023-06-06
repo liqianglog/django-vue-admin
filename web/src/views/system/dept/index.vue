@@ -20,9 +20,9 @@
                         @node-click="handleNodeClick"
                     >
                         <template #default="{ node, data }">
-                            <span v-if="data.status" class="text-center font-black text-xl"><SvgIcon
+                            <span v-if="data.status" class="text-center font-black font-normal"><SvgIcon
                                 :name="node.data.icon"/>&nbsp;{{ node.label }}</span>
-                            <span v-else class="text-center font-black text-xl text-red-700"><SvgIcon
+                            <span v-else class="text-center font-black font-normal text-red-700"><SvgIcon
                                 :name="node.data.icon"/>&nbsp;{{ node.label }}</span>
                         </template>
                     </el-tree>
@@ -301,5 +301,8 @@ onMounted(() => {
 
 .el-card {
     height: 100%;
+}
+.font-normal {
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
 }
 </style>

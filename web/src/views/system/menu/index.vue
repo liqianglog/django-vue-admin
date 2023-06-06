@@ -19,10 +19,10 @@
                              @node-drop="nodeDrop" lazy icon="ArrowRightBold" :indent="12" draggable
                              @node-click="handleNodeClick">
                         <template #default="{ node, data }">
-							<span v-if="data.status" class="text-center font-black text-xl">
+							<span v-if="data.status" class="text-center font-black font-normal">
 								<SvgIcon :name="node.data.icon"/>&nbsp;{{ node.label }}
 							</span>
-                            <span v-else class="text-center font-black text-xl text-red-700">
+                            <span v-else class="text-center font-black text-red-700 font-normal">
 								<SvgIcon :name="node.data.icon"/>&nbsp;{{ node.label }}
 							</span>
                         </template>
@@ -393,5 +393,8 @@ onActivated(() => {
 
 .el-card {
     height: 100%;
+}
+.font-normal {
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
 }
 </style>
