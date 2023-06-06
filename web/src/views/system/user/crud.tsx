@@ -346,7 +346,7 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 							name: 'fs-dict-switch',
 							activeText: '',
 							inactiveText: '',
-							style: '--el-switch-on-color: #409eff; --el-switch-off-color: #dcdfe6',
+							style: '--el-switch-on-color: var(--el-color-primary); --el-switch-off-color: #dcdfe6',
 							onChange: compute((context) => {
 								return () => {
 									api.UpdateObj(context.row).then((res: APIResponseData) => {
