@@ -175,7 +175,7 @@ class UserInfoUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = Users
-        fields = ['email', 'mobile', 'avatar', 'name', 'gender']
+        fields = ['email', 'avatar', 'name', 'gender']
         extra_kwargs = {
             "post": {"required": False, "read_only": True},
         }
