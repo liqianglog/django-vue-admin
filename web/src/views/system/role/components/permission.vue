@@ -22,6 +22,7 @@
           :row-config="{keyField: 'menu_id'}"
           :tree-config="{transform: true, rowField: 'menu_id', parentField: 'parent'}"
           :checkbox-config="{labelField: 'menu_id', checkRowKeys: multipleTableData,checkStrictly:true}"
+          @toggle-row-expand="menuNodeClick"
           :data="menuData">
         <vxe-column type="checkbox" title="ID" width="200" tree-node></vxe-column>
         <vxe-column field="name" title="目录/菜单" ></vxe-column>
@@ -106,7 +107,7 @@ import * as api from './api.ts'
 import type {FormRules, FormInstance} from 'element-plus'
 import {ElMessage} from 'element-plus'
 import XEUtils from 'xe-utils'
-import { VXETable, VxeTableInstance } from 'vxe-table'
+import { VXETable, VxeTableInstance,VxeTableEvents } from 'vxe-table'
 
 interface tableRow {
   menu_id: number
@@ -169,16 +170,16 @@ let isBtnPermissionShow = ref(false)
 let buttonOptions = ref<[]>()
 let editedMenuInfo = ref()
 //菜单节点点击事件
-const menuNodeClick = (node: any) => {
-  isBtnPermissionShow.value = !node.is_catalog
-  if (!node.is_catalog) {
+const menuNodeClick: VxeTableEvents.ToggleRowExpand<tableRow> = ({ expanded, row}) => {
+  // isBtnPermissionShow.value = !node.is_catalog
+  if (!row.is_catalog) {
     buttonOptions.value = []
-    editedMenuInfo.value = node
-    api.GetMenuButton({menu: node.menu_id}).then((res: any) => {
+    editedMenuInfo.value = row
+    api.GetMenuButton({menu: row.menu_id}).then((res: any) => {
       const {data} = res
       buttonOptions.value = data
     })
-    api.getObj({menu: node.menu_id, role: editedRoleInfo.value.id}).then((res: any) => {
+    api.getObj({menu: row.menu_id, role: editedRoleInfo.value.id}).then((res: any) => {
       const {data} = res
       buttonPermissionData.value = data
     })
