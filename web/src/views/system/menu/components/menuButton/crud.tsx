@@ -34,6 +34,16 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 	};
 	return {
 		crudOptions: {
+			search: {
+        container: {
+          action: {
+            //按钮栏配置
+            col: {
+              span: 8
+            }
+          }
+        },
+      },
 			rowHandle: {
 				//固定右侧
 				fixed: 'right',
