@@ -38,7 +38,7 @@
                     <div>{{ scope.row.menu_button__name }}</div>
                   </template>
                 </el-table-column>
-                <el-table-column prop="menu_button__value" label="权限值" width="100">
+                <el-table-column prop="menu_button__value" label="权限值" width="150">
                 </el-table-column>
                 <el-table-column prop="data_range" label="权限范围" width="140">
                   <template #default="scope">
@@ -63,7 +63,7 @@
           <el-form-item label="按钮" prop="menu_button">
             <el-select v-model="buttonForm.menu_button" placeholder="请选择按钮" @change="onChangeButton">
               <el-option v-for="(item,index) in buttonOptions" :key="index" :label="item.name"
-                         :value="item.btn_id"/>
+                         :value="item.id"/>
             </el-select>
           </el-form-item>
           <el-form-item label="权限范围" prop="data_range">

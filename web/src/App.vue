@@ -59,7 +59,12 @@ onBeforeMount(() => {
 	// 设置批量第三方 js
 	setIntroduction.jsCdn();
   //websockt 模块
-  websocket.init(wsReceive)
+  try {
+    websocket.init(wsReceive)
+  }catch (e) {
+    console.log("websocket错误")
+  }
+
 });
 // 页面加载时
 onMounted(() => {
