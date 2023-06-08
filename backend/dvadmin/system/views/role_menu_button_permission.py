@@ -7,6 +7,7 @@
 @Remark: 菜单按钮管理
 """
 from django.db.models import F, Subquery, OuterRef, Exists
+from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
@@ -20,7 +21,6 @@ class RoleMenuButtonPermissionSerializer(CustomModelSerializer):
     """
     菜单按钮-序列化器
     """
-
     class Meta:
         model = RoleMenuButtonPermission
         fields = "__all__"
@@ -41,6 +41,8 @@ class RoleMenuButtonPermissionCreateUpdateSerializer(CustomModelSerializer):
     """
     初始化菜单按钮-序列化器
     """
+    menu_button__name = serializers.CharField(source='menu_button.name', read_only=True)
+    menu_button__value= serializers.CharField(source='menu_button.value', read_only=True)
 
     class Meta:
         model = RoleMenuButtonPermission
