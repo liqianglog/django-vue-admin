@@ -306,7 +306,7 @@ class FileList(CoreModel):
     file_url = models.CharField(max_length=255, blank=True, verbose_name="文件地址", help_text="文件地址")
     engine = models.CharField(max_length=100, default='local', blank=True, verbose_name="引擎", help_text="引擎")
     mime_type = models.CharField(max_length=100, blank=True, verbose_name="Mime类型", help_text="Mime类型")
-    size = models.CharField(max_length=36, blank=True, verbose_name="文件大小", help_text="文件大小")
+    size = models.BigIntegerField(default=0, blank=True, verbose_name="文件大小", help_text="文件大小")
     md5sum = models.CharField(max_length=36, blank=True, verbose_name="文件md5", help_text="文件md5")
 
     def save(self, *args, **kwargs):

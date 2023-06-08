@@ -13,9 +13,11 @@ export default {
       if (value != null) {
         if (value.length >= 0) {
           if (value instanceof Array) {
-            row[col.key] = value.toString()
+            // 剔除前缀
+            row[col.key] = value.map(str => str.replace(util.baseURL(), '')).toString()
           } else {
-            row[col.key] = value
+            // 剔除前缀
+            row[col.key] = value.replace(util.baseURL(), '')
           }
         } else {
           row[col.key] = null
@@ -53,9 +55,11 @@ export default {
       if (value != null) {
         if (value.length >= 0) {
           if (value instanceof Array) {
-            row[col.key] = value.toString()
+            // 剔除前缀
+            row[col.key] = value.map(str => str.replace(util.baseURL(), '')).toString()
           } else {
-            row[col.key] = value
+            // 剔除前缀
+            row[col.key] = value.replace(util.baseURL(), '')
           }
         } else {
           row[col.key] = null
@@ -89,9 +93,11 @@ export default {
       if (value != null) {
         if (value.length >= 0) {
           if (value instanceof Array) {
-            row[col.key] = value.toString()
+            // 剔除前缀
+            row[col.key] = value.map(str => str.replace(util.baseURL(), '')).toString()
           } else {
-            row[col.key] = value
+            // 剔除前缀
+            row[col.key] = value.replace(util.baseURL(), '')
           }
         } else {
           row[col.key] = null
@@ -129,9 +135,11 @@ export default {
       if (value != null) {
         if (value.length >= 0) {
           if (value instanceof Array) {
-            row[col.key] = value.toString()
+            // 剔除前缀
+            row[col.key] = value.map(str => str.replace(util.baseURL(), '')).toString()
           } else {
-            row[col.key] = value
+            // 剔除前缀
+            row[col.key] = value.replace(util.baseURL(), '')
           }
         } else {
           row[col.key] = null
