@@ -22,6 +22,7 @@
           :row-config="{keyField: 'menu_id'}"
           :tree-config="{transform: true, rowField: 'menu_id', parentField: 'parent'}"
           :checkbox-config="{labelField: 'menu_id', checkRowKeys: multipleTableData,checkStrictly:true}"
+          :expand-config="{accordion:true}"
           @toggle-row-expand="menuNodeClick"
           :data="menuData">
         <vxe-column type="checkbox" title="ID" width="200" tree-node></vxe-column>
