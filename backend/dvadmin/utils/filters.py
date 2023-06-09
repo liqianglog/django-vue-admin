@@ -12,9 +12,12 @@ from collections import OrderedDict
 from functools import reduce
 
 import six
+from django.db import models
 from django.db.models import Q, F
 from django.db.models.constants import LOOKUP_SEP
 from django_filters import utils
+from django_filters.conf import settings
+from django_filters.constants import ALL_FIELDS
 from django_filters.filters import CharFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters.utils import get_model_field
@@ -215,6 +218,52 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
 
             class AutoFilterSet(self.filterset_base):
                 @classmethod
+                def get_all_model_fields(cls, model):
+                    opts = model._meta
+
+                    return [
+                        f.name
+                        for f in sorted(opts.fields + opts.many_to_many)
+                        if (f.name == 'id') or not isinstance(f, models.AutoField)
+                           and not (getattr(f.remote_field, "parent_link", False))
+                    ]
+
+                @classmethod
+                def get_fields(cls):
+                    """
+                    Resolve the 'fields' argument that should be used for generating filters on the
+                    filterset. This is 'Meta.fields' sans the fields in 'Meta.exclude'.
+                    """
+                    model = cls._meta.model
+                    fields = cls._meta.fields
+                    exclude = cls._meta.exclude
+
+                    assert not (fields is None and exclude is None), (
+                            "Setting 'Meta.model' without either 'Meta.fields' or 'Meta.exclude' "
+                            "has been deprecated since 0.15.0 and is now disallowed. Add an explicit "
+                            "'Meta.fields' or 'Meta.exclude' to the %s class." % cls.__name__
+                    )
+
+                    # Setting exclude with no fields implies all other fields.
+                    if exclude is not None and fields is None:
+                        fields = ALL_FIELDS
+
+                    # Resolve ALL_FIELDS into all fields for the filterset's model.
+                    if fields == ALL_FIELDS:
+                        fields = cls.get_all_model_fields(model)
+
+                    # Remove excluded fields
+                    exclude = exclude or []
+                    if not isinstance(fields, dict):
+                        fields = [
+                            (f, [settings.DEFAULT_LOOKUP_EXPR]) for f in fields if f not in exclude
+                        ]
+                    else:
+                        fields = [(f, lookups) for f, lookups in fields.items() if f not in exclude]
+
+                    return OrderedDict(fields)
+
+                @classmethod
                 def get_filters(cls):
                     """
                     Get all filters for the filterset. This is the combination of declared and
@@ -305,6 +354,7 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
                     continue
                 query = Q(**{orm_lookup: filterset.data[search_term_key]})
                 queries.append(query)
+            print(1, queries)
             if len(queries) > 0:
                 conditions.append(reduce(operator.and_, queries))
                 queryset = queryset.filter(reduce(operator.and_, conditions))
