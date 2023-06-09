@@ -354,7 +354,6 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
                     continue
                 query = Q(**{orm_lookup: filterset.data[search_term_key]})
                 queries.append(query)
-            print(1, queries)
             if len(queries) > 0:
                 conditions.append(reduce(operator.and_, queries))
                 queryset = queryset.filter(reduce(operator.and_, conditions))
