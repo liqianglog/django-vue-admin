@@ -3,6 +3,7 @@ import Vue from 'vue'
 import d2Container from './d2-container'
 import tableProgress from './table-progress/lib/table-progress.vue'
 import cardSelect from '@/components/card-select/index'
+import selectorTable from '@/components/selector-table/index'
 // 注意 有些组件使用异步加载会有影响
 Vue.component('d2-container', d2Container)
 Vue.component('d2-icon', () => import('./d2-icon'))
@@ -14,4 +15,5 @@ Vue.component('d2p-tree-selector', () => import('./tree-selector/lib/tree-select
 Vue.component('dept-format', () => import('./dept-format/lib/dept-format.vue'))
 Vue.component('dvaHtml2pdf', () => import('./dvaHtml2pdf/index.vue'))
 Vue.component('table-progress', tableProgress)
+Vue.use(selectorTable)
 Vue.use(cardSelect)

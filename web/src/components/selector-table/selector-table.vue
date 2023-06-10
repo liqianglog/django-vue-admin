@@ -92,6 +92,7 @@ export default {
       default () {
         return {
           tableConfig: {
+            pagination: true,
             multiple: false,
             columns: []
           }
@@ -160,10 +161,10 @@ export default {
       handler (newValue, oldVal) {
         const { tableConfig } = this._elProps
         // 是否多选
-        if (!tableConfig.multiple) {
-          this.currentValue = [newValue]
-        } else {
+        if (tableConfig.multiple) {
           this.currentValue = newValue
+        } else {
+          this.currentValue = [newValue]
         }
       },
       deep: true,
@@ -196,19 +197,27 @@ export default {
   methods: {
     // 设置显示值
     setCurrentValue (val) {
+      const params = {}
+      if (this._elProps.tableConfig.pagination) {
+        params.page = this.pageConfig.page
+        params.limit = this.pageConfig.limit
+      }
       if (val.toString().length > 0) {
         // 在这里对 传入的value值做处理
         const { url, value, label } = this.dict
-        const params = {}
         params[value] = val
+        params.query = `{${label},${value}}`
         return request({
           url: url,
           params: params,
           method: 'get'
         }).then(res => {
-          const { data } = res.data
-          if (data && data.length > 0) {
-            this.currentValue = data
+          const { data, page, limit, total } = res
+          this.pageConfig.page = page
+          this.pageConfig.limit = limit
+          this.pageConfig.total = total
+          if (data.data && data.data.length > 0) {
+            this.currentValue = data.data
           } else {
             this.currentValue = null
           }
@@ -220,6 +229,7 @@ export default {
     // 获取数据
     getDict () {
       const that = this
+      const { value, label } = this.dict
       let url
       if (typeof that.dict.url === 'function') {
         const form = that.d2CrudContext.getForm()
@@ -233,7 +243,8 @@ export default {
       }
       const params = {
         page: that.pageConfig.page,
-        limit: that.pageConfig.limit
+        limit: that.pageConfig.limit,
+        query: `{${label},${value}}`
       }
       if (that.search) {
         params.search = that.search
@@ -269,6 +280,7 @@ export default {
       const { tableConfig } = that._elProps
       if (tableConfig.multiple) {
         that.$refs.tableRef.clearSelection() // 先清空选择,再赋值选择
+        // eslint-disable-next-line no-unused-expressions
         that.currentValue ? that.currentValue.forEach(item => {
           that.$refs.tableRef.toggleRowSelection(item, true)
         }) : null
@@ -333,6 +345,7 @@ export default {
         this.$emit('input', '')
         this.$emit('change', '')
       } else {
+        // eslint-disable-next-line no-unused-expressions
         this.$refs.tableRef?.toggleRowSelection(obj, false)
         // const { value } = this.dict
         // const result = this.currentValue.map((item) => {
