@@ -3,6 +3,7 @@ import json
 import os
 
 from django.apps import apps
+from django.db import connection
 from rest_framework import request
 
 from application import settings
@@ -31,7 +32,7 @@ class CoreInitialize:
 
     def init_base(self, Serializer, unique_fields=None):
         model = Serializer.Meta.model
-        if is_tenants_mode() and model._meta.model_name == 'menu':
+        if is_tenants_mode() and connection.tenant.schema_name !='public' and model._meta.model_name == 'menu':
             # 超级租户模式下，取消初始化菜单
             return
         path_file = os.path.join(apps.get_app_config(self.app.split('.')[-1]).path, 'fixtures',
