@@ -160,7 +160,7 @@ class Dept(CoreModel):
 class Menu(CoreModel):
     parent = models.ForeignKey(
         to="Menu",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         verbose_name="上级菜单",
         null=True,
         blank=True,
