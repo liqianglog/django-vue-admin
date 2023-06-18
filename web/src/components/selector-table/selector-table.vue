@@ -2,7 +2,7 @@
   <div ref="selectedTableRef">
     <el-popover
       placement="bottom"
-      width="400"
+      width="600"
       trigger="click"
       @show="visibleChange">
       <div class="option">
@@ -16,7 +16,7 @@
           size="mini"
           border
           :row-key="dict.value"
-          style="width: 400px"
+          style="width: 600px"
           max-height="200"
           height="200"
           :highlight-current-row="!_elProps.tableConfig.multiple"
@@ -25,8 +25,10 @@
         >
           <el-table-column v-if="_elProps.tableConfig.multiple" fixed type="selection" reserve-selection width="55"/>
           <el-table-column fixed type="index" label="#" width="50"/>
-          <el-table-column :prop="item.prop" :label="item.label" :width="item.width"
-                           v-for="(item,index) in _elProps.tableConfig.columns" :key="index"/>
+          <span v-for="(item,index) in _elProps.tableConfig.columns" :key="index" >
+            <el-table-column :prop="item.prop" :label="item.label" :width="item.width"
+                           v-if="item.show !== false"/>
+          </span>
         </el-table>
         <el-pagination style="margin-top: 10px;max-width: 200px" background
                        small
@@ -206,7 +208,11 @@ export default {
         // 在这里对 传入的value值做处理
         const { url, value, label } = this.dict
         params[value] = val
-        params.query = `{${label},${value}}`
+        const queryList = ['id', label, value]
+        this._elProps.tableConfig.columns.map(res => {
+          queryList.push(res.prop)
+        })
+        params.query = `{${Array.from(new Set(queryList)).join(',')}}`
         return request({
           url: url,
           params: params,
@@ -241,10 +247,14 @@ export default {
       if (that.dict.params) {
         dictParams = { ...that.dict.params }
       }
+      const queryList = ['id', label, value]
+      this._elProps.tableConfig.columns.map(res => {
+        queryList.push(res.prop)
+      })
       const params = {
         page: that.pageConfig.page,
         limit: that.pageConfig.limit,
-        query: `{${label},${value}}`
+        query: `{${Array.from(new Set(queryList)).join(',')}}`
       }
       if (that.search) {
         params.search = that.search
