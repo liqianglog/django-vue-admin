@@ -167,5 +167,61 @@ export default {
   'tree-selector': {
     form: { component: { name: 'd2p-tree-selector', props: { } } },
     component: { name: 'values-format', props: {} }
+  },
+  'input-required': {
+    form: {
+      component: {
+        props: { },
+        clearable: true,
+        placeholder: '请输入'
+      },
+      rules: [{ required: true, message: '请输入' }],
+      itemProps: {
+        class: { yxtInput: true }
+      }
+    }
+  },
+  input: {
+    form: {
+      component: {
+        props: { },
+        clearable: true,
+        placeholder: '请输入'
+      },
+      itemProps: {
+        class: { yxtInput: true }
+      }
+    }
+  },
+  'editor-ueditor': {
+    form: {
+      component: {
+        name: 'd2p-ueditor',
+        span: 24,
+        props: {
+          config: {
+            serverUrl: util.baseURL() + 'api/system/file/ueditor/',
+            headers: { Authorization: 'JWT ' + util.cookies.get('token') },
+            imageUrlPrefix: util.baseURL(),
+            // 涂鸦图片上传
+            scrawlUrlPrefix: util.baseURL(),
+            // 截图工具上传
+            snapscreenUrlPrefix: util.baseURL(),
+            // 抓取远程图片路径前缀
+            catcherUrlPrefix: util.baseURL(),
+            // 视频访问路径前缀
+            videoUrlPrefix: util.baseURL(),
+            // 文件访问路径前缀
+            fileUrlPrefix: util.baseURL(),
+            // 列出指定目录下的图片
+            imageManagerUrlPrefix: util.baseURL(),
+            // 列出指定目录下的文件
+            fileManagerUrlPrefix: util.baseURL()
+            // 传入ueditor的配置
+            // 文档参考： http://fex.baidu.com/ueditor/#start-config
+          }
+        }
+      }
+    }
   }
 }
