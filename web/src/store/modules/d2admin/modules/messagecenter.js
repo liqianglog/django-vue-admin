@@ -1,6 +1,4 @@
 import { request } from '@/api/service'
-import { urlPrefix } from '@/views/system/messageCenter/api'
-
 export default {
   namespaced: true,
   state: {

@@ -6,10 +6,23 @@
       trigger="click"
       @show="visibleChange">
       <div class="option">
-        <el-input style="margin-bottom: 10px" v-model="search" clearable placeholder="请输入关键词" @change="getDict"
-                  @clear="getDict">
-          <el-button style="width: 100px" slot="append" icon="el-icon-search"></el-button>
-        </el-input>
+        <el-row>
+          <el-col :span="21">
+            <el-input
+              style="margin-bottom: 10px"
+              v-model="search"
+              clearable
+              size="small"
+              placeholder="请输入关键词"
+              @change="getDict"
+              @clear="getDict">
+              <el-button style="width: 100px" slot="append" icon="el-icon-search"></el-button>
+            </el-input>
+          </el-col>
+          <el-col :span="3" style="padding-left: 10px;padding-right: 10px;">
+            <el-button type="primary" round size="mini" style="padding: 10px;" @click="onClear">清空选择</el-button>
+          </el-col>
+        </el-row>
         <el-table
           ref="tableRef"
           :data="tableData"
@@ -57,7 +70,7 @@
             </el-tag>
           </div>
         </div>
-        <el-input v-else placeholder="请选择" slot:reference  :disabled="disabled"></el-input>
+        <el-input v-else placeholder="请选择" slot:reference clearable :disabled="disabled"></el-input>
       </div>
     </el-popover>
   </div>

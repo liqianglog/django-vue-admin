@@ -4,7 +4,7 @@ import d2Container from './d2-container'
 import tableProgress from './table-progress/lib/table-progress.vue'
 import cardSelect from '@/components/card-select/index'
 import selectorTable from '@/components/selector-table/index'
-import m2mValuesPopover from '@/components/m2m-values-popover/index'
+import valuesPopover from '@/components/values-popover/index'
 // 注意 有些组件使用异步加载会有影响
 Vue.component('d2-container', d2Container)
 Vue.component('d2-icon', () => import('./d2-icon'))
@@ -18,4 +18,4 @@ Vue.component('dvaHtml2pdf', () => import('./dvaHtml2pdf/index.vue'))
 Vue.component('table-progress', tableProgress)
 Vue.use(selectorTable)
 Vue.use(cardSelect)
-Vue.use(m2mValuesPopover)
+Vue.use(valuesPopover)
