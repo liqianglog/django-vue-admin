@@ -112,8 +112,17 @@ export default {
     },
     getListData () {
       const params = {}
-      params[this.dict.value] = this.value
+      if (this.value.constructor === Array) {
+        const ids = []
+        this.value.map(res => {
+          ids.push(res[this.dict.value])
+        })
+        params[this.dict.value] = ids
+      } else {
+        params[this.dict.value] = this.value
+      }
       params.query = `{${this.dict.value},${this.dict.label}}`
+      console.log(12, params)
       request({ url: this.dict.url, params: params }).then(ret => {
         this.data = ret.data.data || ret.data
       })

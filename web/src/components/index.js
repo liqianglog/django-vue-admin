@@ -5,6 +5,7 @@ import tableProgress from './table-progress/lib/table-progress.vue'
 import cardSelect from '@/components/card-select/index'
 import selectorTable from '@/components/selector-table/index'
 import valuesPopover from '@/components/values-popover/index'
+import foreignKeyCrudForm from '@/components/foreign-key-crud-form/index'
 // 注意 有些组件使用异步加载会有影响
 Vue.component('d2-container', d2Container)
 Vue.component('d2-icon', () => import('./d2-icon'))
@@ -19,3 +20,4 @@ Vue.component('table-progress', tableProgress)
 Vue.use(selectorTable)
 Vue.use(cardSelect)
 Vue.use(valuesPopover)
+Vue.use(foreignKeyCrudForm)
