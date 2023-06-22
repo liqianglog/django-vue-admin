@@ -56,8 +56,9 @@
                     >
                       <template slot="append">
                         <img
+                          alt="请检查后端是否正常~~"
                           class="login-code"
-                          style="cursor: pointer;"
+                          style="cursor: pointer;width:145px;height: 33px;"
                           height="33px"
                           width="145px"
                           slot="suffix"
