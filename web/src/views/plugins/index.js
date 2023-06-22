@@ -103,6 +103,7 @@ export const getStoreModules = function (Vue, options) {
         // 注册组件
         if (Module.default) {
           storeModules[key] = Module.default
+          console.log(`[${key}]store注册成功`)
           return true
         }
         return false
