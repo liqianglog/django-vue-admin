@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-
-"""
-@author: 猿小天
-@contact: QQ:1638245306
-@Created on: 2021/6/6 006 10:30
-@Remark: 自定义权限
-"""
 import re
 
 from django.contrib.auth.models import AnonymousUser
@@ -95,3 +87,19 @@ class CustomPermission(BasePermission):
                     return True
             else:
                 return False
+
+
+class SuperuserPermission(BasePermission):
+    """
+    普通管理员权限类
+    """
+
+    def has_permission(self, request, view):
+        if isinstance(request.user, AnonymousUser):
+            return False
+        # 判断是否是超级管理员
+        is_superuser = request.user.is_superuser
+        # 判断是否是管理员角色
+        is_admin = request.user.role.values_list('admin', flat=True)
+        if is_superuser or True in is_admin:
+            return True
