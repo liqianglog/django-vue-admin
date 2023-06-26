@@ -84,6 +84,48 @@ export default {
       }
     }
   },
+  'video-uploader': {
+    form: { component: { name: 'd2p-file-uploader', props: { elProps: { limit: 1, listType: 'video', accept: '.avi,.wmv,.mpg,.mpeg,.mov,.rm,.ram,.swf,.flv,.mp4,.mp3,.wma,.avi,.rm,.rmvb,.flv,.mpg,.mkv', showFileList: false } } } },
+    component: { name: 'd2p-images-format' },
+    view: {
+      component: { props: { height: 100, width: 100 } }
+    },
+    align: 'center',
+    // 提交时,处理数据
+    valueResolve (row, col) {
+      const value = row[col.key]
+      if (value != null) {
+        if (value.length >= 0) {
+          if (value instanceof Array) {
+            // 剔除前缀
+            row[col.key] = value.map(str => str.replace(util.baseURL(), '')).toString()
+          } else {
+            // 剔除前缀
+            row[col.key] = value.replace(util.baseURL(), '')
+          }
+        } else {
+          row[col.key] = null
+        }
+      }
+    },
+    // 接收时,处理数据
+    valueBuilder (row, col) {
+      const value = row[col.key]
+      if (value != null && value) {
+        row[col.key] = value.split(',')
+        // 进行组装地址，纠正地址
+        row[col.key].map((val, index) => {
+          if (val.startsWith('/api')) {
+            row[col.key][index] = val
+          } else if (val.startsWith('/')) {
+            row[col.key][index] = util.baseURL() + val.slice(1)
+          } else {
+            row[col.key][index] = !val.startsWith('http') ? util.baseURL() + val : val
+          }
+        })
+      }
+    }
+  },
   'file-uploader': {
     form: { component: { name: 'd2p-file-uploader', props: { elProps: { listType: 'text' } } } },
     component: { name: 'd2p-files-format' },
