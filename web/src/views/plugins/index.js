@@ -92,7 +92,7 @@ export const getStoreModules = function (Vue, options) {
       const Module = require('@/views/plugins/' + key + '/src/store/index.js')
       // 注册组件
       if (Module.default) {
-        storeModules[key] = Module.default
+        storeModules[Module.default.stateName || key] = Module.default
         console.log(`[${key}]store注册成功`)
         return true
       }
@@ -102,7 +102,7 @@ export const getStoreModules = function (Vue, options) {
         const Module = require('@great-dream/' + key + '/src/store/index.js')
         // 注册组件
         if (Module.default) {
-          storeModules[key] = Module.default
+          storeModules[Module.default.stateName || key] = Module.default
           console.log(`[${key}]store注册成功`)
           return true
         }
