@@ -36,10 +36,32 @@
         <i class="el-icon-plus avatar-uploader-icon" v-else/>
       </div>
     </template>
+    <template v-else-if="_elProps.listType ===  'video'">
+      <div class="avatar-item-wrapper">
+        <div class="status-uploading" v-if="avatarLoading!=null">
+          <el-progress type="circle" :percentage="avatarLoading" :width="70"/>
+        </div>
+        <div v-if="avatarUrl!=null" class="avatar">
+          <img src="./play-back.png">
+          <div class="preview" @click.stop="" >
+            <i class="el-icon-video-camera" @click="previewAvatar"></i>
+            <i class="el-icon-delete" v-if="!disabled" @click="removeAvatar"></i>
+          </div>
+        </div>
+        <i class="el-icon-plus avatar-uploader-icon" v-else/>
+      </div>
+    </template>
   </el-upload>
     <el-dialog :visible.sync="dialogVisible"  v-bind="preview" append-to-body >
-      <div style="text-align: center">
+      <div style="text-align: center" v-if="_elProps.listType ===  'avatar'">
         <img  style="max-width: 100%;" :src="dialogImageUrl" alt="">
+      </div>
+      <div style="text-align: center" v-else>
+        <div id="player" v-if="dialogVisible">
+          <div class="player-container">
+           <vue-core-video-player style="max-width: 100%;" :src="dialogImageUrl"  autoplay :loop="true"/>
+          </div>
+        </div>
       </div>
     </el-dialog>
   </div>
@@ -169,6 +191,8 @@ export default {
     uploadClass () {
       if (this._elProps.listType === 'avatar') {
         return 'avatar-uploader'
+      } else if (this._elProps.listType === 'video') {
+        return 'avatar-uploader'
       } else if (this._elProps.listType === 'picture-card') {
         if (this.fileList && this._elProps.limit !== 0 && this.fileList.length >= this._elProps.limit) {
           return 'image-uploader hide-plus'
@@ -189,7 +213,7 @@ export default {
         showFileList: true,
         action: '',
         onPreview: (file) => {
-          if (this._elProps.listType === 'picture-card' || this._elProps.listType === 'picture' || this._elProps.listType === 'avatar') {
+          if (this._elProps.listType === 'picture-card' || this._elProps.listType === 'picture' || this._elProps.listType === 'avatar' || this._elProps.listType === 'video') {
             this.dialogImageUrl = file.url
             this.dialogVisible = true
           } else {
@@ -215,6 +239,7 @@ export default {
                 const limitTip = this.computeFileSize(limit)
                 const fileSizeTip = this.computeFileSize(file.size)
                 this.$message({ message: '文件大小不能超过' + limitTip + '，当前文件大小:' + fileSizeTip, type: 'warning' })
+                return false
               }
             }
           } else {
@@ -286,7 +311,7 @@ export default {
       this.$set(this, 'fileList', fileList)
     },
     handleUploadProgress (event, file, fileList) {
-      if (this._elProps.listType === 'avatar') {
+      if (this._elProps.listType === 'avatar' || this._elProps.listType === 'video') {
         log.debug('progress', event, file)
         this.avatarLoading = Math.floor(event.percent)
         if (event.percent === 100) {

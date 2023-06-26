@@ -42,6 +42,7 @@
     "ua-parser-js": "^0.7.20",
     "viser-vue": "^2.4.8",
     "vue": "2.7.14",
+    "vue-core-video-player": "^0.2.0",
     "vue-echarts": "^6.5.4",
     "vue-grid-layout": "^2.4.0",
     "vue-html2pdf": "^1.8.0",
