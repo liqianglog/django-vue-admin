@@ -65,6 +65,7 @@ export default {
       type: Object,
       default () {
         return {
+          isInitRows: true, // 是否初始化一行
           index: {
             name: '序号',
             span: 2
@@ -135,18 +136,23 @@ export default {
       return res
     },
     currentForm () {
-      console.log(1212, this.value)
       if (!this.value || !this.value[0]) {
-        const fields = {
-          _id: this.value?.length || 0
-        }
-        for (const key in this.elProps.fields) {
-          fields[key] = this.elProps.fields[key].default || null
-        }
-        this.$emit('change', [fields])
-        this.$emit('input', [fields])
-        return {
-          data: [fields]
+        if (this.elProps.isInitRows) {
+          const fields = {
+            _id: this.value?.length || 0
+          }
+          for (const key in this.elProps.fields) {
+            fields[key] = this.elProps.fields[key].default || null
+          }
+          this.$emit('change', [fields])
+          this.$emit('input', [fields])
+          return {
+            data: [fields]
+          }
+        } else {
+          return {
+            data: []
+          }
         }
       }
       return {
@@ -185,12 +191,12 @@ export default {
     // 新增
     addDomain () {
       const fields = {
-        _id: this.value.length
+        _id: this.value?.length || 0
       }
       for (const key in this.elProps.fields) {
         fields[key] = this.elProps.fields[key].default || null
       }
-      console.log(12121212, this.currentForm.data, fields)
+      fields.sort = (this.value?.length || 0) + 1
       this.currentForm.data.push(fields)
       this.$emit('change', this.currentForm.data)
       this.$emit('input', this.currentForm.data)

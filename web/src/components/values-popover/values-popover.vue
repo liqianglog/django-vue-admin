@@ -26,6 +26,16 @@
         }} {{ elProps.unit }}</span>
       </el-button>
     </div>
+    <div v-if="elProps.type === 'strList'">
+      <el-descriptions class="margin-top" :column="1" size="mini" border>
+        <el-descriptions-item v-for="(item,index) in value" :key="index" labelStyle="width: 60px;">
+          <template slot="label">
+            选项{{ index + 1 }}
+          </template>
+          {{ item[dict.label] }}
+        </el-descriptions-item>
+      </el-descriptions>
+    </div>
     <div v-else-if="elProps.type === 'ueditor'">
       <el-popover
         placement="right"
@@ -122,7 +132,6 @@ export default {
         params[this.dict.value] = this.value
       }
       params.query = `{${this.dict.value},${this.dict.label}}`
-      console.log(12, params)
       request({ url: this.dict.url, params: params }).then(ret => {
         this.data = ret.data.data || ret.data
       })

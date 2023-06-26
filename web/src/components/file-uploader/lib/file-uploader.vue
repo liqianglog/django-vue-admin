@@ -310,7 +310,9 @@ export default {
         //   log.debug('当前文件上传完成，等待剩下的文件全部上传成功后再更新value')
         //   return
         // }
-        item.url = this.baseURL + url
+        if (item.url.indexOf('http') !== 0 && item.url.indexOf('https') !== 0 && item.url.indexOf(this.baseURL) !== 0) {
+          item.url = this.baseURL + item.url
+        }
         if (item.response != null && item.response.url != null) {
           list.push({ ...item.response })
         } else {

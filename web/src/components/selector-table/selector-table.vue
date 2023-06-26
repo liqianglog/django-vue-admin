@@ -217,7 +217,7 @@ export default {
         params.page = this.pageConfig.page
         params.limit = this.pageConfig.limit
       }
-      if (val.toString().length > 0) {
+      if (val && val.toString().length > 0) {
         // 在这里对 传入的value值做处理
         const { url, value, label } = this.dict
         params[value] = val
