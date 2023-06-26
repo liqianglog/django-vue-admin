@@ -449,6 +449,32 @@ export const crudOptions = (vm) => {
             }
           }
         }
+      }, {
+        title: '主框架外展示',
+        key: 'frame_out',
+        search: {
+          disabled: false
+        },
+        width: 75,
+        type: 'radio',
+        dict: {
+          data: vm.dictionary('button_whether_bool')
+        },
+        form: {
+          value: false,
+          component: {
+            placeholder: '请选择主框架外展示'
+          },
+          rules: [ // 表单校验规则
+            { required: true, message: '主框架外展示必填项' }
+          ],
+          helper: {
+            render (h) {
+              return (< el-alert title="是否显示在主框架外展示" type="warning" />
+              )
+            }
+          }
+        }
       },
       {
         title: '状态',

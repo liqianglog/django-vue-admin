@@ -100,6 +100,7 @@ const errorPage = [{
 
 // 导出需要显示菜单的
 export const frameInRoutes = frameIn
+export const frameOutRoutes = frameOut
 
 // 重新组织后导出
 export default [

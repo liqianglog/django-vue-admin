@@ -9,7 +9,7 @@
 import { uniqueId } from 'lodash'
 import { request } from '@/api/service'
 import XEUtils from 'xe-utils'
-import { frameInRoutes } from '@/router/routes'
+import { frameInRoutes, frameOutRoutes } from '@/router/routes'
 const _import = require('@/libs/util.import.' + process.env.NODE_ENV)
 const pluginImport = require('@/libs/util.import.plugin')
 /**
@@ -79,7 +79,11 @@ export const handleRouter = function (menuData) {
           cache: item.cache
         }
       }
-      result.push(obj)
+      if (item.frame_out) {
+        frameOutRoutes.push(obj)
+      } else {
+        result.push(obj)
+      }
     } else {
       if (item.is_link === 0) {
         delete item.path
@@ -87,7 +91,7 @@ export const handleRouter = function (menuData) {
     }
   }
   frameInRoutes[0].children = [...result]
-  return frameInRoutes
+  return { routes: frameInRoutes, frameOut: frameOutRoutes }
 }
 
 /**

@@ -30,7 +30,7 @@ VueRouter.prototype.replace = function replace (location) {
 }
 
 Vue.use(VueRouter)
-
+console.log(routes)
 // 导出路由 在 main.js 里使用
 const router = new VueRouter({
   routes
@@ -72,11 +72,17 @@ router.beforeEach(async (to, from, next) => {
       getMenu().then(ret => {
         // 校验路由是否有效
         ret = checkRouter(ret)
-        const routes = handleRouter(ret)
+        const { routes, frameOut } = handleRouter(ret)
         // 处理路由 得到每一级的路由设置
         store.commit('d2admin/page/init', routes)
-
-        router.addRoutes(routes)
+        routes.map((r) => {
+          router.addRoute(r)
+        })
+        frameOut.map((r) => {
+          router.addRoute(r)
+          router.options.routes.push(r)
+        })
+        console.log('router', router, routes, frameOut)
         // routes.forEach(route => router.addRoute(route))
 
         const menu = handleAsideMenu(ret)

@@ -183,6 +183,7 @@ class Menu(CoreModel):
     component_name = models.CharField(max_length=50, verbose_name="组件名称", null=True, blank=True,
                                       help_text="组件名称")
     status = models.BooleanField(default=True, blank=True, verbose_name="菜单状态", help_text="菜单状态")
+    frame_out = models.BooleanField(default=False, blank=True, verbose_name="是否主框架外", help_text="是否主框架外")
     cache = models.BooleanField(default=False, blank=True, verbose_name="是否页面缓存", help_text="是否页面缓存")
     visible = models.BooleanField(default=True, blank=True, verbose_name="侧边栏中是否显示",
                                   help_text="侧边栏中是否显示")
