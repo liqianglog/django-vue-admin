@@ -41,7 +41,7 @@
         placement="right"
         width="400"
         trigger="hover"
-        v-if="value.length > 0"
+        v-if="value && value.length > 0"
         popper-class="userprjtreepop"
         @show="showEvents"
         @hide="show=false">
