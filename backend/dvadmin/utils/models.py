@@ -10,8 +10,8 @@ import uuid
 from datetime import date, timedelta
 
 from django.apps import apps
-from django.db import models, connection, ProgrammingError
-from django.db.models import QuerySet
+from django.db import models, transaction, connection, ProgrammingError
+from django.core.exceptions import ObjectDoesNotExist
 
 from application import settings
 from application.dispatch import is_tenants_mode
@@ -19,10 +19,16 @@ from application.dispatch import is_tenants_mode
 table_prefix = settings.TABLE_PREFIX  # 数据库表名前缀
 
 
-class SoftDeleteQuerySet(QuerySet):
-    pass
+class SoftDeleteQuerySet(models.query.QuerySet):
+    @transaction.atomic
+    def delete(self, cascade=True):
+        if cascade:  # delete one by one if cascade
+            for obj in self.all():
+                obj.delete(cascade=cascade)
+        return self.update(is_deleted=True)
 
-
+    def hard_delete(self):
+        return super().delete()
 
 
 class SoftDeleteManager(models.Manager):
@@ -34,8 +40,8 @@ class SoftDeleteManager(models.Manager):
 
     def filter(self, *args, **kwargs):
         # 考虑是否主动传入is_deleted
-        if not kwargs.get('is_deleted') is None:
-            self.__add_is_del_filter = True
+        if not kwargs.get("is_deleted") is None:
+            self.__add_is_del_filter = kwargs.get("is_deleted")
         return super(SoftDeleteManager, self).filter(*args, **kwargs)
 
     def get_queryset(self):
@@ -49,8 +55,10 @@ class SoftDeleteManager(models.Manager):
 
 def get_month_range(start_day, end_day):
     months = (end_day.year - start_day.year) * 12 + end_day.month - start_day.month
-    month_range = ['%s-%s-01' % (start_day.year + mon // 12, str(mon % 12 + 1).zfill(2))
-                   for mon in range(start_day.month - 1, start_day.month + months)]
+    month_range = [
+        "%s-%s-01" % (start_day.year + mon // 12, str(mon % 12 + 1).zfill(2))
+        for mon in range(start_day.month - 1, start_day.month + months)
+    ]
     return month_range
 
 
@@ -59,20 +67,101 @@ class SoftDeleteModel(models.Model):
     软删除模型
     一旦继承,就将开启软删除
     """
-    is_deleted = models.BooleanField(verbose_name="是否软删除", help_text='是否软删除', default=False, db_index=True)
+
+    is_deleted = models.BooleanField(verbose_name="是否软删除", help_text="是否软删除", default=False, db_index=True)
     objects = SoftDeleteManager()
 
     class Meta:
         abstract = True
-        verbose_name = '软删除模型'
+        verbose_name = "软删除模型"
         verbose_name_plural = verbose_name
 
-    def delete(self, using=None, soft_delete=True, *args, **kwargs):
+    @transaction.atomic
+    def delete(self, using=None, cascade=True, *args, **kwargs):
         """
         重写删除方法,直接开启软删除
         """
         self.is_deleted = True
         self.save(using=using)
+        if cascade:
+            self.delete_related_objects(raise_exception=True)
+        # raise Exception("delete_related_objects")
+
+    def hard_delete(self):
+        return super().delete()
+
+    soft_delete_kwargs = {
+        "related_names": [],
+    }
+
+    @classmethod
+    def _get_kwargs(cls):
+        return cls.soft_delete_kwargs
+
+    @classmethod
+    def _get_relations(cls):
+        relations = {"foreign": [], "self": []}
+        related_fields = cls._get_kwargs().get("related_names", [])
+        if not related_fields:
+            fields = cls._meta.get_fields(include_hidden=True)
+            mutated_fields = [field for field in fields if field.is_relation and hasattr(field, "related_name")]
+            m2m_models = [field.through for field in mutated_fields if field.many_to_many]
+            related_fields = [
+                field.related_name
+                for field in mutated_fields
+                if not field.many_to_many and field.related_model not in m2m_models and field.related_name
+            ]
+            tree_model_field = [
+                field.field.name
+                for field in mutated_fields
+                if not field.many_to_many and field.related_model is field.model
+            ]
+            relations["foreign"] = related_fields
+            relations["self"] = f"{tree_model_field[0]}_id" if len(tree_model_field) == 1 else None
+        print(f"{relations=}", flush=True)
+        return relations
+
+    def _is_cascade(self, relation):
+        on_delete_case = self._meta.get_field(relation).on_delete.__name__
+        return on_delete_case == "CASCADE"
+
+    def _get_related_objects(self, relation):
+        qs = getattr(self, relation)
+        if isinstance(qs, models.Manager):
+            return qs
+        return
+
+    def related_objects(self, raise_exception=False, use_soft_manager=False):
+        relations = self._get_relations()
+        objects = {}
+        for relation in relations["foreign"]:
+            try:
+                qs = self._get_related_objects(relation)
+            except ObjectDoesNotExist as e:
+                if raise_exception:
+                    raise e
+                continue
+            else:
+                objects[relation] = qs
+        if relations["self"]:
+            objects["self"] = self.__class__.objects.filter(**{relations["self"]: self.id})
+        print(f"related_objects: {objects}", flush=True)
+        return objects
+
+    def delete_related_objects(self, raise_exception=False):
+        for relation, qs in self.related_objects(raise_exception=raise_exception).items():
+            if relation == "self":
+                qs.delete()
+                continue
+            if self._is_cascade(relation):
+                print(f"model {self.__class__} : cascade delete {relation} objects {qs.all()}", flush=True)
+                qs.all().delete()
+            else:
+                print(f"model {self.__class__} : protect delete {relation} objects {qs.all()}", flush=True)
+                if qs.all().exists():
+                    self.hard_delete()
+                qs.all().hard_delete()
+        # raise Exception("xxxxxxxxxxx for test xxxxxxxxxxx")
 
 
 class CoreModel(models.Model):
