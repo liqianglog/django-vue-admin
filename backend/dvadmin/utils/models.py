@@ -116,8 +116,8 @@ class SoftDeleteModel(models.Model):
                 for field in mutated_fields
                 if not field.many_to_many and field.related_model is field.model
             ]
-            relations["foreign"] = related_fields
             relations["self"] = f"{tree_model_field[0]}_id" if len(tree_model_field) == 1 else None
+        relations["foreign"] = related_fields
         print(f"{relations=}", flush=True)
         return relations
 
