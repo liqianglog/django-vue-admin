@@ -60,11 +60,11 @@ export default {
   },
   computed: {
     ...mapState('d2admin', {
-      siteLogo: state => state.settings.data['login.site_logo'] || require('./image/dvadmin.png'), // 网站logo地址
+      siteLogo: state => state.settings.data['login.site_logo'] || require('@/assets/image/dvadmin.png'), // 网站logo地址
       keepRecord: state => state.settings.data['login.keep_record'],
       siteName: state => state.settings.data['login.site_name'], // 网站名称
       copyright: state => state.settings.data['login.copyright'],
-      loginBackground: state => state.settings.data['login.login_background'] || require('./image/bg.jpg'), // 登录页背景图
+      loginBackground: state => state.settings.data['login.login_background'] || require('@/assets/image/bg.jpg'), // 登录页背景图
       helpUrl: state => state.settings.data['login.help_url'], // 帮助
       privacyUrl: state => state.settings.data['login.privacy_url'], // 隐私
       clauseUrl: state => state.settings.data['login.clause_url'], // 条款
@@ -145,7 +145,6 @@ export default {
     left: 0;
     height: 100%;
     width: 100%;
-    background-image: url(./image/bg.jpg);
     background-position: center 0;
     background-repeat: no-repeat;
     background-attachment: fixed;

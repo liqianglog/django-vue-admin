@@ -5,11 +5,11 @@ import { d2CrudPlus } from 'd2-crud-plus'
 import {
   D2pAreaSelector,
   D2pDemoExtend,
-  D2pFileUploader,
   D2pFullEditor,
   D2pIconSelector,
   D2pUploader
 } from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
+import D2pFileUploader from '@/components/file-uploader'
 // http请求
 import { request } from '@/api/service'
 import util from '@/libs/util'
@@ -91,7 +91,8 @@ Vue.use(d2CrudPlus, {
         nullToBlankStr: true, // 提交修改表单时，将undefinded的数据修改为空字符串''，可以解决无法清空字段的问题
         defaultSpan: 12, // 默认的表单 span
         saveRemind: true,
-        labelWidth: '110px'
+        labelWidth: '110px',
+        appendToBody: true
       },
       viewOptions: {
         disabled: false,
@@ -111,11 +112,7 @@ Vue.use(d2CrudPlus, {
 // Vue.use(D2pTreeSelector)
 Vue.use(D2pAreaSelector)
 Vue.use(D2pIconSelector)
-Vue.use(D2pFullEditor, {
-  ueditor: {
-    serverUrl: '/api/ueditor/'
-  }
-})
+Vue.use(D2pFullEditor)
 Vue.use(D2pDemoExtend)
 Vue.use(D2pFileUploader)
 Vue.use(D2pUploader, {
@@ -186,7 +183,7 @@ Vue.use(D2pUploader, {
       if (ret.data === null || ret.data === '') {
         throw new Error('上传失败')
       }
-      return { url: util.baseURL() + ret.data.url, key: option.data.key, id: ret.data.id }
+      return { url: ret.data.url, key: option.data.key, id: ret.data.id }
     },
     withCredentials: false // 是否带cookie
   }

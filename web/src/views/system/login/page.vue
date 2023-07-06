@@ -1,7 +1,7 @@
 <template>
   <div
     class="w3l-signinform"
-    :style="{background:'url(' +(loginBackground || require('./image/bg.jpg')) +') no-repeat center', backgroundSize: '100% 100%' }"
+    :style="{background:'url(' +(loginBackground || require('@/assets/image/bg.jpg')) +') no-repeat center', backgroundSize: '100% 100%' }"
   >
     <!-- container -->
     <div class="wrapper">
@@ -56,8 +56,9 @@
                     >
                       <template slot="append">
                         <img
+                          alt="请检查后端是否正常~~"
                           class="login-code"
-                          style="cursor: pointer;"
+                          style="cursor: pointer;width:145px;height: 33px;"
                           height="33px"
                           width="145px"
                           slot="suffix"

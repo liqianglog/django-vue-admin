@@ -12,9 +12,12 @@ from collections import OrderedDict
 from functools import reduce
 
 import six
+from django.db import models
 from django.db.models import Q, F
 from django.db.models.constants import LOOKUP_SEP
 from django_filters import utils
+from django_filters.conf import settings
+from django_filters.constants import ALL_FIELDS
 from django_filters.filters import CharFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters.utils import get_model_field
@@ -154,12 +157,14 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
         "~": "icontains",
     }
 
-    def construct_search(self, field_name):
+    def construct_search(self, field_name, lookup_expr=None):
         lookup = self.lookup_prefixes.get(field_name[0])
         if lookup:
             field_name = field_name[1:]
         else:
-            lookup = "icontains"
+            lookup = lookup_expr
+        if field_name.endswith(lookup):
+            return field_name
         return LOOKUP_SEP.join([field_name, lookup])
 
     def find_filter_lookups(self, orm_lookups, search_term_key):
@@ -213,6 +218,52 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
 
             class AutoFilterSet(self.filterset_base):
                 @classmethod
+                def get_all_model_fields(cls, model):
+                    opts = model._meta
+
+                    return [
+                        f.name
+                        for f in sorted(opts.fields + opts.many_to_many)
+                        if (f.name == 'id') or not isinstance(f, models.AutoField)
+                           and not (getattr(f.remote_field, "parent_link", False))
+                    ]
+
+                @classmethod
+                def get_fields(cls):
+                    """
+                    Resolve the 'fields' argument that should be used for generating filters on the
+                    filterset. This is 'Meta.fields' sans the fields in 'Meta.exclude'.
+                    """
+                    model = cls._meta.model
+                    fields = cls._meta.fields
+                    exclude = cls._meta.exclude
+
+                    assert not (fields is None and exclude is None), (
+                            "Setting 'Meta.model' without either 'Meta.fields' or 'Meta.exclude' "
+                            "has been deprecated since 0.15.0 and is now disallowed. Add an explicit "
+                            "'Meta.fields' or 'Meta.exclude' to the %s class." % cls.__name__
+                    )
+
+                    # Setting exclude with no fields implies all other fields.
+                    if exclude is not None and fields is None:
+                        fields = ALL_FIELDS
+
+                    # Resolve ALL_FIELDS into all fields for the filterset's model.
+                    if fields == ALL_FIELDS:
+                        fields = cls.get_all_model_fields(model)
+
+                    # Remove excluded fields
+                    exclude = exclude or []
+                    if not isinstance(fields, dict):
+                        fields = [
+                            (f, [settings.DEFAULT_LOOKUP_EXPR]) for f in fields if f not in exclude
+                        ]
+                    else:
+                        fields = [(f, lookups) for f, lookups in fields.items() if f not in exclude]
+
+                    return OrderedDict(fields)
+
+                @classmethod
                 def get_filters(cls):
                     """
                     Get all filters for the filterset. This is the combination of declared and
@@ -239,7 +290,10 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
                         # warn if the field doesn't exist.
                         if field is None:
                             undefined.append(field_name)
-
+                        # 更新默认字符串搜索为模糊搜索
+                        if isinstance(field, (models.CharField)) and filterset_fields == '__all__' and lookups == [
+                            'exact']:
+                            lookups = ['icontains']
                         for lookup_expr in lookups:
                             filter_name = cls.get_filter_name(field_name, lookup_expr)
 
@@ -288,7 +342,7 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
             for search_field in filterset.filters:
                 if isinstance(filterset.filters[search_field], CharFilter):
                     orm_lookups.append(
-                        self.construct_search(six.text_type(search_field))
+                        self.construct_search(six.text_type(search_field), filterset.filters[search_field].lookup_expr)
                     )
                 else:
                     orm_lookups.append(search_field)

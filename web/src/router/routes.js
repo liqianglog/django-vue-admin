@@ -78,12 +78,23 @@ const frameOut = [
 /**
  * 第三方登录
  */
-const pluginsType = checkPlugins('dvadmin-oauth2-web')
-if (pluginsType) {
+const oauth2PluginsType = checkPlugins('dvadmin-oauth2-web')
+if (oauth2PluginsType) {
   frameOut.push({
     path: '/oauth2',
     name: 'login',
-    component: pluginsType === 'local' ? _import('plugins/dvadmin-oauth2-web/src/login/index') : pluginImport('dvadmin-oauth2-web/src/login/index')
+    component: oauth2PluginsType === 'local' ? _import('plugins/dvadmin-oauth2-web/src/login/index') : pluginImport('dvadmin-oauth2-web/src/login/index')
+  })
+}
+/**
+ * 租户申请注册
+ */
+const tenantsPluginsType = checkPlugins('dvadmin-tenants-web')
+if (tenantsPluginsType) {
+  frameOut.push({
+    path: '/register',
+    name: 'tenantsRegister',
+    component: tenantsPluginsType === 'local' ? _import('plugins/dvadmin-tenants-web/src/register/index') : pluginImport('dvadmin-tenants-web/src/register/index')
   })
 }
 /**
@@ -97,6 +108,7 @@ const errorPage = [{
 
 // 导出需要显示菜单的
 export const frameInRoutes = frameIn
+export const frameOutRoutes = frameOut
 
 // 重新组织后导出
 export default [

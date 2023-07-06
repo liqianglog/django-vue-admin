@@ -35,9 +35,11 @@ import md5 from 'js-md5'
 // websocket
 import websocket from '@/api/websocket'
 import util from '@/libs/util'
-
+import VueCoreVideoPlayer from 'vue-core-video-player'
 // 引入echarts
 import * as echarts from 'echarts' // 注册echarts组件
+
+Vue.use(VueCoreVideoPlayer)
 // 核心插件
 Vue.use(d2Admin)
 Vue.use(VXETable)

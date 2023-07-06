@@ -3,7 +3,10 @@ import logging
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
+from django.contrib.auth.hashers import check_password
 from django.utils import timezone
+
+from dvadmin.utils.validator import CustomValidationError
 
 logger = logging.getLogger(__name__)
 UserModel = get_user_model()
@@ -24,10 +27,13 @@ class CustomBackend(ModelBackend):
         except UserModel.DoesNotExist:
             UserModel().set_password(password)
         else:
-            check_password = user.check_password(password)
-            if not check_password:
-                check_password = user.check_password(hashlib.md5(password.encode(encoding='UTF-8')).hexdigest())
-            if check_password and self.user_can_authenticate(user):
-                user.last_login = timezone.now()
-                user.save()
-                return user
+            verify_password = check_password(password, user.password)
+            if not verify_password:
+                password = hashlib.md5(password.encode(encoding='UTF-8')).hexdigest()
+                verify_password = check_password(password, user.password)
+            if verify_password:
+                if self.user_can_authenticate(user):
+                    user.last_login = timezone.now()
+                    user.save()
+                    return user
+                raise CustomValidationError("当前用户已被禁用，请联系管理员!")

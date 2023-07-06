@@ -69,8 +69,12 @@ class DataVViewSet(GenericViewSet):
         :return:
         """
         count = FileList.objects.all().count()
-        data = FileList.objects.aggregate(sum_size=Sum('size'))
-        return DetailResponse(data={"count": count, "occupy_space": format_bytes(data.get('sum_size') or 0)}, msg="获取成功")
+        if count != 0:
+            data = FileList.objects.aggregate(sum_size=Sum('size'))
+        else:
+            data = {"sum_size": 0}
+        return DetailResponse(data={"count": count, "occupy_space": format_bytes(data.get('sum_size') or 0)},
+                              msg="获取成功")
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
     def database_total(self, request):

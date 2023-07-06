@@ -331,7 +331,7 @@ export default {
       const form = JSON.parse(JSON.stringify(this.form))
       const keys = Object.keys(form)
       const values = Object.values(form)
-      let submitForm = Object.assign([],this.formList)
+      const submitForm = Object.assign([], this.formList)
       for (const index in this.formList) {
         const item = this.formList[index]
         // eslint-disable-next-line camelcase
@@ -397,14 +397,13 @@ export default {
       const { tableData } = $table.getTableData()
       const tableLength = tableData.length
       if (tableLength === 0) {
-        const { row } = $table.insert()
+        $table.insert()
       } else {
         const errMap = await $table.validate().catch(errMap => errMap)
         if (errMap) {
           this.$message.error('校验不通过！')
         } else {
-          const { row } = $table.insert()
-
+          $table.insert()
         }
       }
     },
