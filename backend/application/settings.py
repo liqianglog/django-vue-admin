@@ -412,6 +412,7 @@ PLUGINS_URL_PATTERNS = []
 # from dvadmin_ak_sk.settings import *            # 秘钥管理管理
 # from dvadmin_tenants.settings import *          # 租户管理
 # from dvadmin_cloud_storage.settings import * # 云存储
+from dvadmin_low_code_crud.settings import *  # 低代码操作
 # ...
 
 # ********** 一键导入插件配置结束 **********
