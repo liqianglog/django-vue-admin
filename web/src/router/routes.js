@@ -21,6 +21,14 @@ const frameIn = [{
       component: _import('dashboard/workbench/index')
     },
     {
+      path: 'page1',
+      name: 'page1',
+      meta: {
+        auth: true
+      },
+      component: _import('demo/page1/index')
+    },
+    {
       path: 'userInfo',
       name: 'userInfo',
       meta: {
