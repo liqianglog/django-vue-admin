@@ -7,6 +7,7 @@
 @Remark: 系统配置
 """
 import django_filters
+from django.db import connection
 from django.db.models import Q
 from django_filters.rest_framework import BooleanFilter
 from rest_framework import serializers
@@ -277,4 +278,5 @@ class InitSettingsViewSet(APIView):
                                                                                                     'key')]
         data = dict(filter(lambda x: x[0] not in backend_config, data.items()))
         data = self.filter_system_config_values(data=data)
+        data['schema_name'] = connection.tenant.schema_name
         return DetailResponse(data=data)
