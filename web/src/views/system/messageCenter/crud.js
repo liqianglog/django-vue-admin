@@ -275,7 +275,7 @@ export const crudOptions = (vm) => {
             return request({
               url: url
             }).then(ret => {
-              return ret.data.data
+              return ret.data
             })
           }
         },
