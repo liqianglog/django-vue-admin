@@ -13,6 +13,7 @@ from dvadmin.utils.json_response import DetailResponse, SuccessResponse
 from dvadmin.utils.permission import AnonymousUserPermission
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
+from dvadmin.utils.filters import LazyLoadFilter
 
 
 class DeptSerializer(CustomModelSerializer):
@@ -120,6 +121,12 @@ class DeptCreateUpdateSerializer(CustomModelSerializer):
         fields = '__all__'
 
 
+class DeptLazyFilter(LazyLoadFilter):
+    class Meta:
+        model = Dept
+        fields = ['name', 'parent', 'status']
+
+
 class DeptViewSet(CustomModelViewSet):
     """
     部门管理接口
@@ -129,11 +136,13 @@ class DeptViewSet(CustomModelViewSet):
     retrieve:单例
     destroy:删除
     """
+
     queryset = Dept.objects.all()
     serializer_class = DeptSerializer
     create_serializer_class = DeptCreateUpdateSerializer
     update_serializer_class = DeptCreateUpdateSerializer
-    filter_fields = ['name', 'id', 'parent']
+    # filter_fields = ["name", "id", "parent"]
+    filter_class = DeptLazyFilter
     search_fields = []
     # extra_filter_backends = []
     import_serializer_class = DeptImportSerializer

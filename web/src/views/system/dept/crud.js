@@ -20,7 +20,13 @@ export const crudOptions = (vm) => {
         hasChild: 'hasChild',
         lazy: true,
         loadMethod: ({ row }) => {
-          return api.GetList({ parent: row.id }).then(ret => {
+          let query = JSON.parse(JSON.stringify(vm.getSearch().getForm()))
+          query = Object.fromEntries(
+            Object.entries(query).filter(([_, value]) => ![undefined, null, [], '[]', ''].includes(value))
+          )
+          query.parent = row.id
+          // console.log(query)
+          return api.GetList({ ...query }).then(ret => {
             return ret.data.data
           })
         },
