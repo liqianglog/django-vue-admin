@@ -11,7 +11,7 @@ import traceback
 
 from django.db.models import ProtectedError, RestrictedError
 from django.http import Http404
-from rest_framework.exceptions import APIException as DRFAPIException, AuthenticationFailed
+from rest_framework.exceptions import APIException as DRFAPIException, AuthenticationFailed, PermissionDenied
 from rest_framework.status import HTTP_407_PROXY_AUTHENTICATION_REQUIRED, HTTP_401_UNAUTHORIZED
 from rest_framework.views import set_rollback, exception_handler
 
@@ -50,6 +50,8 @@ def CustomExceptionHandler(ex, context):
     elif isinstance(ex, DRFAPIException):
         set_rollback()
         msg = ex.detail
+        if isinstance(ex, PermissionDenied):
+            msg = f'{msg} ({context["request"].method}: {context["request"].path})'
         if isinstance(msg, dict):
             for k, v in msg.items():
                 for i in v:
