@@ -396,8 +396,10 @@ class LazyLoadFilter(FilterSet, metaclass=LazyLoadFilterSetMetaclass):
     @property
     def qs(self):
         is_node = self.queryset.filter(parent__isnull=False).exists()
+        # print(is_node, self.queryset)
         if not is_node:
             self.queryset = self.queryset.model.objects.filter(parent__in=self.queryset)
             parent_ids = set(super().qs.values_list("parent_id", flat=True))
+            # print(self.queryset, parent_ids, super().qs)
             return self.queryset.model.objects.filter(id__in=parent_ids)
         return super().qs

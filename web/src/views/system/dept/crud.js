@@ -144,6 +144,7 @@ export const crudOptions = (vm) => {
         },
         width: 180,
         type: 'input',
+        showOverflow: 'tooltip',
         form: {
           rules: [
             // 表单校验规则
