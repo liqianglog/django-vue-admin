@@ -77,7 +77,7 @@ export const crudOptions = (vm) => {
         show: false,
         disabled: true,
         search: {
-          disabled: false
+          disabled: true
         },
         form: {
           disabled: true,
