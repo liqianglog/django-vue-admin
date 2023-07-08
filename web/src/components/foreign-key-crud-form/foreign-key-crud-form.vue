@@ -63,7 +63,11 @@
       :visible.sync="previewVisible"
       append-to-body
       width="900">
-      <d2p-ueditor v-model="currentForm.data[ueditorIndex][ueditorKey]" :config="ueditorConfig"></d2p-ueditor>
+      <d2p-ueditor
+        v-if="currentForm.data && currentForm.data[ueditorIndex]"
+        v-model="currentForm.data[ueditorIndex][ueditorKey]"
+        :config="ueditorConfig">
+      </d2p-ueditor>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="previewVisible = false">完成</el-button>
       </span>
