@@ -357,6 +357,68 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
 
 # ####################### 懒加载FilterSet ####################### #
 
+import time
+
+
+def calculate_execution_time(func):
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        execution_time = end_time - start_time
+        print(f"Function {func.__name__} took {execution_time:.6f} seconds to execute.", flush=True)
+        return result
+
+    return wrapper
+
+
+def get_children(model: models, obj_id: int, all_qs=None, rec_list=None):
+    if not all_qs:
+        all_qs = model.objects.all().values("id", "parent")
+    if rec_list is None:
+        rec_list = [obj_id]
+    for ele in all_qs:
+        if ele.get("parent") == obj_id:
+            rec_list.append(ele.get("id"))
+            get_dept(ele.get("id"), all_qs, rec_list)
+    return list(set(rec_list))
+
+
+@calculate_execution_time
+def get_qs_children(model, qs):
+    dept_ids = []
+    for d in qs:
+        r = get_children(model, d.id)
+        dept_ids.extend(r)
+    return list(set(dept_ids))
+
+
+@calculate_execution_time
+def next_layer_data(qs_filter, qs_node):
+    print(f"过滤查询集           ==>         {qs_filter}", flush=True)
+    print(f"当前传入的待渲染节点   ==>         {qs_node}", flush=True)
+
+    parent_nodes = set(qs_node.values_list("id", flat=True))
+    print(f"待渲染节点的id        ==>         {parent_nodes=}", flush=True)
+    if set(qs_filter) == set(qs_node):
+        return parent_nodes
+
+    # qs_filter内所有父级id     去重
+    parent_ids = set()
+    for node in qs_filter:
+        while node.parent:
+            if node.id in parent_nodes:
+                parent_ids.add(node.id)
+                break
+            if node.parent.id in parent_nodes:
+                parent_ids.add(node.parent.id)
+                break
+            node = node.parent
+            # parent_ids.add(node.id)
+    print(f"过滤查询集的父节点id   ==>         {parent_ids=}", flush=True)
+
+    return parent_ids
+
 
 class FilterSetOptions:
     def __init__(self, options=None):
@@ -395,11 +457,24 @@ class LazyLoadFilterSetMetaclass(FilterSetMetaclass):
 class LazyLoadFilter(FilterSet, metaclass=LazyLoadFilterSetMetaclass):
     @property
     def qs(self):
-        is_node = self.queryset.filter(parent__isnull=False).exists()
-        # print(is_node, self.queryset)
-        if not is_node:
-            self.queryset = self.queryset.model.objects.filter(parent__in=self.queryset)
-            parent_ids = set(super().qs.values_list("parent_id", flat=True))
-            # print(self.queryset, parent_ids, super().qs)
-            return self.queryset.model.objects.filter(id__in=parent_ids)
+        queryset = self.queryset
+        filter_params = [k for k, v in self.form.cleaned_data.items() if not v]
+        for field in filter_params:
+            self.form.cleaned_data.pop(field)
+        self.form.cleaned_data.pop("parent", None)
+        print(queryset, flush=True)
+        if self.form.cleaned_data:
+            all_dept = queryset.count() == queryset.model.objects.all().count()
+            p_set = set(queryset.values_list("parent", flat=True))
+            all_root = len(p_set) == 1 and p_set.pop() is None
+            is_root = all_dept or all_root
+            ids = (
+                list(set(queryset.model.objects.all().values_list("id", flat=True)))
+                if is_root
+                else get_qs_children(queryset.model, queryset)
+            )
+            # print(f"{ids=}", flush=True)
+            self.queryset = queryset.model.objects.filter(id__in=ids)
+            node_ids = next_layer_data(super().qs, queryset)
+            return queryset.model.objects.filter(id__in=node_ids)
         return super().qs
