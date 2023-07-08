@@ -30,9 +30,9 @@ class Command(BaseCommand):
             reset = True
         if isinstance(options.get("n"), list) or isinstance(options.get("N"), list):
             reset = False
-        signals.pre_init_complete.send(msg='开始初始化', data={"reset": reset})
+        signals.pre_init_complete.send(sender=None, msg='开始初始化', data={"reset": reset})
         for app in settings.INSTALLED_APPS:
-            signals.detail_init_complete.send(msg='初始化中', data={"app": app, "reset": reset})
+            signals.detail_init_complete.send(sender=None, msg='初始化中', data={"app": app, "reset": reset})
             try:
                 exec(
                     f"""
@@ -51,5 +51,5 @@ main(reset={reset})
                     )
                 except ModuleNotFoundError:
                     pass
-        signals.post_init_complete.send(msg='初始化完成', data={"reset": reset})
+        signals.post_init_complete.send(sender=None, msg='初始化完成', data={"reset": reset})
         print("初始化数据完成！")
