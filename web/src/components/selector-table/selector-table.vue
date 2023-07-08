@@ -54,7 +54,7 @@
       </div>
       <div slot="reference" ref="divRef" :style="{'pointerEvents': disabled?'none':''}">
         <div v-if="currentValue" class="div-input el-input__inner" :class="disabled?'div-disabled':''">
-          <div>
+          <div v-if="currentValue instanceof Array">
             <el-tag
               style="margin-right: 5px"
               v-for="(item,index) in currentValue"
@@ -70,7 +70,7 @@
             </el-tag>
           </div>
         </div>
-        <el-input v-else placeholder="请选择" slot:reference clearable :disabled="disabled"></el-input>
+        <el-input v-else placeholder="请选择" slot:reference clearable :disabled="disabled" :size="size"></el-input>
       </div>
     </el-popover>
   </div>
@@ -92,6 +92,11 @@ export default {
     // 值
     value: {
       type: [String, Number, Array],
+      required: false,
+      default: ''
+    },
+    size: {
+      type: String,
       required: false,
       default: ''
     },
