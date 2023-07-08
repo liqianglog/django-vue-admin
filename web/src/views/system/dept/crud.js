@@ -13,6 +13,7 @@ export const crudOptions = (vm) => {
       height: '100%', // 表格高度100%, 使用toolbar必须设置
       highlightCurrentRow: false,
       defaultExpandAll: true,
+      resizable: true,
       treeConfig: {
         transform: true,
         rowField: 'id',
@@ -34,6 +35,7 @@ export const crudOptions = (vm) => {
       }
     },
     rowHandle: {
+      fixed: 'right',
       width: 140,
       view: {
         thin: true,
@@ -61,7 +63,7 @@ export const crudOptions = (vm) => {
       // 或者直接传true,不显示title，不居中
       title: '序号',
       align: 'center',
-      width: 100
+      width: 70
     },
 
     viewOptions: {
@@ -142,7 +144,6 @@ export const crudOptions = (vm) => {
             }
           }
         },
-        width: 180,
         type: 'input',
         showOverflow: 'tooltip',
         form: {
