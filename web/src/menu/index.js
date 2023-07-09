@@ -1,11 +1,3 @@
-/*
- * @创建文件时间: 2021-06-01 22:41:21
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-11-19 21:35:56
- * 联系Qq:1638245306
- * @文件介绍: 菜单获取
- */
 import { uniqueId } from 'lodash'
 import { request } from '@/api/service'
 import XEUtils from 'xe-utils'
@@ -76,7 +68,8 @@ export const handleRouter = function (menuData) {
         meta: {
           title: item.name,
           auth: true,
-          cache: item.cache
+          cache: item.cache,
+          openInNewWindow: item.frame_out
         }
       }
       if (item.frame_out) {
