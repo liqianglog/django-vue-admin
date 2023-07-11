@@ -56,6 +56,7 @@ router.beforeEach(async (to, from, next) => {
       })
       await store.dispatch('d2admin/user/set', res.data, { root: true })
       await store.dispatch('d2admin/account/load')
+      await store.dispatch('d2admin/permission/load', routes)
       store.dispatch('d2admin/dept/load')
       store.dispatch('d2admin/settings/init')
     }

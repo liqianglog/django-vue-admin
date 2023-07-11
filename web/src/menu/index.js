@@ -1,6 +1,5 @@
 import { uniqueId } from 'lodash'
 import { request } from '@/api/service'
-import store from '@/store'
 import XEUtils from 'xe-utils'
 import { frameInRoutes, frameOutRoutes } from '@/router/routes'
 const _import = require('@/libs/util.import.' + process.env.NODE_ENV)
@@ -26,7 +25,6 @@ export const menuAside = supplementPath([])
 
 // 请求菜单数据,用于解析路由和侧边栏菜单
 export const getMenu = function () {
-  store.dispatch('d2admin/permission/load')
   return request({
     url: '/api/system/menu/web_router/',
     method: 'get',
