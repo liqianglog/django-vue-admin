@@ -131,6 +131,7 @@ class Dept(CoreModel):
         null=True,
         blank=True,
         help_text="上级部门",
+        db_index=True
     )
 
     @classmethod

@@ -180,10 +180,10 @@ export default {
       if (this.fileList.length > 0) {
         const file = this.fileList[0]
         log.debug('file,', file, file.status)
-        if (file.response != null && file.response.url != null) {
-          return file.response.url
-        } else if (file.url != null) {
+        if (file.url != null) {
           return file.url
+        } else if (file.response != null && file.response.url != null) {
+          return file.response.url
         }
       }
       return null

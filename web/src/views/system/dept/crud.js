@@ -13,6 +13,7 @@ export const crudOptions = (vm) => {
       height: '100%', // 表格高度100%, 使用toolbar必须设置
       highlightCurrentRow: false,
       defaultExpandAll: true,
+      resizable: true,
       treeConfig: {
         transform: true,
         rowField: 'id',
@@ -20,7 +21,13 @@ export const crudOptions = (vm) => {
         hasChild: 'hasChild',
         lazy: true,
         loadMethod: ({ row }) => {
-          return api.GetList({ parent: row.id }).then(ret => {
+          let query = JSON.parse(JSON.stringify(vm.getSearch().getForm()))
+          query = Object.fromEntries(
+            Object.entries(query).filter(([_, value]) => ![undefined, null, [], '[]', ''].includes(value))
+          )
+          query.parent = row.id
+          // console.log(query)
+          return api.GetList({ ...query }).then(ret => {
             return ret.data.data
           })
         },
@@ -28,6 +35,7 @@ export const crudOptions = (vm) => {
       }
     },
     rowHandle: {
+      fixed: 'right',
       width: 140,
       view: {
         thin: true,
@@ -55,7 +63,7 @@ export const crudOptions = (vm) => {
       // 或者直接传true,不显示title，不居中
       title: '序号',
       align: 'center',
-      width: 100
+      width: 70
     },
 
     viewOptions: {
@@ -71,7 +79,7 @@ export const crudOptions = (vm) => {
         show: false,
         disabled: true,
         search: {
-          disabled: false
+          disabled: true
         },
         form: {
           disabled: true,
@@ -136,8 +144,8 @@ export const crudOptions = (vm) => {
             }
           }
         },
-        width: 180,
         type: 'input',
+        showOverflow: 'tooltip',
         form: {
           rules: [
             // 表单校验规则

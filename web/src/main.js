@@ -38,7 +38,9 @@ import util from '@/libs/util'
 import VueCoreVideoPlayer from 'vue-core-video-player'
 // 引入echarts
 import * as echarts from 'echarts' // 注册echarts组件
-
+// 第三方组件
+import VueClipboard from 'vue-clipboard2'
+Vue.use(VueClipboard)
 Vue.use(VueCoreVideoPlayer)
 // 核心插件
 Vue.use(d2Admin)

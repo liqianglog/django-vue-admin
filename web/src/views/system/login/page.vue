@@ -69,9 +69,20 @@
                     </el-input>
                   </el-form-item>
                 </el-form>
-                <button class="btn btn-primary btn-block" style="padding: 10px 10px;" @click="submit">
-                  登录
-                </button>
+                <el-row v-if="isTenant && isPublic">
+                  <el-col :span="11">
+                    <button class="btn btn-primary btn-block" style="padding: 10px 10px;" @click="submit">登录</button>
+                  </el-col>
+                  <el-col :span="11" :offset="2">
+                    <button
+                      class="btn btn-primary btn-block"
+                      style="padding: 10px 10px;background-color: #409eff;color: #fff;"
+                      @click="$router.push('/register')">
+                      免费试用
+                    </button>
+                  </el-col>
+                </el-row>
+                <button v-else class="btn btn-primary btn-block" style="padding: 10px 10px;" @click="submit">登录</button>
                 <component v-if="componentTag" :is="componentTag"></component>
               </el-tab-pane>
             </el-tabs>

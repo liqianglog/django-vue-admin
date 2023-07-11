@@ -18,10 +18,10 @@
             {{ item[dict.label] }}
           </el-descriptions-item>
         </el-descriptions>
-        <el-button type="primary" plain size="mini" slot="reference"><span> {{ value.length }} {{ elProps.unit }}</span>
+        <el-button type="primary" plain size="mini" slot="reference" @click="listClick"><span> {{ value.length }} {{ elProps.unit }}</span>
         </el-button>
       </el-popover>
-      <el-button v-else type="primary" plain size="mini" slot="reference"><span> {{
+      <el-button v-else type="primary" plain size="mini" slot="reference" @click="listClick"><span> {{
           value.length
         }} {{ elProps.unit }}</span>
       </el-button>
@@ -46,10 +46,10 @@
         @show="showEvents"
         @hide="show=false">
         <div v-html="value" v-if="show"></div>
-        <el-button type="primary" plain size="mini" slot="reference"><span>预览</span>
+        <el-button type="primary" plain size="mini" slot="reference" @click="previewClick"><span>预览</span>
         </el-button>
       </el-popover>
-      <el-button v-else type="primary" plain size="mini" slot="reference"><span>预览</span>
+      <el-button v-else type="primary" plain size="mini" slot="reference" @click="previewClick"><span>预览</span>
       </el-button>
     </div>
   </div>
@@ -125,7 +125,9 @@ export default {
       if (this.value.constructor === Array) {
         const ids = []
         this.value.map(res => {
-          ids.push(res[this.dict.value])
+          if (res) {
+            ids.push(res[this.dict.value])
+          }
         })
         params[this.dict.value] = ids
       } else {
@@ -135,12 +137,18 @@ export default {
       request({ url: this.dict.url, params: params }).then(ret => {
         this.data = ret.data.data || ret.data
       })
+    },
+    previewClick () {
+      this.$emit('previewClick')
+    },
+    listClick () {
+      this.$emit('listClick')
     }
   }
 }
 </script>
-<style >
-.userprjtreepop{
+<style>
+.userprjtreepop {
   width: 80%;
   overflow-x: auto;
   max-height: 80%;
