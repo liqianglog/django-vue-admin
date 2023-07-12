@@ -56,6 +56,9 @@
       <div style="text-align: center" v-if="_elProps.listType ===  'avatar'">
         <img  style="max-width: 100%;" :src="dialogImageUrl" alt="">
       </div>
+      <div style="text-align: center" v-else-if="_elProps.listType ===  'picture-card'">
+        <img  style="max-width: 100%;" :src="dialogImageUrl" alt="">
+      </div>
       <div style="text-align: center" v-else>
         <div id="player" v-if="dialogVisible">
           <div class="player-container">

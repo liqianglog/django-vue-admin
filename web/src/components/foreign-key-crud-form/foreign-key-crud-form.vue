@@ -15,7 +15,7 @@
       <el-row style="margin-bottom: 0" :gutter="5" v-for="(field, index) in currentForm.data" :key="index">
         <el-col :span="elProps.index.span" v-if="elProps.index">
           <div style="text-align: center">
-            {{index+1}}
+            {{ index + 1 }}
           </div>
         </el-col>
         <el-col :span="elProps.fields[key].span" v-for="(_,key) in elProps.fields" :key="key">
@@ -34,20 +34,23 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-input-number style="width: 100%" v-else-if="elProps.fields[key].type === 'number'" controls-position="right" v-model="field[key]"></el-input-number>
-            <div v-else-if="elProps.fields[key].type === 'image'" style="height: 30px;width: 30px;">
-                <d2p-file-uploader v-model="field[key]" :elProps="elProps.fields[key].elProps || { listType: 'picture-card', accept: '.png,.jpeg,.jpg,.ico,.bmp,.gif', limit: 1 }"></d2p-file-uploader>
+            <el-input-number style="width: 100%" v-else-if="elProps.fields[key].type === 'number'"
+                             controls-position="right" v-model="field[key]"></el-input-number>
+            <div class="d2p-images" v-else-if="elProps.fields[key].type === 'image'">
+              <d2p-file-uploader v-model="field[key]"
+                                 :elProps="elProps.fields[key].elProps || { listType: 'picture-card', accept: '.png,.jpeg,.jpg,.ico,.bmp,.gif', limit: 1 }"></d2p-file-uploader>
             </div>
             <!--     富文本     -->
             <span v-else-if="elProps.fields[key].type === 'ueditor'">
-              <values-popover v-model="field[key]" :elProps="{ type: 'ueditor' }" @previewClick="previewClick(index,key)"></values-popover>
+              <values-popover v-model="field[key]" :elProps="{ type: 'ueditor' }"
+                              @previewClick="previewClick(index,key)"></values-popover>
             </span>
             <!--     多对多     -->
             <span v-else-if="elProps.fields[key].type === 'many_to_many'">
               <values-popover
                 v-model="field[key]"
                 :dict="elProps.fields[key].dict"
-                :elProps="{ type: elProps.fields[key].value?.type || 'strList',  rowKey: elProps.fields[key].value?.rowKey || 'title', label: elProps.value?.title || '答复选项内容' }"
+                :elProps="{ type: elProps.fields[key].value?.type || 'manyToMany',  rowKey: elProps.fields[key].value?.rowKey || 'title', label: elProps.value?.title || '答复选项内容' }"
                 @listClick="manyToManyClick(index,key)">
               </values-popover>
             </span>
@@ -56,9 +59,11 @@
         </el-col>
         <el-col :span="4">
           <el-form-item>
-          <el-button @click.prevent="topDomain(index)" :disabled="index === 0" type="primary" circle icon="el-icon-top"></el-button>
-          <el-button @click.prevent="bottomDomain(index)" :disabled="index === currentForm.data.length - 1" type="primary" circle icon="el-icon-bottom"></el-button>
-          <el-button @click.prevent="removeDomain(index)" type="danger" circle icon="el-icon-delete"></el-button>
+            <el-button @click.prevent="topDomain(index)" :disabled="index === 0" type="primary" circle
+                       icon="el-icon-top"></el-button>
+            <el-button @click.prevent="bottomDomain(index)" :disabled="index === currentForm.data.length - 1"
+                       type="primary" circle icon="el-icon-bottom"></el-button>
+            <el-button @click.prevent="removeDomain(index)" type="danger" circle icon="el-icon-delete"></el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -102,6 +107,7 @@
 </template>
 <script>
 import util from '@/libs/util.js'
+
 export default {
   name: 'foreignKeyCrudForm',
   model: {
@@ -346,8 +352,37 @@ export default {
   }
 }
 </script>
-<style scoped>
-::v-deep .d2p-file-uploader .el-upload--picture-card{
+<style lang="scss">
+.d2p-images {
+  height: 30px;
+  width: 30px;
+
+  .el-upload-list__item-thumbnail {
+    height: 60px !important;
+    width: 60px !important;
+  }
+
+  .el-upload-list__item {
+    width: 60px !important;
+    height: 60px !important;
+    line-height: 0 !important;
+
+    img {
+      height: 60px !important;
+      width: 60px !important;
+    }
+  }
+
+  .el-upload-list__item-actions {
+    height: 60px !important;
+    width: 60px !important;
+    line-height: 0 !important;
+  }
+}
+
+</style>
+<style lang="scss" scoped>
+::v-deep .d2p-file-uploader .el-upload--picture-card {
   width: 50px;
   height: 50px;
 }
