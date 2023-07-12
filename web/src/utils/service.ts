@@ -24,12 +24,12 @@ function createService() {
 			serialize(params) {
 				return qs.stringify(params, {
 					indices: false,
-					// encoder: (val: string) => {
-					// 	if (typeof val === 'boolean') {
-					// 		return val ? 1 : 0;
-					// 	}
-					// 	return val;
-					// },
+					encoder: (val: string) => {
+						if (typeof val === 'boolean') {
+							return val ? 'True' : 'False';
+						}
+						return val;
+					},
 				});
 			},
 		},

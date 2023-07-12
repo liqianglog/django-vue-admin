@@ -24,7 +24,7 @@ export function AddObj(obj: AddReq) {
 	});
 }
 
-export function UpdateObj(obj: EditReq) {
+export function UpdateObj(obj: any) {
 	return request({
 		url: apiPrefix + obj.id + '/',
 		method: 'put',
