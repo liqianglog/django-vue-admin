@@ -22,15 +22,19 @@ function createService() {
 		},
 		paramsSerializer: {
 			serialize(params) {
-				return qs.stringify(params, {
-					indices: false,
-					encoder: (val: string) => {
-						if (typeof val === 'boolean') {
-							return val ? 'True' : 'False';
-						}
-						return val;
-					},
-				});
+				interface paramsObj {
+					[key: string]: any;
+				}
+				let result:paramsObj = {};
+				for (const [key, value] of Object.entries(params)) {
+					if (value !== '') {
+						result[key] = value;
+					}
+					if(typeof value === 'boolean'){
+						result[key] = value? 'True': 'False';
+					}
+				}
+				return qs.stringify(result);
 			},
 		},
 	});
