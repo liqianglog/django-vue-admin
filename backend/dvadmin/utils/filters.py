@@ -150,6 +150,7 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
         "$": "iregex",
         "~": "icontains",
     }
+    filter_fields = "__all__"
 
     def construct_search(self, field_name, lookup_expr=None):
         lookup = self.lookup_prefixes.get(field_name[0])
@@ -157,18 +158,31 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
             field_name = field_name[1:]
         else:
             lookup = lookup_expr
-        if field_name.endswith(lookup):
-            return field_name
-        return LOOKUP_SEP.join([field_name, lookup])
+        if lookup:
+            if field_name.endswith(lookup):
+                return field_name
+            return LOOKUP_SEP.join([field_name, lookup])
+        return field_name
 
     def find_filter_lookups(self, orm_lookups, search_term_key):
         for lookup in orm_lookups:
             # if lookup.find(search_term_key) >= 0:
-            new_lookup = lookup.split("__")[0]
+            new_lookup = LOOKUP_SEP.join(lookup.split(LOOKUP_SEP)[:-1]) if len(lookup.split(LOOKUP_SEP)) > 1 else lookup
             # 修复条件搜索错误 bug
             if new_lookup == search_term_key:
                 return lookup
         return None
+
+    # CASE: 前端query string过滤
+    # def find_filter_lookups(self, orm_lookups, search_term_key):
+    #     for lookup, lookup_expr in orm_lookups.items():
+    #         # if lookup.find(search_term_key) >= 0:
+    #         search_key = self.construct_search(search_term_key, lookup_expr)
+    #         new_lookup = LOOKUP_SEP.join(search_key.split(LOOKUP_SEP)[:-1]) if len(search_key.split(LOOKUP_SEP)) > 1 else lookup
+    #         # 修复条件搜索错误 bug
+    #         if new_lookup == lookup:
+    #             return search_key
+    #     return None
 
     def get_filterset_class(self, view, queryset=None):
         """
@@ -189,7 +203,13 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
             utils.deprecate(
                 "`%s.filter_fields` attribute should be renamed `filterset_fields`." % view.__class__.__name__
             )
-            filterset_fields = getattr(view, "filter_fields", None)
+            self.filter_fields = getattr(view, "filter_fields", None)
+            if isinstance(self.filter_fields, (list, tuple)):
+                filterset_fields = [
+                    field[1:] if field[0] in self.lookup_prefixes.keys() else field for field in self.filter_fields
+                ]
+            else:
+                filterset_fields = self.filter_fields
 
         if filterset_class:
             filterset_model = filterset_class._meta.model
@@ -327,14 +347,17 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
             return queryset
         if filterset.__class__.__name__ == "AutoFilterSet":
             queryset = filterset.queryset
-            orm_lookups = []
-            for search_field in filterset.filters:
-                if isinstance(filterset.filters[search_field], CharFilter):
-                    orm_lookups.append(
-                        self.construct_search(six.text_type(search_field), filterset.filters[search_field].lookup_expr)
-                    )
-                else:
-                    orm_lookups.append(search_field)
+            # orm_lookups = []
+            # for search_field in filterset.filters:
+            #     if isinstance(filterset.filters[search_field], CharFilter):
+            #         orm_lookups.append(
+            #             self.construct_search(six.text_type(search_field), filterset.filters[search_field].lookup_expr)
+            #         )
+            #     else:
+            #         orm_lookups.append(search_field)
+            orm_lookups = [self.construct_search(str(search_field)) for search_field in self.filter_fields]
+            # CASE: 前端query string过滤
+            # orm_lookups = {lookup: filterset.filters[lookup].lookup_expr for lookup in filterset.filters.keys()}
             conditions = []
             queries = []
             for search_term_key in filterset.data.keys():
