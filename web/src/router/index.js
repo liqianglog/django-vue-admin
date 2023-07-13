@@ -1,11 +1,3 @@
-/*
- * @创建文件时间: 2021-06-01 22:41:21
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-11-19 21:49:43
- * 联系Qq:1638245306
- * @文件介绍:
- */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // 进度条
@@ -42,7 +34,7 @@ const router = new VueRouter({
  */
 router.beforeEach(async (to, from, next) => {
   // 白名单
-  const whiteList = ['/login', '/auth-redirect', '/bind', '/register', '/oauth2']
+  const whiteList = ['/login', '/auth-redirect', '/bind', '/register', '/clientRenew', '/oauth2']
   // 确认已经加载多标签页数据 https://github.com/d2-projects/d2-admin/issues/201
   await store.dispatch('d2admin/page/isLoaded')
   // 确认已经加载组件尺寸设置 https://github.com/d2-projects/d2-admin/issues/198
@@ -64,6 +56,7 @@ router.beforeEach(async (to, from, next) => {
       })
       await store.dispatch('d2admin/user/set', res.data, { root: true })
       await store.dispatch('d2admin/account/load')
+      await store.dispatch('d2admin/permission/load', routes)
       store.dispatch('d2admin/dept/load')
       store.dispatch('d2admin/settings/init')
     }
@@ -92,11 +85,21 @@ router.beforeEach(async (to, from, next) => {
         next({ path: to.fullPath, replace: true, params: to.params })
       })
     } else {
-      next()
       const childrenPath = window.qiankunActiveRule || []
       if (to.name) {
         // 有 name 属性，说明是主应用的路由
-        next()
+        if (to.meta.openInNewWindow && !to.query.newWindow) {
+          // 在新窗口中打开路由
+          const { href } = router.resolve({
+            path: to.path + '?newWindow=1'
+          })
+          window.open(href, '_blank')
+          // 取消当前导航
+          NProgress.done()
+          next(false)
+        } else {
+          next()
+        }
       } else if (childrenPath.some((item) => to.path.includes(item))) {
         next()
       } else {

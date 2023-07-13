@@ -58,7 +58,6 @@ new Vue({
     // 初始化配置
     this.$store.dispatch('d2admin/settings/load')
     this.$store.dispatch('d2admin/dictionary/load')
-    this.$store.dispatch('d2admin/permission/load')
   },
   created () {
 

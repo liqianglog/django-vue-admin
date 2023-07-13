@@ -15,7 +15,7 @@
       <el-row style="margin-bottom: 0" :gutter="5" v-for="(field, index) in currentForm.data" :key="index">
         <el-col :span="elProps.index.span" v-if="elProps.index">
           <div style="text-align: center">
-            {{index+1}}
+            {{ index + 1 }}
           </div>
         </el-col>
         <el-col :span="elProps.fields[key].span" v-for="(_,key) in elProps.fields" :key="key">
@@ -24,6 +24,7 @@
             :rules="[
                 { required: elProps.fields[key].required, message: '不能为空', trigger: 'blur' },
               ]"
+            style="text-align: center"
           >
             <el-select v-model="field[key]" v-if="elProps.fields[key].type === 'select'" placeholder="请选择">
               <el-option
@@ -33,22 +34,36 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-input-number style="width: 100%" v-else-if="elProps.fields[key].type === 'number'" controls-position="right" v-model="field[key]"></el-input-number>
-            <div v-else-if="elProps.fields[key].type === 'image'" style="height: 50px;width: 50px;">
-                <d2p-file-uploader v-model="field[key]" :elProps="elProps.fields[key].elProps || { listType: 'picture-card', accept: '.png,.jpeg,.jpg,.ico,.bmp,.gif', limit: 1 }"></d2p-file-uploader>
+            <el-input-number style="width: 100%" v-else-if="elProps.fields[key].type === 'number'"
+                             controls-position="right" v-model="field[key]"></el-input-number>
+            <div class="d2p-images" v-else-if="elProps.fields[key].type === 'image'">
+              <d2p-file-uploader v-model="field[key]"
+                                 :elProps="elProps.fields[key].elProps || { listType: 'picture-card', accept: '.png,.jpeg,.jpg,.ico,.bmp,.gif', limit: 1 }"></d2p-file-uploader>
             </div>
             <!--     富文本     -->
             <span v-else-if="elProps.fields[key].type === 'ueditor'">
-              <values-popover v-model="field[key]" :elProps="{ type: 'ueditor' }" @previewClick="previewClick(index,key)"></values-popover>
+              <values-popover v-model="field[key]" :elProps="{ type: 'ueditor' }"
+                              @previewClick="previewClick(index,key)"></values-popover>
+            </span>
+            <!--     多对多     -->
+            <span v-else-if="elProps.fields[key].type === 'many_to_many'">
+              <values-popover
+                v-model="field[key]"
+                :dict="elProps.fields[key].dict"
+                :elProps="{ type: elProps.fields[key].value?.type || 'manyToMany',  rowKey: elProps.fields[key].value?.rowKey || 'title', label: elProps.value?.title || '答复选项内容' }"
+                @listClick="manyToManyClick(index,key)">
+              </values-popover>
             </span>
             <el-input v-model="field[key]" v-else placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="4">
           <el-form-item>
-          <el-button @click.prevent="topDomain(index)" :disabled="index === 0" type="primary" circle icon="el-icon-top"></el-button>
-          <el-button @click.prevent="bottomDomain(index)" :disabled="index === currentForm.data.length - 1" type="primary" circle icon="el-icon-bottom"></el-button>
-          <el-button @click.prevent="removeDomain(index)" type="danger" circle icon="el-icon-delete"></el-button>
+            <el-button @click.prevent="topDomain(index)" :disabled="index === 0" type="primary" circle
+                       icon="el-icon-top"></el-button>
+            <el-button @click.prevent="bottomDomain(index)" :disabled="index === currentForm.data.length - 1"
+                       type="primary" circle icon="el-icon-bottom"></el-button>
+            <el-button @click.prevent="removeDomain(index)" type="danger" circle icon="el-icon-delete"></el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -64,7 +79,7 @@
       append-to-body
       width="900">
       <d2p-ueditor
-        v-if="currentForm.data && currentForm.data[ueditorIndex]"
+        v-if="currentForm.data && currentForm.data[ueditorIndex] && ueditorKey"
         v-model="currentForm.data[ueditorIndex][ueditorKey]"
         :config="ueditorConfig">
       </d2p-ueditor>
@@ -72,10 +87,27 @@
         <el-button type="primary" @click="previewVisible = false">完成</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="编辑"
+      :visible.sync="manyToManyVisible"
+      append-to-body
+      v-if="currentForm.data && currentForm.data[manyToManyIndex] && manyToManyKey"
+      :width="elProps.fields[manyToManyKey].dialogWidth">
+      <foreign-key-crud-form
+        v-model="currentForm.data[manyToManyIndex][manyToManyKey]"
+        :isInitRows="elProps.fields[manyToManyKey].isInitRows"
+        :elProps="elProps.fields[manyToManyKey].elProps"
+        @change="foreignChange"
+      ></foreign-key-crud-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="manyToManyVisible = false">保存</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 import util from '@/libs/util.js'
+
 export default {
   name: 'foreignKeyCrudForm',
   model: {
@@ -128,6 +160,50 @@ export default {
               required: true,
               min: 0,
               max: null
+            },
+            option_data: {
+              name: '选项题目',
+              type: 'many_to_many',
+              span: 2,
+              default: [],
+              required: false,
+              unit: '个',
+              value: {
+                type: 'strList',
+                rowKey: 'name',
+                title: '选项内容'
+              },
+              // 子级多对多
+              isInitRows: true,
+              dialogWidth: '700',
+              dict: {
+                value: 'id', // 数据字典中value字段的属性名
+                label: 'name' // 数据字典中label字段的属性名
+              },
+              elProps: {
+                index: {
+                  name: '序号',
+                  span: 2
+                },
+                fields: {
+                  name: {
+                    name: '题目选项内容',
+                    type: 'input',
+                    span: 10,
+                    default: null,
+                    required: true
+                  },
+                  sort: {
+                    name: '排序',
+                    type: 'number',
+                    span: 8,
+                    default: 0,
+                    required: true,
+                    min: 0,
+                    max: null
+                  }
+                }
+              }
             }
           }
         }
@@ -164,7 +240,11 @@ export default {
       // 富文本弹窗编辑框
       previewVisible: false,
       ueditorIndex: 0,
-      ueditorKey: null
+      ueditorKey: null,
+      // 多对多弹窗
+      manyToManyIndex: 0,
+      manyToManyKey: null,
+      manyToManyVisible: false
     }
   },
   computed: {
@@ -254,12 +334,55 @@ export default {
       this.ueditorKey = key
       this.previewVisible = true
       console.log('previewClick', index, key)
+    },
+    // 多对多点击事件
+    manyToManyClick (index, key) {
+      this.manyToManyIndex = index
+      this.manyToManyKey = key
+      this.manyToManyVisible = true
+      if (!this.currentForm.data[this.manyToManyIndex][this.manyToManyKey]) {
+        this.currentForm.data[this.manyToManyIndex][this.manyToManyKey] = []
+      }
+    },
+    foreignChange (res) {
+      if (this.manyToManyKey) {
+        this.currentForm.data[this.manyToManyIndex][this.manyToManyKey] = res
+      }
     }
   }
 }
 </script>
-<style scoped>
-::v-deep .d2p-file-uploader .el-upload--picture-card{
+<style lang="scss">
+.d2p-images {
+  height: 30px;
+  width: 30px;
+
+  .el-upload-list__item-thumbnail {
+    height: 60px !important;
+    width: 60px !important;
+  }
+
+  .el-upload-list__item {
+    width: 60px !important;
+    height: 60px !important;
+    line-height: 0 !important;
+
+    img {
+      height: 60px !important;
+      width: 60px !important;
+    }
+  }
+
+  .el-upload-list__item-actions {
+    height: 60px !important;
+    width: 60px !important;
+    line-height: 0 !important;
+  }
+}
+
+</style>
+<style lang="scss" scoped>
+::v-deep .d2p-file-uploader .el-upload--picture-card {
   width: 50px;
   height: 50px;
 }

@@ -277,6 +277,6 @@ class InitSettingsViewSet(APIView):
                           SystemConfig.objects.filter(status=False, parent_id__isnull=False).values('parent__key',
                                                                                                     'key')]
         data = dict(filter(lambda x: x[0] not in backend_config, data.items()))
-        data = self.filter_system_config_values(data=data)
-        data['schema_name'] = connection.tenant.schema_name
+        if hasattr(connection, 'tenant'):
+            data['schema_name'] = connection.tenant.schema_name
         return DetailResponse(data=data)
