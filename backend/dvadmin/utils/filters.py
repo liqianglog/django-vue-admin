@@ -173,17 +173,6 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
                 return lookup
         return None
 
-    # CASE: 前端query string过滤
-    # def find_filter_lookups(self, orm_lookups, search_term_key):
-    #     for lookup, lookup_expr in orm_lookups.items():
-    #         # if lookup.find(search_term_key) >= 0:
-    #         search_key = self.construct_search(search_term_key, lookup_expr)
-    #         new_lookup = LOOKUP_SEP.join(search_key.split(LOOKUP_SEP)[:-1]) if len(search_key.split(LOOKUP_SEP)) > 1 else lookup
-    #         # 修复条件搜索错误 bug
-    #         if new_lookup == lookup:
-    #             return search_key
-    #     return None
-
     def get_filterset_class(self, view, queryset=None):
         """
         Return the `FilterSet` class used to filter the queryset.
@@ -347,21 +336,19 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
             return queryset
         if filterset.__class__.__name__ == "AutoFilterSet":
             queryset = filterset.queryset
-            # orm_lookups = []
-            # for search_field in filterset.filters:
-            #     if isinstance(filterset.filters[search_field], CharFilter):
-            #         orm_lookups.append(
-            #             self.construct_search(six.text_type(search_field), filterset.filters[search_field].lookup_expr)
-            #         )
-            #     else:
-            #         orm_lookups.append(search_field)
-            orm_lookups = [self.construct_search(str(search_field)) for search_field in self.filter_fields]
-            # CASE: 前端query string过滤
-            # orm_lookups = {lookup: filterset.filters[lookup].lookup_expr for lookup in filterset.filters.keys()}
+            orm_lookup_dict = dict(
+                zip(
+                    [field for field in self.filter_fields],
+                    [filterset.filters[lookup].lookup_expr for lookup in filterset.filters.keys()],
+                )
+            )
+            orm_lookups = [self.construct_search(lookup, lookup_expr) for lookup, lookup_expr in orm_lookup_dict.items()]
+            # print(orm_lookups)
             conditions = []
             queries = []
             for search_term_key in filterset.data.keys():
                 orm_lookup = self.find_filter_lookups(orm_lookups, search_term_key)
+                # print(search_term_key, orm_lookup)
                 if not orm_lookup:
                     continue
                 query = Q(**{orm_lookup: filterset.data[search_term_key]})

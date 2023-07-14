@@ -252,12 +252,12 @@ class UserViewSet(CustomModelViewSet):
     filter_fields = ["^name", "~username", "^mobile", "is_active", "dept", "user_type", "$dept__name"]
     # filter_fields = {
     #     "name": ["icontains"],
-    #     "mobile": ["icontains"],
+    #     "mobile": ["iregex"],
     #     "username": ["icontains"],
-    #     "gender": ["icontains"],
     #     "is_active": ["icontains"],
     #     "dept": ["exact"],
     #     "user_type": ["exact"],
+    #     "dept__name": ["icontains"],
     # }
     search_fields = ["username", "name", "gender", "dept__name", "role__name"]
     # 导出
