@@ -336,13 +336,16 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
             return queryset
         if filterset.__class__.__name__ == "AutoFilterSet":
             queryset = filterset.queryset
+            filter_fields = filterset.filters if self.filter_fields == "__all__" else self.filter_fields
             orm_lookup_dict = dict(
                 zip(
-                    [field for field in self.filter_fields],
+                    [field for field in filter_fields],
                     [filterset.filters[lookup].lookup_expr for lookup in filterset.filters.keys()],
                 )
             )
-            orm_lookups = [self.construct_search(lookup, lookup_expr) for lookup, lookup_expr in orm_lookup_dict.items()]
+            orm_lookups = [
+                self.construct_search(lookup, lookup_expr) for lookup, lookup_expr in orm_lookup_dict.items()
+            ]
             # print(orm_lookups)
             conditions = []
             queries = []
