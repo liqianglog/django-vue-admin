@@ -56,11 +56,11 @@ router.beforeEach(async (to, from, next) => {
       })
       await store.dispatch('d2admin/user/set', res.data, { root: true })
       await store.dispatch('d2admin/account/load')
-      await store.dispatch('d2admin/permission/load', routes)
-      store.dispatch('d2admin/dept/load')
       store.dispatch('d2admin/settings/init')
     }
     if (!store.state.d2admin.menu || store.state.d2admin.menu.aside.length === 0) {
+      await store.dispatch('d2admin/permission/load', routes)
+      await store.dispatch('d2admin/dept/load')
       // 动态添加路由
       getMenu().then(ret => {
         // 校验路由是否有效
