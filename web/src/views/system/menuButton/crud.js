@@ -82,7 +82,9 @@ export const crudOptions = (vm) => {
       },
       type: 'select',
       dict: {
-        data: vm.dictionary('system_button')
+        data: vm.dictionary('system_button'),
+        label: 'label',
+        value: 'label'
       },
       form: {
         rules: [ // 表单校验规则
@@ -107,7 +109,7 @@ export const crudOptions = (vm) => {
             // console.log('component.dictOptions', component.dictOptions)
             const obj = component.dictOptions.find(item => {
               // console.log(item.label, value)
-              return item.value === value
+              return item.label === value
             })
             if (obj && obj.value) {
               form.name = obj.label
