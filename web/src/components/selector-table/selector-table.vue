@@ -40,7 +40,18 @@
           <el-table-column fixed type="index" label="#" width="50"/>
           <span v-for="(item,index) in _elProps.tableConfig.columns" :key="index" >
             <el-table-column :prop="item.prop" :label="item.label" :width="item.width"
-                           v-if="item.show !== false"/>
+                           v-if="item.show !== false">
+              <template slot-scope="scope">
+                <span v-if="item.type === 'image'">
+                  <el-image :src="baseURL + scope.row[item.prop]" style="height: 30px;width: 30px;">
+                    <div slot="placeholder" class="image-slot">
+                      <img src="./loading-spin.svg">
+                    </div>
+                  </el-image>
+                </span>
+                <span v-else>{{ scope.row[item.prop] }}</span>
+              </template>
+            </el-table-column>
           </span>
         </el-table>
         <el-pagination style="margin-top: 10px;max-width: 200px" background
@@ -80,6 +91,7 @@
 import { request } from '@/api/service'
 import XEUtils from 'xe-utils'
 import { d2CrudPlus } from 'd2-crud-plus'
+import util from '@/libs/util'
 
 export default {
   name: 'selector-table-input',
@@ -147,7 +159,8 @@ export default {
       search: null,
       tableData: [],
       multipleSelection: [],
-      collapseTags: false
+      collapseTags: false,
+      baseURL: util.baseURL()
     }
   },
   computed: {

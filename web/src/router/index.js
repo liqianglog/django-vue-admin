@@ -87,8 +87,11 @@ router.beforeEach(async (to, from, next) => {
     } else {
       const childrenPath = window.qiankunActiveRule || []
       if (to.name) {
+        if (to.meta.openInNewWindow && (from.query.newWindow && to.query.newWindow !== '1' || from.path === '/')) {
+          to.query.newWindow = '1'
+        }
         // 有 name 属性，说明是主应用的路由
-        if (to.meta.openInNewWindow && !to.query.newWindow) {
+        if (to.meta.openInNewWindow && !to.query.newWindow && !from.query.newWindow && from.path !== '/') {
           // 在新窗口中打开路由
           const { href } = router.resolve({
             path: to.path + '?newWindow=1'
