@@ -40,6 +40,19 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="login-authorization">
+			<p>Copyright © 2021-2022 django-vue-admin.com 版权所有</p>
+			<p class="la-other">
+				<a href="https://beian.miit.gov.cn" target="_blank">晋ICP备18005113号-3</a>
+				| 
+				<a href="https://django-vue-admin.com" target="_blank">帮助</a>
+				|
+				<a href="#">隐私</a>
+				|
+				<a href="#">条款</a>
+			</p>
+		</div>
 	</div>
 </template>
 
@@ -101,7 +114,7 @@ onMounted(() => {
 				flex-direction: column;
 				span {
 					margin-left: 10px;
-					font-size: 28px;
+					font-size: 20px;
 					color: #26a59a;
 				}
 				.login-left-logo-text-msg {
@@ -249,6 +262,21 @@ onMounted(() => {
 					}
 				}
 			}
+		}
+	}
+
+	.login-authorization {
+		position: fixed;
+		bottom: 50px;
+		left: 0;
+		right: 0;
+		text-align: center;
+		p {
+			font-size: 14px;
+		}
+		a {
+			color: #409eff;
+			margin: 0 5px;
 		}
 	}
 }
