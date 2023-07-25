@@ -27,7 +27,8 @@ import iconfont from '/@/assets/iconfont/iconfont.json'; //引入json文件
 import '/@/assets/iconfont/iconfont.css'; //引入css
 // 自动注册插件
 import { scanAndInstallPlugins } from '/@/views/plugins/index';
-
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
 let forIconfont = analyzingIconForIconfont(iconfont); //解析class
 iconList.addIcon(forIconfont.list); // 添加iconfont dvadmin3的icon
 iconList.addIcon(elementPlus); // 添加element plus的图标
@@ -47,6 +48,8 @@ pinia.use(piniaPersist);
 directive(app);
 other.elSvg(app);
 
+
+app.use(VXETable)
 app.use(permission);
 app.use(pinia).use(router).use(ElementPlus, { i18n: i18n.global.t }).use(i18n).use(VueGridLayout).use(fastCrud).mount('#app');
 

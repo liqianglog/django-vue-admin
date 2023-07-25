@@ -72,7 +72,14 @@ class RoleMenuPermissionViewSet(CustomModelViewSet):
         menu_list = body.get('menu',None)
         if menu_list is None:
             return ErrorResponse(msg="未获取到菜单参数")
-        data = [{"role":role_id,"menu":item} for item in menu_list]
+        obj_list = RoleMenuPermission.objects.filter(role__id=role_id).values_list('menu__id',flat=True)
+        old_set = set(obj_list)
+        new_set = set(menu_list)
+        #need_update = old_set.intersection(new_set) # 需要更新的
+        need_del = old_set.difference(new_set) # 需要删除的
+        need_add = new_set.difference(old_set) # 需要新增的
+        RoleMenuPermission.objects.filter(role__id=role_id,menu__in=list(need_del)).delete()
+        data = [{"role": role_id, "menu": item} for item in list(need_add)]
         serializer = RoleMenuPermissionSerializer(data=data,many=True,request=request)
         if serializer.is_valid(raise_exception=True):
             serializer.save()

@@ -24,7 +24,7 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 
 	};
 	const editRequest = async ({ form, row }: EditReq) => {
-		return await api.UpdateObj(row);
+		return await api.UpdateObj({ ...form, menu: row.menu });
 	};
 	const delRequest = async ({ row }: DelReq) => {
 		return await api.DelObj(row.id);
@@ -34,6 +34,16 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 	};
 	return {
 		crudOptions: {
+			search: {
+        container: {
+          action: {
+            //按钮栏配置
+            col: {
+              span: 8
+            }
+          }
+        },
+      },
 			rowHandle: {
 				//固定右侧
 				fixed: 'right',

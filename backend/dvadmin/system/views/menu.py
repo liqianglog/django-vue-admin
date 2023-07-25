@@ -90,11 +90,16 @@ class MenuViewSet(CustomModelViewSet):
     def web_router(self, request):
         """用于前端获取当前角色的路由"""
         user = request.user
-        queryset = self.queryset.filter(status=1)
-        if not user.is_superuser:
+        is_admin = user.role.values_list('admin', flat=True)
+        if user.is_superuser or True in is_admin:
+            queryset = self.queryset.filter(status=1)
+        else:
             role_list = user.role.values_list('id', flat=True)
-            menu_list = RoleMenuPermission.objects.filter(role__in=role_list).values_list('menu_id')
+            menu_list = RoleMenuPermission.objects.filter(role__in=role_list).values_list('menu_id',flat=True)
+            print("role_list", role_list)
+            print("menu_list",menu_list)
             queryset = Menu.objects.filter(id__in=menu_list)
+        print(queryset)
         serializer = WebRouterSerializer(queryset, many=True, request=request)
         data = serializer.data
         return SuccessResponse(data=data, total=len(data), msg="获取成功")

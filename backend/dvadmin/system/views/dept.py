@@ -9,7 +9,7 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
-from dvadmin.system.models import Dept
+from dvadmin.system.models import Dept, RoleMenuButtonPermission
 from dvadmin.utils.json_response import DetailResponse, SuccessResponse
 from dvadmin.utils.permission import AnonymousUserPermission
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -130,7 +130,8 @@ class DeptViewSet(CustomModelViewSet):
         if is_superuser:
             queryset = Dept.objects.values('id', 'name', 'parent')
         else:
-            data_range = request.user.role.values_list('data_range', flat=True)
+            role_ids = request.user.role.values_list('id',flat=True)
+            data_range = RoleMenuButtonPermission.objects.filter(role__in=role_ids).values_list('data_range', flat=True)
             user_dept_id = request.user.dept.id
             dept_list = [user_dept_id]
             data_range_list = list(set(data_range))

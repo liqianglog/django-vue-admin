@@ -17,7 +17,7 @@ const alias: Record<string, string> = {
 const viteConfig = defineConfig((mode: ConfigEnv) => {
 	const env = loadEnv(mode.mode, process.cwd());
 	return {
-		plugins: [vue(), vueJsx(),vueSetupExtend()],
+		plugins: [vue(), vueJsx(), vueSetupExtend()],
 		root: process.cwd(),
 		resolve: { alias },
 		base: mode.command === 'serve' ? './' : env.VITE_PUBLIC_PATH,
@@ -27,7 +27,7 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 		server: {
 			host: '0.0.0.0',
 			port: env.VITE_PORT as unknown as number,
-			open: env.VITE_OPEN,
+			open: true,
 			hmr: true,
 			proxy: {
 				'/gitee': {

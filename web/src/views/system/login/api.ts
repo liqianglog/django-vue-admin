@@ -2,7 +2,7 @@ import { request } from "/@/utils/service";
 
 export function getCaptcha() {
     return request({
-        url: '/api/captcha',
+        url: '/api/captcha/',
         method: 'get',
     });
 }

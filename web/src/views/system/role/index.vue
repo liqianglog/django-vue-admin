@@ -5,7 +5,8 @@
 				<el-tag size="small">{{ scope.row.url }}</el-tag>
 			</template>
 		</fs-crud>
-		<RolePermission ref="rolePermission"></RolePermission>
+<!--		<RolePermission ref="rolePermission"></RolePermission>-->
+    <permission ref="rolePermission"></permission>
 	</fs-page>
 </template>
 
@@ -14,6 +15,7 @@ import { ref, onMounted } from 'vue';
 import { useExpose, useCrud, dict } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
 import RolePermission from '/@/views/system/rolePermission/index.vue';
+import permission from './components/permission.vue'
 import * as api from './api';
 import _ from 'lodash-es';
 const rolePermission = ref();
