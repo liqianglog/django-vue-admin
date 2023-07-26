@@ -45,7 +45,7 @@
 			<p>Copyright © 2021-2022 django-vue-admin.com 版权所有</p>
 			<p class="la-other">
 				<a href="https://beian.miit.gov.cn" target="_blank">晋ICP备18005113号-3</a>
-				| 
+				|
 				<a href="https://django-vue-admin.com" target="_blank">帮助</a>
 				|
 				<a href="#">隐私</a>
@@ -92,11 +92,13 @@ onMounted(() => {
 .login-container {
 	height: 100%;
 	background: var(--el-color-white);
+
 	.login-left {
 		flex: 1;
 		position: relative;
 		background-color: rgba(211, 239, 255, 1);
 		margin-right: 100px;
+
 		.login-left-logo {
 			display: flex;
 			align-items: center;
@@ -105,24 +107,29 @@ onMounted(() => {
 			left: 80px;
 			z-index: 1;
 			animation: logoAnimation 0.3s ease;
+
 			img {
 				width: 52px;
 				height: 52px;
 			}
+
 			.login-left-logo-text {
 				display: flex;
 				flex-direction: column;
+
 				span {
 					margin-left: 10px;
-					font-size: 20px;
-					color: #26a59a;
+					font-size: 16px;
+					color: var(--el-color-primary);
 				}
+
 				.login-left-logo-text-msg {
 					font-size: 12px;
-					color: #32a99e;
+					color: var(--el-color-primary);
 				}
 			}
 		}
+
 		.login-left-img {
 			position: absolute;
 			top: 50%;
@@ -130,20 +137,24 @@ onMounted(() => {
 			transform: translate(-50%, -50%);
 			width: 100%;
 			height: 52%;
+
 			img {
 				width: 100%;
 				height: 100%;
 				animation: error-num 0.6s ease;
 			}
 		}
+
 		.login-left-waves {
 			position: absolute;
 			top: 0;
 			right: -100px;
 		}
 	}
+
 	.login-right {
 		width: 700px;
+
 		.login-right-warp {
 			border: 1px solid var(--el-color-primary-light-3);
 			border-radius: 3px;
@@ -152,12 +163,14 @@ onMounted(() => {
 			position: relative;
 			overflow: hidden;
 			background-color: var(--el-color-white);
+
 			.login-right-warp-one,
 			.login-right-warp-two {
 				position: absolute;
 				display: block;
 				width: inherit;
 				height: inherit;
+
 				&::before,
 				&::after {
 					content: '';
@@ -165,6 +178,7 @@ onMounted(() => {
 					z-index: 1;
 				}
 			}
+
 			.login-right-warp-one {
 				&::before {
 					filter: hue-rotate(0deg);
@@ -175,6 +189,7 @@ onMounted(() => {
 					background: linear-gradient(90deg, transparent, var(--el-color-primary));
 					animation: loginLeft 3s linear infinite;
 				}
+
 				&::after {
 					filter: hue-rotate(60deg);
 					top: -100%;
@@ -186,6 +201,7 @@ onMounted(() => {
 					animation-delay: 0.7s;
 				}
 			}
+
 			.login-right-warp-two {
 				&::before {
 					filter: hue-rotate(120deg);
@@ -197,6 +213,7 @@ onMounted(() => {
 					animation: loginRight 3s linear infinite;
 					animation-delay: 1.4s;
 				}
+
 				&::after {
 					filter: hue-rotate(300deg);
 					bottom: -100%;
@@ -208,10 +225,12 @@ onMounted(() => {
 					animation-delay: 2.1s;
 				}
 			}
+
 			.login-right-warp-mian {
 				display: flex;
 				flex-direction: column;
 				height: 100%;
+
 				.login-right-warp-main-title {
 					height: 130px;
 					line-height: 130px;
@@ -222,9 +241,11 @@ onMounted(() => {
 					animation-delay: 0.3s;
 					color: var(--el-text-color-primary);
 				}
+
 				.login-right-warp-main-form {
 					flex: 1;
 					padding: 0 50px 50px;
+
 					.login-content-main-sacn {
 						position: absolute;
 						top: 0;
@@ -235,6 +256,7 @@ onMounted(() => {
 						cursor: pointer;
 						transition: all ease 0.3s;
 						color: var(--el-color-primary);
+
 						&-delta {
 							position: absolute;
 							width: 35px;
@@ -245,11 +267,13 @@ onMounted(() => {
 							background: var(--el-color-white);
 							transform: rotate(-45deg);
 						}
+
 						&:hover {
 							opacity: 1;
 							transition: all ease 0.3s;
 							color: var(--el-color-primary) !important;
 						}
+
 						i {
 							width: 47px;
 							height: 50px;
@@ -267,15 +291,18 @@ onMounted(() => {
 
 	.login-authorization {
 		position: fixed;
-		bottom: 50px;
+		bottom: 30px;
 		left: 0;
 		right: 0;
 		text-align: center;
+
 		p {
 			font-size: 14px;
+			color: rgba(0, 0, 0, 0.5);
 		}
+
 		a {
-			color: #409eff;
+			color: var(--el-color-primary);
 			margin: 0 5px;
 		}
 	}

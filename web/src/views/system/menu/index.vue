@@ -1,35 +1,48 @@
 <template>
 	<fs-page>
 		<el-row class="s-el-row">
-			<el-col :span="5">
+			<el-col :span="6">
 				<div class="menu-box menu-left-box">
-					<p class="font-mono font-black text-center text-xl pb-5">
-						菜单列表
-						<el-tooltip effect="dark" :content="content" placement="right">
-							<el-icon>
-								<QuestionFilled />
-							</el-icon>
-						</el-tooltip>
-					</p>
 					<el-input v-model="filterText" :placeholder="placeholder" />
-					<el-tree ref="treeRef" class="font-mono font-bold leading-6 text-7xl" :data="data" :props="treeProps"
-						:filter-node-method="filterNode" :load="loadNode" :allow-drag="allowDrag" :allow-drop="allowDrop"
-						@node-drop="nodeDrop" lazy icon="ArrowRightBold" :indent="12" draggable @node-click="handleNodeClick">
-						<template #default="{ node, data }">
-							<span v-if="data.status" class="text-center font-black font-normal">
-								<SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}
-							</span>
-							<span v-else class="text-center font-black text-red-700 font-normal">
-								<SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}
-							</span>
-						</template>
-					</el-tree>
+					<div class="menu-left-tree">
+						<div class="mlt-head">
+							<img src="../../../assets/img/menu-tree-head-icon.png" alt="" />
+							菜单列表
+							<el-tooltip effect="dark" placement="right"
+								content="1.红色菜单代表状态禁用; 2.添加菜单，如果是目录，组件地址为空即可; 3.添加根节点菜单，父级ID为空即可; 4.支持拖拽菜单;">
+								<el-icon size="16" class="mlt-tooltip">
+									<QuestionFilled />
+								</el-icon>
+							</el-tooltip>
+						</div>
+						<el-tree ref="treeRef" class="font-mono font-bold leading-6 text-7xl" :data="data" :props="treeProps"
+							:filter-node-method="filterNode" :load="loadNode" :allow-drag="allowDrag" :allow-drop="allowDrop"
+							@node-drop="nodeDrop" lazy :indent="45" draggable @node-click="handleNodeClick" default-expand-all>
+							<template #default="{ node, data }">
+								<element-tree-line :node="node" :showLabelLine="false" :indent="32">
+									<span v-if="data.status" class="text-center font-black font-normal">
+										<SvgIcon :name="node.data.icon" />
+										&nbsp;{{ node.label }}
+									</span>
+									<span v-else class="text-center font-black text-red-700 font-normal">
+										<SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}
+									</span>
+								</element-tree-line>
+								<!--  -->
+							</template>
+						</el-tree>
+					</div>
 				</div>
 			</el-col>
-			<el-col :span="9">
+			<el-col :span="8">
 				<div class="menu-box menu-center-box">
+					<div class="mcb-alert">
+						1.红色菜单代表状态禁用;<br />
+						2.添加菜单，如果是目录，组件地址为空即可;<br />
+						3.添加根节点菜单，父级ID为空即可;<br />
+						4.支持拖拽菜单;
+					</div>
 					<el-form ref="formRef" :rules="rules" :model="form" label-width="80px" label-position="right">
-						<el-alert :title="content" type="success" effect="dark" :closable="false" center />
 						<el-divider>
 							<strong>菜单配置</strong>
 						</el-divider>
@@ -44,7 +57,7 @@
 						</el-form-item>
 						<el-form-item label="组件地址" prop="component">
 							<el-autocomplete class="w-full" v-model="form.component" :fetch-suggestions="querySearch"
-								:trigger-on-focus="false" clearable debounce="100" placeholder="输入组件地址" />
+								:trigger-on-focus="false" clearable :debounce="100" placeholder="输入组件地址" />
 						</el-form-item>
 						<el-form-item required label="Url" prop="web_path">
 							<el-input v-model="form.web_path" />
@@ -77,10 +90,10 @@
 					<el-divider></el-divider>
 					<div class="menus-btns">
 						<el-button @click="saveMenu()" type="primary" round>保存</el-button>
-						<el-button @click="newMenu()" type="success" round :disabled="!form.id">新建</el-button>
-						<el-button @click="addChildMenu()" type="warning" round :disabled="!form.id">添加子级
+						<el-button @click="newMenu()" type="primary" round :disabled="!form.id">新建</el-button>
+						<el-button @click="addChildMenu()" type="primary" round :disabled="!form.id">添加子级
 						</el-button>
-						<el-button @click="deleteMenu()" type="danger" round :disabled="!form.id">删除菜单
+						<el-button @click="deleteMenu()" type="primary" round :disabled="!form.id">删除菜单
 						</el-button>
 					</div>
 				</div>
@@ -91,107 +104,15 @@
 				</div>
 			</el-col>
 		</el-row>
-		<!-- <splitpanes>
-			<pane max-size="30" min-size="30">
-				<el-card :body-style="{ height: '100%' }">
-					<p class="font-mono font-black text-center text-xl pb-5">
-						菜单列表
-						<el-tooltip effect="dark" :content="content" placement="right">
-							<el-icon>
-								<QuestionFilled />
-							</el-icon>
-						</el-tooltip>
-					</p>
-					<el-input v-model="filterText" :placeholder="placeholder" />
-					<el-tree ref="treeRef" class="font-mono font-bold leading-6 text-7xl" :data="data" :props="treeProps"
-						:filter-node-method="filterNode" :load="loadNode" :allow-drag="allowDrag" :allow-drop="allowDrop"
-						@node-drop="nodeDrop" lazy icon="ArrowRightBold" :indent="12" draggable @node-click="handleNodeClick">
-						<template #default="{ node, data }">
-							<span v-if="data.status" class="text-center font-black font-normal">
-								<SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}
-							</span>
-							<span v-else class="text-center font-black text-red-700 font-normal">
-								<SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}
-							</span>
-						</template>
-					</el-tree>
-				</el-card>
-			</pane>
-			<pane min-size="30">
-				<el-card :body-style="{ height: '100%' }">
-					<el-form ref="formRef" :rules="rules" :model="form" label-width="80px" label-position="right">
-						<el-alert :title="content" type="success" effect="dark" :closable="false" center />
-						<el-divider>
-							<strong>菜单配置</strong>
-						</el-divider>
-						<el-form-item label="菜单ID" prop="id">
-							<el-input v-model="form.id" disabled />
-						</el-form-item>
-						<el-form-item label="父级ID" prop="parent">
-							<el-input v-model="form.parent" />
-						</el-form-item>
-						<el-form-item required label="菜单名称" prop="name">
-							<el-input v-model="form.name" />
-						</el-form-item>
-						<el-form-item label="组件地址" prop="component">
-							<el-autocomplete class="w-full" v-model="form.component" :fetch-suggestions="querySearch"
-								:trigger-on-focus="false" clearable debounce="100" placeholder="输入组件地址" />
-						</el-form-item>
-						<el-form-item required label="Url" prop="web_path">
-							<el-input v-model="form.web_path" />
-						</el-form-item>
-						<el-form-item label="排序" prop="sort">
-							<el-input-number v-model="form.sort" controls-position="right" />
-						</el-form-item>
-						<el-form-item label="状态">
-							<el-radio-group v-model="form.status">
-								<el-radio :label="true">启用</el-radio>
-								<el-radio :label="false">禁用</el-radio>
-							</el-radio-group>
-						</el-form-item>
-						<el-form-item label="侧边可见">
-							<el-radio-group v-model="form.visible">
-								<el-radio :label="true">启用</el-radio>
-								<el-radio :label="false">禁用</el-radio>
-							</el-radio-group>
-						</el-form-item>
-						<el-form-item label="缓存">
-							<el-radio-group v-model="form.cache">
-								<el-radio :label="true">启用</el-radio>
-								<el-radio :label="false">禁用</el-radio>
-							</el-radio-group>
-						</el-form-item>
-						<el-form-item label="图标" prop="icon">
-							<IconSelector clearable v-model="form.icon" />
-						</el-form-item>
-					</el-form>
-					<el-divider></el-divider>
-					<div class="menus-btns">
-						<el-button @click="saveMenu()" type="primary" round>保存</el-button>
-						<el-button @click="newMenu()" type="success" round :disabled="!form.id">新建</el-button>
-						<el-button @click="addChildMenu()" type="warning" round :disabled="!form.id">添加子级
-						</el-button>
-						<el-button @click="deleteMenu()" type="danger" round :disabled="!form.id">删除菜单
-						</el-button>
-					</div>
-				</el-card>
-			</pane>
-			<pane min-size="30">
-				<el-card :body-style="{ height: '100%' }">
-					<menuButton :select-menu="form" />
-				</el-card>
-			</pane>
-		</splitpanes> -->
 	</fs-page>
 </template>
 
 <script lang="ts" setup name="menu">
-import { Splitpanes, Pane } from 'splitpanes';
-import 'splitpanes/dist/splitpanes.css';
+import { getElementLabelLine } from "element-tree-line";
 import * as api from './api';
 import * as menuButoonApi from './components/menuButton/api';
 import { ElForm, ElTree, FormRules, ElMessageBox } from 'element-plus';
-import { ref, onMounted, watch, reactive, toRaw, defineAsyncComponent, nextTick, shallowRef, onActivated } from 'vue';
+import { ref, onMounted, watch, reactive, toRaw, defineAsyncComponent, onActivated, h } from 'vue';
 import XEUtils from 'xe-utils';
 import { errorMessage, successMessage } from '../../../utils/message';
 
@@ -216,6 +137,8 @@ interface ComponentFileItem {
 	value: string;
 	label: string;
 }
+
+const ElementTreeLine = getElementLabelLine(h);
 
 // 引入组件
 const menuButton = defineAsyncComponent(() => import('./components/menuButton/index.vue'));
@@ -301,13 +224,6 @@ let data = ref([]);
 let isAddNewMenu = ref(false); // 判断当前是新增菜单，还是更新保存当前菜单
 
 const permissionDrawerVisible = ref(false);
-
-const content = `
-1.红色菜单代表状态禁用;
-2.添加菜单，如果是目录，组件地址为空即可;
-3.添加根节点菜单，父级ID为空即可;
-4.支持拖拽菜单;
-`;
 
 let form: Form<any> = reactive({
 	id: '',
@@ -469,12 +385,14 @@ onActivated(() => {
 .s-el-row {
 	height: 100%;
 	overflow: hidden;
+
 	.el-col {
 		height: 100%;
 		padding: 10px 0;
 		box-sizing: border-box;
 	}
 }
+
 .menu-box {
 	height: 100%;
 	padding: 10px;
@@ -485,11 +403,42 @@ onActivated(() => {
 
 .menu-left-box {
 	border-radius: 0 8px 8px 0;
+
+	//margin-right: 10px;
+	.mlt-head {
+		display: flex;
+		align-items: center;
+		margin-left: -8px;
+		color: #606266;
+
+		img {
+			display: block;
+			width: 16px;
+			height: 16px;
+			margin-right: 8px;
+			position: relative;
+			top: -1px;
+		}
+
+		.mlt-tooltip {
+			margin-left: 5px;
+			position: relative;
+			top: -1px;
+		}
+	}
 }
 
 .menu-center-box {
 	border-radius: 8px;
 	margin: 0 10px;
+
+	.mcb-alert {
+		color: #fff;
+		line-height: 24px;
+		padding: 8px 16px;
+		border-radius: 4px;
+		background-color: var(--el-color-primary);
+	}
 }
 
 .menu-right-box {
@@ -503,5 +452,67 @@ onActivated(() => {
 
 .font-normal {
 	font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
+}
+</style>
+
+<style lang="scss">
+.menu-left-tree {
+	padding: 20px;
+	box-sizing: border-box;
+
+	.el-tree-node__content {
+		height: 32px !important;
+	}
+
+	.el-tree .el-tree-node__expand-icon svg {
+		display: none !important;
+		height: 0;
+		width: 0;
+	}
+
+	.el-tree-node__expand-icon {
+		font-size: 16px;
+	}
+
+	.el-tree-node__content>.el-tree-node__expand-icon {
+		padding: 0;
+		box-sizing: border-box;
+		margin-right: 5px;
+		margin-left: 24px;
+	}
+
+	.el-tree .el-tree-node__expand-icon.expanded {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+
+	.el-tree .el-tree-node__expand-icon.is-leaf {
+		margin-left: 0
+	}
+
+	.el-tree .el-tree-node__expand-icon:before {
+		background: url("../../../assets/img/menu-tree-show-icon.png") no-repeat center / 100%;
+		content: '';
+		display: block;
+		width: 24px;
+		height: 24px;
+	}
+
+	.el-tree .el-tree-node__expand-icon.expanded:before {
+		background: url("../../../assets/img/menu-tree-hidden-icon.png") no-repeat center / 100%;
+		content: '';
+		display: block;
+		width: 24px;
+		height: 24px;
+	}
+
+	.el-tree .is-leaf.el-tree-node__expand-icon::before {
+		display: block;
+		background: none !important;
+		content: '';
+		width: 18px;
+		height: 18px;
+		border: none;
+	}
 }
 </style>

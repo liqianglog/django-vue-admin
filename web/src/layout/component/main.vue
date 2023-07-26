@@ -1,13 +1,10 @@
 <template>
-	<el-main class="layout-main" :style="isFixedHeader ? `height: calc(100% - ${setMainHeight})` : `minHeight: calc(100% - ${setMainHeight})`">
-		<el-scrollbar
-			ref="layoutMainScrollbarRef"
-			class="layout-main-scroll layout-backtop-header-fixed"
-			wrap-class="layout-main-scroll"
-			view-class="layout-main-scroll"
-		>
+	<el-main class="layout-main"
+		:style="isFixedHeader ? `height: calc(100% - ${setMainHeight})` : `minHeight: calc(100% - ${setMainHeight})`">
+		<el-scrollbar ref="layoutMainScrollbarRef" class="layout-main-scroll layout-backtop-header-fixed"
+			wrap-class="layout-main-scroll" view-class="layout-main-scroll">
 			<LayoutParentView />
-			<LayoutFooter v-if="isFooter" />
+			<!-- <LayoutFooter v-if="isFooter" /> -->
 		</el-scrollbar>
 		<el-backtop :target="setBacktopClass" />
 	</el-main>
