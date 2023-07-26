@@ -1,27 +1,23 @@
 import {
-	CrudOptions,
 	AddReq,
 	DelReq,
 	EditReq,
 	dict,
-	CrudExpose,
 	CreateCrudOptionsRet,
 	CreateCrudOptionsProps,
 	UserPageQuery,
 } from '@fast-crud/fast-crud';
-import _ from 'lodash-es';
 import * as api from './api';
 
 import { request } from '/@/utils/service';
 //此处为crudOptions配置
 export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOptionsProps): CreateCrudOptionsRet {
 	const pageRequest = async (query: UserPageQuery) => {
-		if(context!.selectOptions.value.id){
+		if (context!.selectOptions.value.id) {
 			return await api.GetList({ menu: context!.selectOptions.value.id } as any);
-		}else{
-			return undefined
+		} else {
+			return undefined;
 		}
-
 	};
 	const editRequest = async ({ form, row }: EditReq) => {
 		return await api.UpdateObj({ ...form, menu: row.menu });
@@ -35,15 +31,15 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 	return {
 		crudOptions: {
 			search: {
-        container: {
-          action: {
-            //按钮栏配置
-            col: {
-              span: 8
-            }
-          }
-        },
-      },
+				container: {
+					action: {
+						//按钮栏配置
+						col: {
+							span: 8,
+						},
+					},
+				},
+			},
 			rowHandle: {
 				//固定右侧
 				fixed: 'right',
@@ -53,12 +49,12 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 						show: false,
 					},
 					edit: {
-						iconRight: 'Edit',
-						type: 'text',
+						icon: '',
+						type: 'primary',
 					},
 					remove: {
-						iconRight: 'Delete',
-						type: 'text',
+						icon: '',
+						type: 'primary',
 					},
 				},
 			},
