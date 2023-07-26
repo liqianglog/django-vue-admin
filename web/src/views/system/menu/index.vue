@@ -49,13 +49,13 @@
 						</el-tooltip>
 
 						<el-tooltip effect="dark" content="上移">
-							<el-icon size="16" class="mlt-icon">
+							<el-icon size="16" @click="handleSort('up')" class="mlt-icon">
 								<Top />
 							</el-icon>
 						</el-tooltip>
 
 						<el-tooltip effect="dark" content="下移">
-							<el-icon size="16" class="mlt-icon">
+							<el-icon size="16" @click="handleSort('down')" class="mlt-icon">
 								<Bottom />
 							</el-icon>
 						</el-tooltip>
@@ -160,6 +160,7 @@ const ElementTreeLine = getElementLabelLine(h);
 const filterText = ref('');
 const treeRef = ref<InstanceType<typeof ElTree>>();
 let drawerVisible = ref(false)
+let treeSelectNode = ref<Node | null>(null)
 
 watch(filterText, (val) => {
 	treeRef.value!.filter(val);
@@ -315,12 +316,13 @@ const addChildMenu = () => {
 	handleDrawerClose();
 };
 
-const handleNodeClick = (data: any) => {
+const handleNodeClick = (record: any, node: Node) => {
+	treeSelectNode.value = node;
 	Object.keys(toRaw(data)).forEach((key: string) => {
-		form[key] = data[key];
+		form[key] = record[key];
 	});
 	delete form.component_name;
-	form.id = data.id;
+	form.id = record.id;
 	isAddNewMenu.value = false;
 };
 
@@ -366,6 +368,29 @@ const handleDeleteMenu = () => {
 		});
 	})
 };
+
+/**
+ * 移动操作
+ */
+const handleSort = (type: string) => {
+	if (!form.id && treeSelectNode.value) {
+		warningMessage('请选择菜单！')
+		return
+	}
+	const parentList = treeSelectNode.value?.parent.childNodes || [];
+	const index = parentList.findIndex(i => i.data.id === form.id)
+	const record = parentList.find(i => i.data.id === form.id)
+
+	if (type === 'up') {
+		if (index === 0) return
+		parentList.splice(index - 1, 0, record as any)
+		parentList.splice(index + 1, 1)
+	}
+	if (type === 'down') {
+		parentList.splice(index + 2, 0, record as any)
+		parentList.splice(index, 1)
+	}
+}
 
 // 页面打开后获取列表数据
 onMounted(() => {
