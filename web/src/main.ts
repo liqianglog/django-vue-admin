@@ -30,7 +30,9 @@ import { scanAndInstallPlugins } from '/@/views/plugins/index';
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 
+import '/@/assets/style/reset.scss';
 import 'element-tree-line/dist/style.css'
+
 let forIconfont = analyzingIconForIconfont(iconfont); //解析class
 iconList.addIcon(forIconfont.list); // 添加iconfont dvadmin3的icon
 iconList.addIcon(elementPlus); // 添加element plus的图标
