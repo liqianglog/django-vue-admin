@@ -12,16 +12,8 @@
 						</el-tooltip>
 					</p>
 					<el-input v-model="filterText" :placeholder="placeholder" />
-					<el-tree
-						ref="treeRef"
-						class="font-mono font-bold leading-6 text-7xl"
-						:data="data"
-						:props="treeProps"
-						:filter-node-method="filterNode"
-						icon="ArrowRightBold"
-						:indent="12"
-						@node-click="onTreeNodeClick"
-					>
+					<el-tree ref="treeRef" class="font-mono font-bold leading-6 text-7xl" :data="data" :props="treeProps"
+						:filter-node-method="filterNode" icon="ArrowRightBold" :indent="12" @node-click="onTreeNodeClick">
 						<template #default="{ node, data }">
 							<span class="text-center font-black font-normal">{{ node.label }}</span>
 						</template>
@@ -31,10 +23,10 @@
 			<el-col xs="24" :sm="16" :md="18" :lg="20" :xl="20" class="p-1">
 				<el-card :body-style="{ height: '100%' }">
 					<fs-crud ref="crudRef" v-bind="crudBinding">
-            <template #actionbar-right>
-              <importExcel  api="api/system/user/" >导入 </importExcel>
-            </template>
-          </fs-crud>
+						<template #actionbar-right>
+							<importExcel api="api/system/user/">导入 </importExcel>
+						</template>
+					</fs-crud>
 				</el-card>
 			</el-col>
 		</el-row>
@@ -98,6 +90,7 @@ const getData = () => {
 			children: 'children',
 			strict: true,
 		});
+
 		data.value = result;
 	});
 };
@@ -142,7 +135,8 @@ onMounted(() => {
 .el-card {
 	height: 100%;
 }
+
 .font-normal {
-    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
+	font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
 }
 </style>
