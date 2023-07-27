@@ -1,5 +1,6 @@
 <template>
 	<el-config-provider :size="getGlobalComponentSize" :locale="getGlobalI18n">
+		<!-- v-show="themeConfig.lockScreenTime > 1" -->
 		<router-view v-show="themeConfig.lockScreenTime > 1" />
 		<LockScreen v-if="themeConfig.isLockScreen" />
 		<Setings ref="setingsRef" v-show="themeConfig.lockScreenTime > 1" />
@@ -9,7 +10,7 @@
 </template>
 
 <script setup lang="ts" name="app">
-import { defineAsyncComponent, computed, ref, onBeforeMount, onMounted, onUnmounted, nextTick, watch,onBeforeUnmount } from 'vue';
+import { defineAsyncComponent, computed, ref, onBeforeMount, onMounted, onUnmounted, nextTick, watch, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
@@ -34,7 +35,7 @@ const stores = useTagsViewRoutes();
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 import websocket from "/@/utils/websocket";
-import {ElNotification} from "element-plus";
+import { ElNotification } from "element-plus";
 // 获取版本号
 const getVersion = computed(() => {
 	let isVersion = false;
@@ -58,12 +59,12 @@ onBeforeMount(() => {
 	setIntroduction.cssCdn();
 	// 设置批量第三方 js
 	setIntroduction.jsCdn();
-  //websockt 模块
-  try {
-    websocket.init(wsReceive)
-  }catch (e) {
-    console.log("websocket错误")
-  }
+	//websockt 模块
+	try {
+		websocket.init(wsReceive)
+	} catch (e) {
+		console.log("websocket错误")
+	}
 
 });
 // 页面加载时
@@ -86,7 +87,7 @@ onMounted(() => {
 });
 // 页面销毁时，关闭监听布局配置/i18n监听
 onUnmounted(() => {
-	mittBus.off('openSetingsDrawer', () => {});
+	mittBus.off('openSetingsDrawer', () => { });
 });
 // 监听路由的变化，设置网站标题
 watch(
@@ -100,26 +101,26 @@ watch(
 );
 
 // websocket相关代码
-import {messageCenterStore} from "/@/stores/messageCenter";
+import { messageCenterStore } from "/@/stores/messageCenter";
 const wsReceive = (message: any) => {
-  const data = JSON.parse(message.data)
-  const { unread } = data
-  const messageCenter = messageCenterStore()
-  messageCenter.setUnread(unread);
-  if (data.contentType === 'SYSTEM') {
-    ElNotification({
-      title: '系统消息',
-      message: data.content,
-      type: 'success',
-      position: 'bottom-right',
-      duration: 5000
-    })
-  }
+	const data = JSON.parse(message.data)
+	const { unread } = data
+	const messageCenter = messageCenterStore()
+	messageCenter.setUnread(unread);
+	if (data.contentType === 'SYSTEM') {
+		ElNotification({
+			title: '系统消息',
+			message: data.content,
+			type: 'success',
+			position: 'bottom-right',
+			duration: 5000
+		})
+	}
 
 }
 onBeforeUnmount(() => {
-  // 关闭连接
-  websocket.close()
+	// 关闭连接
+	websocket.close()
 })
 
 </script>

@@ -1,6 +1,6 @@
 <template>
 	<fs-page>
-		<el-row class="s-el-row">
+		<el-row class="menu-el-row">
 			<el-col :span="6">
 				<div class="menu-box menu-left-box">
 					<el-input v-model="filterText" :prefix-icon="Search" placeholder="请输入菜单名称" />
@@ -17,9 +17,9 @@
 								</el-icon>
 							</el-tooltip>
 						</div>
-						<el-tree ref="treeRef" class="font-mono font-bold leading-6 text-7xl" :data="data" :props="defaultTreeProps"
-							:filter-node-method="filterNode" :load="loadNode" @node-drop="nodeDrop" lazy :indent="45"
-							@node-click="handleNodeClick" highlight-current default-expand-all>
+						<el-tree ref="treeRef" :data="data" :props="defaultTreeProps" :filter-node-method="filterNode"
+							:load="loadNode" @node-drop="nodeDrop" lazy :indent="45" @node-click="handleNodeClick" highlight-current
+							default-expand-all>
 							<template #default="{ node, data }">
 								<element-tree-line :node="node" :showLabelLine="false" :indent="32">
 									<span v-if="data.status" class="text-center font-black font-normal">
@@ -30,7 +30,6 @@
 										<SvgIcon :name="node.data.icon" />&nbsp;{{ node.label }}
 									</span>
 								</element-tree-line>
-								<!--  -->
 							</template>
 						</el-tree>
 					</div>
@@ -146,10 +145,10 @@ import XEUtils from 'xe-utils';
 import { ElForm, ElTree, FormRules, ElMessageBox } from 'element-plus';
 import { getElementLabelLine } from "element-tree-line";
 import * as api from './api';
-import { Search } from '@element-plus/icons-vue'
+import { Search } from '@element-plus/icons-vue';
 import { errorMessage, successMessage, warningMessage } from '../../../utils/message';
-import { FormTypes, TreeTypes, APIResponseData, ComponentFileItem } from './types'
-import type Node from 'element-plus/es/components/tree/src/model/node'
+import { FormTypes, TreeTypes, APIResponseData, ComponentFileItem } from './types';
+import type Node from 'element-plus/es/components/tree/src/model/node';
 
 const menuButton = defineAsyncComponent(() => import('./components/menuButton/index.vue'));
 const IconSelector = defineAsyncComponent(() => import('/@/components/iconSelector/index.vue'));
@@ -399,7 +398,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.s-el-row {
+.menu-el-row {
 	height: 100%;
 	overflow: hidden;
 
