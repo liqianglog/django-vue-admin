@@ -67,7 +67,7 @@ import { ElTree } from 'element-plus';
 import { getElementLabelLine } from "element-tree-line";
 import { Search } from '@element-plus/icons-vue';
 import { lazyLoadDept } from '../api';
-import { warningMessage } from '../../../../utils/message';
+import { warningNotification } from '../../../../utils/message';
 import { TreeItemType, APIResponseData } from '../types';
 import type Node from 'element-plus/es/components/tree/src/model/node';
 
@@ -85,7 +85,7 @@ const treeProps = {
 withDefaults(defineProps<IProps>(), {
   treeData: () => [],
 })
-const emit = defineEmits(['setFormInitData', 'deleteDept', 'updateDept'])
+const emit = defineEmits(['treeClick', 'deleteDept', 'updateDept'])
 
 let filterVal = ref('');
 let showTotalNum = ref(false)
@@ -96,11 +96,17 @@ watch(filterVal, (val) => {
   treeRef.value!.filter(val);
 });
 
+/**
+ * 部门树的搜索事件
+ */
 const handleFilterTreeNode = (value: string, data: TreeItemType) => {
   if (!value) return true;
   return toRaw(data).name?.indexOf(value) !== -1;
 };
 
+/**
+ * 部门树的懒加载
+ */
 const handleLoadNode = (node: Node, resolve: Function) => {
   if (node.level !== 0) {
     lazyLoadDept({ parent: node.data.id }).then((res: APIResponseData) => {
@@ -109,9 +115,12 @@ const handleLoadNode = (node: Node, resolve: Function) => {
   }
 };
 
+/**
+ * 部门的点击事件
+ */
 const handleNodeClick = (data: TreeItemType) => {
   treeSelectDept.value = data
-  emit('setFormInitData', data)
+  emit('treeClick', data.id)
 };
 
 /**
@@ -120,7 +129,7 @@ const handleNodeClick = (data: TreeItemType) => {
 const handleUpdateMenu = (type: string) => {
   if (type === 'update') {
     if (!treeSelectDept.value.id) {
-      warningMessage('请选择菜单！')
+      warningNotification('请选择菜单！')
       return
     }
     emit('updateDept', type, treeSelectDept.value)
@@ -134,7 +143,7 @@ const handleUpdateMenu = (type: string) => {
  */
 const handleDeleteDept = () => {
   if (!treeSelectDept.value.id) {
-    warningMessage('请选择菜单！')
+    warningNotification('请选择菜单！')
     return
   }
   emit('deleteDept', treeSelectDept.value.id, () => {
