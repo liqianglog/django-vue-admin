@@ -40,13 +40,19 @@ export interface TreeItemType {
 }
 
 export interface DeptFormDataType {
-  id: string;
+  id: string | number;
   key: string;
-  parent: string;
+  parent: string | number;
   name: string;
   owner: string;
   phone: string;
   email: string;
   sort: number;
   is_catalog?: boolean;
+}
+
+export interface DeptListType {
+  id: number;
+  name: string;
+  parent: number;
 }
