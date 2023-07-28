@@ -1,5 +1,5 @@
 import { request } from '/@/utils/service';
-import { UserPageQuery, AddReq, DelReq, EditReq, InfoReq, PageQuery } from '@fast-crud/fast-crud';
+import { UserPageQuery, AddReq, EditReq, InfoReq, PageQuery } from '@fast-crud/fast-crud';
 
 export const apiPrefix = '/api/system/dept/';
 
