@@ -50,3 +50,9 @@ export interface DeptFormDataType {
   sort: number;
   is_catalog?: boolean;
 }
+
+export interface DeptListType {
+  id: number;
+  name: string;
+  parent: number;
+}

@@ -4,8 +4,10 @@
     <el-form-item label="部门ID" prop="id">
       <el-input v-model="deptFormData.id" disabled />
     </el-form-item>
-    <el-form-item label="父级部门ID" prop="parent">
-      <el-input v-model="deptFormData.parent" />
+    <el-form-item label="父级部门" prop="parent">
+      <el-select v-model="deptFormData.parent" style="width: 100%">
+        <el-option v-for="item in deptAllList" :key="item.id" :label="item.name" :value="item.id" />
+      </el-select>
     </el-form-item>
     <el-form-item required label="部门名称" prop="name">
       <el-input v-model="deptFormData.name" />
@@ -38,9 +40,9 @@
 <script lang="ts" setup>
 import { reactive, ref, onMounted } from 'vue';
 import { ElForm, FormRules } from 'element-plus';
-import { AddObj, UpdateObj } from '../api';
-import { successMessage } from '../../../../utils/message';
-import { DeptFormDataType, TreeItemType } from '../types';
+import { getAllDeptList, AddObj, UpdateObj } from '../api';
+import { successNotification } from '../../../../utils/message';
+import { DeptFormDataType, TreeItemType, DeptListType } from '../types';
 
 interface IProps {
   initFormData: TreeItemType | null;
@@ -57,6 +59,7 @@ const props = withDefaults(defineProps<IProps>(), {
 })
 const emit = defineEmits(['drawerClose'])
 
+let deptAllList = ref<DeptListType[]>([]);
 let deptFormData = reactive<DeptFormDataType>({
   id: '',
   key: '',
@@ -69,6 +72,13 @@ let deptFormData = reactive<DeptFormDataType>({
   is_catalog: true,
 })
 let deptBtnLoading = ref(false)
+
+const getData = async () => {
+  const res = await getAllDeptList();
+  if (res?.code === 2000) {
+    deptAllList.value = res.data
+  }
+}
 
 const setDeptFormData = () => {
   if (props.initFormData?.id) {
@@ -95,7 +105,7 @@ const handleUpdateMenu = () => {
         res = await AddObj(deptFormData)
       }
       if (res?.code === 2000) {
-        successMessage(res.msg as string);
+        successNotification(res.msg as string);
         handleClose('submit');
       }
     } finally {
@@ -109,7 +119,8 @@ const handleClose = (type: string = '') => {
   formRef.value?.resetFields();
 };
 
-onMounted(() => {
+onMounted(async () => {
+  await getData()
   setDeptFormData()
 })
 </script>

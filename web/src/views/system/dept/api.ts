@@ -52,10 +52,20 @@ export function lazyLoadDept(query: UserPageQuery) {
 /**
  * 用户相关接口
  */
-export function getUserDeptList(query: PageQuery) {
+export function getDeptUserList(query: PageQuery) {
 	return request({
-		url: "/api/system/dept/dept_lazy_tree/",
+		url: "/api/system/user/",
 		method: 'get',
 		params: query,
+	});
+}
+
+/**
+ * 获取所有部门列表
+ */
+export function getAllDeptList() {
+	return request({
+		url: "/api/system/dept/all_dept/",
+		method: 'get',
 	});
 }
