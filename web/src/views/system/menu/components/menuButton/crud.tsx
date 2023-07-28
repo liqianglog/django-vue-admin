@@ -1,12 +1,4 @@
-import {
-	AddReq,
-	DelReq,
-	EditReq,
-	dict,
-	CreateCrudOptionsRet,
-	CreateCrudOptionsProps,
-	UserPageQuery,
-} from '@fast-crud/fast-crud';
+import { AddReq, DelReq, EditReq, dict, CreateCrudOptionsRet, CreateCrudOptionsProps, UserPageQuery } from '@fast-crud/fast-crud';
 import * as api from './api';
 
 import { request } from '/@/utils/service';
@@ -185,7 +177,7 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 						},
 					}),
 					column: {
-						minWidth: 200,
+						minWidth: 250,
 						sortable: true,
 					},
 					form: {

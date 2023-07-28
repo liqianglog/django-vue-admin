@@ -40,14 +40,12 @@ export interface TreeItemType {
 }
 
 export interface DeptFormDataType {
-  id: string | number;
+  id?: string | number;
   key: string;
   parent: string | number;
   name: string;
   owner: string;
-  phone: string;
-  email: string;
-  sort: number;
+  remark: string;
   is_catalog?: boolean;
 }
 
