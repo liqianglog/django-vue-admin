@@ -117,10 +117,7 @@ class MenuViewSet(CustomModelViewSet):
         else:
             role_list = user.role.values_list('id', flat=True)
             menu_list = RoleMenuPermission.objects.filter(role__in=role_list).values_list('menu_id', flat=True)
-            print("role_list", role_list)
-            print("menu_list", menu_list)
             queryset = Menu.objects.filter(id__in=menu_list)
-        print(queryset)
         serializer = WebRouterSerializer(queryset, many=True, request=request)
         data = serializer.data
         return SuccessResponse(data=data, total=len(data), msg="获取成功")
@@ -146,7 +143,7 @@ class MenuViewSet(CustomModelViewSet):
             menu = Menu.objects.get(id=menu_id)
         except Menu.DoesNotExist:
             return ErrorResponse(msg="菜单不存在")
-        previous_menu = Menu.objects.filter(sort__lt=menu.sort).order_by('-sort').first()
+        previous_menu = Menu.objects.filter(sort__lt=menu.sort, parent=menu.parent).order_by('-sort').first()
         if previous_menu:
             previous_menu.sort, menu.sort = menu.sort, previous_menu.sort
             previous_menu.save()
@@ -162,7 +159,7 @@ class MenuViewSet(CustomModelViewSet):
             menu = Menu.objects.get(id=menu_id)
         except Menu.DoesNotExist:
             return ErrorResponse(msg="菜单不存在")
-        next_menu = Menu.objects.filter(sort__gt=menu.sort).order_by('sort').first()
+        next_menu = Menu.objects.filter(sort__gt=menu.sort, parent=menu.parent).order_by('sort').first()
         if next_menu:
             next_menu.sort, menu.sort = menu.sort, next_menu.sort
             next_menu.save()
