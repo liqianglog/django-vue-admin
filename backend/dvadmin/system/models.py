@@ -35,7 +35,9 @@ class Users(CoreModel, AbstractUser):
     )
     USER_TYPE = (
         (0, "后台用户"),
-        (1, "前台用户"),
+        (1, "消费者用户"),
+        (2, "码包接收方"),
+        (3, "经销商用户"),
     )
     user_type = models.IntegerField(
         choices=USER_TYPE, default=0, verbose_name="用户类型", null=True, blank=True, help_text="用户类型"
@@ -318,21 +320,21 @@ class FileList(CoreModel):
         # 保存到File model中
         instance = FileList()
         instance.name = file_name
-        instance.engine = dispatch.get_system_config_values("fileStorageConfig.file_engine") or 'local'
+        instance.engine = dispatch.get_system_config_values("file_storage.file_engine") or 'local'
         instance.file_url = os.path.join(file_path, file_name)
         instance.mime_type = mime_type
         instance.creator = request.user
         instance.modifier = request.user.id
         instance.dept_belong_id = request.user.dept_id
 
-        file_backup = dispatch.get_system_config_values("fileStorageConfig.file_backup")
-        file_engine = dispatch.get_system_config_values("fileStorageConfig.file_engine") or 'local'
+        file_backup = dispatch.get_system_config_values("file_storage.file_backup")
+        file_engine = dispatch.get_system_config_values("file_storage.file_engine") or 'local'
         if file_backup:
             instance.url = os.path.join(file_path.replace('media/', ''), file_name)
         if file_engine == 'oss':
             from dvadmin_cloud_storage.views.aliyun import ali_oss_upload
             file = File(open(os.path.join(BASE_DIR, file_path, file_name)))
-            file_path = ali_oss_upload(file)
+            file_path = ali_oss_upload(file, file_name=os.path.join(file_path.replace('media/', ''), file_name))
             if file_path:
                 instance.file_url = file_path
             else:
@@ -340,7 +342,7 @@ class FileList(CoreModel):
         elif file_engine == 'cos':
             from dvadmin_cloud_storage.views.tencent import tencent_cos_upload
             file = File(open(os.path.join(BASE_DIR, file_path, file_name)))
-            file_path = tencent_cos_upload(file)
+            file_path = tencent_cos_upload(file, file_name=os.path.join(file_path.replace('media/', ''), file_name))
             if file_path:
                 instance.file_url = file_path
             else:

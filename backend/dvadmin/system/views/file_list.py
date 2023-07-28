@@ -1,8 +1,10 @@
+import base64
 import datetime
 import hashlib
 import json
 import os
 import random
+from pathlib import PurePosixPath
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -10,7 +12,7 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 from application.settings import BASE_DIR
 from application import dispatch
-from dvadmin.system.models import FileList
+from dvadmin.system.models import FileList, media_file_name
 from dvadmin.system.views.ueditor_settings import ueditor_upload_settings, ueditor_settings
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.string_util import format_bytes
@@ -28,8 +30,8 @@ class FileSerializer(CustomModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
-        file_engine = dispatch.get_system_config_values("fileStorageConfig.file_engine") or 'local'
-        file_backup = dispatch.get_system_config_values("fileStorageConfig.file_backup")
+        file_engine = dispatch.get_system_config_values("file_storage.file_engine") or 'local'
+        file_backup = dispatch.get_system_config_values("file_storage.file_backup")
         file = self.initial_data.get('file')
         file_size = file.size
         validated_data['name'] = file.name
@@ -44,14 +46,18 @@ class FileSerializer(CustomModelSerializer):
             validated_data['url'] = file
         if file_engine == 'oss':
             from dvadmin_cloud_storage.views.aliyun import ali_oss_upload
-            file_path = ali_oss_upload(file)
+            h = validated_data['md5sum']
+            basename, ext = os.path.splitext(file.name)
+            file_path = ali_oss_upload(file, file_name=PurePosixPath("files", h[:1], h[1:2], h + ext.lower()))
             if file_path:
                 validated_data['file_url'] = file_path
             else:
                 raise ValueError("上传失败")
         elif file_engine == 'cos':
             from dvadmin_cloud_storage.views.tencent import tencent_cos_upload
-            file_path = tencent_cos_upload(file)
+            h = validated_data['md5sum']
+            basename, ext = os.path.splitext(file.name)
+            file_path = tencent_cos_upload(file, file_name=PurePosixPath("files", h[:1], h[1:2], h + ext.lower()))
             if file_path:
                 validated_data['file_url'] = file_path
             else:
@@ -144,7 +150,7 @@ class FileViewSet(CustomModelViewSet):
             f.write(base64.b64decode(content))
             f.close()
             state = "SUCCESS"
-            FileList.save_file(request, file_path, file_name,mime_type='image/png')
+            FileList.save_file(request, file_path, file_name, mime_type='image/png')
         except Exception as e:
             state = f"写入图片文件错误:{e}"
         return state
