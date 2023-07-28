@@ -435,12 +435,16 @@ const handleSort = (type: string) => {
 
 	if (type === 'up') {
 		if (index === 0) return;
-		parentList.splice(index - 1, 0, record as any);
-		parentList.splice(index + 1, 1);
+		api.moveUp({ menu_id: form.id }).then((res: APIResponseData) => {
+			getData();
+			successMessage(res.msg as string);
+		});
 	}
 	if (type === 'down') {
-		parentList.splice(index + 2, 0, record as any);
-		parentList.splice(index, 1);
+		api.moveDown({ menu_id: form.id }).then((res: APIResponseData) => {
+			getData();
+			successMessage(res.msg as string);
+		});
 	}
 };
 
