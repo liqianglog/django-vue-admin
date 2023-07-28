@@ -26,17 +26,20 @@
       <el-input-number v-model="deptFormData.sort" controls-position="right" />
     </el-form-item>
     <el-form-item>
-      <el-button @click="handleUpdateMenu('update')" type="primary" :disabled="deptBtnLoading">保存</el-button>
+      <el-button @click="handleUpdateMenu" type="primary" :disabled="deptBtnLoading">
+        {{ deptFormData.id ? '保存' : '新增' }}
+      </el-button>
       <el-button @click="handleClose">取消
       </el-button>
     </el-form-item>
-
   </el-form>
 </template>
 
 <script lang="ts" setup>
 import { reactive, ref, onMounted } from 'vue';
 import { ElForm, FormRules } from 'element-plus';
+import { AddObj, UpdateObj } from '../api';
+import { successMessage } from '../../../../utils/message';
 import { DeptFormDataType, TreeItemType } from '../types';
 
 interface IProps {
@@ -67,15 +70,47 @@ let deptFormData = reactive<DeptFormDataType>({
 })
 let deptBtnLoading = ref(false)
 
-const handleUpdateMenu = (type: string) => { };
+const setDeptFormData = () => {
+  if (props.initFormData?.id) {
+    deptFormData.id = props.initFormData?.id;
+    deptFormData.key = props.initFormData.key || '';
+    deptFormData.parent = props.initFormData.parent || '';
+    deptFormData.name = props.initFormData.name || '';
+    deptFormData.owner = props.initFormData.owner || '';
+    deptFormData.phone = props.initFormData.phone || '';
+    deptFormData.email = props.initFormData.email || '';
+    deptFormData.sort = props.initFormData.sort || 0;
+  }
+}
 
-const handleClose = () => {
-  emit('drawerClose')
+const handleUpdateMenu = () => {
+  formRef.value?.validate(async (valid) => {
+    if (!valid) return
+    try {
+      let res;
+      deptBtnLoading.value = true
+      if (deptFormData.id) {
+        res = await UpdateObj(deptFormData);
+      } else {
+        res = await AddObj(deptFormData)
+      }
+      if (res?.code === 2000) {
+        successMessage(res.msg as string);
+        handleClose('submit');
+      }
+    } finally {
+      deptBtnLoading.value = false
+    }
+  })
+};
+
+const handleClose = (type: string = '') => {
+  emit('drawerClose', type)
   formRef.value?.resetFields();
 };
 
 onMounted(() => {
-  console.log(props.initFormData?.id, '----');
+  setDeptFormData()
 })
 </script>
 
