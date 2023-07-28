@@ -74,7 +74,7 @@
 
 		<el-drawer v-model="drawerVisible" title="部门配置" direction="rtl" size="500px" :close-on-click-modal="false"
 			:before-close="handleDrawerClose">
-			<FormCom v-if="drawerVisible" :initFormData="drawerFormData" @drawerClose="handleDrawerClose" />
+			<DeptFormCom v-if="drawerVisible" :initFormData="drawerFormData" @drawerClose="handleDrawerClose" />
 		</el-drawer>
 	</fs-page>
 </template>
@@ -84,7 +84,7 @@ import { ref, onMounted, reactive } from 'vue';
 import XEUtils from 'xe-utils';
 import { ElForm, ElMessageBox, FormRules } from 'element-plus';
 import TreeCom from './components/TreeCom.vue'
-import FormCom from './components/FormCom.vue'
+import DeptFormCom from './components/DeptFormCom.vue'
 import { GetList, AddObj, UpdateObj, DelObj } from './api';
 import { successMessage } from '../../../utils/message';
 import { APIResponseData, DeptFormDataType, TreeItemType } from './types';
@@ -182,7 +182,10 @@ const handleUpdateMenu = (type: string, record?: TreeItemType) => {
 	}); */
 
 };
-const handleDrawerClose = () => {
+const handleDrawerClose = (type?: string) => {
+	if (type === 'submit') {
+		getData()
+	}
 	drawerVisible.value = false
 	drawerFormData.value = {}
 }

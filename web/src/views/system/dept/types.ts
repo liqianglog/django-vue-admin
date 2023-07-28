@@ -40,9 +40,9 @@ export interface TreeItemType {
 }
 
 export interface DeptFormDataType {
-  id: string;
+  id: string | number;
   key: string;
-  parent: string;
+  parent: string | number;
   name: string;
   owner: string;
   phone: string;
