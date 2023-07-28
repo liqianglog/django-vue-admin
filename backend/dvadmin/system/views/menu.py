@@ -9,8 +9,8 @@
 from rest_framework import serializers
 from rest_framework.decorators import action
 
-from dvadmin.system.models import Menu, MenuButton, RoleMenuPermission
-from dvadmin.utils.json_response import SuccessResponse
+from dvadmin.system.models import Menu, RoleMenuPermission
+from dvadmin.utils.json_response import SuccessResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 
@@ -84,50 +84,6 @@ class MenuViewSet(CustomModelViewSet):
     search_fields = ['name', 'status']
     filter_fields = ['parent', 'name', 'status', 'is_link', 'visible', 'cache', 'is_catalog']
 
-    # extra_filter_class = []
-
-    @action(methods=['GET'], detail=False, permission_classes=[])
-    def web_router(self, request):
-        """用于前端获取当前角色的路由"""
-        user = request.user
-        is_admin = user.role.values_list('admin', flat=True)
-        if user.is_superuser or True in is_admin:
-            queryset = self.queryset.filter(status=1)
-        else:
-            role_list = user.role.values_list('id', flat=True)
-            menu_list = RoleMenuPermission.objects.filter(role__in=role_list).values_list('menu_id',flat=True)
-            print("role_list", role_list)
-            print("menu_list",menu_list)
-            queryset = Menu.objects.filter(id__in=menu_list)
-        print(queryset)
-        serializer = WebRouterSerializer(queryset, many=True, request=request)
-        data = serializer.data
-        return SuccessResponse(data=data, total=len(data), msg="获取成功")
-
-    @action(methods=['GET'], detail=False, permission_classes=[])
-    def get_all_menu(self, request):
-        """用于菜单管理获取所有的菜单"""
-        user = request.user
-        queryset = self.queryset.all()
-        if not user.is_superuser:
-            role_list = user.role.values_list('id', flat=True)
-            menu_list = RoleMenuPermission.objects.filter(role__in=role_list).values_list('menu_id')
-            queryset = Menu.objects.filter(id__in=menu_list)
-        serializer = WebRouterSerializer(queryset, many=True, request=request)
-        data = serializer.data
-        return SuccessResponse(data=data, total=len(data), msg="获取成功")
-
-    @action(methods=['POST'], detail=False, permission_classes=[])
-    def drag_menu(self, request):
-        """前端拖拽菜单之后重写parent"""
-        menu_id = request.data['menu_id']
-        parent_id = request.data['parent_id']
-        menu = Menu.objects.get(id=menu_id)
-        menu.parent_id = parent_id
-        menu.save()
-
-        return SuccessResponse(data=[], msg="拖拽菜单成功")
-
     def list(self, request):
         """懒加载"""
         request.query_params._mutable = True
@@ -150,3 +106,66 @@ class MenuViewSet(CustomModelViewSet):
         serializer = MenuSerializer(queryset, many=True, request=request)
         data = serializer.data
         return SuccessResponse(data=data)
+
+    @action(methods=['GET'], detail=False, permission_classes=[])
+    def web_router(self, request):
+        """用于前端获取当前角色的路由"""
+        user = request.user
+        is_admin = user.role.values_list('admin', flat=True)
+        if user.is_superuser or True in is_admin:
+            queryset = self.queryset.filter(status=1)
+        else:
+            role_list = user.role.values_list('id', flat=True)
+            menu_list = RoleMenuPermission.objects.filter(role__in=role_list).values_list('menu_id', flat=True)
+            print("role_list", role_list)
+            print("menu_list", menu_list)
+            queryset = Menu.objects.filter(id__in=menu_list)
+        print(queryset)
+        serializer = WebRouterSerializer(queryset, many=True, request=request)
+        data = serializer.data
+        return SuccessResponse(data=data, total=len(data), msg="获取成功")
+
+    @action(methods=['GET'], detail=False, permission_classes=[])
+    def get_all_menu(self, request):
+        """用于菜单管理获取所有的菜单"""
+        user = request.user
+        queryset = self.queryset.all()
+        if not user.is_superuser:
+            role_list = user.role.values_list('id', flat=True)
+            menu_list = RoleMenuPermission.objects.filter(role__in=role_list).values_list('menu_id')
+            queryset = Menu.objects.filter(id__in=menu_list)
+        serializer = WebRouterSerializer(queryset, many=True, request=request)
+        data = serializer.data
+        return SuccessResponse(data=data, total=len(data), msg="获取成功")
+
+    @action(methods=['POST'], detail=False, permission_classes=[])
+    def move_up(self, request):
+        """菜单上移"""
+        menu_id = request.data.get('menu_id')
+        try:
+            menu = Menu.objects.get(id=menu_id)
+        except Menu.DoesNotExist:
+            return ErrorResponse(msg="菜单不存在")
+        previous_menu = Menu.objects.filter(sort__lt=menu.sort).order_by('-sort').first()
+        if previous_menu:
+            previous_menu.sort, menu.sort = menu.sort, previous_menu.sort
+            previous_menu.save()
+            menu.save()
+
+        return SuccessResponse(data=[], msg="上移成功")
+
+    @action(methods=['POST'], detail=False, permission_classes=[])
+    def move_down(self, request):
+        """菜单下移"""
+        menu_id = request.data['menu_id']
+        try:
+            menu = Menu.objects.get(id=menu_id)
+        except Menu.DoesNotExist:
+            return ErrorResponse(msg="菜单不存在")
+        next_menu = Menu.objects.filter(sort__gt=menu.sort).order_by('sort').first()
+        if next_menu:
+            next_menu.sort, menu.sort = menu.sort, next_menu.sort
+            next_menu.save()
+            menu.save()
+
+        return SuccessResponse(data=[], msg="下移成功")
