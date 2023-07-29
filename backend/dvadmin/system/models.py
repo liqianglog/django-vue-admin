@@ -333,7 +333,7 @@ class FileList(CoreModel):
             instance.url = os.path.join(file_path.replace('media/', ''), file_name)
         if file_engine == 'oss':
             from dvadmin_cloud_storage.views.aliyun import ali_oss_upload
-            with open(os.path.join(BASE_DIR, file_path, file_name)) as file:
+            with open(os.path.join(BASE_DIR, file_path, file_name), 'rb') as file:
                 file_path = ali_oss_upload(file, file_name=os.path.join(file_path.replace('media/', ''), file_name))
                 if file_path:
                     instance.file_url = file_path
@@ -341,7 +341,7 @@ class FileList(CoreModel):
                     raise ValueError("上传失败")
         elif file_engine == 'cos':
             from dvadmin_cloud_storage.views.tencent import tencent_cos_upload
-            with open(os.path.join(BASE_DIR, file_path, file_name)) as file:
+            with open(os.path.join(BASE_DIR, file_path, file_name), 'rb') as file:
                 file_path = tencent_cos_upload(file, file_name=os.path.join(file_path.replace('media/', ''), file_name))
                 if file_path:
                     instance.file_url = file_path
