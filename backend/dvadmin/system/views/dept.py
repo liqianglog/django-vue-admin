@@ -9,9 +9,8 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
-from dvadmin.system.models import Dept, RoleMenuButtonPermission
-from dvadmin.utils.json_response import DetailResponse, SuccessResponse
-from dvadmin.utils.permission import AnonymousUserPermission
+from dvadmin.system.models import Dept, RoleMenuButtonPermission, Users
+from dvadmin.utils.json_response import DetailResponse, SuccessResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 
@@ -24,6 +23,11 @@ class DeptSerializer(CustomModelSerializer):
     status_label = serializers.SerializerMethodField()
     has_children = serializers.SerializerMethodField()
     hasChild = serializers.SerializerMethodField()
+
+    dept_user_count = serializers.SerializerMethodField()
+
+    def get_dept_user_count(self, obj: Dept):
+        return Users.objects.filter(dept=obj).count()
 
     def get_hasChild(self, instance):
         hasChild = Dept.objects.filter(parent=instance.id)
@@ -56,16 +60,13 @@ class DeptImportSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-
-
-
 class DeptCreateUpdateSerializer(CustomModelSerializer):
     """
     部门管理 创建/更新时的列化器
     """
 
     def create(self, validated_data):
-        value = validated_data.get('parent',None)
+        value = validated_data.get('parent', None)
         if value is None:
             validated_data['parent'] = self.request.user.dept
         instance = super().create(validated_data)
@@ -130,28 +131,59 @@ class DeptViewSet(CustomModelViewSet):
         if is_superuser:
             queryset = Dept.objects.values('id', 'name', 'parent')
         else:
-            role_ids = request.user.role.values_list('id',flat=True)
+            role_ids = request.user.role.values_list('id', flat=True)
             data_range = RoleMenuButtonPermission.objects.filter(role__in=role_ids).values_list('data_range', flat=True)
             user_dept_id = request.user.dept.id
             dept_list = [user_dept_id]
             data_range_list = list(set(data_range))
             for item in data_range_list:
-                if item in [0,2]:
+                if item in [0, 2]:
                     dept_list = [user_dept_id]
                 elif item == 1:
                     dept_list = Dept.recursion_dept_info(dept_id=user_dept_id)
                 elif item == 3:
-                    dept_list = Dept.objects.values_list('id',flat=True)
+                    dept_list = Dept.objects.values_list('id', flat=True)
                 elif item == 4:
-                    dept_list = request.user.role.values_list('dept',flat=True)
+                    dept_list = request.user.role.values_list('dept', flat=True)
                 else:
                     dept_list = []
             queryset = Dept.objects.filter(id__in=dept_list).values('id', 'name', 'parent')
         return DetailResponse(data=queryset, msg="获取成功")
 
-
-    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],extra_filter_class=[])
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated], extra_filter_class=[])
     def all_dept(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
         return DetailResponse(data=data, msg="获取成功")
+
+    @action(methods=['POST'], detail=False, permission_classes=[])
+    def move_up(self, request):
+        """部门上移"""
+        dept_id = request.data.get('dept_id')
+        try:
+            dept = Dept.objects.get(id=dept_id)
+        except Dept.DoesNotExist:
+            return ErrorResponse(msg="部门不存在")
+        previous_menu = Dept.objects.filter(sort__lt=dept.sort, parent=dept.parent).order_by('-sort').first()
+        if previous_menu:
+            previous_menu.sort, dept.sort = dept.sort, previous_menu.sort
+            previous_menu.save()
+            dept.save()
+
+        return SuccessResponse(data=[], msg="上移成功")
+
+    @action(methods=['POST'], detail=False, permission_classes=[])
+    def move_down(self, request):
+        """部门下移"""
+        dept_id = request.data['dept_id']
+        try:
+            dept = Dept.objects.get(id=dept_id)
+        except Dept.DoesNotExist:
+            return ErrorResponse(msg="部门不存在")
+        next_menu = Dept.objects.filter(sort__gt=dept.sort, parent=dept.parent).order_by('sort').first()
+        if next_menu:
+            next_menu.sort, dept.sort = dept.sort, next_menu.sort
+            next_menu.save()
+            dept.save()
+
+        return SuccessResponse(data=[], msg="下移成功")
