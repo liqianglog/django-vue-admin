@@ -35,9 +35,7 @@ class Users(CoreModel, AbstractUser):
     )
     USER_TYPE = (
         (0, "后台用户"),
-        (1, "消费者用户"),
-        (2, "码包接收方"),
-        (3, "经销商用户"),
+        (1, "前台用户"),
     )
     user_type = models.IntegerField(
         choices=USER_TYPE, default=0, verbose_name="用户类型", null=True, blank=True, help_text="用户类型"
