@@ -3,27 +3,26 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, watch } from 'vue';
+import { ref } from 'vue';
 import { useFs } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
+import { MenuTreeItemType } from '../../types';
+
 // 当前选择的菜单信息
 let selectOptions: any = ref({ name: null });
-const props = defineProps<{
-	selectMenu: object;
-}>();
+
 const { crudRef, crudBinding, crudExpose, context } = useFs({ createCrudOptions, context: { selectOptions } });
-const { doRefresh,setTableData } = crudExpose;
+const { doRefresh, setTableData } = crudExpose;
 
-watch(props.selectMenu, (val: any) => {
-	if (!val.is_catalog && val.id) {
-		selectOptions.value = val;
+const handleRefreshTable = (record: MenuTreeItemType) => {
+	if (!record.is_catalog && record.id) {
+		selectOptions.value = record;
 		doRefresh();
-	}else{
-    //清空表格数据
-    setTableData([])
-  }
-});
+	} else {
+		//清空表格数据
+		setTableData([]);
+	}
+};
 
-
-defineExpose({ selectOptions });
+defineExpose({ selectOptions, handleRefreshTable });
 </script>

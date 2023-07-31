@@ -1,10 +1,10 @@
-import { AddReq, DelReq, EditReq, dict, CreateCrudOptionsRet, CreateCrudOptionsProps, UserPageQuery } from '@fast-crud/fast-crud';
+import { AddReq, DelReq, EditReq, dict, CreateCrudOptionsRet, CreateCrudOptionsProps } from '@fast-crud/fast-crud';
 import * as api from './api';
 
 import { request } from '/@/utils/service';
 //此处为crudOptions配置
 export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOptionsProps): CreateCrudOptionsRet {
-	const pageRequest = async (query: UserPageQuery) => {
+	const pageRequest = async () => {
 		if (context!.selectOptions.value.id) {
 			return await api.GetList({ menu: context!.selectOptions.value.id } as any);
 		} else {
@@ -113,7 +113,7 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 							},
 						},
 						helper: {
-							render(h) {
+							render() {
 								return <el-alert title="手动输入" type="warning" description="页面中按钮的名称或者自定义一个名称" />;
 							},
 						},
@@ -131,7 +131,7 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 						rules: [{ required: true, message: '权限标识必填' }],
 						placeholder: '输入权限标识',
 						helper: {
-							render(h) {
+							render() {
 								return <el-alert title="唯一值" type="warning" description="用于判断前端按钮权限或接口权限" />;
 							},
 						},
@@ -190,7 +190,7 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 							},
 						},
 						helper: {
-							render(h) {
+							render() {
 								return <el-alert title="请正确填写，以免请求时被拦截。匹配单例使用正则,例如:/api/xx/.*?/" type="warning" />;
 							},
 						},
