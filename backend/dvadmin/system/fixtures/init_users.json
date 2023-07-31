@@ -29,6 +29,7 @@
     "gender": 1,
     "user_type": 0,
     "role": [],
+    "dept_key": "dvadmin",
     "first_name": "",
     "last_name": "",
     "is_staff": true,
