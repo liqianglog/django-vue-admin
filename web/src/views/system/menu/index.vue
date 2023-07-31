@@ -199,6 +199,7 @@ const filterText = ref('');
 const treeRef = ref<InstanceType<typeof ElTree>>();
 let drawerVisible = ref(false);
 let treeSelectNode = ref<Node | null>(null);
+let sortDisable = ref(false);
 
 let formData = reactive({
 	name: '',
@@ -424,27 +425,31 @@ const handleDeleteMenu = () => {
 /**
  * 移动操作
  */
-const handleSort = (type: string) => {
+const handleSort = async (type: string) => {
 	if (!form.id && treeSelectNode.value) {
 		warningMessage('请选择菜单！');
 		return;
 	}
+
+	if (sortDisable.value) return;
 	const parentList = treeSelectNode.value?.parent.childNodes || [];
 	const index = parentList.findIndex((i) => i.data.id === form.id);
 	const record = parentList.find((i) => i.data.id === form.id);
 
 	if (type === 'up') {
 		if (index === 0) return;
-		api.moveUp({ menu_id: form.id }).then((res: APIResponseData) => {
-			getData();
-			successMessage(res.msg as string);
-		});
+		parentList.splice(index - 1, 0, record as any);
+		parentList.splice(index + 1, 1);
+		sortDisable.value = true;
+		await api.moveUp({ menu_id: form.id });
+		sortDisable.value = false;
 	}
 	if (type === 'down') {
-		api.moveDown({ menu_id: form.id }).then((res: APIResponseData) => {
-			getData();
-			successMessage(res.msg as string);
-		});
+		parentList.splice(index + 2, 0, record as any);
+		parentList.splice(index, 1);
+		sortDisable.value = true;
+		await api.moveDown({ menu_id: form.id });
+		sortDisable.value = false;
 	}
 };
 
