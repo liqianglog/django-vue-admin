@@ -34,8 +34,8 @@ const route = useRoute();
 const stores = useTagsViewRoutes();
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
-import websocket from "/@/utils/websocket";
-import { ElNotification } from "element-plus";
+import websocket from '/@/utils/websocket';
+import { ElNotification } from 'element-plus';
 // 获取版本号
 const getVersion = computed(() => {
 	let isVersion = false;
@@ -61,11 +61,10 @@ onBeforeMount(() => {
 	setIntroduction.jsCdn();
 	//websockt 模块
 	try {
-		websocket.init(wsReceive)
+		//websocket.init(wsReceive)
 	} catch (e) {
-		console.log("websocket错误")
+		console.log('websocket错误');
 	}
-
 });
 // 页面加载时
 onMounted(() => {
@@ -87,7 +86,7 @@ onMounted(() => {
 });
 // 页面销毁时，关闭监听布局配置/i18n监听
 onUnmounted(() => {
-	mittBus.off('openSetingsDrawer', () => { });
+	mittBus.off('openSetingsDrawer', () => {});
 });
 // 监听路由的变化，设置网站标题
 watch(
@@ -101,11 +100,11 @@ watch(
 );
 
 // websocket相关代码
-import { messageCenterStore } from "/@/stores/messageCenter";
+import { messageCenterStore } from '/@/stores/messageCenter';
 const wsReceive = (message: any) => {
-	const data = JSON.parse(message.data)
-	const { unread } = data
-	const messageCenter = messageCenterStore()
+	const data = JSON.parse(message.data);
+	const { unread } = data;
+	const messageCenter = messageCenterStore();
 	messageCenter.setUnread(unread);
 	if (data.contentType === 'SYSTEM') {
 		ElNotification({
@@ -113,14 +112,12 @@ const wsReceive = (message: any) => {
 			message: data.content,
 			type: 'success',
 			position: 'bottom-right',
-			duration: 5000
-		})
+			duration: 5000,
+		});
 	}
-
-}
+};
 onBeforeUnmount(() => {
 	// 关闭连接
-	websocket.close()
-})
-
+	websocket.close();
+});
 </script>

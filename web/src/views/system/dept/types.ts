@@ -45,8 +45,7 @@ export interface DeptFormDataType {
   parent: string | number;
   name: string;
   owner: string;
-  remark: string;
-  is_catalog?: boolean;
+  description: string;
 }
 
 export interface DeptListType {

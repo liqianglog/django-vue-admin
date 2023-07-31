@@ -12,6 +12,7 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 		 * 处理crud警告：Invalid prop: type check failed for prop "name". Expected String with value "2", got Number with value 2.
 		 */
 		res.data.forEach((item: any) => {
+			item.dept = String(item.dept);
 			if (item.role && Array.isArray(item.role) && item.role.length > 0) {
 				item.role = item.role.map((r: number) => String(r));
 			}
