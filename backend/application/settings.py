@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 import sys
 from pathlib import Path
+from datetime import timedelta
+
+from conf.env import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,8 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ================================================= #
 # ******************** 动态配置 ******************** #
 # ================================================= #
-
-from conf.env import *
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -303,8 +304,6 @@ AUTHENTICATION_BACKENDS = ["dvadmin.utils.backends.CustomBackend"]
 # ================================================= #
 # ****************** simplejwt配置 ***************** #
 # ================================================= #
-from datetime import timedelta
-
 SIMPLE_JWT = {
     # token有效时长
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
@@ -343,11 +342,11 @@ SWAGGER_SETTINGS = {
 # ================================================= #
 # **************** 验证码配置  ******************* #
 # ================================================= #
-CAPTCHA_IMAGE_SIZE = (160, 60)  # 设置 captcha 图片大小
+CAPTCHA_IMAGE_SIZE = (160, 46)  # 设置 captcha 图片大小
 CAPTCHA_LENGTH = 4  # 字符个数
 CAPTCHA_TIMEOUT = 1  # 超时(minutes)
 CAPTCHA_OUTPUT_FORMAT = "%(image)s %(text_field)s %(hidden_field)s "
-CAPTCHA_FONT_SIZE = 40  # 字体大小
+CAPTCHA_FONT_SIZE = 36  # 字体大小
 CAPTCHA_FOREGROUND_COLOR = "#64DAAA"  # 前景色
 CAPTCHA_BACKGROUND_COLOR = "#F5F7F4"  # 背景色
 CAPTCHA_NOISE_FUNCTIONS = (
