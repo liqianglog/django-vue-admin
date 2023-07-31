@@ -1,6 +1,6 @@
 <template>
 	<el-input v-model="filterVal" :prefix-icon="Search" placeholder="请输入部门名称" />
-	<div class="tree-com">
+	<div class="dept-tree-com">
 		<div class="tc-head">
 			<el-icon size="16" color="#606266" class="tc-head-icon">
 				<HomeFilled />
@@ -15,22 +15,21 @@
 		<el-tree
 			ref="treeRef"
 			:data="treeData"
-			:props="treeProps"
+			:props="defaultTreeProps"
 			:filter-node-method="handleFilterTreeNode"
 			:load="handleLoadNode"
 			lazy
 			:indent="38"
 			@node-click="handleNodeClick"
 			highlight-current
-			default-expand-all
 		>
 			<template #default="{ node, data }">
 				<element-tree-line :node="node" :showLabelLine="false" :indent="32">
 					<span v-if="data.status" class="text-center font-black font-normal">
-						<SvgIcon name="iconfont icon-shouye" />&nbsp;{{ node.label }}
-						<span v-show="showTotalNum">（10人）</span>
+						<SvgIcon name="iconfont icon-shouye" color="var(--el-color-primary)" />&nbsp;{{ node.label }}
+						<span v-show="showTotalNum">（{{ data.dept_user_count }}人）</span>
 					</span>
-					<span v-else class="text-center font-black font-normal text-red-700"> <SvgIcon name="iconfont icon-shouye" />&nbsp;{{ node.label }} </span>
+					<span v-else color="var(--el-color-primary)"> <SvgIcon name="iconfont icon-shouye" />&nbsp;{{ node.label }} </span>
 				</element-tree-line>
 			</template>
 		</el-tree>
@@ -85,9 +84,16 @@ interface IProps {
 
 const ElementTreeLine = getElementLabelLine(h);
 
-const treeProps = {
+const defaultTreeProps: any = {
 	children: 'children',
 	label: 'name',
+	isLeaf: (data: TreeItemType[], node: Node) => {
+		if (node.data.hasChild) {
+			return false;
+		} else {
+			return true;
+		}
+	},
 };
 
 withDefaults(defineProps<IProps>(), {
@@ -233,7 +239,7 @@ const handleSort = async (type: string) => {
 </style>
 
 <style lang="scss">
-.tree-com {
+.dept-tree-com {
 	height: calc(100% - 60px);
 	padding: 20px;
 	box-sizing: border-box;
@@ -257,7 +263,7 @@ const handleSort = async (type: string) => {
 		padding: 0;
 		box-sizing: border-box;
 		margin-right: 5px;
-		margin-left: 18px;
+		margin-left: 20px;
 	}
 
 	.el-tree .el-tree-node__expand-icon.expanded {
