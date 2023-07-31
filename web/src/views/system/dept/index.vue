@@ -3,8 +3,7 @@
 		<el-row class="dept-el-row">
 			<el-col :span="6">
 				<div class="dept-box dept-left">
-					<TreeCom :treeData="deptTreeData" @treeClick="handleTreeClick" @updateDept="handleUpdateMenu"
-						@deleteDept="handleDeleteMenu" />
+					<TreeCom :treeData="deptTreeData" @treeClick="handleTreeClick" @updateDept="handleUpdateMenu" @deleteDept="handleDeleteMenu" />
 				</div>
 			</el-col>
 
@@ -15,9 +14,8 @@
 			</el-col>
 		</el-row>
 
-		<el-drawer v-model="drawerVisible" title="部门配置" direction="rtl" size="500px" :close-on-click-modal="false"
-			:before-close="handleDrawerClose">
-			<DeptFormCom v-if="drawerVisible" :initFormData="drawerFormData" @drawerClose="handleDrawerClose" />
+		<el-drawer v-model="drawerVisible" title="部门配置" direction="rtl" size="500px" :close-on-click-modal="false" :before-close="handleDrawerClose">
+			<DeptFormCom v-if="drawerVisible" :initFormData="drawerFormData" :treeData="deptTreeData" @drawerClose="handleDrawerClose" />
 		</el-drawer>
 	</fs-page>
 </template>
@@ -34,9 +32,9 @@ import { successNotification } from '../../../utils/message';
 import { APIResponseData, TreeItemType } from './types';
 
 let deptTreeData = ref([]);
-let drawerVisible = ref(false)
-let drawerFormData = ref<Partial<TreeItemType>>({})
-let deptUserRef = ref<InstanceType<typeof DeptUserCom> | null>(null)
+let drawerVisible = ref(false);
+let drawerFormData = ref<Partial<TreeItemType>>({});
+let deptUserRef = ref<InstanceType<typeof DeptUserCom> | null>(null);
 
 const getData = async () => {
 	let res: APIResponseData = await GetList({});
@@ -56,30 +54,26 @@ const getData = async () => {
  * 部门的点击事件
  */
 const handleTreeClick = (id: string) => {
-	deptUserRef.value?.handleDoRefreshUser(id)
-}
+	deptUserRef.value?.handleDoRefreshUser(id);
+};
 
 /**
  * 部门的删除事件
  */
 const handleDeleteMenu = (id: string, callback: Function) => {
-	ElMessageBox.confirm(
-		'您确认删除该部门吗?',
-		'温馨提示',
-		{
-			confirmButtonText: '确认',
-			cancelButtonText: '取消',
-			type: 'warning',
-		}
-	).then(async () => {
-		const res: APIResponseData = await DelObj(id)
-		callback()
+	ElMessageBox.confirm('您确认删除该部门吗?', '温馨提示', {
+		confirmButtonText: '确认',
+		cancelButtonText: '取消',
+		type: 'warning',
+	}).then(async () => {
+		const res: APIResponseData = await DelObj(id);
+		callback();
 		if (res?.code === 2000) {
 			successNotification(res.msg as string);
 			getData();
-			deptUserRef.value?.handleDoRefreshUser('')
+			deptUserRef.value?.handleDoRefreshUser('');
 		}
-	})
+	});
 };
 
 /**
@@ -87,18 +81,17 @@ const handleDeleteMenu = (id: string, callback: Function) => {
  */
 const handleUpdateMenu = (type: string, record?: TreeItemType) => {
 	if (type === 'update' && record) {
-		drawerFormData.value = record
+		drawerFormData.value = record;
 	}
-	drawerVisible.value = true
-
+	drawerVisible.value = true;
 };
 const handleDrawerClose = (type?: string) => {
 	if (type === 'submit') {
-		getData()
+		getData();
 	}
-	drawerVisible.value = false
-	drawerFormData.value = {}
-}
+	drawerVisible.value = false;
+	drawerFormData.value = {};
+};
 
 onMounted(() => {
 	getData();
