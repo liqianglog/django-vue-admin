@@ -15,7 +15,7 @@
 		</el-row>
 
 		<el-drawer v-model="drawerVisible" title="菜单配置" direction="rtl" size="500px" :close-on-click-modal="false" :before-close="handleDrawerClose">
-			<MenuFormCom v-if="drawerVisible" :initFormData="drawerFormData" @drawerClose="handleDrawerClose" />
+			<MenuFormCom v-if="drawerVisible" :initFormData="drawerFormData" :treeData="menuTreeData" @drawerClose="handleDrawerClose" />
 		</el-drawer>
 	</fs-page>
 </template>
@@ -27,7 +27,7 @@ import { ElMessageBox } from 'element-plus';
 import MenuTreeCom from './components/MenuTreeCom/index.vue';
 import MenuButtonCom from './components/MenuButtonCom/index.vue';
 import MenuFormCom from './components/MenuFormCom/index.vue';
-import * as api from './api';
+import { GetList, DelObj } from './api';
 import { successNotification } from '/@/utils/message';
 import { APIResponseData, MenuTreeItemType } from './types';
 
@@ -37,7 +37,7 @@ let drawerVisible = ref(false);
 let drawerFormData = ref<Partial<MenuTreeItemType>>({});
 
 const getData = () => {
-	api.GetList({}).then((ret: APIResponseData) => {
+	GetList({}).then((ret: APIResponseData) => {
 		const responseData = ret.data;
 		const result = XEUtils.toArrayTree(responseData, {
 			parentKey: 'parent',
@@ -81,7 +81,7 @@ const handleDeleteMenu = (id: string, callback: Function) => {
 		cancelButtonText: '取消',
 		type: 'warning',
 	}).then(async () => {
-		const res: APIResponseData = await api.DelObj(id);
+		const res: APIResponseData = await DelObj(id);
 		callback();
 		if (res?.code === 2000) {
 			successNotification(res.msg as string);

@@ -8,10 +8,19 @@
 		</div>
 		<el-form ref="formRef" :rules="rules" :model="menuFormData" label-width="80px" label-position="right">
 			<el-form-item label="菜单名称" prop="name">
-				<el-input v-model="menuFormData.name" />
+				<el-input v-model="menuFormData.name" placeholder="菜单名称" />
 			</el-form-item>
 			<el-form-item label="父级菜单" prop="parent">
-				<el-input v-model="menuFormData.parent" />
+				<!-- <el-input v-model="menuFormData.parent" /> -->
+				<el-tree-select
+					v-model="menuFormData.parent"
+					:props="defaultTreeProps"
+					:data="deptDefaultList"
+					lazy
+					check-strictly
+					:load="handleTreeLoad"
+					style="width: 100%"
+				/>
 			</el-form-item>
 			<el-form-item label="图标" prop="icon">
 				<IconSelector clearable v-model="menuFormData.icon" />
@@ -39,22 +48,22 @@
 			</el-form-item>
 
 			<el-form-item label="备注">
-				<el-input v-model="menuFormData.description" maxlength="200" show-word-limit type="textarea" />
+				<el-input v-model="menuFormData.description" maxlength="200" show-word-limit type="textarea" placeholder="备注" />
 			</el-form-item>
 
 			<el-divider></el-divider>
 
 			<div style="min-height: 184px">
 				<el-form-item v-if="menuFormData.menu_status === '3'" label="Url">
-					<el-input v-model="menuFormData.web_path" />
+					<el-input v-model="menuFormData.web_path" placeholder="Url" />
 				</el-form-item>
 
 				<el-form-item v-if="menuFormData.menu_status === '1'" label="路由地址">
-					<el-input v-model="menuFormData.web_path" />
+					<el-input v-model="menuFormData.web_path" placeholder="路由地址" />
 				</el-form-item>
 
 				<el-form-item v-if="menuFormData.menu_status === '1'" label="组件名称">
-					<el-input v-model="menuFormData.component_name" />
+					<el-input v-model="menuFormData.component_name" placeholder="组件名称" />
 				</el-form-item>
 
 				<el-form-item v-if="menuFormData.menu_status === '1'" label="组件地址">
@@ -88,12 +97,27 @@
 import { ref, onMounted, reactive } from 'vue';
 import { ElForm, FormRules } from 'element-plus';
 import IconSelector from '/@/components/iconSelector/index.vue';
-import { MenuFormDataType, MenuTreeItemType, ComponentFileItem } from '../../types';
+import { lazyLoadMenu } from '../../api';
+import { MenuFormDataType, MenuTreeItemType, ComponentFileItem, APIResponseData } from '../../types';
+import type Node from 'element-plus/es/components/tree/src/model/node';
 
 interface IProps {
 	initFormData: Partial<MenuTreeItemType> | null;
+	treeData: MenuTreeItemType[];
 }
 
+const defaultTreeProps: any = {
+	children: 'children',
+	label: 'name',
+	value: 'id',
+	isLeaf: (data: MenuTreeItemType[], node: Node) => {
+		if (node?.data.hasChild) {
+			return false;
+		} else {
+			return true;
+		}
+	},
+};
 const validateWebPath = (rule: any, value: string, callback: Function) => {
 	let pattern = /^\/.*?/;
 	if (!pattern.test(value)) {
@@ -105,6 +129,7 @@ const validateWebPath = (rule: any, value: string, callback: Function) => {
 
 const props = withDefaults(defineProps<IProps>(), {
 	initFormData: () => null,
+	treeData: () => [],
 });
 const emit = defineEmits(['drawerClose']);
 
@@ -116,6 +141,7 @@ const rules = reactive<FormRules>({
 	parent: [{ required: true, message: '父级菜单必选', trigger: ['blur', 'change'] }],
 });
 
+let deptDefaultList = ref<MenuTreeItemType[]>([]);
 let menuFormData = reactive<MenuFormDataType>({
 	parent: '',
 	name: '',
@@ -170,6 +196,17 @@ const createFilter = (queryString: string) => {
 	};
 };
 
+/**
+ * 树的懒加载
+ */
+const handleTreeLoad = (node: Node, resolve: Function) => {
+	if (node.level !== 0) {
+		lazyLoadMenu({ parent: node.data.id }).then((res: APIResponseData) => {
+			resolve(res.data);
+		});
+	}
+};
+
 const handleSubmit = () => {};
 
 const handleCancel = (type: string = '') => {
@@ -178,13 +215,15 @@ const handleCancel = (type: string = '') => {
 };
 
 onMounted(async () => {
+	props.treeData.map((item) => {
+		deptDefaultList.value.push(item);
+	});
 	setMenuFormData();
 });
 </script>
 
 <style lang="scss" scoped>
 .menu-form-com {
-	border-radius: 8px;
 	margin: 10px;
 	overflow-y: auto;
 	.menu-form-alert {

@@ -73,9 +73,9 @@ import { ref, watch, toRaw, h } from 'vue';
 import { ElTree } from 'element-plus';
 import { getElementLabelLine } from 'element-tree-line';
 import { Search } from '@element-plus/icons-vue';
-import { lazyLoadDept, deptMoveUp, deptMoveDown } from '../api';
-import { warningNotification } from '../../../../utils/message';
-import { TreeItemType, APIResponseData } from '../types';
+import { lazyLoadDept, deptMoveUp, deptMoveDown } from '../../api';
+import { warningNotification } from '/@/utils/message';
+import { TreeItemType, APIResponseData } from '../../types';
 import type Node from 'element-plus/es/components/tree/src/model/node';
 
 interface IProps {
@@ -276,7 +276,7 @@ const handleSort = async (type: string) => {
 	}
 
 	.el-tree .el-tree-node__expand-icon:before {
-		background: url('../../../../assets/img/menu-tree-show-icon.png') no-repeat center / 100%;
+		background: url('../../../../../assets/img/menu-tree-show-icon.png') no-repeat center / 100%;
 		content: '';
 		display: block;
 		width: 24px;
@@ -284,7 +284,7 @@ const handleSort = async (type: string) => {
 	}
 
 	.el-tree .el-tree-node__expand-icon.expanded:before {
-		background: url('../../../../assets/img/menu-tree-hidden-icon.png') no-repeat center / 100%;
+		background: url('../../../../../assets/img/menu-tree-hidden-icon.png') no-repeat center / 100%;
 		content: '';
 		display: block;
 		width: 24px;
