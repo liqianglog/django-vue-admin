@@ -50,6 +50,25 @@ export function lazyLoadDept(query: UserPageQuery) {
 }
 
 /**
+ * 上下移动
+ */
+export function deptMoveUp(obj: AddReq) {
+	return request({
+		url: apiPrefix + 'move_up/',
+		method: 'post',
+		data: obj,
+	});
+}
+
+export function deptMoveDown(obj: AddReq) {
+	return request({
+		url: apiPrefix + 'move_down/',
+		method: 'post',
+		data: obj,
+	});
+}
+
+/**
  * 用户相关接口
  */
 export function getDeptUserList(query: PageQuery) {

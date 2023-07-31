@@ -74,7 +74,7 @@ import { ref, watch, toRaw, h } from 'vue';
 import { ElTree } from 'element-plus';
 import { getElementLabelLine } from 'element-tree-line';
 import { Search } from '@element-plus/icons-vue';
-import { lazyLoadDept } from '../api';
+import { lazyLoadDept, deptMoveUp, deptMoveDown } from '../api';
 import { warningNotification } from '../../../../utils/message';
 import { TreeItemType, APIResponseData } from '../types';
 import type Node from 'element-plus/es/components/tree/src/model/node';
@@ -97,7 +97,9 @@ const emit = defineEmits(['treeClick', 'deleteDept', 'updateDept']);
 
 let filterVal = ref('');
 let showTotalNum = ref(false);
+let sortDisable = ref(false);
 let treeSelectDept = ref<TreeItemType>({});
+let treeSelectNode = ref<Node | null>(null);
 const treeRef = ref<InstanceType<typeof ElTree>>();
 
 watch(filterVal, (val) => {
@@ -126,8 +128,9 @@ const handleLoadNode = (node: Node, resolve: Function) => {
 /**
  * 部门的点击事件
  */
-const handleNodeClick = (data: TreeItemType) => {
+const handleNodeClick = (data: TreeItemType, node: Node) => {
 	treeSelectDept.value = data;
+	treeSelectNode.value = node;
 	emit('treeClick', data.id);
 };
 
@@ -162,7 +165,33 @@ const handleDeleteDept = () => {
 /**
  * 部门上下移动操作
  */
-const handleSort = (type: string) => {};
+const handleSort = async (type: string) => {
+	if (!treeSelectDept.value.id) {
+		warningNotification('请选择菜单！');
+		return;
+	}
+	if (sortDisable.value) return;
+
+	const parentList = treeSelectNode.value?.parent.childNodes || [];
+	const index = parentList.findIndex((i) => i.data.id === treeSelectDept.value.id);
+	const record = parentList.find((i) => i.data.id === treeSelectDept.value.id);
+
+	if (type === 'up') {
+		if (index === 0) return;
+		parentList.splice(index - 1, 0, record as any);
+		parentList.splice(index + 1, 1);
+		sortDisable.value = true;
+		await deptMoveUp({ dept_id: treeSelectDept.value.id });
+		sortDisable.value = false;
+	}
+	if (type === 'down') {
+		parentList.splice(index + 2, 0, record as any);
+		parentList.splice(index, 1);
+		sortDisable.value = true;
+		await deptMoveDown({ dept_id: treeSelectDept.value.id });
+		sortDisable.value = false;
+	}
+};
 </script>
 
 <style lang="scss" scoped>
