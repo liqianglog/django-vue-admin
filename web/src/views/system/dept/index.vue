@@ -120,10 +120,6 @@ onMounted(() => {
 .dept-left {
 	position: relative;
 	border-radius: 0 8px 8px 0;
-
-	.dl-nav {
-		margin-bottom: 10px;
-	}
 }
 
 .dept-table {
