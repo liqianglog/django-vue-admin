@@ -35,9 +35,9 @@
 <script lang="ts" setup>
 import { reactive, ref, onMounted } from 'vue';
 import { ElForm, FormRules } from 'element-plus';
-import { lazyLoadDept, AddObj, UpdateObj } from '../api';
-import { successNotification } from '../../../../utils/message';
-import { DeptFormDataType, TreeItemType, APIResponseData } from '../types';
+import { lazyLoadDept, AddObj, UpdateObj } from '../../api';
+import { successNotification } from '/@/utils/message';
+import { DeptFormDataType, TreeItemType, APIResponseData } from '../../types';
 import type Node from 'element-plus/es/components/tree/src/model/node';
 
 interface IProps {

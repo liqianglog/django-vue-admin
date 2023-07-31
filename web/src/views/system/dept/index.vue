@@ -3,7 +3,7 @@
 		<el-row class="dept-el-row">
 			<el-col :span="6">
 				<div class="dept-box dept-left">
-					<TreeCom :treeData="deptTreeData" @treeClick="handleTreeClick" @updateDept="handleUpdateMenu" @deleteDept="handleDeleteMenu" />
+					<DeptTreeCom :treeData="deptTreeData" @treeClick="handleTreeClick" @updateDept="handleUpdateMenu" @deleteDept="handleDeleteMenu" />
 				</div>
 			</el-col>
 
@@ -24,8 +24,8 @@
 import { ref, onMounted } from 'vue';
 import XEUtils from 'xe-utils';
 import { ElMessageBox } from 'element-plus';
-import TreeCom from './components/TreeCom.vue';
-import DeptFormCom from './components/DeptFormCom.vue';
+import DeptTreeCom from './components/DeptTreeCom/index.vue';
+import DeptFormCom from './components/DeptFormCom/index.vue';
 import DeptUserCom from './components/DeptUserCom/index.vue';
 import { GetList, DelObj } from './api';
 import { successNotification } from '../../../utils/message';

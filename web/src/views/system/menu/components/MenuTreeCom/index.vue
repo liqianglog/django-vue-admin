@@ -112,7 +112,7 @@ const emit = defineEmits(['treeClick', 'deleteDept', 'updateDept']);
 
 let filterVal = ref('');
 let sortDisable = ref(false);
-let treeSelectMenu = ref<TreeTypes>({});
+let treeSelectMenu = ref<Partial<MenuTreeItemType>>({});
 let treeSelectNode = ref<Node | null>(null);
 
 watch(filterVal, (val) => {
