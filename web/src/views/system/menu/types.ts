@@ -56,7 +56,8 @@ export interface MenuFormDataType {
   cache: boolean;
   status: boolean;
   visible: boolean;
-  menu_status: string;
   component_name: string;
   description: string;
+  is_catalog: boolean;
+  is_link: boolean;
 }
