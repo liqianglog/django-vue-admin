@@ -113,11 +113,31 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 						columnSetDisabled: true, //禁止在列设置中选择
 					},
 				},
-				username: {
-					title: '账号',
+				search: {
+					title: '关键词',
+					column: {
+						show: false,
+					},
 					search: {
 						show: true,
+						component: {
+							props: {
+								clearable: true,
+							},
+							placeholder: '请输入关键词',
+						},
 					},
+					form: {
+						show: false,
+						component: {
+							props: {
+								clearable: true,
+							},
+						},
+					},
+				},
+				username: {
+					title: '账号',
 					type: 'input',
 					column: {
 						minWidth: 100, //最小列宽
@@ -167,9 +187,6 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				},
 				name: {
 					title: '姓名',
-					search: {
-						show: true,
-					},
 					type: 'input',
 					column: {
 						minWidth: 100, //最小列宽
@@ -273,9 +290,6 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				},
 				mobile: {
 					title: '手机号码',
-					search: {
-						show: true,
-					},
 					type: 'input',
 					column: {
 						minWidth: 120, //最小列宽
