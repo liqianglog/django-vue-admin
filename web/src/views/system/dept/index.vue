@@ -3,7 +3,13 @@
 		<el-row class="dept-el-row">
 			<el-col :span="6">
 				<div class="dept-box dept-left">
-					<DeptTreeCom :treeData="deptTreeData" @treeClick="handleTreeClick" @updateDept="handleUpdateMenu" @deleteDept="handleDeleteMenu" />
+					<DeptTreeCom
+						ref="deptTreeRef"
+						:treeData="deptTreeData"
+						@treeClick="handleTreeClick"
+						@updateDept="handleUpdateMenu"
+						@deleteDept="handleDeleteMenu"
+					/>
 				</div>
 			</el-col>
 
@@ -15,7 +21,13 @@
 		</el-row>
 
 		<el-drawer v-model="drawerVisible" title="部门配置" direction="rtl" size="500px" :close-on-click-modal="false" :before-close="handleDrawerClose">
-			<DeptFormCom v-if="drawerVisible" :initFormData="drawerFormData" :treeData="deptTreeData" @drawerClose="handleDrawerClose" />
+			<DeptFormCom
+				v-if="drawerVisible"
+				:initFormData="drawerFormData"
+				:treeData="deptTreeData"
+				:cacheData="deptTreeCacheData"
+				@drawerClose="handleDrawerClose"
+			/>
 		</el-drawer>
 	</fs-page>
 </template>
@@ -32,9 +44,11 @@ import { successNotification } from '../../../utils/message';
 import { APIResponseData, TreeItemType } from './types';
 
 let deptTreeData = ref([]);
+let deptTreeCacheData = ref<TreeItemType[]>([]);
 let drawerVisible = ref(false);
 let drawerFormData = ref<Partial<TreeItemType>>({});
 let deptUserRef = ref<InstanceType<typeof DeptUserCom> | null>(null);
+let deptTreeRef = ref<InstanceType<typeof DeptTreeCom> | null>(null);
 
 const getData = async () => {
 	let res: APIResponseData = await GetList({});
@@ -53,8 +67,8 @@ const getData = async () => {
 /**
  * 部门的点击事件
  */
-const handleTreeClick = (id: string) => {
-	deptUserRef.value?.handleDoRefreshUser(id);
+const handleTreeClick = (record: TreeItemType) => {
+	deptUserRef.value?.handleDoRefreshUser(record.id as string);
 };
 
 /**
@@ -81,6 +95,8 @@ const handleDeleteMenu = (id: string, callback: Function) => {
  */
 const handleUpdateMenu = (type: string, record?: TreeItemType) => {
 	if (type === 'update' && record) {
+		const parentData = deptTreeRef.value?.treeRef?.currentNode.parent.data || {};
+		deptTreeCacheData.value = [parentData];
 		drawerFormData.value = record;
 	}
 	drawerVisible.value = true;

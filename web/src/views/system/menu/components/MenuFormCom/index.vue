@@ -14,6 +14,7 @@
 					v-model="menuFormData.parent"
 					:props="defaultTreeProps"
 					:data="deptDefaultList"
+					:cache-data="props.cacheData"
 					lazy
 					check-strictly
 					clearable
@@ -110,6 +111,7 @@ import type Node from 'element-plus/es/components/tree/src/model/node';
 interface IProps {
 	initFormData: Partial<MenuTreeItemType> | null;
 	treeData: MenuTreeItemType[];
+	cacheData: MenuTreeItemType[];
 }
 
 const defaultTreeProps: any = {
@@ -136,6 +138,7 @@ const validateWebPath = (rule: any, value: string, callback: Function) => {
 const props = withDefaults(defineProps<IProps>(), {
 	initFormData: () => null,
 	treeData: () => [],
+	cacheData: () => [],
 });
 const emit = defineEmits(['drawerClose']);
 

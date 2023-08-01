@@ -205,6 +205,10 @@ const handleSort = async (type: string) => {
 		sortDisable.value = false;
 	}
 };
+
+defineExpose({
+	treeRef,
+});
 </script>
 
 <style lang="scss" scoped>

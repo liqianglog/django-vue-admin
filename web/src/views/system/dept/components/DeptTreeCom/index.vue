@@ -137,7 +137,7 @@ const handleLoadNode = (node: Node, resolve: Function) => {
 const handleNodeClick = (record: TreeItemType, node: Node) => {
 	treeSelectDept.value = record;
 	treeSelectNode.value = node;
-	emit('treeClick', record.id);
+	emit('treeClick', record);
 };
 
 /**
@@ -198,6 +198,10 @@ const handleSort = async (type: string) => {
 		sortDisable.value = false;
 	}
 };
+
+defineExpose({
+	treeRef,
+});
 </script>
 
 <style lang="scss" scoped>
