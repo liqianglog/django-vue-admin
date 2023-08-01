@@ -5,6 +5,7 @@
 				v-model="deptFormData.parent"
 				:props="defaultTreeProps"
 				:data="deptDefaultList"
+				:cache-data="props.cacheData"
 				lazy
 				check-strictly
 				:load="handleTreeLoad"
@@ -43,6 +44,7 @@ import type Node from 'element-plus/es/components/tree/src/model/node';
 interface IProps {
 	initFormData: TreeItemType | null;
 	treeData: TreeItemType[];
+	cacheData: TreeItemType[];
 }
 
 const defaultTreeProps: any = {
@@ -67,6 +69,7 @@ const rules = reactive<FormRules>({
 const props = withDefaults(defineProps<IProps>(), {
 	initFormData: () => null,
 	treeData: () => [],
+	cacheData: () => [],
 });
 const emit = defineEmits(['drawerClose']);
 

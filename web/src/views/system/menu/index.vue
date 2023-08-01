@@ -3,7 +3,13 @@
 		<el-row class="menu-el-row">
 			<el-col :span="6">
 				<div class="menu-box menu-left-box">
-					<MenuTreeCom :treeData="menuTreeData" @treeClick="handleTreeClick" @updateDept="handleUpdateMenu" @deleteDept="handleDeleteMenu" />
+					<MenuTreeCom
+						ref="menuTreeRef"
+						:treeData="menuTreeData"
+						@treeClick="handleTreeClick"
+						@updateDept="handleUpdateMenu"
+						@deleteDept="handleDeleteMenu"
+					/>
 				</div>
 			</el-col>
 
@@ -15,7 +21,13 @@
 		</el-row>
 
 		<el-drawer v-model="drawerVisible" title="菜单配置" direction="rtl" size="500px" :close-on-click-modal="false" :before-close="handleDrawerClose">
-			<MenuFormCom v-if="drawerVisible" :initFormData="drawerFormData" :treeData="menuTreeData" @drawerClose="handleDrawerClose" />
+			<MenuFormCom
+				v-if="drawerVisible"
+				:initFormData="drawerFormData"
+				:cacheData="menuTreeCacheData"
+				:treeData="menuTreeData"
+				@drawerClose="handleDrawerClose"
+			/>
 		</el-drawer>
 	</fs-page>
 </template>
@@ -31,10 +43,12 @@ import { GetList, DelObj } from './api';
 import { successNotification } from '/@/utils/message';
 import { APIResponseData, MenuTreeItemType } from './types';
 
-let menuButtonRef = ref<InstanceType<typeof MenuButtonCom> | null>(null);
 let menuTreeData = ref([]);
+let menuTreeCacheData = ref<MenuTreeItemType[]>([]);
 let drawerVisible = ref(false);
 let drawerFormData = ref<Partial<MenuTreeItemType>>({});
+let menuTreeRef = ref<InstanceType<typeof MenuTreeCom> | null>(null);
+let menuButtonRef = ref<InstanceType<typeof MenuButtonCom> | null>(null);
 
 const getData = () => {
 	GetList({}).then((ret: APIResponseData) => {
@@ -60,6 +74,8 @@ const handleTreeClick = (record: MenuTreeItemType) => {
  */
 const handleUpdateMenu = (type: string, record?: MenuTreeItemType) => {
 	if (type === 'update' && record) {
+		const parentData = menuTreeRef.value?.treeRef?.currentNode.parent.data || {};
+		menuTreeCacheData.value = [parentData];
 		drawerFormData.value = record;
 	}
 	drawerVisible.value = true;
