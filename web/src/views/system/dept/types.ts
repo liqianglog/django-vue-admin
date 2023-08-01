@@ -16,7 +16,7 @@ export interface FormType<T> {
 }
 
 export interface TreeItemType {
-  id?: number;
+  id?: number | string;
   modifier_name?: string;
   creator_name?: string;
   create_datetime?: string;
