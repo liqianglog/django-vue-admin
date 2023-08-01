@@ -80,12 +80,12 @@
 					<el-input v-model="menuFormData.component_name" placeholder="请输入组件名称" />
 				</el-form-item>
 
-				<el-form-item v-if="!menuFormData.is_catalog" label="缓存">
-					<el-switch v-model="menuFormData.cache" width="60" inline-prompt active-text="启用" inactive-text="禁用" />
-				</el-form-item>
-
 				<el-form-item v-if="!menuFormData.is_catalog && menuFormData.is_link" label="Url" prop="web_path">
 					<el-input v-model="menuFormData.web_path" placeholder="请输入Url" />
+				</el-form-item>
+
+				<el-form-item v-if="!menuFormData.is_catalog" label="缓存">
+					<el-switch v-model="menuFormData.cache" width="60" inline-prompt active-text="启用" inactive-text="禁用" />
 				</el-form-item>
 			</div>
 
@@ -128,10 +128,12 @@ const defaultTreeProps: any = {
 };
 const validateWebPath = (rule: any, value: string, callback: Function) => {
 	let pattern = /^\/.*?/;
-	if (!pattern.test(value)) {
-		callback(new Error('请输入正确的地址'));
-	} else {
+	let patternUrl = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+	const reg = menuFormData.is_link ? patternUrl.test(value) : pattern.test(value);
+	if (reg) {
 		callback();
+	} else {
+		callback(new Error('请输入正确的地址'));
 	}
 };
 
@@ -145,7 +147,7 @@ const emit = defineEmits(['drawerClose']);
 const formRef = ref<InstanceType<typeof ElForm>>();
 
 const rules = reactive<FormRules>({
-	web_path: [{ required: true, message: '路由地址请以/开头', validator: validateWebPath, trigger: 'blur' }],
+	web_path: [{ required: true, message: '请输入正确的地址', validator: validateWebPath, trigger: 'blur' }],
 	name: [{ required: true, message: '菜单名称必填', trigger: 'blur' }],
 	component: [{ required: true, message: '请输入组件地址', trigger: 'blur' }],
 	component_name: [{ required: true, message: '请输入组件名称', trigger: 'blur' }],

@@ -128,18 +128,18 @@ onMounted(() => {
 
 .dept-box {
 	height: 100%;
-	padding: 10px;
-	background-color: #fff;
+	position: relative;
 	box-sizing: border-box;
 }
 
 .dept-left {
-	position: relative;
+	background-color: #fff;
 	border-radius: 0 8px 8px 0;
+	padding: 10px;
 }
 
 .dept-table {
-	border-radius: 8px 0 0 8px;
 	margin-left: 10px;
+	padding-bottom: 10px;
 }
 </style>
