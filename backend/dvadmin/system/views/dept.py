@@ -69,6 +69,8 @@ class DeptCreateUpdateSerializer(CustomModelSerializer):
         value = validated_data.get('parent', None)
         if value is None:
             validated_data['parent'] = self.request.user.dept
+        last_sort = Dept.objects.filter(parent=self.request.user.dept).order_by('-sort').first().sort
+        validated_data['sort'] = last_sort + 1
         instance = super().create(validated_data)
         instance.dept_belong_id = instance.id
         instance.save()
@@ -156,7 +158,7 @@ class DeptViewSet(CustomModelViewSet):
         data = queryset.filter(status=True).order_by('sort').values('name', 'id', 'parent')
         return DetailResponse(data=data, msg="获取成功")
 
-    @action(methods=['POST'], detail=False, permission_classes=[])
+    @action(methods=['POST'], detail=False, permission_classes=[IsAuthenticated])
     def move_up(self, request):
         """部门上移"""
         dept_id = request.data.get('dept_id')
@@ -172,7 +174,7 @@ class DeptViewSet(CustomModelViewSet):
 
         return SuccessResponse(data=[], msg="上移成功")
 
-    @action(methods=['POST'], detail=False, permission_classes=[])
+    @action(methods=['POST'], detail=False, permission_classes=[IsAuthenticated])
     def move_down(self, request):
         """部门下移"""
         dept_id = request.data['dept_id']
