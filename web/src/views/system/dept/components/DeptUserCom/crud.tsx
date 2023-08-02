@@ -5,9 +5,10 @@ import * as api from './api';
 import { dictionary } from '/@/utils/dictionary';
 import { successMessage } from '/@/utils/message';
 
-export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProps): CreateCrudOptionsRet {
+export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOptionsProps): CreateCrudOptionsRet {
 	const pageRequest = async (query: UserPageQuery) => {
-		const res = await api.GetList(query);
+		const show_all = context?.isShowChildFlag.value ? '1' : '0';
+		const res = await api.GetList({ ...query, show_all });
 		/**
 		 * 处理crud警告：Invalid prop: type check failed for prop "name". Expected String with value "2", got Number with value 2.
 		 */
@@ -24,10 +25,14 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 		return await api.UpdateObj(form);
 	};
 	const delRequest = async ({ row }: DelReq) => {
-		return await api.DelObj(row.id);
+		const res = await api.DelObj(row.id);
+		context?.getDeptInfo();
+		return res;
 	};
 	const addRequest = async ({ form }: AddReq) => {
-		return await api.AddObj(form);
+		const res = await api.AddObj(form);
+		context?.getDeptInfo();
+		return res;
 	};
 
 	const exportRequest = async (query: UserPageQuery) => {

@@ -1,6 +1,8 @@
 import { request, downloadFile } from '/@/utils/service';
 import { PageQuery, AddReq, DelReq, EditReq, InfoReq } from '@fast-crud/fast-crud';
 
+type GetListType = PageQuery & { show_all: string }
+
 export const apiPrefix = '/api/system/user/';
 
 export function GetDept(query: PageQuery) {
@@ -11,7 +13,7 @@ export function GetDept(query: PageQuery) {
 	});
 }
 
-export function GetList(query: PageQuery) {
+export function GetList(query: GetListType) {
 	return request({
 		url: apiPrefix,
 		method: 'get',
@@ -55,4 +57,11 @@ export function exportData(params: any) {
 		params: params,
 		method: 'get'
 	})
+}
+
+export function getDeptInfoById(id: string, type: string) {
+	return request({
+		url: `/api/system/dept/dept_info/?dept_id=${id}&show_all=${type}`,
+		method: 'get',
+	});
 }
