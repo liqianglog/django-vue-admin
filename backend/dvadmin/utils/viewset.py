@@ -6,8 +6,6 @@
 @Created on: 2021/6/1 001 22:57
 @Remark: 自定义视图集
 """
-import uuid
-
 from django.db import transaction
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
