@@ -1,26 +1,34 @@
 <template>
 	<div class="dept-user-com-box dept-info">
 		<div class="di-left">
+			<h3>{{ deptInfo.dept_name || '' }}</h3>
 			<div class="di-cell">
-				<h3>技术部</h3>
-				<!-- <el-switch
-							v-model="isShowChildFlag"
-							inline-prompt
-							active-text="是"
-							inactive-text="否"
-							style="--el-switch-on-color: var(--el-color-primary)"
-						/> -->
+				<p>部门负责人：</p>
+				<p class="content">{{ deptInfo.owner || '无' }}</p>
 			</div>
 			<div class="di-cell">
-				<p>部门人数：10人</p>
-				<p class="di-margin">部门负责人：test</p>
+				<p>部门人数：</p>
+				<p class="content">{{ deptInfo.dept_user || 0 }}人</p>
 			</div>
-			<p>部门简介：</p>
+			<div class="di-cell">
+				<p>部门简介：</p>
+				<p class="content">{{ deptInfo.description || '无' }}</p>
+			</div>
+			<div class="di-cell">
+				<p>显示子级：</p>
+				<el-switch
+					v-model="isShowChildFlag"
+					inline-prompt
+					active-text="是"
+					inactive-text="否"
+					:disabled="!currentDeptId"
+					@change="handleSwitchChange"
+					style="--el-switch-on-color: var(--el-color-primary)"
+				/>
+			</div>
 		</div>
-		<div style="height: 100px; width: 150px" ref="deptSexPie"></div>
-		<div class="dept-split">
-			<div class="ds-line"></div>
-		</div>
+		<div style="height: 180px; width: 380px" ref="deptCountBar"></div>
+		<div style="height: 180px; width: 200px" ref="deptSexPie"></div>
 	</div>
 	<fs-crud ref="crudRef" v-bind="crudBinding" customClass="dept-user-com-box dept-user-com-table">
 		<!-- -->
@@ -35,9 +43,13 @@ import { ref, onMounted } from 'vue';
 import { useExpose, useCrud } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
 import importExcel from '/@/components/importExcel/index.vue';
+import * as echarts from 'echarts';
 import { ECharts, EChartsOption, init } from 'echarts';
+import { getDeptInfoById } from './api';
+import { HeadDeptInfoType } from '../../types';
 
-let chart: ECharts;
+let deptCountChart: ECharts;
+let deptSexChart: ECharts;
 
 // crud组件的ref
 const crudRef = ref();
@@ -45,23 +57,66 @@ const crudRef = ref();
 const crudBinding = ref();
 // 暴露的方法
 const { crudExpose } = useExpose({ crudRef, crudBinding });
-// 你的crud配置
-const { crudOptions } = createCrudOptions({ crudExpose });
-// 初始化crud配置
-const { resetCrudOptions } = useCrud({
-	crudExpose,
-	crudOptions,
-	context: {},
-});
 
+let currentDeptId = ref('');
+let deptCountBar = ref();
 let deptSexPie = ref();
 let isShowChildFlag = ref(false);
+let deptInfo = ref<Partial<HeadDeptInfoType>>({});
 
 /**
- * 部门切换刷新用户列表
+ * 初始化顶部部门折线图
  */
-const handleDoRefreshUser = (id: string) => {
-	crudExpose.doSearch({ form: { dept: id } });
+const initDeptCountBarChart = () => {
+	const xAxisData = deptInfo.value.sub_dept_map?.map((item) => item.name) || [];
+	const yAxisData = deptInfo.value.sub_dept_map?.map((item) => item.count) || [];
+
+	const option: EChartsOption = {
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {
+				type: 'shadow',
+			},
+		},
+		xAxis: {
+			type: 'category',
+			data: xAxisData,
+			axisTick: {
+				alignWithLabel: true,
+			},
+		},
+		yAxis: {
+			type: 'value',
+		},
+		dataZoom: [
+			{
+				type: 'inside',
+			},
+		],
+		grid: {
+			top: '6%',
+			right: '5%',
+			bottom: '10%',
+			left: '10%',
+		},
+		series: [
+			{
+				data: yAxisData,
+				type: 'bar',
+				barWidth: '60%',
+				showBackground: true,
+				itemStyle: {
+					color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+						{ offset: 0, color: '#83bff6' },
+						{ offset: 0.5, color: '#188df0' },
+						{ offset: 1, color: '#188df0' },
+					]),
+				},
+			},
+		],
+	};
+
+	deptCountChart.setOption(option);
 };
 
 /**
@@ -75,7 +130,7 @@ const initDeptSexPieChart = () => {
 		legend: {
 			orient: 'vertical',
 			right: '0%',
-			left: '58%',
+			left: '65%',
 			top: 'center',
 			itemWidth: 12,
 			itemHeight: 12,
@@ -84,31 +139,67 @@ const initDeptSexPieChart = () => {
 			{
 				type: 'pie',
 				radius: '65%',
-				center: ['35%', '50%'],
+				center: ['32%', '50%'],
 				label: {
 					show: false,
 					position: 'center',
 				},
-				color: ['#51A3FC', '#E790E8', '#dcdfe6'],
+				color: ['#188df0', '#f56c6c', '#dcdfe6'],
 				data: [
-					{ value: 1048, name: '男' },
-					{ value: 735, name: '女' },
-					{ value: 580, name: '未知' },
+					{ value: deptInfo.value.gender?.male || 0, name: '男' },
+					{ value: deptInfo.value.gender?.female || 0, name: '女' },
+					{ value: deptInfo.value.gender?.unknown || 0, name: '未知' },
 				],
 			},
 		],
 	};
-	chart.setOption(option);
+	deptSexChart.setOption(option);
+};
+
+/**
+ * 获取顶部部门信息
+ */
+const getDeptInfo = async () => {
+	const res = await getDeptInfoById(currentDeptId.value, isShowChildFlag.value ? '1' : '0');
+	if (res?.code === 2000) {
+		deptInfo.value = res.data;
+		initDeptCountBarChart();
+		initDeptSexPieChart();
+	}
+};
+
+/**
+ * 部门切换刷新用户列表
+ */
+const handleDoRefreshUser = (id: string) => {
+	currentDeptId.value = id;
+	crudExpose.doSearch({ form: { dept: id } });
+	getDeptInfo();
+};
+
+const handleSwitchChange = () => {
+	handleDoRefreshUser(currentDeptId.value);
 };
 
 onMounted(() => {
 	crudExpose.doRefresh();
-	chart = init(deptSexPie.value as HTMLElement);
-	initDeptSexPieChart();
+	deptCountChart = init(deptCountBar.value as HTMLElement);
+	deptSexChart = init(deptSexPie.value as HTMLElement);
+	getDeptInfo();
 });
 
 defineExpose({
 	handleDoRefreshUser,
+});
+
+// 你的crud配置
+const { crudOptions } = createCrudOptions({ crudExpose, context: { getDeptInfo, isShowChildFlag } });
+
+// 初始化crud配置
+const { resetCrudOptions } = useCrud({
+	crudExpose,
+	crudOptions,
+	context: {},
 });
 </script>
 
@@ -136,14 +227,21 @@ defineExpose({
 			font-weight: 900;
 		}
 		.di-cell {
+			margin-top: 6px;
 			display: flex;
 			align-items: center;
-		}
-		.di-margin {
-			margin-left: 20px;
-		}
-		p {
-			margin-top: 6px;
+
+			p:nth-child(1) {
+				display: block;
+				width: 85px;
+				text-align: left;
+			}
+			.content {
+				max-width: 120px;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
 		}
 	}
 }
