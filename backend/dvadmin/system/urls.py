@@ -29,11 +29,9 @@ system_url.register(r'area', AreaViewSet)
 system_url.register(r'file', FileViewSet)
 system_url.register(r'api_white_list', ApiWhiteListViewSet)
 system_url.register(r'system_config', SystemConfigViewSet)
-system_url.register(r'message_center',MessageCenterViewSet)
+system_url.register(r'message_center', MessageCenterViewSet)
 system_url.register(r'role_menu_button_permission', RoleMenuButtonPermissionViewSet)
 system_url.register(r'role_menu_permission', RoleMenuPermissionViewSet)
-
-
 
 
 urlpatterns = [

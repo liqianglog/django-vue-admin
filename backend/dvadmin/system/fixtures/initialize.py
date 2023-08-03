@@ -8,9 +8,11 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "application.settings")
 django.setup()
 
 from dvadmin.utils.core_initialize import CoreInitialize
-from dvadmin.system.fixtures.initSerializer import UsersInitSerializer, DeptInitSerializer, RoleInitSerializer, \
-    MenuInitSerializer, ApiWhiteListInitSerializer, DictionaryInitSerializer, SystemConfigInitSerializer, \
-    RoleMenuInitSerializer, RoleMenuButtonInitSerializer
+from dvadmin.system.fixtures.initSerializer import (
+    UsersInitSerializer, DeptInitSerializer, RoleInitSerializer,
+    MenuInitSerializer, ApiWhiteListInitSerializer, DictionaryInitSerializer,
+    SystemConfigInitSerializer, RoleMenuInitSerializer, RoleMenuButtonInitSerializer
+)
 
 
 class Initialize(CoreInitialize):
@@ -50,7 +52,6 @@ class Initialize(CoreInitialize):
         初始化角色菜单按钮信息
         """
         self.init_base(RoleMenuButtonInitSerializer, unique_fields=['role', 'menu_button'])
-
 
     def init_api_white_list(self):
         """
