@@ -6,8 +6,6 @@
 @Created on: 2021/5/31 031 22:08
 @Remark: 公共基础model类
 """
-import uuid
-
 from django.apps import apps
 from django.db import models
 from django.db.models import QuerySet
@@ -18,8 +16,6 @@ table_prefix = settings.TABLE_PREFIX  # 数据库表名前缀
 
 class SoftDeleteQuerySet(QuerySet):
     pass
-
-
 
 
 class SoftDeleteManager(models.Manager):
@@ -40,7 +36,7 @@ class SoftDeleteManager(models.Manager):
             return SoftDeleteQuerySet(self.model, using=self._db).exclude(is_deleted=False)
         return SoftDeleteQuerySet(self.model).exclude(is_deleted=True)
 
-    def get_by_natural_key(self,name):
+    def get_by_natural_key(self, name):
         return SoftDeleteQuerySet(self.model).get(username=name)
 
 
@@ -84,8 +80,6 @@ class CoreModel(models.Model):
         abstract = True
         verbose_name = '核心模型'
         verbose_name_plural = verbose_name
-
-
 
 
 def get_all_models_objects(model_name=None):

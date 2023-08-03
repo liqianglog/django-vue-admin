@@ -189,3 +189,53 @@ class DeptViewSet(CustomModelViewSet):
             dept.save()
 
         return SuccessResponse(data=[], msg="下移成功")
+
+    @action(methods=['GET'], detail=False, permission_classes=[])
+    def dept_info(self, request):
+        """部门信息"""
+        def inner(did, li):
+            sub = Dept.objects.filter(parent_id=did)
+            if not sub.exists():
+                return li
+            for i in sub:
+                li.append(i.pk)
+                inner(i, li)
+            return li
+        dept_id = request.query_params.get('dept_id')
+        show_all = request.query_params.get('show_all')
+        if dept_id is None:
+            return ErrorResponse(msg="部门不存在")
+        if not show_all:
+            show_all = 0
+        if int(show_all):  # 递归当前部门下的所有部门，查询用户
+            all_did = [dept_id]
+            inner(dept_id, all_did)
+            users = Users.objects.filter(dept_id__in=all_did)
+        else:
+            if dept_id != '':
+                users = Users.objects.filter(dept_id=dept_id)
+            else:
+                users = Users.objects.none()
+        dept_obj = Dept.objects.get(id=dept_id) if dept_id != '' else None
+        sub_dept = Dept.objects.filter(parent_id=dept_obj.pk) if dept_id != '' else []
+        data = {
+            'dept_name': dept_obj and dept_obj.name,
+            'dept_user': users.count(),
+            'owner': dept_obj and dept_obj.owner,
+            'description': dept_obj and dept_obj.description,
+            'gender': {
+                'male': users.filter(gender=1).count(),
+                'female': users.filter(gender=2).count(),
+                'unknown': users.filter(gender=0).count(),
+            },
+            'sub_dept_map': []
+        }
+        for dept in sub_dept:
+            all_did = [dept.pk]
+            inner(dept.pk, all_did)
+            sub_data = {
+                'name': dept.name,
+                'count': Users.objects.filter(dept_id__in=all_did).count()
+            }
+            data['sub_dept_map'].append(sub_data)
+        return SuccessResponse(data)

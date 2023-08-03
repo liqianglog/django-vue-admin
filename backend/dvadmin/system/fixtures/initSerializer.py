@@ -6,8 +6,11 @@ from rest_framework import serializers
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'application.settings')
 import django
 django.setup()
-from dvadmin.system.models import Role, Dept, Users, Menu, MenuButton, ApiWhiteList, Dictionary, SystemConfig, \
+from dvadmin.system.models import (
+    Role, Dept, Users, Menu, MenuButton,
+    ApiWhiteList, Dictionary, SystemConfig,
     RoleMenuPermission, RoleMenuButtonPermission
+)
 from dvadmin.utils.serializers import CustomModelSerializer
 
 
@@ -48,7 +51,6 @@ class MenuButtonInitSerializer(CustomModelSerializer):
         model = MenuButton
         fields = ['id', 'name', 'value', 'api', 'method', 'menu']
         read_only_fields = ["id"]
-
 
 
 class MenuInitSerializer(CustomModelSerializer):
@@ -139,8 +141,8 @@ class RoleMenuInitSerializer(CustomModelSerializer):
     """
     初始化角色菜单(用于生成初始化json文件)
     """
-    role_key = serializers.CharField(max_length=100,required=True)
-    menu_component_name = serializers.CharField(max_length=100,required=True)
+    role_key = serializers.CharField(max_length=100, required=True)
+    menu_component_name = serializers.CharField(max_length=100, required=True)
 
     def create(self, validated_data):
         init_data = self.initial_data
@@ -154,7 +156,7 @@ class RoleMenuInitSerializer(CustomModelSerializer):
 
     class Meta:
         model = RoleMenuPermission
-        fields = ['role_key','menu_component_name','creator', 'dept_belong_id']
+        fields = ['role_key', 'menu_component_name', 'creator', 'dept_belong_id']
         read_only_fields = ["id"]
         extra_kwargs = {
             'role': {'required': False},
@@ -168,8 +170,8 @@ class RoleMenuButtonInitSerializer(CustomModelSerializer):
     """
     初始化角色菜单按钮(用于生成初始化json文件)
     """
-    role_key = serializers.CharField(max_length=100,required=True)
-    menu_button_value = serializers.CharField(max_length=100,required=True)
+    role_key = serializers.CharField(max_length=100, required=True)
+    menu_button_value = serializers.CharField(max_length=100, required=True)
     data_range = serializers.CharField(max_length=100, required=False)
 
     def create(self, validated_data):
@@ -186,7 +188,7 @@ class RoleMenuButtonInitSerializer(CustomModelSerializer):
 
     class Meta:
         model = RoleMenuButtonPermission
-        fields = ['role_key','menu_button_value','data_range','dept','creator', 'dept_belong_id']
+        fields = ['role_key', 'menu_button_value','data_range','dept','creator', 'dept_belong_id']
         read_only_fields = ["id"]
         extra_kwargs = {
             'role': {'required': False},
@@ -194,7 +196,6 @@ class RoleMenuButtonInitSerializer(CustomModelSerializer):
             'creator': {'write_only': True},
             'dept_belong_id': {'write_only': True}
         }
-
 
 
 class ApiWhiteListInitSerializer(CustomModelSerializer):

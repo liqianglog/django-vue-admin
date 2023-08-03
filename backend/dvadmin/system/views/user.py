@@ -3,13 +3,13 @@ import hashlib
 from django.contrib.auth.hashers import make_password, check_password
 from django_restql.fields import DynamicSerializerMethodField
 from rest_framework import serializers
-from rest_framework.decorators import action, permission_classes
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from django.db import connection
 from application import dispatch
 from dvadmin.system.models import Users, Role, Dept
 from dvadmin.system.views.role import RoleSerializer
-from dvadmin.utils.json_response import ErrorResponse, DetailResponse
+from dvadmin.utils.json_response import ErrorResponse, DetailResponse, SuccessResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.validator import CustomUniqueValidator
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -23,7 +23,7 @@ def recursion(instance, parent, result):
         res.append(data)
     if new_instance:
         array = recursion(new_instance, parent, result)
-        res += (array)
+        res += array
     return res
 
 
@@ -197,6 +197,7 @@ class ExportUserProfileSerializer(CustomModelSerializer):
 
 class UserProfileImportSerializer(CustomModelSerializer):
     password = serializers.CharField(read_only=True, required=False)
+
     def save(self, **kwargs):
         data = super().save(**kwargs)
         password = hashlib.new(
@@ -363,3 +364,33 @@ class UserViewSet(CustomModelViewSet):
                 return DetailResponse(data=None, msg="修改成功")
         else:
             return ErrorResponse(msg="未获取到用户")
+
+    def list(self, request, *args, **kwargs):
+        dept_id = request.query_params.get('dept')
+        show_all = request.query_params.get('show_all')
+        if not dept_id:
+            dept_id = ''
+        if not show_all:
+            show_all = 0
+        if int(show_all):
+            all_did = [dept_id]
+            def inner(did):
+                sub = Dept.objects.filter(parent_id=did)
+                if not sub.exists():
+                    return
+                for i in sub:
+                    all_did.append(i.pk)
+                    inner(i)
+            if dept_id != '':
+                inner(dept_id)
+                queryset = Users.objects.filter(dept_id__in=all_did)
+            else:
+                queryset = self.filter_queryset(self.get_queryset())
+        else:
+            queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True, request=request)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True, request=request)
+        return SuccessResponse(data=serializer.data, msg="获取成功")
