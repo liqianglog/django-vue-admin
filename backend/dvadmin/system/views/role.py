@@ -32,9 +32,6 @@ class RoleSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-
-
-
 class RoleCreateUpdateSerializer(CustomModelSerializer):
     """
     角色管理 创建/更新时的列化器
@@ -61,7 +58,7 @@ class RoleCreateUpdateSerializer(CustomModelSerializer):
         fields = '__all__'
 
 
-class MenuPermissonSerializer(CustomModelSerializer):
+class MenuPermissionSerializer(CustomModelSerializer):
     """
     菜单的按钮权限
     """
@@ -72,9 +69,9 @@ class MenuPermissonSerializer(CustomModelSerializer):
         if is_superuser:
             queryset = MenuButton.objects.filter(menu__id=instance.id)
         else:
-            menu_permission_id_list = self.request.user.role.values_list('permission',flat=True)
-            queryset = MenuButton.objects.filter(id__in=menu_permission_id_list,menu__id=instance.id)
-        serializer = MenuButtonSerializer(queryset,many=True, read_only=True)
+            menu_permission_id_list = self.request.user.role.values_list('permission', flat=True)
+            queryset = MenuButton.objects.filter(id__in=menu_permission_id_list, menu__id=instance.id)
+        serializer = MenuButtonSerializer(queryset, many=True, read_only=True)
         return serializer.data
 
     class Meta:
@@ -82,7 +79,7 @@ class MenuPermissonSerializer(CustomModelSerializer):
         fields = ['id', 'parent', 'name', 'menuPermission']
 
 
-class RoleViewSet(CustomModelViewSet,FastCrudMixin):
+class RoleViewSet(CustomModelViewSet, FastCrudMixin):
     """
     角色管理接口
     list:查询
