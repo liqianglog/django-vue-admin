@@ -212,9 +212,6 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 				},
 				dept: {
 					title: '部门',
-					search: {
-						disabled: true,
-					},
 					type: 'dict-tree',
 					dict: dict({
 						isTree: true,
@@ -255,7 +252,12 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 				role: {
 					title: '角色',
 					search: {
-						disabled: true,
+						show: true,
+						component: {
+							props: {
+								clearable: true,
+							},
+						},
 					},
 					type: 'dict-select',
 					dict: dict({
