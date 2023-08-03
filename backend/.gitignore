@@ -91,7 +91,7 @@ ENV/
 **/migrations/*.py
 !**/migrations/__init__.py
 *.pyc
-conf/
+conf/*
 !conf/env.example.py
 db.sqlite3
 media/

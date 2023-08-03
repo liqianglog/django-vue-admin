@@ -55,10 +55,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "corsheaders",  # 注册跨域app
-    "dvadmin.system",
     "drf_yasg",
     "captcha",
     'channels',
+    *locals().get("CUSTOM_APPS", []),  # 所有项目里写的app需要在env.py文件里的CUSTOM_APPS中
 ]
 
 MIDDLEWARE = [
@@ -306,7 +306,7 @@ AUTHENTICATION_BACKENDS = ["dvadmin.utils.backends.CustomBackend"]
 # ================================================= #
 SIMPLE_JWT = {
     # token有效时长
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1440),
     # token刷新后的有效时间
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     # 设置前缀
