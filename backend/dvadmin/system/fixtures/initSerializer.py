@@ -188,7 +188,7 @@ class RoleMenuButtonInitSerializer(CustomModelSerializer):
 
     class Meta:
         model = RoleMenuButtonPermission
-        fields = ['role_key', 'menu_button_value','data_range','dept','creator', 'dept_belong_id']
+        fields = ['role_key', 'menu_button_value', 'data_range', 'dept', 'creator', 'dept_belong_id']
         read_only_fields = ["id"]
         extra_kwargs = {
             'role': {'required': False},

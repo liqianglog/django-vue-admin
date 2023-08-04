@@ -11,7 +11,6 @@
         "status": true,
         "cache": false,
         "visible": true,
-        "parent": null,
         "children": [
             {
                 "name": "菜单管理",
@@ -25,7 +24,6 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -57,6 +55,30 @@
                         "value": "menu:Delete",
                         "api": "/api/system/menu/{id}/",
                         "method": 3
+                    },
+                    {
+                        "name": "查询所有",
+                        "value": "menu:SearchAll",
+                        "api": "/api/system/menu/get_all_menu/",
+                        "method": 0
+                    },
+                    {
+                        "name": "路由",
+                        "value": "menu:router",
+                        "api": "/api/system/menu/web_router/",
+                        "method": 0
+                    },
+                    {
+                        "name": "上移",
+                        "value": "menu:MoveUp",
+                        "api": "/api/system/menu/mode_up/",
+                        "method": 1
+                    },
+                    {
+                        "name": "下移",
+                        "value": "menu:MoveDown",
+                        "api": "/api/system/menu/mode_down/",
+                        "method": 1
                     }
                 ]
             },
@@ -72,7 +94,6 @@
                 "status": true,
                 "cache": false,
                 "visible": false,
-                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -113,7 +134,6 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -145,6 +165,36 @@
                         "value": "dept:Delete",
                         "api": "/api/system/dept/{id}/",
                         "method": 3
+                    },
+                    {
+                        "name": "查询所有",
+                        "value": "dept:SearchAll",
+                        "api": "/api/system/dept/all_dept/",
+                        "method": 0
+                    },
+                    {
+                        "name": "懒加载查询所有",
+                        "value": "dept:LazySearchAll",
+                        "api": "/api/system/dept/dept_lazy_tree/",
+                        "method": 0
+                    },
+                    {
+                        "name": "上移",
+                        "value": "dept:MoveUp",
+                        "api": "/api/system/dept/mode_up/",
+                        "method": 1
+                    },
+                    {
+                        "name": "下移",
+                        "value": "dept:MoveDown",
+                        "api": "/api/system/dept/mode_down/",
+                        "method": 1
+                    },
+                    {
+                        "name": "头信息",
+                        "value": "dept:HeaderInfo",
+                        "api": "/api/system/dept/dept_info/",
+                        "method": 0
                     }
                 ]
             },
@@ -160,7 +210,6 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -202,6 +251,64 @@
                 ]
             },
             {
+                "name": "列管理",
+                "icon": "iconfont icon-bolangneng",
+                "sort": 5,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/columns",
+                "component": "system/columns/index",
+                "component_name": "columns",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "查询",
+                        "value": "column:Search",
+                        "api": "/api/system/column/",
+                        "method": 0
+                    },
+                    {
+                        "name": "详情",
+                        "value": "column:Retrieve",
+                        "api": "/api/system/column/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "新增",
+                        "value": "column:Create",
+                        "api": "/api/system/column/",
+                        "method": 1
+                    },
+                    {
+                        "name": "编辑",
+                        "value": "column:Update",
+                        "api": "/api/system/column/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "删除",
+                        "value": "column:Delete",
+                        "api": "/api/system/column/{id}/",
+                        "method": 3
+                    },
+                    {
+                        "name": "所有模型表",
+                        "value": "column:AllModel",
+                        "api": "/api/system/column/get_models/",
+                        "method": 0
+                    },
+                    {
+                        "name": "自动匹配所有字段",
+                        "value": "column:AutoMatch",
+                        "api": "/api/system/column/auto_match_fields/",
+                        "method": 1
+                    }
+                ]
+            },
+            {
                 "name": "用户管理",
                 "icon": "iconfont icon-icon-",
                 "sort": 6,
@@ -213,7 +320,6 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -284,7 +390,6 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -331,7 +436,6 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 41,
                 "children": [],
                 "menu_button": [
                     {
@@ -381,7 +485,6 @@
         "status": true,
         "cache": false,
         "visible": true,
-        "parent": null,
         "children": [
             {
                 "name": "系统配置",
@@ -395,7 +498,6 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 49,
                 "children": [],
                 "menu_button": [
                     {
@@ -442,7 +544,6 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 49,
                 "children": [],
                 "menu_button": [
                     {
@@ -489,7 +590,6 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 49,
                 "children": [],
                 "menu_button": [
                     {
@@ -536,7 +636,6 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 49,
                 "children": [],
                 "menu_button": [
                     {
@@ -580,7 +679,6 @@
         "status": true,
         "cache": false,
         "visible": true,
-        "parent": null,
         "children": [
             {
                 "name": "登录日志",
@@ -594,7 +692,6 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 54,
                 "children": [],
                 "menu_button": [
                     {
@@ -623,7 +720,6 @@
                 "status": true,
                 "cache": false,
                 "visible": true,
-                "parent": 54,
                 "children": [],
                 "menu_button": [
                     {

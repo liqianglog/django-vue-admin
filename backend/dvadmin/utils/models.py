@@ -6,15 +6,17 @@
 @Created on: 2021/5/31 031 22:08
 @Remark: 公共基础model类
 """
+from importlib import import_module
+
 from django.apps import apps
 from django.db import models
-from django.db.models import QuerySet
+from django.conf import settings
 
 from application import settings
 table_prefix = settings.TABLE_PREFIX  # 数据库表名前缀
 
 
-class SoftDeleteQuerySet(QuerySet):
+class SoftDeleteQuerySet(models.QuerySet):
     pass
 
 
@@ -106,3 +108,38 @@ def get_all_models_objects(model_name=None):
     if model_name:
         return settings.ALL_MODELS_OBJECTS[model_name] or {}
     return settings.ALL_MODELS_OBJECTS or {}
+
+
+def get_model_from_app(app_name):
+    """获取模型里的字段"""
+    model_module = import_module(app_name + '.models')
+    filter_model = [
+        getattr(model_module, item) for item in dir(model_module)
+        if item != 'CoreModel' and issubclass(getattr(model_module, item).__class__, models.base.ModelBase)
+    ]
+    model_list = []
+    for model in filter_model:
+        if model.__name__ == 'AbstractUser':
+            continue
+        fields = [
+            {'title': field.verbose_name, 'name': field.name, 'object': field}
+            for field in model._meta.fields
+        ]
+        model_list.append({
+            'app': app_name,
+            'verbose': model._meta.verbose_name,
+            'model': model.__name__,
+            'object': model,
+            'fields': fields
+        })
+    return model_list
+
+
+def get_custom_app_models(app_name=None):
+    """获取所有项目写的app里的models"""
+    if app_name:
+        return get_model_from_app(app_name)
+    res = []
+    for app in settings.CUSTOM_APPS:
+        res.append(get_model_from_app(app))
+    return res

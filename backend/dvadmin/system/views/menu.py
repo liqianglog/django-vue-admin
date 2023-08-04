@@ -10,6 +10,7 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 
 from dvadmin.system.models import Menu, RoleMenuPermission
+from dvadmin.system.views.menu_button import MenuButtonSerializer
 from dvadmin.utils.json_response import SuccessResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -23,7 +24,8 @@ class MenuSerializer(CustomModelSerializer):
     hasChild = serializers.SerializerMethodField()
 
     def get_menuPermission(self, instance):
-        queryset = instance.menuPermission.order_by('-name').values_list('name', flat=True)
+        queryset = instance.menuPermission.order_by('-name').values('id', 'name', 'value')
+        # MenuButtonSerializer(instance.menuPermission.all(), many=True)
         if queryset:
             return queryset
         else:
@@ -46,6 +48,11 @@ class MenuCreateSerializer(CustomModelSerializer):
     菜单表的创建序列化器
     """
     name = serializers.CharField(required=False)
+
+    def create(self, validated_data):
+        last_sort = Menu.objects.filter(parent_id=validated_data.get('parent', None)).order_by('-sort').first().sort
+        validated_data['sort'] = last_sort + 1
+        return super().create(validated_data)
 
     class Meta:
         model = Menu
@@ -148,7 +155,6 @@ class MenuViewSet(CustomModelViewSet):
             previous_menu.sort, menu.sort = menu.sort, previous_menu.sort
             previous_menu.save()
             menu.save()
-
         return SuccessResponse(data=[], msg="上移成功")
 
     @action(methods=['POST'], detail=False, permission_classes=[])
@@ -164,5 +170,4 @@ class MenuViewSet(CustomModelViewSet):
             next_menu.sort, menu.sort = menu.sort, next_menu.sort
             next_menu.save()
             menu.save()
-
         return SuccessResponse(data=[], msg="下移成功")

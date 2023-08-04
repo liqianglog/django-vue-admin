@@ -40,13 +40,11 @@ class CustomPagination(PageNumberPagination):
         try:
             self.page = paginator.page(page_number)
         except InvalidPage as exc:
-
             # msg = self.invalid_page_message.format(
             #     page_number=page_number, message=str(exc)
             # )
             # raise NotFound(msg)
             empty = False
-            pass
 
         if paginator.num_pages > 1 and self.template is not None:
             # The browsable API should display pagination controls.
@@ -58,15 +56,15 @@ class CustomPagination(PageNumberPagination):
             self.page = []
 
         return list(self.page)
+
     def get_paginated_response(self, data):
         code = 2000
         msg = 'success'
-        page =int(self.get_page_number(self.request, paginator)) or 1
-        total=self.page.paginator.count if self.page else 0
-        limit= int(self.get_page_size(self.request)) or 10
-        is_next= self.page.has_next()
-        is_previous= self.page.has_previous()
-        data=data
+        page = int(self.get_page_number(self.request, paginator)) or 1
+        total = self.page.paginator.count if self.page else 0
+        limit = int(self.get_page_size(self.request)) or 10
+        is_next = self.page.has_next() if self.page else False
+        is_previous = self.page.has_previous() if self.page else False
 
         if not data:
             code = 2000
