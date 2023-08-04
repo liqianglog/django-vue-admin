@@ -171,7 +171,6 @@ class DeptViewSet(CustomModelViewSet):
             previous_menu.sort, dept.sort = dept.sort, previous_menu.sort
             previous_menu.save()
             dept.save()
-
         return SuccessResponse(data=[], msg="上移成功")
 
     @action(methods=['POST'], detail=False, permission_classes=[IsAuthenticated])
@@ -187,7 +186,6 @@ class DeptViewSet(CustomModelViewSet):
             next_menu.sort, dept.sort = dept.sort, next_menu.sort
             next_menu.save()
             dept.save()
-
         return SuccessResponse(data=[], msg="下移成功")
 
     @action(methods=['GET'], detail=False, permission_classes=[])

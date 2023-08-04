@@ -155,7 +155,6 @@ class MenuViewSet(CustomModelViewSet):
             previous_menu.sort, menu.sort = menu.sort, previous_menu.sort
             previous_menu.save()
             menu.save()
-
         return SuccessResponse(data=[], msg="上移成功")
 
     @action(methods=['POST'], detail=False, permission_classes=[])
@@ -171,5 +170,4 @@ class MenuViewSet(CustomModelViewSet):
             next_menu.sort, menu.sort = menu.sort, next_menu.sort
             next_menu.save()
             menu.save()
-
         return SuccessResponse(data=[], msg="下移成功")

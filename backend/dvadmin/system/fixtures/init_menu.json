@@ -263,7 +263,50 @@
                 "cache": false,
                 "visible": true,
                 "children": [],
-                "menu_button": []
+                "menu_button": [
+                    {
+                        "name": "查询",
+                        "value": "column:Search",
+                        "api": "/api/system/column/",
+                        "method": 0
+                    },
+                    {
+                        "name": "详情",
+                        "value": "column:Retrieve",
+                        "api": "/api/system/column/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "新增",
+                        "value": "column:Create",
+                        "api": "/api/system/column/",
+                        "method": 1
+                    },
+                    {
+                        "name": "编辑",
+                        "value": "column:Update",
+                        "api": "/api/system/column/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "删除",
+                        "value": "column:Delete",
+                        "api": "/api/system/column/{id}/",
+                        "method": 3
+                    },
+                    {
+                        "name": "所有模型表",
+                        "value": "column:AllModel",
+                        "api": "/api/system/column/get_models/",
+                        "method": 0
+                    },
+                    {
+                        "name": "自动匹配所有字段",
+                        "value": "column:AutoMatch",
+                        "api": "/api/system/column/auto_match_fields/",
+                        "method": 1
+                    }
+                ]
             },
             {
                 "name": "用户管理",
