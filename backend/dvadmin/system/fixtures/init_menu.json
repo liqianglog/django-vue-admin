@@ -57,6 +57,30 @@
                         "value": "menu:Delete",
                         "api": "/api/system/menu/{id}/",
                         "method": 3
+                    },
+                    {
+                        "name": "查询所有",
+                        "value": "menu:SearchAll",
+                        "api": "/api/system/menu/get_all_menu/",
+                        "method": 0
+                    },
+                    {
+                        "name": "路由",
+                        "value": "menu:router",
+                        "api": "/api/system/menu/web_router/",
+                        "method": 0
+                    },
+                    {
+                        "name": "上移",
+                        "value": "menu:MoveUp",
+                        "api": "/api/system/menu/mode_up/",
+                        "method": 1
+                    },
+                    {
+                        "name": "下移",
+                        "value": "menu:MoveDown",
+                        "api": "/api/system/menu/mode_down/",
+                        "method": 1
                     }
                 ]
             },
@@ -145,6 +169,36 @@
                         "value": "dept:Delete",
                         "api": "/api/system/dept/{id}/",
                         "method": 3
+                    },
+                    {
+                        "name": "查询所有",
+                        "value": "dept:SearchAll",
+                        "api": "/api/system/dept/all_dept/",
+                        "method": 0
+                    },
+                    {
+                        "name": "懒加载查询所有",
+                        "value": "dept:LazySearchAll",
+                        "api": "/api/system/dept/dept_lazy_tree/",
+                        "method": 0
+                    },
+                    {
+                        "name": "上移",
+                        "value": "dept:MoveUp",
+                        "api": "/api/system/dept/mode_up/",
+                        "method": 1
+                    },
+                    {
+                        "name": "下移",
+                        "value": "dept:MoveDown",
+                        "api": "/api/system/dept/mode_down/",
+                        "method": 1
+                    },
+                    {
+                        "name": "头信息",
+                        "value": "dept:HeaderInfo",
+                        "api": "/api/system/dept/dept_info/",
+                        "method": 0
                     }
                 ]
             },
