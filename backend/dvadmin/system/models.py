@@ -5,12 +5,7 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from application import dispatch
-from dvadmin.utils.models import CoreModel, table_prefix
-
-STATUS_CHOICES = (
-    (0, "禁用"),
-    (1, "启用"),
-)
+from dvadmin.utils.models import CoreModel, table_prefix, get_custom_app_models
 
 
 class Role(CoreModel):
@@ -107,8 +102,7 @@ class Post(CoreModel):
 
 class Dept(CoreModel):
     name = models.CharField(max_length=64, verbose_name="部门名称", help_text="部门名称")
-    key = models.CharField(max_length=64, unique=True, null=True, blank=True, verbose_name="关联字符",
-                           help_text="关联字符")
+    key = models.CharField(max_length=64, unique=True, null=True, blank=True, verbose_name="关联字符", help_text="关联字符")
     sort = models.IntegerField(default=1, verbose_name="显示排序", help_text="显示排序")
     owner = models.CharField(max_length=32, verbose_name="负责人", null=True, blank=True, help_text="负责人")
     phone = models.CharField(max_length=32, verbose_name="联系电话", null=True, blank=True, help_text="联系电话")
@@ -184,6 +178,23 @@ class Menu(CoreModel):
         verbose_name = "菜单表"
         verbose_name_plural = verbose_name
         ordering = ("sort",)
+
+
+class Columns(CoreModel):
+    role = models.ForeignKey(to='Role', on_delete=models.CASCADE, verbose_name='角色', db_constraint=False)
+    app = models.CharField(max_length=64, verbose_name='应用名')
+    model = models.CharField(max_length=64, verbose_name='表名')
+    field_name = models.CharField(max_length=64, verbose_name='模型表字段名')
+    title = models.CharField(max_length=64, verbose_name='字段显示名')
+    is_query = models.BooleanField(default=1, verbose_name='是否可查询')
+    is_create = models.BooleanField(default=1, verbose_name='是否可创建')
+    is_update = models.BooleanField(default=1, verbose_name='是否可更新')
+
+    class Meta:
+        db_table = table_prefix + "system_columns"
+        verbose_name = "列权限表"
+        verbose_name_plural = verbose_name
+        ordering = ("id",)
 
 
 class MenuButton(CoreModel):
@@ -289,7 +300,7 @@ class Dictionary(CoreModel):
         (7, "images"),
     )
     label = models.CharField(max_length=100, blank=True, null=True, verbose_name="字典名称", help_text="字典名称")
-    value = models.CharField(max_length=200, blank=True, null=True, verbose_name="字典编号",help_text="字典编号/实际值")
+    value = models.CharField(max_length=200, blank=True, null=True, verbose_name="字典编号", help_text="字典编号/实际值")
     parent = models.ForeignKey(
         to="self",
         related_name="sublist",
@@ -374,7 +385,7 @@ class FileList(CoreModel):
         if not self.size:
             self.size = self.url.size
         if not self.file_url:
-            url = media_file_name(self,self.name)
+            url = media_file_name(self, self.name)
             self.file_url = f'media/{url}'
         super(FileList, self).save(*args, **kwargs)
 
