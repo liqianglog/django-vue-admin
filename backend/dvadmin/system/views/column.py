@@ -44,26 +44,16 @@ class ColumnViewSet(CustomModelViewSet):
 
     def create(self, request, *args, **kwargs):
         payload = request.data
-        if not Role.objects.filter(pk=payload.get('role')).exists():
-            return ErrorResponse(msg='角色不存在')
-        model = None
-        for app in get_custom_app_models():
-            equal = False
-            for model in app:
-                if payload.get('model') == model['model']:
-                    equal = True
-                    model = model
-                    break
-            if equal:
+        for model in get_custom_app_models(payload.get('app')):
+            if payload.get('model') == model['model']:
                 break
         else:
             return ErrorResponse(msg='模型表不存在')
+
         if Columns.objects.filter(app=model['app'], model=model['model'], field_name=payload.get('field_name')).exists():
             return ErrorResponse(msg='‘%s’ 字段权限已有，不可重复创建' % payload.get('title'))
-        serializer = self.get_serializer(data=request.data, request=request)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return DetailResponse(data=serializer.data, msg="新增成功")
+
+        return super().create(request, *args, **kwargs)
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
     def get_models(self, request):
