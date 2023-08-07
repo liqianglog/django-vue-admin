@@ -50,7 +50,8 @@ class MenuCreateSerializer(CustomModelSerializer):
     name = serializers.CharField(required=False)
 
     def create(self, validated_data):
-        last_sort = Menu.objects.filter(parent_id=validated_data.get('parent', None)).order_by('-sort').first().sort
+        menu_obj = Menu.objects.filter(parent_id=validated_data.get('parent', None)).order_by('-sort').first()
+        last_sort = menu_obj.sort if menu_obj else 0
         validated_data['sort'] = last_sort + 1
         return super().create(validated_data)
 
