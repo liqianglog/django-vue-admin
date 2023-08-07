@@ -113,6 +113,8 @@ onMounted(() => {
 		white-space: nowrap;
 		overflow: auto;
 		.item-com-item {
+			width: fit-content;
+			min-width: 100%;
 			padding: 10px 16px;
 			border-radius: 8px;
 			cursor: pointer;

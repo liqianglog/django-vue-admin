@@ -58,7 +58,7 @@ import { ElMessageBox } from 'element-plus';
 import ColumnsFormCom from '../ColumnsFormCom/index.vue';
 import { getColumnsData, automatchColumnsData, deleteColumnsData, updateColumnsData } from './api';
 import { successNotification, warningNotification } from '/@/utils/message';
-import { CurrentInfoType, ColumnsFormDataType, AddColumnsDataType } from '../../types';
+import { APIResponseData, CurrentInfoType, ColumnsFormDataType, AddColumnsDataType } from '../../types';
 
 const props = defineProps({
 	currentInfo: {
@@ -149,7 +149,9 @@ const handleDelete = ({ id }: { id: number }) => {
 };
 
 const handleChange = (record: AddColumnsDataType) => {
-	updateColumnsData(record);
+	updateColumnsData(record).then((res: APIResponseData) => {
+		successNotification(res.msg || '更新成功');
+	});
 };
 
 /**
