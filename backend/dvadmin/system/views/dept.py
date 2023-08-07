@@ -69,7 +69,8 @@ class DeptCreateUpdateSerializer(CustomModelSerializer):
         value = validated_data.get('parent', None)
         if value is None:
             validated_data['parent'] = self.request.user.dept
-        last_sort = Dept.objects.filter(parent=self.request.user.dept).order_by('-sort').first().sort
+        dept_obj = Dept.objects.filter(parent=self.request.user.dept).order_by('-sort').first()
+        last_sort = dept_obj.sort if dept_obj else 0
         validated_data['sort'] = last_sort + 1
         instance = super().create(validated_data)
         instance.dept_belong_id = instance.id
