@@ -1,15 +1,22 @@
 import { CrudOptions, AddReq, DelReq, EditReq, dict, CrudExpose, compute } from '@fast-crud/fast-crud';
-import _ from 'lodash-es';
 import * as api from './api';
 import { dictionary } from '/@/utils/dictionary';
 import { successMessage } from '../../../utils/message';
-import {inject} from "vue";
+import { inject } from 'vue';
 interface CreateCrudOptionsTypes {
 	crudOptions: CrudOptions;
 }
 
 //此处为crudOptions配置
-export const createCrudOptions = function ({ crudExpose, rolePermission }: { crudExpose: CrudExpose; rolePermission: any }): CreateCrudOptionsTypes {
+export const createCrudOptions = function ({
+	crudExpose,
+	rolePermission,
+	handleDrawerOpen,
+}: {
+	crudExpose: CrudExpose;
+	rolePermission: any;
+	handleDrawerOpen: Function;
+}): CreateCrudOptionsTypes {
 	const pageRequest = async (query: any) => {
 		return await api.GetList(query);
 	};
@@ -25,7 +32,7 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 	};
 
 	//权限判定
-	const hasPermissions = inject("$hasPermissions")
+	const hasPermissions: any = inject('$hasPermissions');
 
 	// @ts-ignore
 	// @ts-ignore
@@ -40,25 +47,34 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 			rowHandle: {
 				//固定右侧
 				fixed: 'right',
-				width: 200,
+				width: 260,
 				buttons: {
 					view: {
 						show: false,
 					},
 					edit: {
-						iconRight: 'Edit',
-						type: 'text',
-						show:hasPermissions('role:Update')
+						show: hasPermissions('role:Update'),
 					},
 					remove: {
-						iconRight: 'Delete',
-						type: 'text',
-						show:hasPermissions('role:Delete')
+						show: hasPermissions('role:Delete'),
 					},
 					custom: {
+						type: 'primary',
 						text: '权限配置',
-						type: 'text',
-						show:hasPermissions('role:Update'),
+						show: hasPermissions('role:Update'),
+						tooltip: {
+							placement: 'top',
+							content: '权限配置',
+						},
+						click: (context: any): void => {
+							const { row } = context;
+							handleDrawerOpen();
+						},
+					},
+					/* custom: {
+						type: 'primary',
+						text: '权限配置',
+						show: hasPermissions('role:Update'),
 						tooltip: {
 							placement: 'top',
 							content: '权限配置',
@@ -70,7 +86,7 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 							rolePermission.value.editedRoleInfo = row;
 							rolePermission.value.initGet();
 						},
-					},
+					}, */
 				},
 			},
 			form: {
@@ -172,7 +188,7 @@ export const createCrudOptions = function ({ crudExpose, rolePermission }: { cru
 					search: { show: true },
 					type: 'dict-radio',
 					column: {
-						width:100,
+						width: 100,
 						component: {
 							name: 'fs-dict-switch',
 							activeText: '',

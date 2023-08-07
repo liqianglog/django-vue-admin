@@ -5,36 +5,57 @@
 				<el-tag size="small">{{ scope.row.url }}</el-tag>
 			</template>
 		</fs-crud>
-		<!--		<RolePermission ref="rolePermission"></RolePermission>-->
-		<permission ref="rolePermission"></permission>
+		<!-- <permission ref="rolePermission"></permission> -->
+
+		<el-drawer v-model="drawerVisible" title="权限配置" direction="rtl" size="60%" :close-on-click-modal="false" :before-close="handleDrawerClose">
+			<template #header>
+				<div>当前角色: <el-tag>管理员</el-tag></div>
+			</template>
+			<PermissionComNew v-if="drawerVisible" @drawerClose="handleDrawerClose" />
+		</el-drawer>
 	</fs-page>
 </template>
 
 <script lang="ts" setup name="role">
 import { ref, onMounted } from 'vue';
-import { useExpose, useCrud, dict } from '@fast-crud/fast-crud';
+import { useExpose, useCrud } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
-import RolePermission from '/@/views/system/rolePermission/index.vue';
-import permission from './components/PermissionCom/index.vue';
-import * as api from './api';
-import _ from 'lodash-es';
+//import permission from './components/PermissionCom/index.vue';
+import PermissionComNew from './components/PermissionComNew/index.vue';
+
+let drawerVisible = ref(false);
+
 const rolePermission = ref();
-defineExpose(rolePermission);
+
 // crud组件的ref
 const crudRef = ref();
 // crud 配置的ref
 const crudBinding = ref();
 // 暴露的方法
 const { crudExpose } = useExpose({ crudRef, crudBinding });
-// 你的crud配置
-const { crudOptions } = createCrudOptions({ crudExpose, rolePermission });
-// 初始化crud配置
-const { resetCrudOptions } = useCrud({ crudExpose, crudOptions });
-// 你可以调用此方法，重新初始化crud配置
-// resetCrudOptions(options)
 
+const handleDrawerOpen = () => {
+	drawerVisible.value = true;
+};
+
+const handleDrawerClose = () => {
+	drawerVisible.value = false;
+};
+
+// 你的crud配置
+const { crudOptions } = createCrudOptions({ crudExpose, rolePermission, handleDrawerOpen });
+//const { crudOptions } = createCrudOptions({ crudExpose, handleDrawerOpen });
+
+// 初始化crud配置
+const { resetCrudOptions } = useCrud({
+	crudExpose,
+	crudOptions,
+	context: {},
+});
 // 页面打开后获取列表数据
 onMounted(() => {
 	crudExpose.doRefresh();
 });
+
+defineExpose(rolePermission);
 </script>
