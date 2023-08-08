@@ -5,7 +5,8 @@
 				<el-tag size="small">{{ scope.row.url }}</el-tag>
 			</template>
 		</fs-crud>
-		<!-- <permission ref="rolePermission"></permission> -->
+
+		<permission ref="rolePermission"></permission>
 
 		<el-drawer v-model="drawerVisible" title="权限配置" direction="rtl" size="60%" :close-on-click-modal="false" :before-close="handleDrawerClose">
 			<template #header>
@@ -20,13 +21,12 @@
 import { ref, onMounted } from 'vue';
 import { useExpose, useCrud } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
-//import permission from './components/PermissionCom/index.vue';
+import permission from './components/PermissionCom/index.vue';
 import PermissionComNew from './components/PermissionComNew/index.vue';
 
 let drawerVisible = ref(false);
 
 const rolePermission = ref();
-
 // crud组件的ref
 const crudRef = ref();
 // crud 配置的ref
@@ -44,7 +44,6 @@ const handleDrawerClose = () => {
 
 // 你的crud配置
 const { crudOptions } = createCrudOptions({ crudExpose, rolePermission, handleDrawerOpen });
-//const { crudOptions } = createCrudOptions({ crudExpose, handleDrawerOpen });
 
 // 初始化crud配置
 const { resetCrudOptions } = useCrud({
@@ -56,6 +55,5 @@ const { resetCrudOptions } = useCrud({
 onMounted(() => {
 	crudExpose.doRefresh();
 });
-
 defineExpose(rolePermission);
 </script>
