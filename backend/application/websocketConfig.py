@@ -122,7 +122,8 @@ class MessageCreateSerializer(CustomModelSerializer):
         fields = "__all__"
         read_only_fields = ["id"]
 
-def websocket_push(user_id,message):
+
+def websocket_push(user_id, message):
     username = "user_" + str(user_id)
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
@@ -133,8 +134,9 @@ def websocket_push(user_id,message):
         }
     )
 
-def create_message_push(title: str, content: str, target_type: int=0, target_user: list=[], target_dept=None, target_role=None,
-             message: dict = {'contentType': 'INFO', 'content': '测试~'}, request= Request):
+
+def create_message_push(title: str, content: str, target_type: int = 0, target_user: list = None, target_dept=None,
+                        target_role=None, message: dict = None, request=Request):
     if message is None:
         message = {"contentType": "INFO", "content": None}
     if target_role is None:
@@ -145,11 +147,11 @@ def create_message_push(title: str, content: str, target_type: int=0, target_use
         "title": title,
         "content": content,
         "target_type": target_type,
-        "target_user":target_user,
-        "target_dept":target_dept,
-        "target_role":target_role
+        "target_user": target_user,
+        "target_dept": target_dept,
+        "target_role": target_role
     }
-    message_center_instance = MessageCreateSerializer(data=data,request=request)
+    message_center_instance = MessageCreateSerializer(data=data, request=request)
     message_center_instance.is_valid(raise_exception=True)
     message_center_instance.save()
     users = target_user or []
@@ -176,6 +178,6 @@ def create_message_push(title: str, content: str, target_type: int=0, target_use
             username,
             {
                 "type": "push.message",
-                "json": {**message,'unread':unread_count}
+                "json": {**message, 'unread': unread_count}
             }
         )
