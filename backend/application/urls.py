@@ -30,6 +30,7 @@ from dvadmin.system.views.login import (
     CaptchaView,
     ApiLogin,
     LogoutView,
+    LoginTokenView
 )
 from dvadmin.system.views.system_config import InitSettingsViewSet
 from dvadmin.utils.swagger import CustomOpenAPISchemaGenerator
@@ -81,6 +82,10 @@ urlpatterns = (
             path("api/init/dictionary/", InitDictionaryViewSet.as_view()),
             path("api/init/settings/", InitSettingsViewSet.as_view()),
             path("apiLogin/", ApiLogin.as_view()),
+            path("api/device/", include("device.urls")),
+
+            # 仅用于开发，上线需关闭
+            path("api/token/", LoginTokenView.as_view()),
         ]
         + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
         + static(settings.STATIC_URL, document_root=settings.STATIC_URL)
