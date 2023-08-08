@@ -2,12 +2,12 @@
 	<el-drawer size="70%" v-model="drawer" direction="rtl" destroy-on-close :before-close="handleClose">
 		<template #header>
 			<div>
-				<el-tag size="large">当前角色:{{ editedRoleInfo.name }}</el-tag>
+				<el-tag>当前角色:{{ editedRoleInfo.name }}</el-tag>
 			</div>
 		</template>
 		<div style="padding: 1em">
 			<div style="margin-bottom: 10px">
-				<el-button size="mini" type="primary" @click="onSaveAuth">保存菜单授权</el-button>
+				<el-button type="primary" @click="onSaveAuth">保存菜单授权</el-button>
 			</div>
 			<vxe-table
 				ref="tableRef"

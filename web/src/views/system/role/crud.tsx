@@ -68,12 +68,15 @@ export const createCrudOptions = function ({
 						},
 						click: (context: any): void => {
 							const { row } = context;
-							handleDrawerOpen();
+							// eslint-disable-next-line no-mixed-spaces-and-tabs
+							rolePermission.value.drawer = true;
+							rolePermission.value.editedRoleInfo = row;
+							rolePermission.value.initGet();
 						},
 					},
-					/* custom: {
+					customNew: {
 						type: 'primary',
-						text: '权限配置',
+						text: '权限配置新',
 						show: hasPermissions('role:Update'),
 						tooltip: {
 							placement: 'top',
@@ -81,12 +84,9 @@ export const createCrudOptions = function ({
 						},
 						click: (context: any): void => {
 							const { row } = context;
-							// eslint-disable-next-line no-mixed-spaces-and-tabs
-							rolePermission.value.drawer = true;
-							rolePermission.value.editedRoleInfo = row;
-							rolePermission.value.initGet();
+							handleDrawerOpen();
 						},
-					}, */
+					},
 				},
 			},
 			form: {
