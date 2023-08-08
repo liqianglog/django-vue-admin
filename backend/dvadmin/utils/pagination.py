@@ -76,8 +76,9 @@ class CustomPagination(PageNumberPagination):
             ('msg', msg),
             ('page', page),
             ('limit', limit),
-            ('total',total),
-            ('is_next',is_next),
+            ('total', total),
+            ('is_next', is_next),
             ('is_previous', is_previous),
-            ('data', data)
+            ('data', data),
+            ('permission', self.request.permission_fields)
         ]))
