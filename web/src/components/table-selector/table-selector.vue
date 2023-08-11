@@ -440,11 +440,11 @@ export default {
           this.selected.length === 0
             ? sizeInMap + 'px'
             : Math.max(
-              tags
-                ? tags.clientHeight + (tags.clientHeight > sizeInMap ? 6 : 0)
-                : 0,
-              sizeInMap
-            ) + 'px'
+            tags
+              ? tags.clientHeight + (tags.clientHeight > sizeInMap ? 6 : 0)
+              : 0,
+            sizeInMap
+          ) + 'px'
         input.style.height = height
         if (this.visible && this.emptyText !== false) {
           this.broadcast('ElSelectDropdown', 'updatePopper')
