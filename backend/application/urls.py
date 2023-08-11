@@ -82,7 +82,6 @@ urlpatterns = (
             path("api/init/dictionary/", InitDictionaryViewSet.as_view()),
             path("api/init/settings/", InitSettingsViewSet.as_view()),
             path("apiLogin/", ApiLogin.as_view()),
-            path("api/device/", include("device.urls")),
 
             # 仅用于开发，上线需关闭
             path("api/token/", LoginTokenView.as_view()),
