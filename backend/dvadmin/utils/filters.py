@@ -150,6 +150,7 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
         "$": "iregex",
         "~": "icontains",
     }
+    filter_fields = "__all__"
 
     def construct_search(self, field_name, lookup_expr=None):
         lookup = self.lookup_prefixes.get(field_name[0])
@@ -157,14 +158,16 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
             field_name = field_name[1:]
         else:
             lookup = lookup_expr
-        if field_name.endswith(lookup):
-            return field_name
-        return LOOKUP_SEP.join([field_name, lookup])
+        if lookup:
+            if field_name.endswith(lookup):
+                return field_name
+            return LOOKUP_SEP.join([field_name, lookup])
+        return field_name
 
     def find_filter_lookups(self, orm_lookups, search_term_key):
         for lookup in orm_lookups:
             # if lookup.find(search_term_key) >= 0:
-            new_lookup = lookup.split("__")[0]
+            new_lookup = LOOKUP_SEP.join(lookup.split(LOOKUP_SEP)[:-1]) if len(lookup.split(LOOKUP_SEP)) > 1 else lookup
             # 修复条件搜索错误 bug
             if new_lookup == search_term_key:
                 return lookup
@@ -189,7 +192,13 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
             utils.deprecate(
                 "`%s.filter_fields` attribute should be renamed `filterset_fields`." % view.__class__.__name__
             )
-            filterset_fields = getattr(view, "filter_fields", None)
+            self.filter_fields = getattr(view, "filter_fields", None)
+            if isinstance(self.filter_fields, (list, tuple)):
+                filterset_fields = [
+                    field[1:] if field[0] in self.lookup_prefixes.keys() else field for field in self.filter_fields
+                ]
+            else:
+                filterset_fields = self.filter_fields
 
         if filterset_class:
             filterset_model = filterset_class._meta.model
@@ -327,18 +336,22 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
             return queryset
         if filterset.__class__.__name__ == "AutoFilterSet":
             queryset = filterset.queryset
-            orm_lookups = []
-            for search_field in filterset.filters:
-                if isinstance(filterset.filters[search_field], CharFilter):
-                    orm_lookups.append(
-                        self.construct_search(six.text_type(search_field), filterset.filters[search_field].lookup_expr)
-                    )
-                else:
-                    orm_lookups.append(search_field)
+            filter_fields = filterset.filters if self.filter_fields == "__all__" else self.filter_fields
+            orm_lookup_dict = dict(
+                zip(
+                    [field for field in filter_fields],
+                    [filterset.filters[lookup].lookup_expr for lookup in filterset.filters.keys()],
+                )
+            )
+            orm_lookups = [
+                self.construct_search(lookup, lookup_expr) for lookup, lookup_expr in orm_lookup_dict.items()
+            ]
+            # print(orm_lookups)
             conditions = []
             queries = []
             for search_term_key in filterset.data.keys():
                 orm_lookup = self.find_filter_lookups(orm_lookups, search_term_key)
+                # print(search_term_key, orm_lookup)
                 if not orm_lookup:
                     continue
                 query = Q(**{orm_lookup: filterset.data[search_term_key]})

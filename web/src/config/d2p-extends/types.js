@@ -1,4 +1,5 @@
 import util from '@/libs/util.js'
+
 export default {
   'image-uploader': {
     form: { component: { name: 'd2p-file-uploader', props: { elProps: { listType: 'picture-card', accept: '.png,.jpeg,.jpg,.ico,.bmp,.gif' } } } },
@@ -244,21 +245,21 @@ export default {
           config: {
             serverUrl: util.baseURL() + 'api/system/file/ueditor/',
             headers: { Authorization: 'JWT ' + util.cookies.get('token') },
-            imageUrlPrefix: util.baseURL(),
+            imageUrlPrefix: util.baseFileURL(),
             // 涂鸦图片上传
-            scrawlUrlPrefix: util.baseURL(),
+            scrawlUrlPrefix: util.baseFileURL(),
             // 截图工具上传
-            snapscreenUrlPrefix: util.baseURL(),
+            snapscreenUrlPrefix: util.baseFileURL(),
             // 抓取远程图片路径前缀
-            catcherUrlPrefix: util.baseURL(),
+            catcherUrlPrefix: util.baseFileURL(),
             // 视频访问路径前缀
-            videoUrlPrefix: util.baseURL(),
+            videoUrlPrefix: util.baseFileURL(),
             // 文件访问路径前缀
-            fileUrlPrefix: util.baseURL(),
+            fileUrlPrefix: util.baseFileURL(),
             // 列出指定目录下的图片
-            imageManagerUrlPrefix: util.baseURL(),
+            imageManagerUrlPrefix: util.baseFileURL(),
             // 列出指定目录下的文件
-            fileManagerUrlPrefix: util.baseURL()
+            fileManagerUrlPrefix: util.baseFileURL()
             // 传入ueditor的配置
             // 文档参考： http://fex.baidu.com/ueditor/#start-config
           }

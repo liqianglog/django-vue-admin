@@ -36,6 +36,30 @@
         </el-descriptions-item>
       </el-descriptions>
     </div>
+    <div v-if="elProps.type === 'manyToMany'">
+     <el-popover
+        placement="right"
+        width="300"
+        trigger="hover"
+        v-if="value.length > 0"
+        @show="showEvents"
+        @hide="show=false">
+        <el-descriptions class="margin-top" :column="1" size="mini" border>
+          <el-descriptions-item v-for="(item,index) in value" :key="index" labelStyle="width: 60px;">
+            <template slot="label">
+              选项{{ index + 1 }}
+            </template>
+            {{ item[dict.label] }}
+          </el-descriptions-item>
+        </el-descriptions>
+        <el-button type="primary" plain size="mini" slot="reference" @click="listClick"><span> {{ value.length }} {{ elProps.unit }}</span>
+        </el-button>
+      </el-popover>
+      <el-button v-else type="primary" plain size="mini" slot="reference" @click="listClick"><span> {{
+          value.length
+        }} {{ elProps.unit }}</span>
+      </el-button>
+    </div>
     <div v-else-if="elProps.type === 'ueditor'">
       <el-popover
         placement="right"

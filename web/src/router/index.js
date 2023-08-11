@@ -56,11 +56,11 @@ router.beforeEach(async (to, from, next) => {
       })
       await store.dispatch('d2admin/user/set', res.data, { root: true })
       await store.dispatch('d2admin/account/load')
-      await store.dispatch('d2admin/permission/load', routes)
-      store.dispatch('d2admin/dept/load')
       store.dispatch('d2admin/settings/init')
     }
     if (!store.state.d2admin.menu || store.state.d2admin.menu.aside.length === 0) {
+      await store.dispatch('d2admin/permission/load', routes)
+      await store.dispatch('d2admin/dept/load')
       // 动态添加路由
       getMenu().then(ret => {
         // 校验路由是否有效
@@ -87,8 +87,11 @@ router.beforeEach(async (to, from, next) => {
     } else {
       const childrenPath = window.qiankunActiveRule || []
       if (to.name) {
+        if (to.meta.openInNewWindow && (from.query.newWindow && to.query.newWindow !== '1' || from.path === '/')) {
+          to.query.newWindow = '1'
+        }
         // 有 name 属性，说明是主应用的路由
-        if (to.meta.openInNewWindow && !to.query.newWindow) {
+        if (to.meta.openInNewWindow && !to.query.newWindow && !from.query.newWindow && from.path !== '/') {
           // 在新窗口中打开路由
           const { href } = router.resolve({
             path: to.path + '?newWindow=1'

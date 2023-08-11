@@ -118,7 +118,6 @@ class SoftDeleteModel(models.Model):
             ]
             relations["self"] = f"{tree_model_field[0]}_id" if len(tree_model_field) == 1 else None
         relations["foreign"] = related_fields
-        print(f"{relations=}", flush=True)
         return relations
 
     def _is_cascade(self, relation):

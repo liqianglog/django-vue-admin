@@ -1,17 +1,20 @@
+import base64
 import datetime
 import hashlib
 import json
 import os
 import random
+from pathlib import PurePosixPath
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import serializers
 from rest_framework.decorators import action
 from application.settings import BASE_DIR
-from application import dispatch
-from dvadmin.system.models import FileList
+from application import dispatch, settings
+from dvadmin.system.models import FileList, media_file_name
 from dvadmin.system.views.ueditor_settings import ueditor_upload_settings, ueditor_settings
+from dvadmin.utils.json_response import DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.string_util import format_bytes
 from dvadmin.utils.viewset import CustomModelViewSet
@@ -21,6 +24,16 @@ class FileSerializer(CustomModelSerializer):
     url = serializers.SerializerMethodField(read_only=True)
 
     def get_url(self, instance):
+        if self.request.query_params.get('prefix'):
+            if settings.ENVIRONMENT in ['local']:
+                prefix = 'http://127.0.0.1:8000'
+            elif settings.ENVIRONMENT in ['test']:
+                prefix = 'http://{host}/api'.format(host=self.request.get_host())
+            else:
+                prefix = 'https://{host}/api'.format(host=self.request.get_host())
+            if instance.file_url:
+                return instance.file_url if instance.file_url.startswith('http') else f"{prefix}/{instance.file_url}"
+            return (f'{prefix}/media/{str(instance.url)}')
         return instance.file_url or (f'media/{str(instance.url)}')
 
     class Meta:
@@ -28,8 +41,8 @@ class FileSerializer(CustomModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
-        file_engine = dispatch.get_system_config_values("fileStorageConfig.file_engine") or 'local'
-        file_backup = dispatch.get_system_config_values("fileStorageConfig.file_backup")
+        file_engine = dispatch.get_system_config_values("file_storage.file_engine") or 'local'
+        file_backup = dispatch.get_system_config_values("file_storage.file_backup")
         file = self.initial_data.get('file')
         file_size = file.size
         validated_data['name'] = file.name
@@ -44,14 +57,18 @@ class FileSerializer(CustomModelSerializer):
             validated_data['url'] = file
         if file_engine == 'oss':
             from dvadmin_cloud_storage.views.aliyun import ali_oss_upload
-            file_path = ali_oss_upload(file)
+            h = validated_data['md5sum']
+            basename, ext = os.path.splitext(file.name)
+            file_path = ali_oss_upload(file, file_name=PurePosixPath("files", h[:1], h[1:2], h + ext.lower()))
             if file_path:
                 validated_data['file_url'] = file_path
             else:
                 raise ValueError("上传失败")
         elif file_engine == 'cos':
             from dvadmin_cloud_storage.views.tencent import tencent_cos_upload
-            file_path = tencent_cos_upload(file)
+            h = validated_data['md5sum']
+            basename, ext = os.path.splitext(file.name)
+            file_path = tencent_cos_upload(file, file_name=PurePosixPath("files", h[:1], h[1:2], h + ext.lower()))
             if file_path:
                 validated_data['file_url'] = file_path
             else:
@@ -82,6 +99,12 @@ class FileViewSet(CustomModelViewSet):
     serializer_class = FileSerializer
     filter_fields = ['name', ]
     permission_classes = []
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, request=request)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return DetailResponse(data=serializer.data, msg="新增成功")
 
     @csrf_exempt
     @action(methods=["GET", "POST"], detail=False, permission_classes=[])
@@ -138,16 +161,17 @@ class FileViewSet(CustomModelViewSet):
     # 涂鸦功能上传处理
     def save_scrawl_file(self, request, file_path, file_name):
         import base64
+        instance = None
         try:
             content = request.data.get(ueditor_upload_settings.get("scrawlFieldName", "upfile"))
             f = open(os.path.join(BASE_DIR, file_path, file_name), 'wb')
             f.write(base64.b64decode(content))
             f.close()
             state = "SUCCESS"
-            FileList.save_file(request, file_path, file_name,mime_type='image/png')
+            instance = FileList.save_file(request, file_path, file_name, mime_type='image/png')
         except Exception as e:
             state = f"写入图片文件错误:{e}"
-        return state
+        return state, instance
 
     def upload_file(self, request):
         """上传文件"""
@@ -213,20 +237,21 @@ class FileViewSet(CustomModelViewSet):
         # 取得输出文件的路径
         format_file_name, output_path = self.get_output_path(path_format_var)
         # 所有检测完成后写入文件
+        file_instance = None
         if state == "SUCCESS":
             if action == "uploadscrawl":
-                state = self.save_scrawl_file(request, file_path=output_path,
-                                              file_name=format_file_name)
+                state, file_instance = self.save_scrawl_file(request, file_path=output_path,
+                                                             file_name=format_file_name)
             else:
                 file = request.FILES.get(upload_field_name, None)
                 # 保存到文件中，如果保存错误，需要返回ERROR
                 state = self.save_upload_file(file, os.path.join(BASE_DIR, output_path, format_file_name))
                 # 保存到附件管理中
-                FileList.save_file(request, output_path, format_file_name, mime_type=file.content_type)
+                file_instance = FileList.save_file(request, output_path, format_file_name, mime_type=file.content_type)
 
         # 返回数据
         return_info = {
-            'url': os.path.join(output_path, format_file_name),  # 保存后的文件名称
+            'url': file_instance.file_url if file_instance else os.path.join(output_path, format_file_name),  # 保存后的文件名称
             'original': upload_file_name,  # 原始文件名
             'type': upload_original_ext,
             'state': state,  # 上传状态，成功时返回SUCCESS,其他任何值将原样返回至图片上传框中

@@ -318,33 +318,33 @@ class FileList(CoreModel):
         # 保存到File model中
         instance = FileList()
         instance.name = file_name
-        instance.engine = dispatch.get_system_config_values("fileStorageConfig.file_engine") or 'local'
+        instance.engine = dispatch.get_system_config_values("file_storage.file_engine") or 'local'
         instance.file_url = os.path.join(file_path, file_name)
         instance.mime_type = mime_type
         instance.creator = request.user
         instance.modifier = request.user.id
         instance.dept_belong_id = request.user.dept_id
 
-        file_backup = dispatch.get_system_config_values("fileStorageConfig.file_backup")
-        file_engine = dispatch.get_system_config_values("fileStorageConfig.file_engine") or 'local'
+        file_backup = dispatch.get_system_config_values("file_storage.file_backup")
+        file_engine = dispatch.get_system_config_values("file_storage.file_engine") or 'local'
         if file_backup:
             instance.url = os.path.join(file_path.replace('media/', ''), file_name)
         if file_engine == 'oss':
             from dvadmin_cloud_storage.views.aliyun import ali_oss_upload
-            file = File(open(os.path.join(BASE_DIR, file_path, file_name)))
-            file_path = ali_oss_upload(file)
-            if file_path:
-                instance.file_url = file_path
-            else:
-                raise ValueError("上传失败")
+            with open(os.path.join(BASE_DIR, file_path, file_name), 'rb') as file:
+                file_path = ali_oss_upload(file, file_name=os.path.join(file_path.replace('media/', ''), file_name))
+                if file_path:
+                    instance.file_url = file_path
+                else:
+                    raise ValueError("上传失败")
         elif file_engine == 'cos':
             from dvadmin_cloud_storage.views.tencent import tencent_cos_upload
-            file = File(open(os.path.join(BASE_DIR, file_path, file_name)))
-            file_path = tencent_cos_upload(file)
-            if file_path:
-                instance.file_url = file_path
-            else:
-                raise ValueError("上传失败")
+            with open(os.path.join(BASE_DIR, file_path, file_name), 'rb') as file:
+                file_path = tencent_cos_upload(file, file_name=os.path.join(file_path.replace('media/', ''), file_name))
+                if file_path:
+                    instance.file_url = file_path
+                else:
+                    raise ValueError("上传失败")
         else:
             instance.url = os.path.join(file_path.replace('media/', ''), file_name)
         instance.save()
