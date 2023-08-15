@@ -1,9 +1,13 @@
 <template>
+  <el-drawer v-model="drawerVisible" title="权限配置" direction="rtl" size="60%" :close-on-click-modal="false" :before-close="handleDrawerClose">
+    <template #header>
+      <div>当前角色: <el-tag>{{props.roleName}}</el-tag></div>
+    </template>
 	<div class="permission-com">
-		<el-button type="primary" class="pc-save-btn">保存菜单授权</el-button>
+		<el-button type="primary" class="pc-save-btn" @click="handleSavePermission">保存菜单授权</el-button>
 
 		<el-collapse v-model="collapseCurrent" @change="handleCollapseChange" accordion>
-			<el-collapse-item v-for="item in menuData" :key="item.key" :name="item.key">
+			<el-collapse-item v-for="(item,mIndex) in menuData" :key="mIndex" :name="mIndex">
 				<template #title>
 					<div @click.stop="null">
 						<p class="pc-collapse-title">
@@ -11,8 +15,8 @@
 								<span>{{ item.name }}</span>
 							</el-checkbox>
 						</p>
-						<div v-show="!collapseCurrent.includes(item.key)">
-							<el-checkbox v-for="btn in item.btns" :key="btn.value" :label="btn.value" v-model="btn.isCheck">{{ btn.label }}</el-checkbox>
+						<div v-show="!collapseCurrent.includes(mIndex)">
+							<el-checkbox v-for="btn in item.btns" :key="btn.value" :label="btn.value" v-model="btn.isCheck">{{ btn.name }}</el-checkbox>
 						</div>
 					</div>
 				</template>
@@ -21,7 +25,7 @@
 						<p>允许对这些数据有以下操作</p>
 						<el-checkbox v-for="btn in item.btns" :key="btn.value" v-model="btn.isCheck" :label="btn.value">
 							<p class="btn-item">
-								{{ btn.role ? `${btn.label}(${btn.role})` : btn.label }}
+								{{ btn.role ? `${btn.label}(${btn.role})` : btn.name }}
 								<span @click.stop.prevent="handleSettingClick(item, btn.value)">
 									<el-icon><Setting /></el-icon>
 								</span>
@@ -90,14 +94,46 @@
 			</template>
 		</el-dialog>
 	</div>
+  </el-drawer>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineProps,watch } from 'vue';
 import XEUtils from 'xe-utils';
 import { errorNotification } from '/@/utils/message';
-import { getDataPermissionRange, getDataPermissionDept } from './api';
+import {getDataPermissionRange, getDataPermissionDept, getRolePremission,setRolePremission} from './api';
 import { MenuDataType, DataPermissionRangeType, CustomDataPermissionDeptType } from './types';
+import { ElMessage } from 'element-plus'
+const props= defineProps({
+  roleId:{
+    type: Number,
+    default: -1
+  },
+  roleName:{
+    type: String,
+    default: ''
+  },
+  drawerVisible:{
+    type: Boolean,
+    default: false
+  }
+})
+const emit = defineEmits(['update:drawerVisible'])
+
+const drawerVisible = ref(false)
+watch(
+    () => props.drawerVisible,
+    (val) => {
+      drawerVisible.value = val;
+      getMenuBtnPermission()
+    }
+);
+const handleDrawerClose = ()=>{
+  emit('update:drawerVisible', false);
+}
+
+
+
 
 const defaultTreeProps = {
 	children: 'children',
@@ -106,39 +142,39 @@ const defaultTreeProps = {
 };
 
 let menuData = ref<MenuDataType[]>([
-	{
-		key: '1',
-		name: '用户管理',
-		isCheck: true,
-		radio: '1',
-		btns: [
-			{ label: '新增', value: 'create', isCheck: true, role: '' },
-			{ label: '编辑', value: 'edit', isCheck: true, role: '' },
-			{ label: '查询', value: 'look', isCheck: true, role: '' },
-		],
-		columns: [
-			{ name: '姓名', create: true, edit: true, delete: true, look: true },
-			{ name: '性别', create: false, edit: true, delete: false, look: true },
-			{ name: '地址', create: true, edit: false, delete: true, look: false },
-		],
-	},
-	{
-		key: '2',
-		name: '系统管理',
-		isCheck: false,
-		radio: '2',
-		btns: [
-			{ label: '新增', value: 'create', isCheck: false, role: '' },
-			{ label: '编辑', value: 'edit', isCheck: true, role: '' },
-			{ label: '删除', value: 'delete', isCheck: false, role: '' },
-			{ label: '查询', value: 'look', isCheck: true, role: '' },
-		],
-		columns: [
-			{ name: '姓名', create: false, edit: true, delete: false, look: true },
-			{ name: '性别', create: true, edit: true, delete: true, look: true },
-			{ name: '地址', create: true, edit: false, delete: true, look: false },
-		],
-	},
+	// {
+	// 	key: '1',
+	// 	name: '用户管理',
+	// 	isCheck: true,
+	// 	radio: '1',
+	// 	btns: [
+	// 		{ label: '新增', value: 'create', isCheck: true, role: '' },
+	// 		{ label: '编辑', value: 'edit', isCheck: true, role: '' },
+	// 		{ label: '查询', value: 'look', isCheck: true, role: '' },
+	// 	],
+	// 	columns: [
+	// 		{ name: '姓名', create: true, edit: true, delete: true, look: true },
+	// 		{ name: '性别', create: false, edit: true, delete: false, look: true },
+	// 		{ name: '地址', create: true, edit: false, delete: true, look: false },
+	// 	],
+	// },
+	// {
+	// 	key: '2',
+	// 	name: '系统管理',
+	// 	isCheck: false,
+	// 	radio: '2',
+	// 	btns: [
+	// 		{ label: '新增', value: 'create', isCheck: false, role: '' },
+	// 		{ label: '编辑', value: 'edit', isCheck: true, role: '' },
+	// 		{ label: '删除', value: 'delete', isCheck: false, role: '' },
+	// 		{ label: '查询', value: 'look', isCheck: true, role: '' },
+	// 	],
+	// 	columns: [
+	// 		{ name: '姓名', create: false, edit: true, delete: false, look: true },
+	// 		{ name: '性别', create: true, edit: true, delete: true, look: true },
+	// 		{ name: '地址', create: true, edit: false, delete: true, look: false },
+	// 	],
+	// },
 ]);
 let collapseCurrent = ref(['1']);
 let menuCurrent = ref<Partial<MenuDataType>>({});
@@ -148,6 +184,12 @@ let dataPermissionRange = ref<DataPermissionRangeType[]>([]);
 let deptData = ref<CustomDataPermissionDeptType[]>([]);
 let dataPermission = ref();
 let customDataPermission = ref([]);
+
+//获取菜单,按钮,权限
+const getMenuBtnPermission = async () => {
+  const resMenu = await getRolePremission({role:props.roleId})
+  menuData.value = resMenu.data
+}
 
 const fetchData = async () => {
 	try {
@@ -209,8 +251,19 @@ const handleDialogClose = () => {
 	dataPermission.value = null;
 };
 
+//保存权限
+const handleSavePermission = () => {
+  setRolePremission(props.roleId, menuData.value).then(res=>{
+    ElMessage({
+      message: res.msg,
+      type: 'success',
+    })
+  })
+}
+
 onMounted(() => {
 	fetchData();
+
 });
 </script>
 

@@ -79,6 +79,28 @@ class MenuPermissionSerializer(CustomModelSerializer):
         fields = ['id', 'parent', 'name', 'menuPermission']
 
 
+class MenuButtonPermissionSerializer(CustomModelSerializer):
+    """
+    菜单和按钮权限
+    """
+    isCheck = serializers.SerializerMethodField()
+
+    def get_isCheck(self, instance):
+        is_superuser = self.request.user.is_superuser
+        if is_superuser:
+            return True
+        else:
+            return MenuButton.objects.filter(
+                menu__id=instance.id,
+                role__id__in=self.request.user.role.values_list('id', flat=True),
+            ).exists()
+
+    class Meta:
+        model = Menu
+        fields = '__all__'
+
+
+
 class RoleViewSet(CustomModelViewSet, FastCrudMixin):
     """
     角色管理接口

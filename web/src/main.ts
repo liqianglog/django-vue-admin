@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import { directive } from '/@/utils/directive';
-import { i18n } from '/@/i18n/index';
+import { i18n } from '/@/i18n';
 import other from '/@/utils/other';
 import '/@/assets/style/tailwind.css'; // 先引入tailwind css, 以免element-plus冲突
 import ElementPlus from 'element-plus';
