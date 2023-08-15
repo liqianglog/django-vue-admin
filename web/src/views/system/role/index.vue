@@ -8,12 +8,9 @@
 
 		<permission ref="rolePermission"></permission>
 
-		<el-drawer v-model="drawerVisible" title="权限配置" direction="rtl" size="60%" :close-on-click-modal="false" :before-close="handleDrawerClose">
-			<template #header>
-				<div>当前角色: <el-tag>管理员</el-tag></div>
-			</template>
-			<PermissionComNew v-if="drawerVisible" @drawerClose="handleDrawerClose" />
-		</el-drawer>
+
+			<PermissionComNew  v-model:drawerVisible="drawerVisible" :roleId="roleId" :roleName="roleName"  @drawerClose="handleDrawerClose" />
+
 	</fs-page>
 </template>
 
@@ -25,6 +22,8 @@ import permission from './components/PermissionCom/index.vue';
 import PermissionComNew from './components/PermissionComNew/index.vue';
 
 let drawerVisible = ref(false);
+let roleId = ref(null);
+let roleName = ref(null);
 
 const rolePermission = ref();
 // crud组件的ref
@@ -34,7 +33,9 @@ const crudBinding = ref();
 // 暴露的方法
 const { crudExpose } = useExpose({ crudRef, crudBinding });
 
-const handleDrawerOpen = () => {
+const handleDrawerOpen = (row:any) => {
+  roleId.value = row.id
+  roleName.value = row.name
 	drawerVisible.value = true;
 };
 

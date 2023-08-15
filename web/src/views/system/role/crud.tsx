@@ -84,7 +84,7 @@ export const createCrudOptions = function ({
 						},
 						click: (context: any): void => {
 							const { row } = context;
-							handleDrawerOpen();
+							handleDrawerOpen(row);
 						},
 					},
 				},

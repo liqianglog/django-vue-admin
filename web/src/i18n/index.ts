@@ -14,9 +14,9 @@ import { useThemeConfig } from '/@/stores/themeConfig';
  */
 
 // element plus 自带国际化
-import enLocale from 'element-plus/lib/locale/lang/en';
-import zhcnLocale from 'element-plus/lib/locale/lang/zh-cn';
-import zhtwLocale from 'element-plus/lib/locale/lang/zh-tw';
+import enLocale from 'element-plus/es/locale/lang/en';
+import zhcnLocale from 'element-plus/es/locale/lang/zh-cn';
+import zhtwLocale from 'element-plus/es/locale/lang/zh-tw';
 
 // 定义变量内容
 const messages = {};

@@ -28,16 +28,6 @@ class RoleMenuButtonPermissionSerializer(CustomModelSerializer):
         read_only_fields = ["id"]
 
 
-class RoleMenuButtonPermissionInitSerializer(CustomModelSerializer):
-    """
-    初始化菜单按钮-序列化器
-    """
-
-    class Meta:
-        model = RoleMenuButtonPermission
-        fields = "__all__"
-        read_only_fields = ["id"]
-
 
 class RoleMenuButtonPermissionCreateUpdateSerializer(CustomModelSerializer):
     """
@@ -51,6 +41,46 @@ class RoleMenuButtonPermissionCreateUpdateSerializer(CustomModelSerializer):
         fields = "__all__"
         read_only_fields = ["id"]
 
+
+class RoleButtonPermissionSerializer(CustomModelSerializer):
+    """
+    角色按钮权限
+    """
+    isCheck = serializers.SerializerMethodField()
+
+    def get_isCheck(self, instance):
+        params = self.request.query_params
+        return RoleMenuButtonPermission.objects.filter(
+            menu_button__id=instance['id'],
+            role__id=params.get('role'),
+        ).exists()
+
+    class Meta:
+        model = MenuButton
+        fields = ['id','name','value','isCheck']
+
+class RoleMenuPermissionSerializer(CustomModelSerializer):
+    """
+    菜单和按钮权限
+    """
+    isCheck = serializers.SerializerMethodField()
+    btns = serializers.SerializerMethodField()
+
+    def get_isCheck(self, instance):
+        params = self.request.query_params
+        return RoleMenuPermission.objects.filter(
+            menu__id=instance['id'],
+            role__id=params.get('role'),
+        ).exists()
+
+    def get_btns(self, instance):
+        btn_list = MenuButton.objects.filter(menu__id=instance['id']).values('id', 'name', 'value')
+        serializer = RoleButtonPermissionSerializer(btn_list,many=True,request=self.request)
+        return  serializer.data
+
+    class Meta:
+        model = Menu
+        fields = ['id','name','isCheck','btns']
 
 class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
     """
@@ -68,39 +98,48 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
     extra_filter_class = []
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
-    def role_get_menu(self, request):
-        """根据当前用户的角色返回角色拥有的菜单"""
-        data = []
+    def get_role_premission(self, request):
+        """
+        角色授权获取:
+        :param request: role
+        :return: menu,btns,columns
+        """
+        params = request.query_params
+        role = params.get('role',None)
+        if  role is None:
+            return ErrorResponse(msg="未获取到角色信息")
         is_superuser = request.user.is_superuser
-        is_admin = request.user.role.values_list('admin', flat=True)
-        if is_superuser or True in is_admin:
-            queryset = Menu.objects.filter(status=1).values('name', 'parent', 'is_catalog', menu_id=F('id'))
-            for item in queryset:
-                btn_name = MenuButton.objects.filter(menu=item['menu_id']).values_list('name', flat=True)
-                data.append({
-                    'menu_id': item['menu_id'],
-                    'name': item['name'],
-                    'parent': item['parent'],
-                    'permission': btn_name,
-                    'is_catalog': item['is_catalog']
-                })
+        if is_superuser:
+            queryset = Menu.objects.filter(status=1,is_catalog=False).values('name', 'id').all()
         else:
             role_id = request.user.role.values_list('id', flat=True)
-            queryset = RoleMenuPermission.objects.filter(role__in=role_id).values(
-                'menu_id', name=F('menu__name'), parent=F('menu__parent'), is_catalog=F('menu__is_catalog')
-            ).distinct()
-            for item in queryset:
-                btn_name = RoleMenuButtonPermission.objects.filter(
-                    menu_button__menu=item['menu_id']
-                ).values_list('menu_button__name', flat=True)
-                data.append({
-                    'menu_id': item['menu_id'],
-                    'name': item['name'],
-                    'parent': item['parent'],
-                    'permission': btn_name,
-                    'is_catalog': item['is_catalog']
-                })
+            menu_list = RoleMenuPermission.objects.filter(role__in=role_id).values_list('id',flat=True)
+            queryset = Menu.objects.filter(status=1, is_catalog=False,id__in=menu_list).values('name', 'id').all()
+        serializer = RoleMenuPermissionSerializer(queryset,many=True,request=request)
+        data = serializer.data
         return DetailResponse(data=data)
+
+    @action(methods=['PUT'], detail=True, permission_classes=[IsAuthenticated])
+    def set_role_premission(self,request,pk):
+        """
+        对角色授权:
+        :param request:
+        :param pk: role
+        :return:
+        """
+        body = request.data
+        RoleMenuPermission.objects.filter(role=pk).delete()
+        RoleMenuButtonPermission.objects.filter(role=pk).delete()
+        for menu in body:
+            if menu.get('isCheck'):
+                menu_parent = Menu.objects.filter(id=menu.get('id')).values('parent').first()
+                RoleMenuPermission.objects.create(role_id=pk, menu_id=menu_parent.get('parent'))
+                RoleMenuPermission.objects.create(role_id=pk, menu_id=menu.get('id'))
+            for btn in menu.get('btns'):
+                if btn.get('isCheck'):
+                    RoleMenuButtonPermission.objects.create(role_id=pk, menu_button_id=btn.get('id'))
+        return DetailResponse(msg="授权成功")
+
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
     def role_menu_get_button(self, request):
