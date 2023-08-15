@@ -351,11 +351,16 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
             queries = []
             for search_term_key in filterset.data.keys():
                 orm_lookup = self.find_filter_lookups(orm_lookups, search_term_key)
-                # print(search_term_key, orm_lookup)
-                if not orm_lookup:
+                if not orm_lookup or filterset.data.get(search_term_key) == '':
                     continue
-                query = Q(**{orm_lookup: filterset.data[search_term_key]})
-                queries.append(query)
+                filterset_data_len = len(filterset.data.getlist(search_term_key))
+                if filterset_data_len == 1:
+                    query = Q(**{orm_lookup: filterset.data[search_term_key]})
+                    queries.append(query)
+                elif filterset_data_len == 2:
+                    orm_lookup += '__range'
+                    query = Q(**{orm_lookup: filterset.data.getlist(search_term_key)})
+                    queries.append(query)
             if len(queries) > 0:
                 conditions.append(reduce(operator.and_, queries))
                 queryset = queryset.filter(reduce(operator.and_, conditions))
