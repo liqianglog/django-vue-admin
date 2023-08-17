@@ -20,10 +20,10 @@ export interface CustomDataPermissionMenuType {
 }
 
 export interface MenuDataType {
-  key: string;
+  id: string;
   name: string;
   isCheck: boolean;
   radio: string;
-  btns: { label: string; value: string; isCheck: boolean; role: string; }[];
+  btns: { id:number,label: string; value: string; isCheck: boolean; data_range: number;dept:object }[];
   columns: { [key: string]: boolean | string; }[]
 }

@@ -47,6 +47,7 @@ class RoleButtonPermissionSerializer(CustomModelSerializer):
     角色按钮权限
     """
     isCheck = serializers.SerializerMethodField()
+    data_range = serializers.SerializerMethodField()
 
     def get_isCheck(self, instance):
         params = self.request.query_params
@@ -55,9 +56,20 @@ class RoleButtonPermissionSerializer(CustomModelSerializer):
             role__id=params.get('role'),
         ).exists()
 
+    def get_data_range(self, instance):
+        params = self.request.query_params
+        obj = RoleMenuButtonPermission.objects.filter(
+            menu_button__id=instance['id'],
+            role__id=params.get('role'),
+        ).first()
+        if obj is None:
+            return None
+        return obj.data_range
+
+
     class Meta:
         model = MenuButton
-        fields = ['id','name','value','isCheck']
+        fields = ['id','name','value','isCheck','data_range']
 
 class RoleMenuPermissionSerializer(CustomModelSerializer):
     """
@@ -122,7 +134,7 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
     @action(methods=['PUT'], detail=True, permission_classes=[IsAuthenticated])
     def set_role_premission(self,request,pk):
         """
-        对角色授权:
+        对角色的菜单和按钮授权:
         :param request:
         :param pk: role
         :return:
@@ -137,8 +149,10 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
                 RoleMenuPermission.objects.create(role_id=pk, menu_id=menu.get('id'))
             for btn in menu.get('btns'):
                 if btn.get('isCheck'):
-                    RoleMenuButtonPermission.objects.create(role_id=pk, menu_button_id=btn.get('id'))
+                    instance = RoleMenuButtonPermission.objects.create(role_id=pk, menu_button_id=btn.get('id'),data_range=btn.get('data_range'))
+                    instance.dept.set(btn.get('dept',[]))
         return DetailResponse(msg="授权成功")
+
 
 
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
