@@ -45,3 +45,15 @@ export function getDataPermissionMenu() {
     method: 'get'
   })
 }
+
+/**
+ * 设置按钮的数据范围
+ */
+export function setBtnDatarange(roleId:number,data:object) {
+  return request({
+    url: `/api/system/role_menu_button_permission/${roleId}/set_btn_datarange/`,
+    method: 'put',
+    data
+  })
+}
+
