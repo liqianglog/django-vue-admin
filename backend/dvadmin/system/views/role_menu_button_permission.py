@@ -134,7 +134,7 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
     @action(methods=['PUT'], detail=True, permission_classes=[IsAuthenticated])
     def set_role_premission(self,request,pk):
         """
-        对角色的菜单和按钮授权:
+        对角色的菜单和按钮及按钮范围授权:
         :param request:
         :param pk: role
         :return:
