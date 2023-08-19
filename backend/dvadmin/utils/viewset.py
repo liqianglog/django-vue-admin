@@ -81,12 +81,6 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
 
     def get_column_permission(self, serializer_class):
         """获取列权限"""
-        action_map = {
-            'list': 'is_query',
-            'retrieve': 'is_query',
-            'create': 'is_create',
-            'update': 'is_update'
-        }
         finded = False
         for app in get_custom_app_models():
             for model in app:
@@ -97,10 +91,9 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
                 break
         if finded is False:
             return []
-        column_permission = Columns.objects.filter(app=model['app'], model=model['model'])
-        if self.action in action_map:
-            return [obj.field_name for obj in column_permission if getattr(obj, action_map[self.action])]
-        return []
+        return Columns.objects.filter(
+            app=model['app'], model=model['model']
+        ).values('field_name', 'is_create', 'is_query', 'is_update')
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, request=request)

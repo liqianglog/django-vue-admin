@@ -11,7 +11,7 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
-from dvadmin.system.models import RoleMenuButtonPermission, Menu, MenuButton, Dept, RoleMenuPermission
+from dvadmin.system.models import RoleMenuButtonPermission, Menu, MenuButton, Dept, RoleMenuPermission, Columns
 from dvadmin.system.views.menu import MenuSerializer
 from dvadmin.utils.json_response import DetailResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -71,12 +71,20 @@ class RoleButtonPermissionSerializer(CustomModelSerializer):
         model = MenuButton
         fields = ['id','name','value','isCheck','data_range']
 
+class RoleColumnsSerializer(CustomModelSerializer):
+
+    class Meta:
+        model = Columns
+        fields = "__all__"
+
+
 class RoleMenuPermissionSerializer(CustomModelSerializer):
     """
     菜单和按钮权限
     """
     isCheck = serializers.SerializerMethodField()
     btns = serializers.SerializerMethodField()
+    columns = serializers.SerializerMethodField()
 
     def get_isCheck(self, instance):
         params = self.request.query_params
@@ -90,9 +98,17 @@ class RoleMenuPermissionSerializer(CustomModelSerializer):
         serializer = RoleButtonPermissionSerializer(btn_list,many=True,request=self.request)
         return  serializer.data
 
+    def get_columns(self, instance):
+        params = self.request.query_params
+        col_list = Columns.objects.filter(role__id=params.get('role'),menu__id=instance['id'])
+        serializer = RoleColumnsSerializer(col_list,many=True,request=self.request)
+        return serializer.data
+
+
+
     class Meta:
         model = Menu
-        fields = ['id','name','isCheck','btns']
+        fields = ['id','name','isCheck','btns','columns']
 
 class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
     """
@@ -151,6 +167,8 @@ class RoleMenuButtonPermissionViewSet(CustomModelViewSet):
                 if btn.get('isCheck'):
                     instance = RoleMenuButtonPermission.objects.create(role_id=pk, menu_button_id=btn.get('id'),data_range=btn.get('data_range'))
                     instance.dept.set(btn.get('dept',[]))
+            for col in menu.get('columns'):
+                Columns.objects.filter(id=col.get('id')).update(is_query=col.get('is_query'),is_create=col.get('is_create'),is_update=col.get('is_update'))
         return DetailResponse(msg="授权成功")
 
 

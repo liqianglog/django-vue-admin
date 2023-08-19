@@ -184,6 +184,7 @@ class Columns(CoreModel):
     role = models.ForeignKey(to='Role', on_delete=models.CASCADE, verbose_name='角色', db_constraint=False)
     app = models.CharField(max_length=64, verbose_name='应用名')
     model = models.CharField(max_length=64, verbose_name='表名')
+    menu = models.ForeignKey(to='Menu', on_delete=models.CASCADE, verbose_name='菜单', db_constraint=False)
     field_name = models.CharField(max_length=64, verbose_name='模型表字段名')
     title = models.CharField(max_length=64, verbose_name='字段显示名')
     is_query = models.BooleanField(default=1, verbose_name='是否可查询')
