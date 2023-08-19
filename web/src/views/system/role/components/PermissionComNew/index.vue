@@ -49,29 +49,23 @@
             <div class="pccm-item">
               <p>对这些数据有以下字段权限</p>
 
-              <el-radio-group v-model="item.radio">
-                <el-radio label="1">全部字段可查看可编辑</el-radio>
-                <el-radio label="2">全部字段仅可查看不可编辑</el-radio>
-                <el-radio label="3">自定义字段权限</el-radio>
-              </el-radio-group>
-
-              <ul v-show="item.radio === '3'" class="columns-list">
+              <ul  class="columns-list">
                 <li class="columns-head">
                   <div class="width-txt">
                     <span>字段</span>
                   </div>
 
-                  <div v-for="btn in item.btns" :key="btn.value" class="width-check">
-                    <el-checkbox :label="btn.value" @change="handleColumnChange($event, item, btn.value)">
-                      <span>{{ btn.label }}</span>
+                  <div v-for="(head,hIndex) in column.header" :key="hIndex" class="width-check">
+                    <el-checkbox :label="head.value" @change="handleColumnChange($event, item, head.value)">
+                      <span>{{head.label}}</span>
                     </el-checkbox>
                   </div>
                 </li>
 
                 <li v-for="(c_item, c_index) in item.columns" :key="c_index" class="columns-item">
-                  <div class="width-txt">{{ c_item.name }}</div>
-                  <div v-for="btn in item.btns" :key="btn.value" class="width-check">
-                    <el-checkbox v-model="c_item[btn.value]" class="ci-checkout"></el-checkbox>
+                  <div class="width-txt">{{ c_item.title }}</div>
+                  <div v-for="(col,cIndex) in column.header" :key="cIndex" class="width-check">
+                    <el-checkbox v-model="c_item[col.value]" class="ci-checkout"></el-checkbox>
                   </div>
                 </li>
               </ul>
@@ -112,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, defineProps, watch,computed} from 'vue';
+import {ref, onMounted, defineProps, watch, computed, reactive} from 'vue';
 import XEUtils from 'xe-utils';
 import {errorNotification} from '/@/utils/message';
 import {getDataPermissionRange, getDataPermissionDept, getRolePremission, setRolePremission,setBtnDatarange} from './api';
@@ -257,6 +251,10 @@ const handleSavePermission = () => {
   })
 }
 
+const column = reactive({
+  header:[{value:'is_create',label:'新增可见'},{value:'is_update',label:'编辑可见'},{value:'is_query',label:'列表可见'}]
+})
+
 onMounted(() => {
 });
 </script>
@@ -300,7 +298,7 @@ onMounted(() => {
         }
 
         .width-check {
-          width: 80px;
+          width: 100px;
         }
 
         .width-icon {

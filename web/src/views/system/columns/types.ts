@@ -13,6 +13,8 @@ export interface CurrentInfoType {
   role: string;
   model: string;
   app: string;
+
+  menu: string;
 }
 
 export interface ModelItemType {

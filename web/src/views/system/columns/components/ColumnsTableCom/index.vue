@@ -10,21 +10,6 @@
 		<el-table :data="state.data" border v-loading="state.loading" class="ctc-table">
 			<el-table-column prop="field_name" label="字段名" />
 			<el-table-column prop="title" label="列名" />
-			<el-table-column prop="is_create" label="创建显示">
-				<template #default="scope">
-					<el-switch v-model="scope.row.is_create" @change="handleChange(scope.row)" />
-				</template>
-			</el-table-column>
-			<el-table-column prop="is_update" label="编辑显示">
-				<template #default="scope">
-					<el-switch v-model="scope.row.is_update" @change="handleChange(scope.row)" />
-				</template>
-			</el-table-column>
-			<el-table-column prop="is_query" label="查询显示">
-				<template #default="scope">
-					<el-switch v-model="scope.row.is_query" @change="handleChange(scope.row)" />
-				</template>
-			</el-table-column>
 			<el-table-column label="操作" width="180" align="center">
 				<template #default="scope">
 					<el-button type="primary" @click="handleUpdateColumn('update', scope.row)">编辑</el-button>
