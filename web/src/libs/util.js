@@ -3,7 +3,6 @@ import db from './util.db'
 import log from './util.log'
 import dayjs from 'dayjs'
 import filterParams from './util.params'
-
 const util = {
   cookies,
   db,
@@ -63,6 +62,12 @@ util.baseURL = function () {
   return baseURL
 }
 
+util.baseFileURL = function () {
+  if (process.env.VUE_APP_FILE_ENGINE && (process.env.VUE_APP_FILE_ENGINE === 'oss' || process.env.VUE_APP_FILE_ENGINE === 'cos')) {
+    return ''
+  }
+  return util.baseURL()
+}
 util.wsBaseURL = function () {
   var baseURL = process.env.VUE_APP_API
   var param = baseURL.split('/')[3] || ''

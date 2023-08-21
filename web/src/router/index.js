@@ -1,11 +1,3 @@
-/*
- * @创建文件时间: 2021-06-01 22:41:21
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-11-19 21:49:43
- * 联系Qq:1638245306
- * @文件介绍:
- */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // 进度条
@@ -30,7 +22,7 @@ VueRouter.prototype.replace = function replace (location) {
 }
 
 Vue.use(VueRouter)
-
+console.log(routes)
 // 导出路由 在 main.js 里使用
 const router = new VueRouter({
   routes
@@ -42,7 +34,7 @@ const router = new VueRouter({
  */
 router.beforeEach(async (to, from, next) => {
   // 白名单
-  const whiteList = ['/login', '/auth-redirect', '/bind', '/register', '/oauth2']
+  const whiteList = ['/login', '/auth-redirect', '/bind', '/register', '/clientRenew', '/oauth2']
   // 确认已经加载多标签页数据 https://github.com/d2-projects/d2-admin/issues/201
   await store.dispatch('d2admin/page/isLoaded')
   // 确认已经加载组件尺寸设置 https://github.com/d2-projects/d2-admin/issues/198
@@ -64,19 +56,26 @@ router.beforeEach(async (to, from, next) => {
       })
       await store.dispatch('d2admin/user/set', res.data, { root: true })
       await store.dispatch('d2admin/account/load')
-      store.dispatch('d2admin/dept/load')
       store.dispatch('d2admin/settings/init')
     }
     if (!store.state.d2admin.menu || store.state.d2admin.menu.aside.length === 0) {
+      await store.dispatch('d2admin/permission/load', routes)
+      await store.dispatch('d2admin/dept/load')
       // 动态添加路由
       getMenu().then(ret => {
         // 校验路由是否有效
         ret = checkRouter(ret)
-        const routes = handleRouter(ret)
+        const { routes, frameOut } = handleRouter(ret)
         // 处理路由 得到每一级的路由设置
         store.commit('d2admin/page/init', routes)
-
-        router.addRoutes(routes)
+        routes.map((r) => {
+          router.addRoute(r)
+        })
+        frameOut.map((r) => {
+          router.addRoute(r)
+          router.options.routes.push(r)
+        })
+        console.log('router', router, routes, frameOut)
         // routes.forEach(route => router.addRoute(route))
 
         const menu = handleAsideMenu(ret)
@@ -86,11 +85,43 @@ router.beforeEach(async (to, from, next) => {
         next({ path: to.fullPath, replace: true, params: to.params })
       })
     } else {
-      next()
       const childrenPath = window.qiankunActiveRule || []
+      // 判断，是否是租户模式
+      if (to.path !== '/clientRenew' && store.state.d2admin.user.info.tenant_id) {
+        // 如果租户到期，跳转到续费页面
+        if (store.state.d2admin.user.info.tenant_expire) {
+          next({ path: '/clientRenew' })
+          // 取消当前导航
+          NProgress.done()
+          return
+        // 如果是普通租户，如果没有试用套餐，且是试用阶段
+        } else if (store.state.d2admin.user.info.tenant_id !== 100000 && !store.state.d2admin.user.info.package_manage && store.state.d2admin.user.info.tenant_experience) {
+          next({ path: '/clientRenew' })
+          // 取消当前导航
+          NProgress.done()
+          return
+        }
+      }
       if (to.name) {
+        if (to.meta.openInNewWindow && ((from.query.newWindow && to.query.newWindow !== '1') || from.path === '/')) {
+          to.query.newWindow = '1'
+        }
+
         // 有 name 属性，说明是主应用的路由
-        next()
+        if (to.meta.openInNewWindow && !to.query.newWindow && !from.query.newWindow && from.path !== '/') {
+          // 在新窗口中打开路由
+          const { href } = router.resolve({
+            path: to.path + '?newWindow=1'
+          })
+          window.open(href, '_blank')
+          // 取消当前导航
+          NProgress.done()
+          next(false)
+        } else {
+          // 取消当前导航
+          NProgress.done()
+          next()
+        }
       } else if (childrenPath.some((item) => to.path.includes(item))) {
         next()
       } else {

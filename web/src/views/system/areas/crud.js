@@ -97,6 +97,11 @@ export const crudOptions = (vm) => {
         //   label: 'name', // 数据字典中label字段的属性名
         //   children: 'children' // 数据字典中children字段的属性名
         // },
+        valueResolve (row, key) {
+          if (row.pcode === null) {
+            row.pcode = undefined
+          }
+        },
         form: {
           component: {
             showAllLevels: false, // 仅显示最后一级

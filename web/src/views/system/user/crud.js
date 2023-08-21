@@ -93,6 +93,23 @@ export const crudOptions = (vm) => {
         }
       },
       {
+        title: '部门名称',
+        key: 'dept__name',
+        treeNode: true, // 设置为树形列
+        search: {
+          disabled: false,
+          component: {
+            props: {
+              clearable: true
+            }
+          }
+        },
+        show: false,
+        form: {
+          disabled: true
+        }
+      },
+      {
         title: '账号',
         key: 'username',
         search: {
@@ -174,7 +191,7 @@ export const crudOptions = (vm) => {
         title: '部门',
         key: 'dept',
         search: {
-          disabled: true
+          disabled: false
         },
         minWidth: 140,
         type: 'tree-selector',

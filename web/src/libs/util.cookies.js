@@ -21,7 +21,8 @@ cookies.set = function (name = 'default', value = '', cookieSetting = {}) {
  * @param {String} name cookie name
  */
 cookies.get = function (name = 'default') {
-  return Cookies.get(`d2admin-${process.env.VUE_APP_VERSION}-${name}`)
+  window.dvAdminToken = Cookies.get(`d2admin-${process.env.VUE_APP_VERSION}-${name}`)
+  return window.dvAdminToken
 }
 
 /**
