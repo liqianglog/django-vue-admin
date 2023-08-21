@@ -202,7 +202,7 @@ export default {
       },
       deep: true,
       immediate: true
-    },
+    }
     // currentValue (newValue, oldVal) {
     //   const { tableConfig } = this._elProps
     //   const { value } = this.dict
