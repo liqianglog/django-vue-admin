@@ -237,13 +237,17 @@ export default {
       }
       if (val && val.toString().length > 0) {
         // 在这里对 传入的value值做处理
-        const { url, value, label } = this.dict
+        let { url, value, label } = this.dict
         params[value] = val
         const queryList = ['id', label, value]
         this._elProps.tableConfig.columns.map(res => {
           queryList.push(res.prop)
         })
         params.query = `{${Array.from(new Set(queryList)).join(',')}}`
+        if (typeof url === 'function') {
+          const form = this.d2CrudContext.getForm()
+          url = url(this.dict, { form })
+        }
         return request({
           url: url,
           params: params,
