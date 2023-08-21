@@ -170,26 +170,26 @@ export default {
     }
   },
   watch: {
-    value: {
-      handler (value, oldVal) {
-        // 父组件收到input事件后会通过v-model改变value参数的值
-        // 然后此处会watch到value的改变，发出change事件
-        // change事件放在此处发射的好处是，当外部修改value值时，也能够触发form-data-change事件
-        this.$emit('change', value)
-        this.$emit('input', value)
-        // 如果值是被外部改变的，则修改本组件的currentValue
-        if (Array.isArray(value) && value.length === 0) {
-          this.currentValue = null
-          this.multipleSelection = null
-        } else {
-          if (value && this.dispatch) {
-            this.dispatch('ElFormItem', 'el.form.blur')
-          }
-        }
-      },
-      deep: true,
-      immediate: true
-    },
+    // value: {
+    //   handler (value, oldVal) {
+    //     // 父组件收到input事件后会通过v-model改变value参数的值
+    //     // 然后此处会watch到value的改变，发出change事件
+    //     // change事件放在此处发射的好处是，当外部修改value值时，也能够触发form-data-change事件
+    //     this.$emit('change', value)
+    //     this.$emit('input', value)
+    //     // 如果值是被外部改变的，则修改本组件的currentValue
+    //     if (Array.isArray(value) && value.length === 0) {
+    //       this.currentValue = null
+    //       this.multipleSelection = null
+    //     } else {
+    //       if (value && this.dispatch) {
+    //         this.dispatch('ElFormItem', 'el.form.blur')
+    //       }
+    //     }
+    //   },
+    //   deep: true,
+    //   immediate: true
+    // },
     multipleSelection: {
       handler (newValue, oldVal) {
         const { tableConfig } = this._elProps
@@ -202,26 +202,26 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    currentValue (newValue, oldVal) {
+      const { tableConfig } = this._elProps
+      const { value } = this.dict
+      if (newValue) {
+        if (!tableConfig.multiple) {
+          if (newValue[0]) {
+            this.$emit('input', newValue[0][value])
+            this.$emit('change', newValue[0][value])
+          }
+        } else {
+          console.log(newValue)
+          const result = newValue.map((item) => {
+            return item[value]
+          })
+          this.$emit('input', result)
+          this.$emit('change', result)
+        }
+      }
     }
-    // currentValue (newValue, oldVal) {
-    //   const { tableConfig } = this._elProps
-    //   const { value } = this.dict
-    //   if (newValue) {
-    //     if (!tableConfig.multiple) {
-    //       if (newValue[0]) {
-    //         this.$emit('input', newValue[0][value])
-    //         this.$emit('change', newValue[0][value])
-    //       }
-    //     } else {
-    //       console.log(newValue)
-    //       const result = newValue.map((item) => {
-    //         return item[value]
-    //       })
-    //       this.$emit('input', result)
-    //       this.$emit('change', result)
-    //     }
-    //   }
-    // }
   },
   mounted () {
     // 给currentValue设置初始值
