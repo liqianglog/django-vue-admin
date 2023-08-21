@@ -64,7 +64,7 @@
         />
       </div>
       <div slot="reference" ref="divRef" :style="{'pointerEvents': disabled?'none':''}">
-        <div v-if="currentValue" class="div-input el-input__inner" :class="disabled?'div-disabled':''">
+        <div v-if="currentValue.length>0" class="div-input el-input__inner" :class="disabled?'div-disabled':''">
           <div v-if="currentValue instanceof Array">
             <el-tag
               style="margin-right: 5px"
@@ -95,10 +95,10 @@ import util from '@/libs/util'
 
 export default {
   name: 'selector-table-input',
-  model: {
-    prop: 'value',
-    event: ['change', 'input']
-  },
+  // model: {
+  //   prop: 'value',
+  //   event: ['change', 'input']
+  // },
   mixins: [d2CrudPlus.input, d2CrudPlus.inputDict],
   props: {
     // 值
@@ -170,25 +170,16 @@ export default {
     }
   },
   watch: {
-    // value: {
-    //   handler (value, oldVal) {
-    //     // 父组件收到input事件后会通过v-model改变value参数的值
-    //     // 然后此处会watch到value的改变，发出change事件
-    //     // change事件放在此处发射的好处是，当外部修改value值时，也能够触发form-data-change事件
-    //     this.$emit('change', value)
-    //     this.$emit('input', value)
-    //     // 如果值是被外部改变的，则修改本组件的currentValue
-    //     if (Array.isArray(value) && value.length === 0) {
-    //       this.currentValue = null
-    //       this.multipleSelection = null
-    //     } else {
-    //       if (value && this.dispatch) {
-    //         this.dispatch('ElFormItem', 'el.form.blur')
-    //       }
-    //     }
-    //   },
-    //   deep: true,
-    //   immediate: true
+    // value (value) {
+    //   // 父组件收到input事件后会通过v-model改变value参数的值
+    //   // 然后此处会watch到value的改变，发出change事件
+    //   // change事件放在此处发射的好处是，当外部修改value值时，也能够触发form-data-change事件
+    //   this.$emit('change', value)
+    //   // if (this.currentValue === value) {
+    //   //   return
+    //   // }
+    //   // 如果值是被外部改变的，则修改本组件的currentValue
+    //   // this.setCurrentValue(value)
     // },
     multipleSelection: {
       handler (newValue, oldVal) {
@@ -203,25 +194,6 @@ export default {
       deep: true,
       immediate: true
     }
-    // currentValue (newValue, oldVal) {
-    //   const { tableConfig } = this._elProps
-    //   const { value } = this.dict
-    //   if (newValue) {
-    //     if (!tableConfig.multiple) {
-    //       if (newValue[0]) {
-    //         this.$emit('input', newValue[0][value])
-    //         this.$emit('change', newValue[0][value])
-    //       }
-    //     } else {
-    //       console.log(newValue)
-    //       const result = newValue.map((item) => {
-    //         return item[value]
-    //       })
-    //       this.$emit('input', result)
-    //       this.$emit('change', result)
-    //     }
-    //   }
-    // }
   },
   mounted () {
     // 给currentValue设置初始值
@@ -258,6 +230,7 @@ export default {
           this.pageConfig.limit = limit
           this.pageConfig.total = total
           if (data.data && data.data.length > 0) {
+            console.log(data.data)
             this.currentValue = data.data
           } else {
             this.currentValue = []
@@ -349,6 +322,9 @@ export default {
       const result = val.map((item) => {
         return item[this.dict.value]
       })
+      if (this.dispatch) {
+        this.dispatch('ElFormItem', 'el.form.blur')
+      }
       this.$emit('input', result)
       this.$emit('change', result)
     },
@@ -361,6 +337,9 @@ export default {
       if (!tableConfig.multiple) {
         this.multipleSelection = val
         this.$emit('radioChange', val)
+        if (this.dispatch) {
+          this.dispatch('ElFormItem', 'el.form.blur')
+        }
         this.$emit('input', val[this.dict.value])
         this.$emit('change', val[this.dict.value])
       }
