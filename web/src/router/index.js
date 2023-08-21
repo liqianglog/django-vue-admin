@@ -86,10 +86,27 @@ router.beforeEach(async (to, from, next) => {
       })
     } else {
       const childrenPath = window.qiankunActiveRule || []
+      // 判断，是否是租户模式
+      if (to.path !== '/clientRenew' && store.state.d2admin.user.info.tenant_id) {
+        // 如果租户到期，跳转到续费页面
+        if (store.state.d2admin.user.info.tenant_expire) {
+          next({ path: '/clientRenew' })
+          // 取消当前导航
+          NProgress.done()
+          return
+        // 如果是普通租户，如果没有试用套餐，且是试用阶段
+        } else if (store.state.d2admin.user.info.tenant_id !== 100000 && !store.state.d2admin.user.info.package_manage && store.state.d2admin.user.info.tenant_experience) {
+          next({ path: '/clientRenew' })
+          // 取消当前导航
+          NProgress.done()
+          return
+        }
+      }
       if (to.name) {
-        if (to.meta.openInNewWindow && (from.query.newWindow && to.query.newWindow !== '1' || from.path === '/')) {
+        if (to.meta.openInNewWindow && ((from.query.newWindow && to.query.newWindow !== '1') || from.path === '/')) {
           to.query.newWindow = '1'
         }
+
         // 有 name 属性，说明是主应用的路由
         if (to.meta.openInNewWindow && !to.query.newWindow && !from.query.newWindow && from.path !== '/') {
           // 在新窗口中打开路由
@@ -101,6 +118,8 @@ router.beforeEach(async (to, from, next) => {
           NProgress.done()
           next(false)
         } else {
+          // 取消当前导航
+          NProgress.done()
           next()
         }
       } else if (childrenPath.some((item) => to.path.includes(item))) {
