@@ -40,7 +40,7 @@
           <el-table-column fixed type="index" label="#" width="50"/>
           <span v-for="(item,index) in _elProps.tableConfig.columns" :key="index" >
             <el-table-column :prop="item.prop" :label="item.label" :width="item.width"
-                           v-if="item.show !== false">
+                             v-if="item.show !== false">
               <template slot-scope="scope">
                 <span v-if="item.type === 'image'">
                   <el-image :src="baseURL + scope.row[item.prop]" style="height: 30px;width: 30px;">
@@ -203,25 +203,25 @@ export default {
       deep: true,
       immediate: true
     },
-    currentValue (newValue, oldVal) {
-      const { tableConfig } = this._elProps
-      const { value } = this.dict
-      if (newValue) {
-        if (!tableConfig.multiple) {
-          if (newValue[0]) {
-            this.$emit('input', newValue[0][value])
-            this.$emit('change', newValue[0][value])
-          }
-        } else {
-          console.log(newValue)
-          const result = newValue.map((item) => {
-            return item[value]
-          })
-          this.$emit('input', result)
-          this.$emit('change', result)
-        }
-      }
-    }
+    // currentValue (newValue, oldVal) {
+    //   const { tableConfig } = this._elProps
+    //   const { value } = this.dict
+    //   if (newValue) {
+    //     if (!tableConfig.multiple) {
+    //       if (newValue[0]) {
+    //         this.$emit('input', newValue[0][value])
+    //         this.$emit('change', newValue[0][value])
+    //       }
+    //     } else {
+    //       console.log(newValue)
+    //       const result = newValue.map((item) => {
+    //         return item[value]
+    //       })
+    //       this.$emit('input', result)
+    //       this.$emit('change', result)
+    //     }
+    //   }
+    // }
   },
   mounted () {
     // 给currentValue设置初始值
@@ -256,11 +256,11 @@ export default {
           if (data.data && data.data.length > 0) {
             this.currentValue = data.data
           } else {
-            this.currentValue = null
+            this.currentValue = []
           }
         })
       } else {
-        this.currentValue = null
+        this.currentValue = []
       }
     },
     // 获取数据
