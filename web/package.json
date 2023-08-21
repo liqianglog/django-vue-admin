@@ -1,6 +1,6 @@
 {
   "name": "django-vue-admin",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "start": "npm run serve",

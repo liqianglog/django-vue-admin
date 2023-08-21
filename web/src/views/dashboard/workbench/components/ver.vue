@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     async getVer () {
-      this.ver = `v${process.env.VUE_APP_VERSION}` || 'v2.1.1'
+      this.ver = `v${process.env.VUE_APP_VERSION}` || 'v2.1.5'
       this.title = this.siteName || process.env.VUE_APP_TITLE
     },
     // 生成一个颜色

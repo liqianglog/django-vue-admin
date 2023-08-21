@@ -3,7 +3,7 @@
     <el-button size="small" type="success" icon="el-icon-upload" @click="handleImport">
       <slot>导入</slot>
     </el-button>
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body destroy-on-close>
       <div v-loading="loading">
         <el-upload
           ref="upload"
@@ -25,8 +25,11 @@
           <div slot="tip" class="el-upload__tip" style="color:red">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
         </el-upload>
         <div>
-          <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="importTemplate">下载导入模板</el-button>
-          <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="updateTemplate">批量更新模板</el-button>
+          <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="importTemplate">下载导入模板
+          </el-button>
+          <el-button type="warning" style="font-size:14px;margin-top: 20px" @click="updateTemplate" v-if="showUpdate">
+            批量更新模板
+          </el-button>
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -74,6 +77,12 @@ export default {
       type: Array,
       default () {
         return []
+      }
+    },
+    showUpdate: {
+      type: Boolean,
+      default () {
+        return true
       }
     }
   },
@@ -131,6 +140,8 @@ export default {
             that.refreshView()
           }
         })
+      }).finally(() => {
+        that.loading = false
       })
     },
     // 提交上传文件

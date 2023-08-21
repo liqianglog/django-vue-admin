@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import connection
 from django.core.cache import cache
 from dvadmin.utils.validator import CustomValidationError
+from django.db.models import Q
 
 dispatch_db_type = getattr(settings, 'DISPATCH_DB_TYPE', 'memory')  # redis
 
@@ -44,7 +45,7 @@ def _get_all_system_config():
     from dvadmin.system.models import SystemConfig
 
     system_config_obj = (
-        SystemConfig.objects.filter(parent_id__isnull=False)
+        SystemConfig.objects.filter(~Q(parent_id__form_item_type=11), parent_id__isnull=False)
         .values("parent__key", "key", "value", "form_item_type")
         .order_by("sort")
     )

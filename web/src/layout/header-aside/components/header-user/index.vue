@@ -9,6 +9,9 @@
       <span>
         当前租户：{{info.tenant_name}}
       </span>
+      <span style="color: #E6A23C;" v-if="info.tenant_id && info.tenant_id !== 100000" @click="clientInfo">
+        切换套餐
+      </span>
       <span class="btn-text">{{
       info.name ? `你好 ${info.name}` : "未登录"
     }}</span>
@@ -20,7 +23,7 @@
       <el-dropdown-item @click.native="userInfo">
         <d2-icon name="cog" class="d2-mr-5" />个人信息
       </el-dropdown-item>
-      <el-dropdown-item @click.native="clientInfo" v-if="info.tenant_id === 100000">
+      <el-dropdown-item @click.native="clientInfo" v-if="info.tenant_id && info.tenant_id !== 100000">
         <d2-icon name="cog" class="d2-mr-5" />租户信息
       </el-dropdown-item>
       <el-dropdown-item @click.native="logOff" divided>
