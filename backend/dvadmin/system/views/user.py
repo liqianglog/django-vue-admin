@@ -1,6 +1,6 @@
 import hashlib
 
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django_restql.fields import DynamicSerializerMethodField
 from rest_framework import serializers
 from rest_framework.decorators import action, permission_classes
@@ -175,7 +175,7 @@ class UserInfoUpdateSerializer(CustomModelSerializer):
 
     class Meta:
         model = Users
-        fields = ['email', 'mobile', 'avatar', 'name', 'gender']
+        fields = ['email', 'avatar', 'name', 'gender']
         extra_kwargs = {
             "post": {"required": False, "read_only": True},
         }
@@ -249,16 +249,16 @@ class UserViewSet(CustomModelViewSet):
     serializer_class = UserSerializer
     create_serializer_class = UserCreateSerializer
     update_serializer_class = UserUpdateSerializer
-    # filter_fields = ["name", "username", "gender", "is_active", "dept", "user_type"]
-    filter_fields = {
-        "name": ["exact"],
-        "mobile": ["exact"],
-        "username": ["exact"],
-        "gender": ["icontains"],
-        "is_active": ["icontains"],
-        "dept": ["exact"],
-        "user_type": ["exact"],
-    }
+    filter_fields = ["^name", "~username", "^mobile", "is_active", "dept", "user_type", "$dept__name"]
+    # filter_fields = {
+    #     "name": ["icontains"],
+    #     "mobile": ["iregex"],
+    #     "username": ["icontains"],
+    #     "is_active": ["icontains"],
+    #     "dept": ["exact"],
+    #     "user_type": ["exact"],
+    #     "dept__name": ["icontains"],
+    # }
     search_fields = ["username", "name", "gender", "dept__name", "role__name"]
     # 导出
     export_field_label = {
@@ -347,10 +347,10 @@ class UserViewSet(CustomModelViewSet):
             return ErrorResponse(msg="参数不能为空")
         if new_pwd != new_pwd2:
             return ErrorResponse(msg="两次密码不匹配")
-        check_password = request.user.check_password(old_pwd)
-        if not check_password:
-            check_password = request.user.check_password(hashlib.md5(old_pwd.encode(encoding='UTF-8')).hexdigest())
-        if check_password:
+        verify_password = check_password(old_pwd, self.request.user.password)
+        if not verify_password:
+            verify_password = check_password(hashlib.md5(old_pwd.encode(encoding='UTF-8')).hexdigest(), self.request.user.password)
+        if verify_password:
             request.user.password = make_password(new_pwd)
             request.user.save()
             return DetailResponse(data=None, msg="修改成功")

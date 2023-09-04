@@ -66,7 +66,7 @@ export default {
      * @param {Object} context
      * @param {Object} payload confirm {Boolean} 是否需要确认
      */
-    logout ({ commit, dispatch }, { confirm = false } = {}) {
+    logout ({ commit, dispatch }, { confirm = false, refresh = true } = {}) {
       /**
        * @description 注销
        */
@@ -87,7 +87,9 @@ export default {
 
         // 跳转路由
         router.push({ name: 'login' })
-        router.go(0)
+        if (refresh) {
+          router.go(0)
+        }
       }
       // 判断是否需要确认
       if (confirm) {

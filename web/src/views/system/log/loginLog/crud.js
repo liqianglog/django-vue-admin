@@ -239,7 +239,13 @@ export const crudOptions = (vm) => {
           disabled: false
         },
         dict: {
-          data: [{ label: '普通登录', value: 1 }, { label: '微信扫码登录', value: 2 }]
+          data: [
+            { label: '普通登录', value: 1 },
+            { label: '普通扫码登录', value: 2 },
+            { label: '微信扫码登录', value: 3 },
+            { label: '飞书扫码登录', value: 4 },
+            { label: '钉钉扫码登录', value: 5 },
+            { label: '短信登录', value: 6 }]
         },
         form: {
           component: {

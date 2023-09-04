@@ -1,10 +1,13 @@
 import hashlib
 import os
+from pathlib import PurePosixPath
 
 from django.contrib.auth.models import AbstractUser
+from django.core.files.base import File
 from django.db import models
 
 from application import dispatch
+from application.settings import BASE_DIR
 from dvadmin.utils.models import CoreModel, table_prefix
 
 STATUS_CHOICES = (
@@ -129,6 +132,7 @@ class Dept(CoreModel):
         null=True,
         blank=True,
         help_text="上级部门",
+        db_index=True
     )
 
     @classmethod
@@ -160,7 +164,7 @@ class Dept(CoreModel):
 class Menu(CoreModel):
     parent = models.ForeignKey(
         to="Menu",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         verbose_name="上级菜单",
         null=True,
         blank=True,
@@ -181,6 +185,7 @@ class Menu(CoreModel):
     component_name = models.CharField(max_length=50, verbose_name="组件名称", null=True, blank=True,
                                       help_text="组件名称")
     status = models.BooleanField(default=True, blank=True, verbose_name="菜单状态", help_text="菜单状态")
+    frame_out = models.BooleanField(default=False, blank=True, verbose_name="是否主框架外", help_text="是否主框架外")
     cache = models.BooleanField(default=False, blank=True, verbose_name="是否页面缓存", help_text="是否页面缓存")
     visible = models.BooleanField(default=True, blank=True, verbose_name="侧边栏中是否显示",
                                   help_text="侧边栏中是否显示")
@@ -297,20 +302,66 @@ class OperationLog(CoreModel):
 def media_file_name(instance, filename):
     h = instance.md5sum
     basename, ext = os.path.splitext(filename)
-    return os.path.join("files", h[0:1], h[1:2], h + ext.lower())
+    return PurePosixPath("files", h[:1], h[1:2], h + ext.lower())
 
 
 class FileList(CoreModel):
     name = models.CharField(max_length=200, null=True, blank=True, verbose_name="名称", help_text="名称")
-    url = models.FileField(upload_to=media_file_name)
+    url = models.FileField(upload_to=media_file_name, null=True, blank=True, )
+    file_url = models.CharField(max_length=255, blank=True, verbose_name="文件地址", help_text="文件地址")
+    engine = models.CharField(max_length=100, default='local', blank=True, verbose_name="引擎", help_text="引擎")
+    mime_type = models.CharField(max_length=100, blank=True, verbose_name="Mime类型", help_text="Mime类型")
+    size = models.BigIntegerField(default=0, blank=True, verbose_name="文件大小", help_text="文件大小")
     md5sum = models.CharField(max_length=36, blank=True, verbose_name="文件md5", help_text="文件md5")
 
+    @classmethod
+    def save_file(cls, request, file_path, file_name, mime_type):
+        # 保存到File model中
+        instance = FileList()
+        instance.name = file_name
+        instance.engine = dispatch.get_system_config_values("file_storage.file_engine") or 'local'
+        instance.file_url = os.path.join(file_path, file_name)
+        instance.mime_type = mime_type
+        instance.creator = request.user
+        instance.modifier = request.user.id
+        instance.dept_belong_id = request.user.dept_id
+
+        file_backup = dispatch.get_system_config_values("file_storage.file_backup")
+        file_engine = dispatch.get_system_config_values("file_storage.file_engine") or 'local'
+        if file_backup:
+            instance.url = os.path.join(file_path.replace('media/', ''), file_name)
+        if file_engine == 'oss':
+            from dvadmin_cloud_storage.views.aliyun import ali_oss_upload
+            with open(os.path.join(BASE_DIR, file_path, file_name), 'rb') as file:
+                file_path = ali_oss_upload(file, file_name=os.path.join(file_path.replace('media/', ''), file_name))
+                if file_path:
+                    instance.file_url = file_path
+                else:
+                    raise ValueError("上传失败")
+        elif file_engine == 'cos':
+            from dvadmin_cloud_storage.views.tencent import tencent_cos_upload
+            with open(os.path.join(BASE_DIR, file_path, file_name), 'rb') as file:
+                file_path = tencent_cos_upload(file, file_name=os.path.join(file_path.replace('media/', ''), file_name))
+                if file_path:
+                    instance.file_url = file_path
+                else:
+                    raise ValueError("上传失败")
+        else:
+            instance.url = os.path.join(file_path.replace('media/', ''), file_name)
+        instance.save()
+        return instance
+
     def save(self, *args, **kwargs):
-        if not self.md5sum:  # file is new
+        if not self.md5sum and self.url:  # file is new
             md5 = hashlib.md5()
             for chunk in self.url.chunks():
                 md5.update(chunk)
             self.md5sum = md5.hexdigest()
+        if not self.size and self.url:
+            self.size = self.url.size
+        if not self.file_url:
+            url = media_file_name(self, self.name)
+            self.file_url = f'media/{url}'
         super(FileList, self).save(*args, **kwargs)
 
     class Meta:
@@ -447,7 +498,8 @@ class LoginLog(CoreModel):
         (5, "钉钉扫码登录"),
         (6, "短信登录")
     )
-    username = models.CharField(max_length=150, verbose_name="登录用户名", null=True, blank=True, help_text="登录用户名")
+    username = models.CharField(max_length=150, verbose_name="登录用户名", null=True, blank=True,
+                                help_text="登录用户名")
     ip = models.CharField(max_length=32, verbose_name="登录ip", null=True, blank=True, help_text="登录ip")
     agent = models.TextField(verbose_name="agent信息", null=True, blank=True, help_text="agent信息")
     browser = models.CharField(max_length=200, verbose_name="浏览器名", null=True, blank=True, help_text="浏览器名")

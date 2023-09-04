@@ -1,15 +1,7 @@
-/*
- * @创建文件时间: 2021-06-01 22:41:21
- * @Auther: 猿小天
- * @最后修改人: 猿小天
- * @最后修改时间: 2021-11-19 21:35:56
- * 联系Qq:1638245306
- * @文件介绍: 菜单获取
- */
 import { uniqueId } from 'lodash'
 import { request } from '@/api/service'
 import XEUtils from 'xe-utils'
-import { frameInRoutes } from '@/router/routes'
+import { frameInRoutes, frameOutRoutes } from '@/router/routes'
 const _import = require('@/libs/util.import.' + process.env.NODE_ENV)
 const pluginImport = require('@/libs/util.import.plugin')
 /**
@@ -76,10 +68,15 @@ export const handleRouter = function (menuData) {
         meta: {
           title: item.name,
           auth: true,
-          cache: item.cache
+          cache: item.cache,
+          openInNewWindow: item.frame_out
         }
       }
-      result.push(obj)
+      if (item.frame_out) {
+        frameOutRoutes.push(obj)
+      } else {
+        result.push(obj)
+      }
     } else {
       if (item.is_link === 0) {
         delete item.path
@@ -87,7 +84,7 @@ export const handleRouter = function (menuData) {
     }
   }
   frameInRoutes[0].children = [...result]
-  return frameInRoutes
+  return { routes: frameInRoutes, frameOut: frameOutRoutes }
 }
 
 /**

@@ -114,7 +114,7 @@ class MenuInitSerializer(CustomModelSerializer):
     class Meta:
         model = Menu
         fields = ['name', 'icon', 'sort', 'is_link', 'is_catalog', 'web_path', 'component', 'component_name', 'status',
-                  'cache', 'visible', 'parent', 'children', 'menu_button', 'creator', 'dept_belong_id']
+                  'cache', 'visible', 'parent', 'children', 'menu_button', 'frame_out', 'creator', 'dept_belong_id']
         extra_kwargs = {
             'creator': {'write_only': True},
             'dept_belong_id': {'write_only': True}
@@ -137,7 +137,8 @@ class WebRouterSerializer(CustomModelSerializer):
         else:
             # 根据当前角色获取权限按钮id集合
             permissionIds = self.request.user.role.values_list('permission', flat=True)
-            queryset = instance.menuPermission.filter(id__in=permissionIds, menu=instance.id).values_list('value', flat=True)
+            queryset = instance.menuPermission.filter(id__in=permissionIds, menu=instance.id).values_list('value',
+                                                                                                          flat=True)
             if queryset:
                 return queryset
             else:
@@ -145,8 +146,9 @@ class WebRouterSerializer(CustomModelSerializer):
 
     class Meta:
         model = Menu
-        fields = ('id', 'parent', 'icon', 'sort', 'path', 'name', 'title', 'is_link', 'is_catalog', 'web_path', 'component',
-        'component_name', 'cache', 'visible', 'menuPermission')
+        fields = (
+        'id', 'parent', 'icon', 'sort', 'path', 'name', 'title', 'is_link', 'is_catalog', 'web_path', 'component',
+        'component_name', 'cache', 'visible', 'menuPermission', 'frame_out')
         read_only_fields = ["id"]
 
 
@@ -165,6 +167,7 @@ class MenuViewSet(CustomModelViewSet):
     update_serializer_class = MenuCreateSerializer
     search_fields = ['name', 'status']
     filter_fields = ['parent', 'name', 'status', 'is_link', 'visible', 'cache', 'is_catalog']
+
     # extra_filter_backends = []
 
     @action(methods=['GET'], detail=False, permission_classes=[])
@@ -179,7 +182,7 @@ class MenuViewSet(CustomModelViewSet):
         data = serializer.data
         return SuccessResponse(data=data, total=len(data), msg="获取成功")
 
-    def list(self,request):
+    def list(self, request):
         """懒加载"""
         params = request.query_params
         parent = params.get('parent', None)

@@ -1,5 +1,9 @@
 <template>
-  <el-card shadow="hover" header="欢迎" style="background: linear-gradient(150deg, #3b88ec 0%, #accaff 100%);color: #fff;">
+  <el-card
+    shadow="hover"
+    :header="config?.showHeader?.value ? '欢迎使用' : ''"
+    class="card-view"
+    :style="{background: randomColor(), color: config?.fontColor?.value}">
     <div class="welcome">
       <div class="logo">
         <img src="/image/django-vue-admin.png">
@@ -34,14 +38,40 @@
 
 <script>
 export default {
-  title: '欢迎',
+  sort: 11,
+  title: '欢迎使用',
+  name: 'welcome',
   icon: 'el-icon-present',
   description: '项目特色以及文档链接',
-  width: 8,
+  width: 16,
   height: 45,
-  minH: 45,
-  minW: 1,
   isResizable: true,
+  config: {
+    showHeader: {
+      label: '显示头部信息',
+      type: 'boot',
+      value: true,
+      placeholder: '颜色为空则随机变换颜色'
+    },
+    color: {
+      label: '背景颜色',
+      type: 'color',
+      value: '',
+      placeholder: '颜色为空则随机变换颜色'
+    },
+    fontColor: {
+      label: '字体颜色',
+      type: 'color',
+      value: '',
+      placeholder: '请选择字体颜色'
+    }
+  },
+  props: {
+    config: {
+      type: Object,
+      required: false
+    }
+  },
   data () {
     return {}
   },
@@ -54,13 +84,16 @@ export default {
       if (this.config?.color?.value) {
         return this.config.color.value
       }
-      return this.color || this.$util.randomColor()
+      return 'linear-gradient(150deg, #3b88ec 0%, #accaff 100%)'
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.card-view {
+  color: $color-primary;
+}
 .welcome .logo {
   text-align: center;
 }

@@ -35,16 +35,20 @@ import md5 from 'js-md5'
 // websocket
 import websocket from '@/api/websocket'
 import util from '@/libs/util'
-
-//引入echarts
-import * as echarts from "echarts" 
+import VueCoreVideoPlayer from 'vue-core-video-player'
+// 引入echarts
+import * as echarts from 'echarts' // 注册echarts组件
+// 第三方组件
+import VueClipboard from 'vue-clipboard2'
+Vue.use(VueClipboard)
+Vue.use(VueCoreVideoPlayer)
 // 核心插件
 Vue.use(d2Admin)
 Vue.use(VXETable)
 Vue.prototype.$md5 = md5
 Vue.prototype.$util = util
 Vue.prototype.$websocket = websocket
-Vue.prototype.$echarts = echarts //注册echarts组件
+Vue.prototype.$echarts = echarts
 new Vue({
   router,
   store,

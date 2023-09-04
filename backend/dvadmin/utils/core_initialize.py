@@ -3,10 +3,12 @@ import json
 import os
 
 from django.apps import apps
+from django.db import connection
 from rest_framework import request
 
 from application import settings
-from dvadmin.system.models import Users
+from application.dispatch import is_tenants_mode
+from dvadmin.system.models import Users, Menu
 
 
 class CoreInitialize:
@@ -30,11 +32,14 @@ class CoreInitialize:
 
     def init_base(self, Serializer, unique_fields=None):
         model = Serializer.Meta.model
+        if is_tenants_mode() and connection.tenant.schema_name !='public' and model._meta.model_name == 'menu':
+            # 超级租户模式下，取消初始化菜单
+            return
         path_file = os.path.join(apps.get_app_config(self.app.split('.')[-1]).path, 'fixtures',
                                  f'init_{Serializer.Meta.model._meta.model_name}.json')
         if not os.path.isfile(path_file):
             return
-        with open(path_file,encoding="utf-8") as f:
+        with open(path_file, encoding="utf-8") as f:
             for data in json.load(f):
                 filter_data = {}
                 # 配置过滤条件,如果有唯一标识字段则使用唯一标识字段，否则使用全部字段

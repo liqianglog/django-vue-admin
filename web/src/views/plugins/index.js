@@ -78,3 +78,40 @@ export const plugins = async function install (Vue, options) {
   window.pluginsAll = components
   return components
 }
+
+export const getStoreModules = function (Vue, options) {
+  // 获取每个插件的Store文件并进行注册
+  if (window.storeModules) return
+  const storeModules = {}
+  let components = []
+  components = components.concat(importAll(require.context('./', true, /index\.js$/)))
+  components = components.concat(importAll(require.context('@great-dream/', true, /index\.js$/)))
+  components = Array.from(new Set(components))
+  components.filter(async (key, index) => {
+    try {
+      const Module = require('@/views/plugins/' + key + '/src/store/index.js')
+      // 注册组件
+      if (Module.default) {
+        storeModules[Module.default.stateName || key] = Module.default
+        console.log(`[${key}]store注册成功`)
+        return true
+      }
+      return false
+    } catch (exception) {
+      try {
+        const Module = require('@great-dream/' + key + '/src/store/index.js')
+        // 注册组件
+        if (Module.default) {
+          storeModules[Module.default.stateName || key] = Module.default
+          console.log(`[${key}]store注册成功`)
+          return true
+        }
+        return false
+      } catch (exception) {
+        return false
+      }
+    }
+  })
+  window.storeModules = storeModules
+  return storeModules
+}

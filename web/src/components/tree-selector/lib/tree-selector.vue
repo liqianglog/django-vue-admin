@@ -306,7 +306,7 @@ export default {
     },
     itemClosed (item) {
       const newNodes = lodash.without(this.selected, item)
-      console.log('new value', item, newNodes)
+      // console.log('new value', item, newNodes)
       this.$set(this, 'selected', newNodes)
       this.doValueInputChanged(newNodes)
     },

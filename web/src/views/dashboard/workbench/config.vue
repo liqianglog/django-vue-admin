@@ -15,10 +15,11 @@
           :key="index"
           :rules="item.rules">
           <el-input v-if="item.type==='input'" v-model="item.value" :placeholder="item.placeholder || '请输入'"></el-input>
+          <el-switch v-if="item.type==='boot'" v-model="item.value" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
           <el-color-picker v-if="item.type==='color'" v-model="item.value" show-alpha :predefine="predefineColors"></el-color-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="deviceUpgradeDrawer = false">保存</el-button>
+          <el-button type="primary" @click="saveConfig">保存</el-button>
           <el-button @click="deviceUpgradeDrawer = false">关闭</el-button>
         </el-form-item>
       </el-form>
@@ -59,6 +60,10 @@ export default {
       this.myComp = myComp
       this.items = items
       console.log(1112, this.myComp, this.items)
+    },
+    saveConfig () {
+      this.deviceUpgradeDrawer = false
+      this.$emit('saveConfig', this.myComp, this.items)
     }
   }
 
