@@ -103,7 +103,7 @@ export const crudOptions = (vm) => {
       },
       {
         title: '被重码订单编号',
-        key: 'repetition_code_package_id',
+        key: 'repetition_code_package_order_id',
         width: 200,
         search: {
           disabled: false,
