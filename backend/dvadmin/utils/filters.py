@@ -111,8 +111,10 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
         # (2, "本部门数据权限"),
         # (3, "全部数据权限"),
         # (4, "自定数据权限")
-        replace_str = re.compile('\d')
-        re_api = replace_str.sub('{id}', api)
+        re_api = api
+        _pk = request.parser_context["kwargs"].get('pk')
+        if _pk: # 判断是否是单例查询
+            re_api = re.sub(_pk,'{id}', api)
         role_id_list = request.user.role.values_list('id', flat=True)
         role_permission_list=RoleMenuButtonPermission.objects.filter(
             role__in=role_id_list,
