@@ -50,7 +50,7 @@ export const createCrudOptions = function ({
 				width: 260,
 				buttons: {
 					view: {
-						show: false,
+						show: true,
 					},
 					edit: {
 						show: hasPermissions('role:Update'),
