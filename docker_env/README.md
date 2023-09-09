@@ -4,9 +4,9 @@
 
 ~~~sh
 # 编译打包到本地
-docker build -f ./docker_env/web/DockerfileBuild -t registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/dvadmin3-base-web:latest .
+docker build -f ./docker_env/web/DockerfileBuild -t registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/dvadmin3-base-web:16.19-alpine .
 # 上传到阿里云仓库
-docker push registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/dvadmin3-base-web:latest
+docker push registry.cn-zhangjiakou.aliyuncs.com/dvadmin-pro/dvadmin3-base-web:16.19-alpine
 
 ~~~
 
