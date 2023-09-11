@@ -1,9 +1,11 @@
 import { CrudOptions, AddReq, DelReq, EditReq, dict, CrudExpose, compute } from '@fast-crud/fast-crud';
 import * as api from './api';
 import { dictionary } from '/@/utils/dictionary';
+import { columnPermission } from '../../../utils/columnPermission';
 import { successMessage } from '../../../utils/message';
-import { inject } from 'vue';
+
 interface CreateCrudOptionsTypes {
+	output: any;
 	crudOptions: CrudOptions;
 }
 
@@ -12,10 +14,12 @@ export const createCrudOptions = function ({
 	crudExpose,
 	rolePermission,
 	handleDrawerOpen,
+	hasPermissions,
 }: {
 	crudExpose: CrudExpose;
 	rolePermission: any;
 	handleDrawerOpen: Function;
+	hasPermissions: Function;
 }): CreateCrudOptionsTypes {
 	const pageRequest = async (query: any) => {
 		return await api.GetList(query);
@@ -32,7 +36,6 @@ export const createCrudOptions = function ({
 	};
 
 	//权限判定
-	const hasPermissions: any = inject('$hasPermissions');
 
 	// @ts-ignore
 	// @ts-ignore
@@ -58,7 +61,7 @@ export const createCrudOptions = function ({
 					remove: {
 						show: hasPermissions('role:Delete'),
 					},
-					custom: {
+					/* custom: {
 						type: 'primary',
 						text: '权限配置',
 						show: hasPermissions('role:Update'),
@@ -73,10 +76,10 @@ export const createCrudOptions = function ({
 							rolePermission.value.editedRoleInfo = row;
 							rolePermission.value.initGet();
 						},
-					},
+					}, */
 					customNew: {
 						type: 'primary',
-						text: '权限配置新',
+						text: '权限配置',
 						show: hasPermissions('role:Update'),
 						tooltip: {
 							placement: 'top',
@@ -122,6 +125,13 @@ export const createCrudOptions = function ({
 					column: {
 						minWidth: 120,
 						sortable: 'custom',
+						show: columnPermission('name', 'is_query'),
+					},
+					addForm: {
+						show: columnPermission('name', 'is_create'),
+					},
+					editForm: {
+						show: columnPermission('name', 'is_update'),
 					},
 					form: {
 						rules: [{ required: true, message: '角色名称必填' }],
@@ -135,12 +145,22 @@ export const createCrudOptions = function ({
 					type: 'text',
 					search: { show: false },
 					column: {
-						width: 120,
+						minWidth: 120,
 						sortable: 'custom',
+						show: columnPermission('key', 'is_query'),
+						columnSetDisabled: true,
+					},
+					addForm: {
+						show: columnPermission('key', 'is_create'),
+					},
+					editForm: {
+						show: columnPermission('key', 'is_update'),
 					},
 					form: {
 						rules: [{ required: true, message: '权限标识必填' }],
-						placeholder: '输入权限标识',
+						component: {
+							placeholder: '输入权限标识',
+						},
 					},
 				},
 				sort: {
@@ -148,8 +168,15 @@ export const createCrudOptions = function ({
 					search: { show: false },
 					type: 'number',
 					column: {
-						width: 90,
+						minWidth: 90,
 						sortable: 'custom',
+						show: columnPermission('sort', 'is_query'),
+					},
+					addForm: {
+						show: columnPermission('sort', 'is_create'),
+					},
+					editForm: {
+						show: columnPermission('sort', 'is_update'),
 					},
 					form: {
 						rules: [{ required: true, message: '排序必填' }],
@@ -175,8 +202,15 @@ export const createCrudOptions = function ({
 						],
 					}),
 					column: {
-						width: 130,
+						minWidth: 130,
 						sortable: 'custom',
+						show: columnPermission('admin', 'is_query'),
+					},
+					addForm: {
+						show: columnPermission('admin', 'is_create'),
+					},
+					editForm: {
+						show: columnPermission('admin', 'is_update'),
 					},
 					form: {
 						rules: [{ required: true, message: '是否管理员必填' }],
@@ -202,6 +236,13 @@ export const createCrudOptions = function ({
 								};
 							}),
 						},
+						show: columnPermission('status', 'is_query'),
+					},
+					addForm: {
+						show: columnPermission('status', 'is_create'),
+					},
+					editForm: {
+						show: columnPermission('status', 'is_update'),
 					},
 					dict: dict({
 						data: dictionary('button_status_bool'),
@@ -212,8 +253,9 @@ export const createCrudOptions = function ({
 					type: 'text',
 					search: { show: false },
 					column: {
-						width: 170,
+						minWidth: 170,
 						sortable: 'custom',
+						show: columnPermission('update_datetime', 'is_query'),
 					},
 					form: {
 						show: false,
@@ -228,7 +270,8 @@ export const createCrudOptions = function ({
 					search: { show: false },
 					column: {
 						sortable: 'custom',
-						width: 170,
+						minWidth: 170,
+						show: columnPermission('create_datetime', 'is_query'),
 					},
 					form: {
 						show: false,
