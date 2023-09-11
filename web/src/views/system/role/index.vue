@@ -8,14 +8,14 @@
 
 		<permission ref="rolePermission"></permission>
 
-
-			<PermissionComNew  v-model:drawerVisible="drawerVisible" :roleId="roleId" :roleName="roleName"  @drawerClose="handleDrawerClose" />
-
+		<PermissionComNew v-model:drawerVisible="drawerVisible" :roleId="roleId" :roleName="roleName" @drawerClose="handleDrawerClose" />
 	</fs-page>
 </template>
 
 <script lang="ts" setup name="role">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, inject } from 'vue';
+import { useColumnPermission } from '/@/stores/columnPermission';
+import { GetPermission } from './api';
 import { useExpose, useCrud } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
 import permission from './components/PermissionCom/index.vue';
@@ -30,12 +30,17 @@ const rolePermission = ref();
 const crudRef = ref();
 // crud 配置的ref
 const crudBinding = ref();
-// 暴露的方法
-const { crudExpose } = useExpose({ crudRef, crudBinding });
 
-const handleDrawerOpen = (row:any) => {
-  roleId.value = row.id
-  roleName.value = row.name
+const hasPermissions: any = inject('$hasPermissions');
+
+const fetchColumnPermission = async () => {
+	const res = await GetPermission();
+	useColumnPermission().setPermissionData(res.data);
+};
+
+const handleDrawerOpen = (row: any) => {
+	roleId.value = row.id;
+	roleName.value = row.name;
 	drawerVisible.value = true;
 };
 
@@ -43,18 +48,24 @@ const handleDrawerClose = () => {
 	drawerVisible.value = false;
 };
 
-// 你的crud配置
-const { crudOptions } = createCrudOptions({ crudExpose, rolePermission, handleDrawerOpen });
+const { crudExpose } = useExpose({ crudRef, crudBinding });
 
-// 初始化crud配置
-const { resetCrudOptions } = useCrud({
-	crudExpose,
-	crudOptions,
-	context: {},
-});
 // 页面打开后获取列表数据
-onMounted(() => {
+onMounted(async () => {
+	await fetchColumnPermission();
+
+	// 你的crud配置
+	const { crudOptions } = createCrudOptions({ crudExpose, rolePermission, handleDrawerOpen, hasPermissions });
+
+	// 初始化crud配置
+	const { resetCrudOptions } = useCrud({
+		crudExpose,
+		crudOptions,
+		context: {},
+	});
+
 	crudExpose.doRefresh();
 });
+
 defineExpose(rolePermission);
 </script>
