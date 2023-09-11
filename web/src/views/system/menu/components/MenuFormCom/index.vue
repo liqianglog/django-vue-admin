@@ -23,6 +23,11 @@
 					style="width: 100%"
 				/>
 			</el-form-item>
+
+			<el-form-item label="路由地址" prop="web_path">
+				<el-input v-model="menuFormData.web_path" placeholder="请输入路由地址，请以/开头" />
+			</el-form-item>
+
 			<el-form-item label="图标" prop="icon">
 				<IconSelector clearable v-model="menuFormData.icon" />
 			</el-form-item>
@@ -60,10 +65,6 @@
 			<el-divider></el-divider>
 
 			<div style="min-height: 184px">
-				<el-form-item v-if="!menuFormData.is_catalog && !menuFormData.is_link" label="路由地址" prop="web_path">
-					<el-input v-model="menuFormData.web_path" placeholder="请输入路由地址，请以/开头" />
-				</el-form-item>
-
 				<el-form-item v-if="!menuFormData.is_catalog && !menuFormData.is_link" label="组件地址" prop="component">
 					<el-autocomplete
 						class="w-full"
