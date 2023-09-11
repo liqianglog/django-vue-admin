@@ -1,5 +1,5 @@
 <template>
-	<div class="dept-user-com-box dept-info">
+	<div v-show="!showCount" class="dept-user-com-box dept-info">
 		<div class="di-left">
 			<h3>{{ deptInfo.dept_name || '' }}</h3>
 			<div class="di-cell">
@@ -30,8 +30,15 @@
 		<div style="height: 180px; width: 380px" ref="deptCountBar"></div>
 		<div style="height: 180px; width: 200px" ref="deptSexPie"></div>
 	</div>
-	<fs-crud ref="crudRef" v-bind="crudBinding" customClass="dept-user-com-box dept-user-com-table">
-		<!-- -->
+
+	<fs-crud
+		ref="crudRef"
+		v-bind="crudBinding"
+		:customClass="!showCount ? 'dept-user-com-box dept-user-com-table' : 'dept-user-com-box dept-user-com-table-cover'"
+	>
+		<template #toolbar-left>
+			<el-button :icon="!showCount ? 'Hide' : 'View'" circle @click="showCount = !showCount"></el-button>
+		</template>
 		<template #actionbar-right>
 			<importExcel api="api/system/user/">导入 </importExcel>
 		</template>
@@ -63,6 +70,7 @@ let deptCountBar = ref();
 let deptSexPie = ref();
 let isShowChildFlag = ref(false);
 let deptInfo = ref<Partial<HeadDeptInfoType>>({});
+let showCount = ref(false);
 
 /**
  * 初始化顶部部门折线图
@@ -212,6 +220,9 @@ const { resetCrudOptions } = useCrud({
 }
 .dept-user-com-table {
 	height: calc(100% - 200px);
+}
+.dept-user-com-table-cover {
+	height: 100%;
 }
 .dept-info {
 	width: 100%;

@@ -74,7 +74,7 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 				container: {
 					action: {
 						col: {
-							span: 6,
+							span: 10,
 						},
 					},
 				},
