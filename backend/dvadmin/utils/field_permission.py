@@ -23,7 +23,16 @@ class FieldPermissionMixin:
                 break
         if finded is False:
             return []
-        data= Columns.objects.filter(
-            app=model['app'], model=model['model']
-        ).values('field_name', 'is_create', 'is_query', 'is_update')
+        roles = request.user.role.values_list('id', flat=True)
+        user = request.user
+        if user.is_superuser==1:
+            data = Columns.objects.filter(app=model['app'], model=model['model']).values('field_name', 'is_create', 'is_query', 'is_update')
+            for item in data:
+                item['is_create'] = True
+                item['is_query'] = True
+                item['is_update'] = True
+        else:
+            data= Columns.objects.filter(
+                app=model['app'], model=model['model'],role__in=roles
+            ).values('field_name', 'is_create', 'is_query', 'is_update')
         return DetailResponse(data=data)
