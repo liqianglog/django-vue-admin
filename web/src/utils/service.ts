@@ -25,13 +25,13 @@ function createService() {
 				interface paramsObj {
 					[key: string]: any;
 				}
-				let result:paramsObj = {};
+				let result: paramsObj = {};
 				for (const [key, value] of Object.entries(params)) {
 					if (value !== '') {
 						result[key] = value;
 					}
-					if(typeof value === 'boolean'){
-						result[key] = value? 'True': 'False';
+					if (typeof value === 'boolean') {
+						result[key] = value ? 'True' : 'False';
 					}
 				}
 				return qs.stringify(result);
@@ -96,7 +96,7 @@ function createService() {
 						return dataAxios;
 					case 4000:
 						errorCreate(`${dataAxios.msg}: ${response.config.url}`);
-						return Promise.reject(dataAxios.msg);
+						return dataAxios;
 					default:
 						// 不是正确的 code
 						errorCreate(`${dataAxios.msg}: ${response.config.url}`);
@@ -202,14 +202,14 @@ export const requestForMock = createRequestFunction(serviceForMock);
  * @param method
  * @param filename
  */
-export const downloadFile = function ({url,params,method,filename = '文件导出'}:any) {
+export const downloadFile = function ({ url, params, method, filename = '文件导出' }: any) {
 	request({
 		url: url,
 		method: method,
 		params: params,
 		responseType: 'blob'
 		// headers: {Accept: 'application/vnd.openxmlformats-officedocument'}
-	}).then((res:any) => {
+	}).then((res: any) => {
 		const xlsxName = window.decodeURI(res.headers['content-disposition'].split('=')[1])
 		const fileName = xlsxName || `${filename}.xlsx`
 		if (res) {

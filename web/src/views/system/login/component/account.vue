@@ -1,41 +1,31 @@
 <template>
 	<el-form size="large" class="login-content-form">
 		<el-form-item class="login-animation1">
-			<el-input type="text" :placeholder="$t('message.account.accountPlaceholder1')" v-model="ruleForm.username" clearable autocomplete="off">
+			<el-input type="text" :placeholder="$t('message.account.accountPlaceholder1')" v-model="ruleForm.username"
+				clearable autocomplete="off">
 				<template #prefix>
 					<el-icon class="el-input__icon"><ele-User /></el-icon>
 				</template>
 			</el-input>
 		</el-form-item>
 		<el-form-item class="login-animation2">
-			<el-input
-				:type="isShowPassword ? 'text' : 'password'"
-				:placeholder="$t('message.account.accountPlaceholder2')"
-				v-model="ruleForm.password"
-			>
+			<el-input :type="isShowPassword ? 'text' : 'password'" :placeholder="$t('message.account.accountPlaceholder2')"
+				v-model="ruleForm.password">
 				<template #prefix>
 					<el-icon class="el-input__icon"><ele-Unlock /></el-icon>
 				</template>
 				<template #suffix>
-					<i
-						class="iconfont el-input__icon login-content-password"
+					<i class="iconfont el-input__icon login-content-password"
 						:class="isShowPassword ? 'icon-yincangmima' : 'icon-xianshimima'"
-						@click="isShowPassword = !isShowPassword"
-					>
+						@click="isShowPassword = !isShowPassword">
 					</i>
 				</template>
 			</el-input>
 		</el-form-item>
 		<el-form-item class="login-animation3" v-if="isShowCaptcha">
 			<el-col :span="15">
-				<el-input
-					type="text"
-					maxlength="4"
-					:placeholder="$t('message.account.accountPlaceholder3')"
-					v-model="ruleForm.captcha"
-					clearable
-					autocomplete="off"
-				>
+				<el-input type="text" maxlength="4" :placeholder="$t('message.account.accountPlaceholder3')"
+					v-model="ruleForm.captcha" clearable autocomplete="off">
 					<template #prefix>
 						<el-icon class="el-input__icon"><ele-Position /></el-icon>
 					</template>
@@ -49,7 +39,8 @@
 			</el-col>
 		</el-form-item>
 		<el-form-item class="login-animation4">
-			<el-button type="primary" class="login-content-submit" round @click.enter="loginClick" :loading="loading.signIn">
+			<el-button type="primary" class="login-content-submit" round @click.enter="loginClick"
+				:loading="loading.signIn">
 				<span>{{ $t('message.account.accountBtnText') }}</span>
 			</el-button>
 		</el-form-item>
@@ -201,6 +192,7 @@ export default defineComponent({
 <style scoped lang="scss">
 .login-content-form {
 	margin-top: 20px;
+
 	@for $i from 1 through 4 {
 		.login-animation#{$i} {
 			opacity: 0;
@@ -210,20 +202,24 @@ export default defineComponent({
 			animation-delay: calc($i/10) + s;
 		}
 	}
+
 	.login-content-password {
 		display: inline-block;
 		width: 20px;
 		cursor: pointer;
+
 		&:hover {
 			color: #909399;
 		}
 	}
+
 	.login-content-captcha {
 		width: 100%;
 		padding: 0;
 		font-weight: bold;
 		letter-spacing: 5px;
 	}
+
 	.login-content-submit {
 		width: 100%;
 		letter-spacing: 2px;
