@@ -1,6 +1,6 @@
 <template>
-	<el-form size="large" class="login-content-form">
-		<el-form-item class="login-animation1">
+	<el-form ref="formRef" size="large" class="login-content-form" :model="state.ruleForm" :rules="rules">
+		<el-form-item class="login-animation1" prop="username">
 			<el-input type="text" :placeholder="$t('message.account.accountPlaceholder1')" v-model="ruleForm.username"
 				clearable autocomplete="off">
 				<template #prefix>
@@ -8,7 +8,7 @@
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item class="login-animation2">
+		<el-form-item class="login-animation2" prop="password">
 			<el-input :type="isShowPassword ? 'text' : 'password'" :placeholder="$t('message.account.accountPlaceholder2')"
 				v-model="ruleForm.password">
 				<template #prefix>
@@ -22,7 +22,7 @@
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item class="login-animation3" v-if="isShowCaptcha">
+		<el-form-item class="login-animation3" v-if="isShowCaptcha" prop="captcha">
 			<el-col :span="15">
 				<el-input type="text" maxlength="4" :placeholder="$t('message.account.accountPlaceholder3')"
 					v-model="ruleForm.captcha" clearable autocomplete="off">
@@ -39,7 +39,7 @@
 			</el-col>
 		</el-form-item>
 		<el-form-item class="login-animation4">
-			<el-button type="primary" class="login-content-submit" round @click.enter="loginClick"
+			<el-button type="primary" class="login-content-submit" round @keyup.enter="loginClick" @click="loginClick"
 				:loading="loading.signIn">
 				<span>{{ $t('message.account.accountBtnText') }}</span>
 			</el-button>
@@ -48,9 +48,9 @@
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, defineComponent, computed, onMounted, onUnmounted } from 'vue';
+import { toRefs, reactive, defineComponent, computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { ElMessage } from 'element-plus';
+import { ElMessage, FormInstance, FormRules } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 import Cookies from 'js-cookie';
 import { storeToRefs } from 'pinia';
@@ -66,6 +66,7 @@ import { DictionaryStore } from '/@/stores/dictionary';
 import { SystemConfigStore } from '/@/stores/systemConfig';
 import { BtnPermissionStore } from '/@/plugin/permission/store.permission';
 import { Md5 } from 'ts-md5';
+import { errorMessage } from '/@/utils/message';
 
 export default defineComponent({
 	name: 'loginAccount',
@@ -89,6 +90,26 @@ export default defineComponent({
 				signIn: false,
 			},
 		});
+		const rules = reactive<FormRules>({
+			username: [
+				{ required: true, message: '请填写账号', trigger: 'blur' },
+			],
+			password: [
+				{
+					required: true,
+					message: '请填写密码',
+					trigger: 'blur',
+				},
+			],
+			captcha: [
+				{
+					required: true,
+					message: '请填写验证码',
+					trigger: 'blur',
+				},
+			],
+		})
+		const formRef = ref();
 		// 时间获取
 		const currentTime = computed(() => {
 			return formatAxis(new Date());
@@ -111,36 +132,40 @@ export default defineComponent({
 			});
 		};
 		const loginClick = async () => {
-			loginApi.login({ ...state.ruleForm, password: Md5.hashStr(state.ruleForm.password) }).then((res: any) => {
-				if (res.code === 2000) {
-					Session.set('token', res.data.access);
-					Cookies.set('username', res.data.name);
-					if (!themeConfig.value.isRequestRoutes) {
-						// 前端控制路由，2、请注意执行顺序
-						initFrontEndControlRoutes();
-						loginSuccess();
-					} else {
-						// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
-						// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
-						initBackEndControlRoutes();
-						// 执行完 initBackEndControlRoutes，再执行 signInSuccess
-						loginSuccess();
-					}
-				} else if (res.code === 4000) {
-					// 登录错误之后，刷新验证码
-					refreshCaptcha();
+			if (!formRef.value) return
+			await formRef.value.validate((valid: any) => {
+				if (valid) {
+					loginApi.login({ ...state.ruleForm, password: Md5.hashStr(state.ruleForm.password) }).then((res: any) => {
+						if (res.code === 2000) {
+							Session.set('token', res.data.access);
+							Cookies.set('username', res.data.name);
+							if (!themeConfig.value.isRequestRoutes) {
+								// 前端控制路由，2、请注意执行顺序
+								initFrontEndControlRoutes();
+								loginSuccess();
+							} else {
+								// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
+								// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
+								initBackEndControlRoutes();
+								// 执行完 initBackEndControlRoutes，再执行 signInSuccess
+								loginSuccess();
+							}
+						} else if (res.code === 4000) {
+							// 登录错误之后，刷新验证码
+							refreshCaptcha();
+						}
+					});
+				} else {
+					errorMessage("请填写登录信息")
 				}
-			});
+			})
+
 		};
 		const getUserInfo = () => {
 			useUserInfo().setUserInfos();
 		};
 
-		const enterClickLogin = (e: any) => {
-			if (e.keyCode == 13 || e.keyCode == 100) {
-				loginClick();
-			}
-		};
+
 		// 登录成功后的跳转
 		const loginSuccess = () => {
 			//登录成功获取用户信息,获取系统字典数据
@@ -172,17 +197,17 @@ export default defineComponent({
 			getCaptcha();
 			//获取系统配置
 			SystemConfigStore().getSystemConfigs();
-			// window.addEventListener('keyup', enterClickLogin, false);
 		});
-		onUnmounted(() => {
-			// window.removeEventListener('keyup', enterClickLogin, false);
-		});
+
 
 		return {
 			refreshCaptcha,
 			loginClick,
 			loginSuccess,
 			isShowCaptcha,
+			state,
+			formRef,
+			rules,
 			...toRefs(state),
 		};
 	},
