@@ -364,7 +364,7 @@ Vue.prototype.commonEndColumns = function (param = {}) {
       width: 160,
       search: {
         disabled: !showData.create_datetime.showForm,
-        width: 240,
+        width: 380,
         component: { // 查询框组件配置，默认根据form配置生成
           name: 'el-date-picker',
           props: {

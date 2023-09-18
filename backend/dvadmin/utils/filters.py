@@ -358,7 +358,6 @@ class CustomDjangoFilterBackend(DjangoFilterBackend):
                     query = Q(**{orm_lookup: filterset.data[search_term_key]})
                     queries.append(query)
                 elif filterset_data_len == 2:
-                    orm_lookup += '__range'
                     query = Q(**{orm_lookup: filterset.data.getlist(search_term_key)})
                     queries.append(query)
             if len(queries) > 0:
