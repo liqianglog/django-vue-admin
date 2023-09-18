@@ -89,14 +89,14 @@ if (oauth2PluginsType) {
 /**
  * 租户申请注册
  */
-const tenantsPluginsType = checkPlugins('dvadmin-tenants-web')
-if (tenantsPluginsType) {
-  frameOut.push({
-    path: '/register',
-    name: 'tenantsRegister',
-    component: tenantsPluginsType === 'local' ? _import('plugins/dvadmin-tenants-web/src/register/index') : pluginImport('dvadmin-tenants-web/src/register/index')
-  })
-}
+// const tenantsPluginsType = checkPlugins('dvadmin-tenants-web')
+// if (tenantsPluginsType) {
+//   frameOut.push({
+//     path: '/register',
+//     name: 'tenantsRegister',
+//     component: tenantsPluginsType === 'local' ? _import('plugins/dvadmin-tenants-web/src/register/index') : pluginImport('dvadmin-tenants-web/src/register/index')
+//   })
+// }
 /**
  * 错误页面
  */
