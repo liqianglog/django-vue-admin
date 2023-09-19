@@ -6,6 +6,7 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from django.db import connection
+from django.db.models import Q
 from application import dispatch
 from dvadmin.system.models import Users, Role, Dept
 from dvadmin.system.views.role import RoleSerializer
@@ -233,7 +234,7 @@ class UserViewSet(CustomModelViewSet):
     create_serializer_class = UserCreateSerializer
     update_serializer_class = UserUpdateSerializer
     filter_fields = ["name", "username", "gender", "is_active", "dept", "user_type"]
-    search_fields = ["username", "name", "gender", "dept__name", "role__name"]
+    search_fields = ["username", "name", "dept__name", "role__name"]
     # 导出
     export_field_label = {
         "username": "用户账号",
@@ -383,7 +384,17 @@ class UserViewSet(CustomModelViewSet):
                     inner(i)
             if dept_id != '':
                 inner(dept_id)
-                queryset = Users.objects.filter(dept_id__in=all_did)
+                searchs = [
+                    Q(**{f+'__icontains':i})
+                    for f in self.search_fields
+                ] if (i:=request.query_params.get('search')) else []
+                q_obj = []
+                if searchs:
+                    q = searchs[0]
+                    for i in searchs[1:]:
+                        q |= i
+                    q_obj.append(Q(q))
+                queryset = Users.objects.filter(*q_obj, dept_id__in=all_did)
             else:
                 queryset = self.filter_queryset(self.get_queryset())
         else:
