@@ -184,7 +184,7 @@ class ImportSerializerMixin:
             value = items[1]
             if isinstance(value, dict):
                 header_data.append(value.get("title"))
-                hidden_header.append(value.get('display'))
+                hidden_header.append(value.get('display') or key)
                 choices = value.get("choices", {})
                 if choices.get("data"):
                     data_list = []
@@ -213,7 +213,7 @@ class ImportSerializerMixin:
                 ws1[f"{get_column_letter(index + 1)}{inx + 2}"] = ele
         #--------
         df_len_max = [self.get_string_len(ele) for ele in header_data]
-        row = get_column_letter(len(hidden_header) + 1)
+        row = get_column_letter(len(hidden_header))
         column = 1
         ws.append(header_data)
         for index, results in enumerate(data):
@@ -221,6 +221,24 @@ class ImportSerializerMixin:
             for h_index, h_item in enumerate(hidden_header):
                 for key, val in results.items():
                     if key == h_item:
+
+                        select_field = self.import_field_dict.get(key) if key in self.import_field_dict.keys() else None
+
+                        choices = (
+                            select_field.get("choices", {}) if select_field and isinstance(select_field, dict) else {}
+                        )
+                        if choices.get("data"):
+                            for k, v in choices.get("data").items():
+                                if v == val:
+                                    val = k
+                        elif choices.get("queryset") and choices.get("values_name"):
+                            data_list = choices.get("queryset").values(choices.get("values_name"), "id")
+                            join_vals = []
+                            for ele in data_list:
+                                if ele.get("id") == val or (isinstance(val, list) and ele.get("id") in val):
+                                    join_vals.append(ele.get(choices.get("values_name")))
+                            val = ",".join(join_vals)
+
                         if val is None or val == "":
                             results_list.append("")
                         elif isinstance(val,list):

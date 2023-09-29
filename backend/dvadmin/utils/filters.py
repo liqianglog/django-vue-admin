@@ -425,9 +425,9 @@ def next_layer_data(qs_filter, qs_node):
                 parent_ids.add(node.parent.id)
                 break
             node = node.parent
-    # print(f"过滤查询集           ==>         {qs_filter}", flush=True)
+    # print(f"过滤查询集            ==>         {qs_filter}", flush=True)
     # print(f"待渲染节点的id        ==>         {parent_nodes=}", flush=True)
-    # print(f"过滤查询集的父节点id   ==>         {parent_ids=}", flush=True)
+    # print(f"过滤查询集的父节点id  ==>         {parent_ids=}", flush=True)
     return parent_ids
 
 
