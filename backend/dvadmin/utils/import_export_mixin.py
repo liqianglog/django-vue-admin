@@ -28,7 +28,7 @@ class ImportSerializerMixin:
     # 表格表头最大宽度，默认50个字符
     export_column_width = 50
 
-    def is_number(self,num):
+    def is_number(self, num):
         try:
             float(num)
             return True
@@ -37,6 +37,7 @@ class ImportSerializerMixin:
 
         try:
             import unicodedata
+
             unicodedata.numeric(num)
             return True
         except (TypeError, ValueError):
@@ -58,7 +59,7 @@ class ImportSerializerMixin:
             length += 2.1 if ord(char) > 256 else 1
         return round(length, 1) if length <= self.export_column_width else self.export_column_width
 
-    @action(methods=['get','post'],detail=False)
+    @action(methods=['get', 'post'], detail=False)
     @transaction.atomic  # Django 事务,防止出错
     def import_data(self, request: Request, *args, **kwargs):
         """
@@ -146,10 +147,10 @@ class ImportSerializerMixin:
                 for ele in queryset.model._meta.get_fields()
                 if hasattr(ele, "many_to_many") and ele.many_to_many == True
             ]
-            import_field_dict = {'id':'更新主键(勿改)',**self.import_field_dict}
+            import_field_dict = {'id': '更新主键(勿改)', **self.import_field_dict}
             data = import_to_data(request.data.get("url"), import_field_dict, m2m_fields)
             for ele in data:
-                filter_dic = {'id':ele.get('id')}
+                filter_dic = {'id': ele.get('id')}
                 instance = filter_dic and queryset.filter(**filter_dic).first()
                 # print(156,ele)
                 serializer = self.import_serializer_class(instance, data=ele, request=request)
@@ -157,8 +158,8 @@ class ImportSerializerMixin:
                 serializer.save()
             return DetailResponse(msg=f"导入成功！")
 
-    @action(methods=['get'],detail=False)
-    def update_template(self,request):
+    @action(methods=['get'], detail=False)
+    def update_template(self, request):
         queryset = self.filter_queryset(self.get_queryset())
         assert self.import_field_dict, "'%s' 请配置对应的导入模板字段。" % self.__class__.__name__
         assert self.import_serializer_class, "'%s' 请配置对应的导入序列化器。" % self.__class__.__name__
@@ -174,9 +175,9 @@ class ImportSerializerMixin:
         ws1.sheet_state = "hidden"
         ws = wb.active
         import_field_dict = {}
-        header_data = ["序号","更新主键(勿改)"]
-        hidden_header = ["#","id"]
-        #----设置选项----
+        header_data = ["序号", "更新主键(勿改)"]
+        hidden_header = ["#", "id"]
+        # ----设置选项----
         validation_data_dict = {}
         for index, item in enumerate(self.import_field_dict.items()):
             items = list(item)
@@ -211,7 +212,7 @@ class ImportSerializerMixin:
         for index, validation_data in enumerate(validation_data_dict.values()):
             for inx, ele in enumerate(validation_data):
                 ws1[f"{get_column_letter(index + 1)}{inx + 2}"] = ele
-        #--------
+        # --------
         df_len_max = [self.get_string_len(ele) for ele in header_data]
         row = get_column_letter(len(hidden_header))
         column = 1
@@ -221,7 +222,6 @@ class ImportSerializerMixin:
             for h_index, h_item in enumerate(hidden_header):
                 for key, val in results.items():
                     if key == h_item:
-
                         select_field = self.import_field_dict.get(key) if key in self.import_field_dict.keys() else None
 
                         choices = (
@@ -229,7 +229,7 @@ class ImportSerializerMixin:
                         )
                         if choices.get("data"):
                             for k, v in choices.get("data").items():
-                                if v == val:
+                                if str(v) == str(val):
                                     val = k
                         elif choices.get("queryset") and choices.get("values_name"):
                             data_list = choices.get("queryset").values(choices.get("values_name"), "id")
@@ -241,16 +241,16 @@ class ImportSerializerMixin:
 
                         if val is None or val == "":
                             results_list.append("")
-                        elif isinstance(val,list):
+                        elif isinstance(val, list):
                             results_list.append(str(val))
                         else:
                             results_list.append(val)
                         # 计算最大列宽度
-                        if isinstance(val,str):
+                        if isinstance(val, str):
                             result_column_width = self.get_string_len(val)
                             if h_index != 0 and result_column_width > df_len_max[h_index]:
                                 df_len_max[h_index] = result_column_width
-            ws.append([index+1,*results_list])
+            ws.append([index + 1, *results_list])
             column += 1
         # 　更新列宽
         for index, width in enumerate(df_len_max):
@@ -281,7 +281,7 @@ class ExportSerializerMixin:
     # 表格表头最大宽度，默认50个字符
     export_column_width = 50
 
-    def is_number(self,num):
+    def is_number(self, num):
         try:
             float(num)
             return True
@@ -290,6 +290,7 @@ class ExportSerializerMixin:
 
         try:
             import unicodedata
+
             unicodedata.numeric(num)
             return True
         except (TypeError, ValueError):
@@ -311,7 +312,7 @@ class ExportSerializerMixin:
             length += 2.1 if ord(char) > 256 else 1
         return round(length, 1) if length <= self.export_column_width else self.export_column_width
 
-    @action(methods=['get'],detail=False)
+    @action(methods=['get'], detail=False)
     def export_data(self, request: Request, *args, **kwargs):
         """
         导出功能
@@ -339,15 +340,15 @@ class ExportSerializerMixin:
         for index, results in enumerate(data):
             results_list = []
             for h_index, h_item in enumerate(hidden_header):
-                for key,val in results.items():
+                for key, val in results.items():
                     if key == h_item:
-                        if val is None or val=="":
+                        if val is None or val == "":
                             results_list.append("")
                         else:
                             results_list.append(val)
                         # 计算最大列宽度
                         result_column_width = self.get_string_len(val)
-                        if h_index !=0 and result_column_width > df_len_max[h_index]:
+                        if h_index != 0 and result_column_width > df_len_max[h_index]:
                             df_len_max[h_index] = result_column_width
             ws.append([index + 1, *results_list])
             column += 1
