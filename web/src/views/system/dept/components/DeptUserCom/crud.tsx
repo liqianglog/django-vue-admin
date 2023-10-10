@@ -103,6 +103,7 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 						},
 						click: (ctx: any) => {
 							const { row } = ctx;
+							context?.handleResetPwdOpen(row);
 						},
 					},
 				},
