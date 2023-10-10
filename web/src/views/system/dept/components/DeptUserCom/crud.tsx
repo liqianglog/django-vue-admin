@@ -72,6 +72,7 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 			},
 			search: {
 				container: {
+					layout: 'multi-line',
 					action: {
 						col: {
 							span: 10,
