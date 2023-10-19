@@ -50,7 +50,7 @@ export const createCrudOptions = function ({
 			rowHandle: {
 				//固定右侧
 				fixed: 'right',
-				width: 260,
+				width: 320,
 				buttons: {
 					view: {
 						show: true,

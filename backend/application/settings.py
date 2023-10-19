@@ -44,6 +44,9 @@ DEBUG = locals().get("DEBUG", True)
 ALLOWED_HOSTS = locals().get("ALLOWED_HOSTS", ["*"])
 
 # Application definition
+CUSTOM_APPS = [
+    "dvadmin.system",
+]
 
 INSTALLED_APPS = [
     "django.contrib.auth",
