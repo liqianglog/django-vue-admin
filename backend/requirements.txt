@@ -1,5 +1,5 @@
 Django==4.2.6
-jango-comment-migrate==0.1.7
+django-comment-migrate==0.1.7
 django-cors-headers==4.3.0
 django-filter==23.3
 django-ranged-response==0.2.0
