@@ -64,8 +64,9 @@
         />
       </div>
       <div slot="reference" ref="divRef" :style="{'pointerEvents': disabled?'none':''}">
-        <div v-if="currentValue.length>0" class="div-input el-input__inner" :class="disabled?'div-disabled':''">
-          <div v-if="currentValue instanceof Array">
+        <div v-if="currentValue.length>0" ref="tagDiv" class="div-input el-input__inner" :class="disabled?'div-disabled':''">
+          <div  v-if="currentValue instanceof Array"  ref="elTags">
+            <transition-group @after-leave="resetInputHeight" >
             <el-tag
               style="margin-right: 5px"
               v-for="(item,index) in currentValue"
@@ -79,6 +80,7 @@
             >
               <span>{{ item[dict.label] }}</span>
             </el-tag>
+            </transition-group>
           </div>
         </div>
         <el-input v-else placeholder="请选择" slot:reference clearable :disabled="disabled" :size="size"></el-input>
@@ -203,13 +205,17 @@ export default {
     // 设置显示值
     setCurrentValue (val) {
       const params = {}
+      let { url, value, label } = this.dict
       if (this._elProps.tableConfig.pagination) {
-        params.page = this.pageConfig.page
-        params.limit = this.pageConfig.limit
+        if (url.indexOf('page') === -1) {
+          params.page = this._elProps.tableConfig.page || this.pageConfig.page
+        }
+        if (url.indexOf('limit') === -1) {
+          params.limit = this._elProps.tableConfig.limit || this.pageConfig.limit
+        }
       }
       if (val && val.toString().length > 0) {
         // 在这里对 传入的value值做处理
-        let { url, value, label } = this.dict
         params[value] = val
         const queryList = ['id', label, value]
         this._elProps.tableConfig.columns.map(res => {
@@ -230,8 +236,8 @@ export default {
           this.pageConfig.limit = limit
           this.pageConfig.total = total
           if (data.data && data.data.length > 0) {
-            console.log(data.data)
             this.currentValue = data.data
+            this.resetInputHeight()
           } else {
             this.currentValue = []
           }
@@ -327,6 +333,7 @@ export default {
       }
       this.$emit('input', result)
       this.$emit('change', result)
+      this.resetInputHeight()
     },
     /**
      * 表格单选
@@ -378,6 +385,20 @@ export default {
         // this.$emit('input', result)
         // this.$emit('change', result)
       }
+    },
+    resetInputHeight () {
+      this.$nextTick(() => {
+        const tagDiv = this.$refs.tagDiv
+        const elTags = this.$refs.elTags
+        const sizeInMap = this.initialInputHeight || 40
+        const height = this.currentValue.length === 0
+          ? sizeInMap + 'px'
+          : Math.max(
+            elTags ? (elTags.clientHeight + (elTags.clientHeight > sizeInMap ? 4 : 0)) : 0,
+            sizeInMap
+          ) + 'px'
+        tagDiv.style.height = height
+      })
     }
   }
 }
