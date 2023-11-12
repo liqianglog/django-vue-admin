@@ -11,6 +11,7 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 from rest_framework.decorators import action
 from rest_framework.request import Request
 
+from application import dispatch
 from dvadmin.utils.import_export import import_to_data
 from dvadmin.utils.json_response import DetailResponse
 from dvadmin.utils.request_util import get_verbose_name
@@ -148,7 +149,15 @@ class ImportSerializerMixin:
                 if hasattr(ele, "many_to_many") and ele.many_to_many == True
             ]
             import_field_dict = {'id': '更新主键(勿改)', **self.import_field_dict}
-            data = import_to_data(request.data.get("url"), import_field_dict, m2m_fields)
+            url = request.data.get("url")
+            aliyun_cdn_url = dispatch.get_system_config_values("file_storage.aliyun_cdn_url")
+            file_engine = dispatch.get_system_config_values("file_storage.file_engine") or 'local'
+            if file_engine == 'oss':
+                if aliyun_cdn_url and url.startswith(aliyun_cdn_url):
+                    if aliyun_cdn_url[-1] != '/':
+                        aliyun_cdn_url = f"{aliyun_cdn_url}/"
+                    url = url.replace(aliyun_cdn_url, '')
+            data = import_to_data(url, import_field_dict, m2m_fields)
             for ele in data:
                 filter_dic = {'id': ele.get('id')}
                 instance = filter_dic and queryset.filter(**filter_dic).first()
