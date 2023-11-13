@@ -44,6 +44,4 @@ LOGIN_NO_CAPTCHA_AUTH = True
 # ================================================= #
 
 ALLOWED_HOSTS = ["*"]
-CUSTOM_APPS = [
-    "dvadmin.system",
-]
+CUSTOM_APPS = []

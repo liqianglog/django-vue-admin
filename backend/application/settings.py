@@ -46,7 +46,7 @@ ALLOWED_HOSTS = locals().get("ALLOWED_HOSTS", ["*"])
 # Application definition
 CUSTOM_APPS = [
     "dvadmin.system",
-]
+] + CUSTOM_APPS
 
 INSTALLED_APPS = [
     "django.contrib.auth",
@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "captcha",
     'channels',
-    *locals().get("CUSTOM_APPS", []),  # 所有项目里写的app需要在env.py文件里的CUSTOM_APPS中
+    *CUSTOM_APPS,
 ]
 
 MIDDLEWARE = [
