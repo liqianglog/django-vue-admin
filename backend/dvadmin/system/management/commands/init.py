@@ -23,6 +23,7 @@ class Command(BaseCommand):
         parser.add_argument("-Y", nargs="*")
         parser.add_argument("-n", nargs="*")
         parser.add_argument("-N", nargs="*")
+        parser.add_argument("--apps", nargs="*")
 
     def handle(self, *args, **options):
         reset = False
@@ -31,7 +32,12 @@ class Command(BaseCommand):
         if isinstance(options.get("n"), list) or isinstance(options.get("N"), list):
             reset = False
         signals.pre_init_complete.send(sender=None, msg='开始初始化', data={"reset": reset})
+
+        filter_apps = None
+        if isinstance(options.get("apps"), list): filter_apps = options.get("apps")
+
         for app in settings.INSTALLED_APPS:
+            if filter_apps and not app in filter_apps: continue
             signals.detail_init_complete.send(sender=None, msg='初始化中', data={"app": app, "reset": reset})
             try:
                 exec(
