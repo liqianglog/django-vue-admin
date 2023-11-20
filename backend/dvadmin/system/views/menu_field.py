@@ -11,7 +11,7 @@ from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.json_response import DetailResponse, ErrorResponse, SuccessResponse
 
 
-class ColumnSerializer(CustomModelSerializer):
+class MenuFieldSerializer(CustomModelSerializer):
     """
     列权限序列化器
     """
@@ -22,32 +22,24 @@ class ColumnSerializer(CustomModelSerializer):
         read_only_fields = ['id']
 
 
-class ColumnViewSet(CustomModelViewSet):
+class MenuFieldViewSet(CustomModelViewSet):
     """
     列权限视图集
     """
     queryset = MenuField.objects.all()
-    serializer_class = ColumnSerializer
+    serializer_class = MenuFieldSerializer
 
     def list(self, request, *args, **kwargs):
-        app_name = request.query_params.get('app')
-        model_name = request.query_params.get('model')
         menu = request.query_params.get('menu')
         if  not menu:
             return SuccessResponse([])
         queryset = self.filter_queryset(self.get_queryset().filter(menu=menu))
-        # page = self.paginate_queryset(queryset)
-        # if page is not None:
-        #     serializer = self.get_serializer(page, many=True, request=request)
-        #     return self.get_paginated_response(serializer.data)
         serializer = self.get_serializer(queryset, many=True, request=request)
         return SuccessResponse(data=serializer.data, msg="获取成功")
 
     def create(self, request, *args, **kwargs):
         payload = request.data
-        print(11,get_custom_app_models())
         for model in apps.get_models():
-            print(model.__name__)
             if payload.get('model') == model.__name__:
                 break
         else:
@@ -62,34 +54,31 @@ class ColumnViewSet(CustomModelViewSet):
     def get_models(self, request):
         """获取所有项目app下的model"""
         res = []
-        for app in get_custom_app_models():
-            for model in app:
-                res.append({
-                    'app': model['app'],
-                    'title': model['verbose'],
-                    'key': model['model']
-                })
+        for model in get_custom_app_models():
+            res.append({
+                'app': model['app'],
+                'title': model['verbose'],
+                'key': model['model']
+            })
         return DetailResponse(res)
 
     @action(methods=['POST'], detail=False, permission_classes=[IsAuthenticated])
     def auto_match_fields(self, request):
         """自动匹配已有的字段"""
         menu_id = request.data.get('menu')
-        app_name = request.data.get('app')
         model_name = request.data.get('model')
-        if not menu_id or not model_name or not app_name:
+        if not menu_id or not model_name:
             return ErrorResponse( msg='参数错误')
-        for model in get_custom_app_models(app_name):
+        for model in get_custom_app_models():
             if model['model'] != model_name:
                 continue
             for field in model['fields']:
                 if MenuField.objects.filter(
-                        menu_id=menu_id, app=app_name, model=model_name, field_name=field['name']
+                        menu_id=menu_id, model=model_name, field_name=field['name']
                 ).exists():
                     continue
                 data = {
                     'menu': menu_id,
-                    'app': app_name,
                     'model': model_name,
                     'field_name': field['name'],
                     'title': str(field['title']),

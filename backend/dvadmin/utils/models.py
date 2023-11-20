@@ -141,6 +141,7 @@ def get_custom_app_models(app_name=None):
         return get_model_from_app(app_name)
     res = []
     for app in settings.CUSTOM_APPS:
-        # print(222,get_model_from_app(app))
-        res.append(get_model_from_app(app))
+        all_models = get_model_from_app(app)
+        for model in all_models:
+            res.append(model)
     return res

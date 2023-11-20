@@ -179,7 +179,7 @@ class Menu(CoreModel):
         ordering = ("sort",)
 
 class MenuField(CoreModel):
-    model = models.CharField(max_length=64, verbose_name='表名',null=True,blank=True)
+    model = models.CharField(max_length=64, verbose_name='表名')
     menu = models.ForeignKey(to='Menu', on_delete=models.CASCADE, verbose_name='菜单', db_constraint=False)
     field_name = models.CharField(max_length=64, verbose_name='模型表字段名')
     title = models.CharField(max_length=64, verbose_name='字段显示名')

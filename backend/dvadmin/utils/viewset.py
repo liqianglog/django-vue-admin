@@ -82,12 +82,9 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
     def get_menu_field(self, serializer_class):
         """获取字段权限"""
         finded = False
-        for app in get_custom_app_models():
-            for model in app:
-                if model['object'] is serializer_class.Meta.model:
-                    finded = True
-                    break
-            if finded:
+        for model in get_custom_app_models():
+            if model['object'] is serializer_class.Meta.model:
+                finded = True
                 break
         if finded is False:
             return []

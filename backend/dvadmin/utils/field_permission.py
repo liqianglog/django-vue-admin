@@ -15,16 +15,14 @@ class FieldPermissionMixin:
         获取字段权限
         """
         finded = False
-        for app in get_custom_app_models():
-            for model in app:
-                if model['object'] is self.serializer_class.Meta.model:
-                    finded = True
-                    break
+        for model in get_custom_app_models():
+            if model['object'] is self.serializer_class.Meta.model:
+                finded = True
+                break
             if finded:
                 break
         if finded is False:
             return []
-        print(266666,model)
         user = request.user
         if user.is_superuser==1:
             data = MenuField.objects.filter( model=model['model']).values('field_name')
