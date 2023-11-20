@@ -63,8 +63,7 @@ class MenuButtonViewSet(CustomModelViewSet):
         :return:
         """
         is_superuser = request.user.is_superuser
-        is_admin = request.user.role.values_list('admin', flat=True)
-        if is_superuser or True in is_admin:
+        if is_superuser:
             queryset = MenuButton.objects.values_list('value',flat=True)
         else:
             role_id = request.user.role.values_list('id', flat=True)

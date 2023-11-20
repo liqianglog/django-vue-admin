@@ -1,6 +1,8 @@
 <template>
   <el-drawer v-model="drawerVisible" title="权限配置" direction="rtl" size="60%" :close-on-click-modal="false"
-             :before-close="handleDrawerClose">
+             :before-close="handleDrawerClose"
+             :destroy-on-close="true"
+  >
     <template #header>
       <el-row>
         <el-col :span="4">

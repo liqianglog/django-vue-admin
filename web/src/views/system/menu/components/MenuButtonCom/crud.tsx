@@ -124,7 +124,7 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 					type: 'text',
 					search: { show: false },
 					column: {
-						width: 120,
+						width: 200,
 						sortable: true,
 					},
 					form: {

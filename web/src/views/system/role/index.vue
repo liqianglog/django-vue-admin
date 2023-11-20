@@ -18,7 +18,6 @@ import { useColumnPermission } from '/@/stores/columnPermission';
 import { GetPermission } from './api';
 import { useExpose, useCrud } from '@fast-crud/fast-crud';
 import { createCrudOptions } from './crud';
-import permission from './components/PermissionCom/index.vue';
 import PermissionComNew from './components/PermissionComNew/index.vue';
 
 let drawerVisible = ref(false);

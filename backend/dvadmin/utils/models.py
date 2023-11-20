@@ -136,10 +136,11 @@ def get_model_from_app(app_name):
 
 
 def get_custom_app_models(app_name=None):
-    """获取所有项目写的app里的models"""
+    """获取所有项目下的app里的models"""
     if app_name:
         return get_model_from_app(app_name)
     res = []
     for app in settings.CUSTOM_APPS:
+        # print(222,get_model_from_app(app))
         res.append(get_model_from_app(app))
     return res
