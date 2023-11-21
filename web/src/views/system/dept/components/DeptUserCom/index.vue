@@ -251,10 +251,10 @@ const handleResetPwdSubmit = async () => {
 };
 
 onMounted(() => {
-	crudExpose.doRefresh();
 	deptCountChart = init(deptCountBar.value as HTMLElement);
 	deptSexChart = init(deptSexPie.value as HTMLElement);
 	getDeptInfo();
+  crudExpose.doRefresh();
 });
 
 defineExpose({

@@ -47,6 +47,15 @@ export const createCrudOptions = function ({ crudExpose, tabActivted }: { crudEx
 				editRequest,
 				delRequest,
 			},
+			actionbar:{
+				buttons:{
+					add:{
+						show:computed(() =>{
+							return tabActivted.value !== 'receive'
+						})
+					},
+				}
+			},
 			rowHandle: {
 				fixed:'right',
 				width:150,

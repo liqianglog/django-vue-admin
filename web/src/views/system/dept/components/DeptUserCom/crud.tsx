@@ -266,7 +266,6 @@ export const createCrudOptions = function ({ crudExpose, context }: CreateCrudOp
 						url: '/api/system/role/',
 						value: 'id',
 						label: 'name',
-						isTree: true,
 						getData: async ({ url }: { url: string }) => {
 							return request({
 								url: url,
