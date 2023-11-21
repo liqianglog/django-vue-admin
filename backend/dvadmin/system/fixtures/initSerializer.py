@@ -128,7 +128,7 @@ class RoleInitSerializer(CustomModelSerializer):
 
     class Meta:
         model = Role
-        fields = ['name', 'key', 'sort', 'status', 'admin',
+        fields = ['name', 'key', 'sort', 'status',
                   'creator', 'dept_belong_id']
         read_only_fields = ["id"]
         extra_kwargs = {
