@@ -44,7 +44,6 @@ export const createCrudOptions = function ({ crudExpose }: CreateCrudOptionsProp
 				buttons: {
 					add: {
 						show: hasPermissions('user:Create')
-						// show:true
 					},
 					export:{
 						text:"导出",//按钮文字

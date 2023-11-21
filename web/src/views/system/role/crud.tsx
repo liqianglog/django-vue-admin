@@ -47,6 +47,13 @@ export const createCrudOptions = function ({
 				editRequest,
 				delRequest,
 			},
+			actionbar: {
+				buttons: {
+					add: {
+						show: hasPermissions('role:Create')
+					}
+				}
+			},
 			rowHandle: {
 				//固定右侧
 				fixed: 'right',

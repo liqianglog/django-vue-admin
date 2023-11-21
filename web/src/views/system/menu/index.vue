@@ -15,12 +15,12 @@
 
 			<el-col :span="18">
         <el-tabs type="border-card">
-          <el-tab-pane label="按钮配置" >
+          <el-tab-pane label="按钮权限配置" >
             <div style="height: 80vh">
               <MenuButtonCom ref="menuButtonRef" />
             </div>
           </el-tab-pane>
-          <el-tab-pane label="字段配置">
+          <el-tab-pane label="列权限配置">
             <div style="height: 80vh">
               <MenuFieldCom ref="menuFieldRef"></MenuFieldCom>
             </div>
