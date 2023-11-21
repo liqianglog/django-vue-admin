@@ -83,46 +83,6 @@
                 ]
             },
             {
-                "name": "菜单按钮",
-                "icon": "dot-circle-o",
-                "sort": 2,
-                "is_link": false,
-                "is_catalog": false,
-                "web_path": "/menuButton",
-                "component": "system/menuButton/index",
-                "component_name": "menuButton",
-                "status": true,
-                "cache": false,
-                "visible": false,
-                "children": [],
-                "menu_button": [
-                    {
-                        "name": "查询",
-                        "value": "menu_button:Search",
-                        "api": "/api/system/menu_button/",
-                        "method": 0
-                    },
-                    {
-                        "name": "新增",
-                        "value": "menu_button:Create",
-                        "api": "/api/system/menu_button/",
-                        "method": 1
-                    },
-                    {
-                        "name": "编辑",
-                        "value": "menu_button:Update",
-                        "api": "/api/system/menu_button/{id}/",
-                        "method": 2
-                    },
-                    {
-                        "name": "删除",
-                        "value": "menu_button:Delete",
-                        "api": "/api/system/menu_button/{id}/",
-                        "method": 3
-                    }
-                ]
-            },
-            {
                 "name": "部门管理",
                 "icon": "ele-OfficeBuilding",
                 "sort": 3,
@@ -247,64 +207,6 @@
                         "value": "role:Delete",
                         "api": "/api/system/role/{id}/",
                         "method": 3
-                    }
-                ]
-            },
-            {
-                "name": "列管理",
-                "icon": "iconfont icon-bolangneng",
-                "sort": 5,
-                "is_link": false,
-                "is_catalog": false,
-                "web_path": "/columns",
-                "component": "system/columns/index",
-                "component_name": "columns",
-                "status": true,
-                "cache": false,
-                "visible": true,
-                "children": [],
-                "menu_button": [
-                    {
-                        "name": "查询",
-                        "value": "column:Search",
-                        "api": "/api/system/column/",
-                        "method": 0
-                    },
-                    {
-                        "name": "详情",
-                        "value": "column:Retrieve",
-                        "api": "/api/system/column/{id}/",
-                        "method": 0
-                    },
-                    {
-                        "name": "新增",
-                        "value": "column:Create",
-                        "api": "/api/system/column/",
-                        "method": 1
-                    },
-                    {
-                        "name": "编辑",
-                        "value": "column:Update",
-                        "api": "/api/system/column/{id}/",
-                        "method": 2
-                    },
-                    {
-                        "name": "删除",
-                        "value": "column:Delete",
-                        "api": "/api/system/column/{id}/",
-                        "method": 3
-                    },
-                    {
-                        "name": "所有模型表",
-                        "value": "column:AllModel",
-                        "api": "/api/system/column/get_models/",
-                        "method": 0
-                    },
-                    {
-                        "name": "自动匹配所有字段",
-                        "value": "column:AutoMatch",
-                        "api": "/api/system/column/auto_match_fields/",
-                        "method": 1
                     }
                 ]
             },
