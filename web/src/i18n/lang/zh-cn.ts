@@ -40,6 +40,8 @@ export default {
         title4: '消息',
         title5: '开全屏',
         title6: '关全屏',
+        retry: '重试上线',
+        onlinePrompt: '当前离线状态，是否重试上线？',
         dropdownLarge: '大型',
         dropdownDefault: '默认',
         dropdownSmall: '小型',
@@ -75,7 +77,7 @@ export default {
     },
     noAccess: {
         accessTitle: '您未被授权，没有操作权限~',
-        accessMsg: '联系方式：加QQ群探讨 665452019',
+        accessMsg: '请联系管理员',
         accessBtn: '重新授权',
     },
     layout: {
