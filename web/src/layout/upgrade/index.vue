@@ -17,7 +17,7 @@
 			<div class="upgrade-content">
 				{{ getThemeConfig.globalTitle }} {{ $t('message.upgrade.msg') }}
 				<div class="mt5">
-					<el-link type="primary" class="font12" href="https://gitee.com/lyt-top/vue-next-admin/blob/master/CHANGELOG.md" target="_black">
+					<el-link type="primary" class="font12" href=https://gitee.com/huge-dream/django-vue3-admin/blob/master/CHANGELOG.md" target="_black">
 						CHANGELOG.md
 					</el-link>
 				</div>
@@ -76,10 +76,10 @@ const delayShow = () => {
 };
 // 页面加载时
 onMounted(() => {
-	// delayShow();
-	// setTimeout(() => {
-	// 	state.btnTxt = t('message.upgrade.btnTwo');
-	// }, 200);
+	delayShow();
+	setTimeout(() => {
+		state.btnTxt = t('message.upgrade.btnTwo');
+	}, 200);
 });
 </script>
 
