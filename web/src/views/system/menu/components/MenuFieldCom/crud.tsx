@@ -2,8 +2,8 @@ import * as api from './api';
 import { dict, UserPageQuery, AddReq, DelReq, EditReq, compute, CreateCrudOptionsProps, CreateCrudOptionsRet } from '@fast-crud/fast-crud';
 import { request } from '/@/utils/service';
 import { dictionary } from '/@/utils/dictionary';
-
 import { inject } from 'vue';
+import {auth} from "/@/utils/authFunction";
 
 
 
@@ -28,11 +28,6 @@ export const createCrudOptions = function ({ crudExpose, props,modelDialog,selec
 		return await api.AddObj(form);
 	};
 
-
-
-	//权限判定
-	const hasPermissions = inject('$hasPermissions');
-
 	return {
 		crudOptions: {
 			request: {
@@ -46,9 +41,13 @@ export const createCrudOptions = function ({ crudExpose, props,modelDialog,selec
 			},
 			actionbar: {
 				buttons: {
+					add:{
+						show:auth('column:Create')
+					},
 					auto: {
 						text: '自动匹配',
 						type: 'success',
+						show:auth('column:Match'),
 						click: () => {
 							return modelDialog.value=true;
 						},
@@ -58,6 +57,17 @@ export const createCrudOptions = function ({ crudExpose, props,modelDialog,selec
 			rowHandle: {
 				//固定右侧
 				fixed: 'right',
+				buttons: {
+					view: {
+						show: false,
+					},
+					edit: {
+						show: auth('column:Update')
+					},
+					remove: {
+						show: auth('column:Delete')
+					},
+				},
 			},
 			form: {
 				col: { span: 24 },

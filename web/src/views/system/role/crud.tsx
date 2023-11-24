@@ -3,7 +3,7 @@ import * as api from './api';
 import { dictionary } from '/@/utils/dictionary';
 import { columnPermission } from '../../../utils/columnPermission';
 import { successMessage } from '../../../utils/message';
-
+import {auth} from '/@/utils/authFunction'
 interface CreateCrudOptionsTypes {
 	output: any;
 	crudOptions: CrudOptions;
@@ -14,12 +14,10 @@ export const createCrudOptions = function ({
 	crudExpose,
 	rolePermission,
 	handleDrawerOpen,
-	hasPermissions,
 }: {
 	crudExpose: CrudExpose;
 	rolePermission: any;
 	handleDrawerOpen: Function;
-	hasPermissions: Function;
 }): CreateCrudOptionsTypes {
 	const pageRequest = async (query: any) => {
 		return await api.GetList(query);
@@ -50,7 +48,7 @@ export const createCrudOptions = function ({
 			actionbar: {
 				buttons: {
 					add: {
-						show: hasPermissions('role:Create')
+						show: auth('role:Create')
 					}
 				}
 			},
@@ -63,31 +61,15 @@ export const createCrudOptions = function ({
 						show: true,
 					},
 					edit: {
-						show: hasPermissions('role:Update'),
+						show: auth('role:Update'),
 					},
 					remove: {
-						show: hasPermissions('role:Delete'),
+						show: auth('role:Delete'),
 					},
-					/* custom: {
+					permission: {
 						type: 'primary',
 						text: '权限配置',
-						show: hasPermissions('role:Update'),
-						tooltip: {
-							placement: 'top',
-							content: '权限配置',
-						},
-						click: (context: any): void => {
-							const { row } = context;
-							// eslint-disable-next-line no-mixed-spaces-and-tabs
-							rolePermission.value.drawer = true;
-							rolePermission.value.editedRoleInfo = row;
-							rolePermission.value.initGet();
-						},
-					}, */
-					customNew: {
-						type: 'primary',
-						text: '权限配置',
-						show: hasPermissions('role:Update'),
+						show: auth('role:Permission'),
 						tooltip: {
 							placement: 'top',
 							content: '权限配置',
@@ -134,9 +116,9 @@ export const createCrudOptions = function ({
 						sortable: 'custom',
 						show: columnPermission('name', 'is_query'),
 					},
-					addForm: {
-						show: columnPermission('name', 'is_create'),
-					},
+					// addForm: {
+					// 	show: columnPermission('name', 'is_create'),
+					// },
 					editForm: {
 						show: columnPermission('name', 'is_update'),
 					},
@@ -177,7 +159,6 @@ export const createCrudOptions = function ({
 					column: {
 						minWidth: 90,
 						sortable: 'custom',
-						show: columnPermission('sort', 'is_query'),
 					},
 					addForm: {
 						show: columnPermission('sort', 'is_create'),
