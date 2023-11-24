@@ -299,7 +299,7 @@ const messageCenter = messageCenterStore();
 	}
   .online-status{
     cursor: pointer;
-    :deep .el-badge__content.is-fixed {
+    :deep(.el-badge__content.is-fixed) {
       top: 30px;
       font-size: 14px;
       left: 5px;
@@ -311,7 +311,7 @@ const messageCenter = messageCenterStore();
   }
   .online-down{
     cursor: pointer;
-    :deep .el-badge__content.is-fixed {
+    :deep(.el-badge__content.is-fixed) {
       top: 30px;
       font-size: 14px;
       left: 5px;
