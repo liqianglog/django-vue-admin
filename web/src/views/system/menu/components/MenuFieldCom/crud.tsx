@@ -133,6 +133,7 @@ export const createCrudOptions = function ({ crudExpose, props,modelDialog,selec
 						],
 						component: {
 							span: 12,
+							placeholder: '请输入中文名',
 						},
 					},
 				},
@@ -152,6 +153,7 @@ export const createCrudOptions = function ({ crudExpose, props,modelDialog,selec
 						],
 						component: {
 							span: 12,
+							placeholder: '请输入字段名',
 						},
 					},
 				},
