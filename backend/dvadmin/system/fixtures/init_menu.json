@@ -1,704 +1,1403 @@
 [
-  {
-    "name": "Á≥ªÁªüÁÆ°ÁêÜ",
-    "icon": "iconfont icon-xitongshezhi",
-    "sort": 1,
-    "is_link": false,
-    "is_catalog": true,
-    "web_path": "/system",
-    "component": "",
-    "component_name": "",
-    "status": true,
-    "cache": false,
-    "visible": true,
-    "children": [
-      {
-        "name": "ËèúÂçïÁÆ°ÁêÜ",
-        "icon": "iconfont icon-caidan",
+    {
+        "name": "œµÕ≥π‹¿Ì",
+        "icon": "iconfont icon-xitongshezhi",
         "sort": 1,
         "is_link": false,
-        "is_catalog": false,
-        "web_path": "/menu",
-        "component": "system/menu/index",
-        "component_name": "menu",
+        "is_catalog": true,
+        "web_path": "/system",
+        "component": "",
+        "component_name": "",
         "status": true,
         "cache": false,
         "visible": true,
-        "children": [],
-        "menu_button": [
-          {
-            "name": "Êü•ËØ¢",
-            "value": "menu:Search",
-            "api": "/api/system/menu/",
-            "method": 0
-          },
-          {
-            "name": "ËØ¶ÊÉÖ",
-            "value": "menu:Retrieve",
-            "api": "/api/system/menu/{id}/",
-            "method": 0
-          },
-          {
-            "name": "Êñ∞Â¢û",
-            "value": "menu:Create",
-            "api": "/api/system/menu/",
-            "method": 1
-          },
-          {
-            "name": "ÁºñËæë",
-            "value": "menu:Update",
-            "api": "/api/system/menu/{id}/",
-            "method": 2
-          },
-          {
-            "name": "Âà†Èô§",
-            "value": "menu:Delete",
-            "api": "/api/system/menu/{id}/",
-            "method": 3
-          },
-          {
-            "name": "Êü•ËØ¢ÊâÄÊúâ",
-            "value": "menu:SearchAll",
-            "api": "/api/system/menu/get_all_menu/",
-            "method": 0
-          },
-          {
-            "name": "Ë∑ØÁî±",
-            "value": "menu:router",
-            "api": "/api/system/menu/web_router/",
-            "method": 0
-          },
-          {
-            "name": "‰∏äÁßª",
-            "value": "menu:MoveUp",
-            "api": "/api/system/menu/mode_up/",
-            "method": 1
-          },
-          {
-            "name": "‰∏ãÁßª",
-            "value": "menu:MoveDown",
-            "api": "/api/system/menu/mode_down/",
-            "method": 1
-          },
-          {
-            "name": "Êñ∞Â¢ûÊåâÈíÆÊùÉÈôê",
-            "value": "btn:Create",
-            "api": "/api/system/menu_button/",
-            "method": 1
-          },
-          {
-            "name": "‰øÆÊîπÊåâÈíÆÊùÉÈôê",
-            "value": "btn:Update",
-            "api": "/api/system/menu_button/{id}/",
-            "method": 2
-          },
-          {
-            "name": "Êü•ËØ¢ÊåâÈíÆÊùÉÈôê",
-            "value": "btn:Search",
-            "api": "/api/system/menu_button/",
-            "method": 0
-          },
-          {
-            "name": "Âà†Èô§ÊåâÈíÆÊùÉÈôê",
-            "value": "btn:Delete",
-            "api": "/api/system/menu_button/{id}/",
-            "method": 3
-          },
-          {
-            "name": "Êü•ËØ¢ÂàóÊùÉÈôê",
-            "value": "column:Search",
-            "api": "/api/system/column/",
-            "method": 0
-          },
-          {
-            "name": "Êñ∞Â¢ûÂàóÊùÉÈôê",
-            "value": "column:Create",
-            "api": "/api/system/column/",
-            "method": 1
-          },
-          {
-            "name": "ÁºñËæëÂàóÊùÉÈôê",
-            "value": "column:Update",
-            "api": "/api/system/column/{id}/",
-            "method": 2
-          },
-          {
-            "name": "Âà†Èô§ÂàóÊùÉÈôê",
-            "value": "column:Delete",
-            "api": "/api/system/column/{id}/",
-            "method": 3
-          },
-          {
-            "name": "Ëá™Âä®ÂåπÈÖçÂàóÊùÉÈôê",
-            "value": "column:Match",
-            "api": "/api/system/column/auto_match_fields/",
-            "method": 1
-          }
-        ]
-      },
-      {
-        "name": "ÈÉ®Èó®ÁÆ°ÁêÜ",
-        "icon": "ele-OfficeBuilding",
-        "sort": 3,
-        "is_link": false,
-        "is_catalog": false,
-        "web_path": "/dept",
-        "component": "system/dept/index",
-        "component_name": "dept",
-        "status": true,
-        "cache": false,
-        "visible": true,
-        "children": [],
-        "menu_button": [
-          {
-            "name": "Êü•ËØ¢",
-            "value": "dept:Search",
-            "api": "/api/system/dept/",
-            "method": 0
-          },
-          {
-            "name": "ËØ¶ÊÉÖ",
-            "value": "dept:Retrieve",
-            "api": "/api/system/dept/{id}/",
-            "method": 0
-          },
-          {
-            "name": "Êñ∞Â¢û",
-            "value": "dept:Create",
-            "api": "/api/system/dept/",
-            "method": 1
-          },
-          {
-            "name": "ÁºñËæë",
-            "value": "dept:Update",
-            "api": "/api/system/dept/{id}/",
-            "method": 2
-          },
-          {
-            "name": "Âà†Èô§",
-            "value": "dept:Delete",
-            "api": "/api/system/dept/{id}/",
-            "method": 3
-          },
-          {
-            "name": "Êü•ËØ¢ÊâÄÊúâ",
-            "value": "dept:SearchAll",
-            "api": "/api/system/dept/all_dept/",
-            "method": 0
-          },
-          {
-            "name": "ÊáíÂä†ËΩΩÊü•ËØ¢ÊâÄÊúâ",
-            "value": "dept:LazySearchAll",
-            "api": "/api/system/dept/dept_lazy_tree/",
-            "method": 0
-          },
-          {
-            "name": "‰∏äÁßª",
-            "value": "dept:MoveUp",
-            "api": "/api/system/dept/mode_up/",
-            "method": 1
-          },
-          {
-            "name": "‰∏ãÁßª",
-            "value": "dept:MoveDown",
-            "api": "/api/system/dept/mode_down/",
-            "method": 1
-          },
-          {
-            "name": "Â§¥‰ø°ÊÅØ",
-            "value": "dept:HeaderInfo",
-            "api": "/api/system/dept/dept_info/",
-            "method": 0
-          }
-        ]
-      },
-      {
-        "name": "ËßíËâ≤ÁÆ°ÁêÜ",
-        "icon": "ele-ColdDrink",
-        "sort": 4,
-        "is_link": false,
-        "is_catalog": false,
-        "web_path": "/role",
-        "component": "system/role/index",
-        "component_name": "role",
-        "status": true,
-        "cache": false,
-        "visible": true,
-        "children": [],
-        "menu_button": [
-          {
-            "name": "Êü•ËØ¢",
-            "value": "role:Search",
-            "api": "/api/system/role/",
-            "method": 0
-          },
-          {
-            "name": "ËØ¶ÊÉÖ",
-            "value": "role:Retrieve",
-            "api": "/api/system/role/{id}/",
-            "method": 0
-          },
-          {
-            "name": "Êñ∞Â¢û",
-            "value": "role:Create",
-            "api": "/api/system/role/",
-            "method": 1
-          },
-          {
-            "name": "ÁºñËæë",
-            "value": "role:Update",
-            "api": "/api/system/role/{id}/",
-            "method": 2
-          },
-          {
-            "name": "‰øùÂ≠ò",
-            "value": "role:Save",
-            "api": "/api/system/role/{id}/",
-            "method": 2
-          },
-          {
-            "name": "Âà†Èô§",
-            "value": "role:Delete",
-            "api": "/api/system/role/{id}/",
-            "method": 3
-          },
-          {
-            "name": "ÊùÉÈôêÈÖçÁΩÆ",
-            "value": "role:Permission",
-            "api": "/api/system/role/{id}/",
-            "method": 0
-          }
-        ]
-      },
-      {
-        "name": "Áî®Êà∑ÁÆ°ÁêÜ",
-        "icon": "iconfont icon-icon-",
-        "sort": 6,
-        "is_link": false,
-        "is_catalog": false,
-        "web_path": "/user",
-        "component": "system/user/index",
-        "component_name": "user",
-        "status": true,
-        "cache": false,
-        "visible": true,
-        "children": [],
-        "menu_button": [
-          {
-            "name": "Êü•ËØ¢",
-            "value": "user:Search",
-            "api": "/api/system/user/",
-            "method": 0
-          },
-          {
-            "name": "ËØ¶ÊÉÖ",
-            "value": "user:Retrieve",
-            "api": "/api/system/user/{id}/",
-            "method": 0
-          },
-          {
-            "name": "Êñ∞Â¢û",
-            "value": "user:Create",
-            "api": "/api/system/user/",
-            "method": 1
-          },
-          {
-            "name": "ÂØºÂá∫",
-            "value": "user:Export",
-            "api": "/api/system/user/export/",
-            "method": 1
-          },
-          {
-            "name": "ÂØºÂÖ•",
-            "value": "user:Import",
-            "api": "/api/system/user/import/",
-            "method": 1
-          },
-          {
-            "name": "ÁºñËæë",
-            "value": "user:Update",
-            "api": "/api/system/user/{id}/",
-            "method": 2
-          },
-          {
-            "name": "ÈáçËÆæÂØÜÁ†Å",
-            "value": "user:ResetPassword",
-            "api": "/api/system/user/{id}/reset_password/",
-            "method": 2
-          },
-          {
-            "name": "ÈáçÁΩÆÂØÜÁ†Å",
-            "value": "user:DefaultPassword",
-            "api": "/api/system/user/{id}/reset_to_default_password/",
-            "method": 2
-          },
-          {
-            "name": "Âà†Èô§",
-            "value": "user:Delete",
-            "api": "/api/system/user/{id}/",
-            "method": 3
-          }
-        ]
-      },
-      {
-        "name": "Ê∂àÊÅØ‰∏≠ÂøÉ",
-        "icon": "iconfont icon-xiaoxizhongxin",
-        "sort": 7,
-        "is_link": false,
-        "is_catalog": false,
-        "web_path": "/messageCenter",
-        "component": "system/messageCenter/index",
-        "component_name": "messageCenter",
-        "status": true,
-        "cache": false,
-        "visible": true,
-        "children": [],
-        "menu_button": [
-          {
-            "name": "Êü•ËØ¢",
-            "value": "messageCenter:Search",
-            "api": "/api/system/message_center/",
-            "method": 0
-          },
-          {
-            "name": "ËØ¶ÊÉÖ",
-            "value": "messageCenter:Retrieve",
-            "api": "/api/system/message_center/{id}/",
-            "method": 0
-          },
-          {
-            "name": "Êñ∞Â¢û",
-            "value": "messageCenter:Create",
-            "api": "/api/system/message_center/",
-            "method": 1
-          },
-          {
-            "name": "ÁºñËæë",
-            "value": "messageCenter:Update",
-            "api": "/api/system/message_center/{id}/",
-            "method": 2
-          },
-          {
-            "name": "Âà†Èô§",
-            "value": "messageCenter:Delete",
-            "api": "/api/system/menu/{id}/",
-            "method": 3
-          }
-        ]
-      },
-      {
-        "name": "Êé•Âè£ÁôΩÂêçÂçï",
-        "icon": "ele-SetUp",
-        "sort": 8,
-        "is_link": false,
-        "is_catalog": false,
-        "web_path": "/apiWhiteList",
-        "component": "system/whiteList/index",
-        "component_name": "whiteList",
-        "status": true,
-        "cache": false,
-        "visible": true,
-        "children": [],
-        "menu_button": [
-          {
-            "name": "Êü•ËØ¢",
-            "value": "api_white_list:Search",
-            "api": "/api/system/api_white_list/",
-            "method": 0
-          },
-          {
-            "name": "ËØ¶ÊÉÖ",
-            "value": "api_white_list:Retrieve",
-            "api": "/api/system/api_white_list/{id}/",
-            "method": 0
-          },
-          {
-            "name": "Êñ∞Â¢û",
-            "value": "api_white_list:Create",
-            "api": "/api/system/api_white_list/",
-            "method": 1
-          },
-          {
-            "name": "ÁºñËæë",
-            "value": "api_white_list:Update",
-            "api": "/api/system/api_white_list/{id}/",
-            "method": 2
-          },
-          {
-            "name": "Âà†Èô§",
-            "value": "api_white_list:Delete",
-            "api": "/api/system/api_white_list/{id}/",
-            "method": 3
-          }
-        ]
-      }
-    ],
-    "menu_button": []
-  },
-  {
-    "name": "Â∏∏ËßÑÈÖçÁΩÆ",
-    "icon": "iconfont icon-configure",
-    "sort": 2,
-    "is_link": false,
-    "is_catalog": true,
-    "web_path": "/generalConfig",
-    "component": "",
-    "component_name": "",
-    "status": true,
-    "cache": false,
-    "visible": true,
-    "children": [
-      {
-        "name": "Á≥ªÁªüÈÖçÁΩÆ",
-        "icon": "iconfont icon-system",
-        "sort": 0,
-        "is_link": false,
-        "is_catalog": false,
-        "web_path": "/config",
-        "component": "system/config/index",
-        "component_name": "config",
-        "status": true,
-        "cache": false,
-        "visible": true,
-        "children": [],
-        "menu_button": [
-          {
-            "name": "Êü•ËØ¢",
-            "value": "system_config:Search",
-            "api": "/api/system/system_config/",
-            "method": 0
-          },
-          {
-            "name": "ËØ¶ÊÉÖ",
-            "value": "system_config:Retrieve",
-            "api": "/api/system/system_config/{id}/",
-            "method": 0
-          },
-          {
-            "name": "Êñ∞Â¢û",
-            "value": "system_config:Create",
-            "api": "/api/system/system_config/",
-            "method": 1
-          },
-          {
-            "name": "ÁºñËæë",
-            "value": "system_config:Update",
-            "api": "/api/system/system_config/{id}/",
-            "method": 2
-          },
-          {
-            "name": "Âà†Èô§",
-            "value": "system_config:Delete",
-            "api": "/api/system/system_config/{id}/",
-            "method": 3
-          }
-        ]
-      },
-      {
-        "name": "Â≠óÂÖ∏ÁÆ°ÁêÜ",
-        "icon": "iconfont icon-dict",
-        "sort": 1,
-        "is_link": false,
-        "is_catalog": false,
-        "web_path": "/dictionary",
-        "component": "system/dictionary/index",
-        "component_name": "dictionary",
-        "status": true,
-        "cache": false,
-        "visible": true,
-        "children": [],
-        "menu_button": [
-          {
-            "name": "Êü•ËØ¢",
-            "value": "dictionary:Search",
-            "api": "/api/system/dictionary/",
-            "method": 0
-          },
-          {
-            "name": "ËØ¶ÊÉÖ",
-            "value": "dictionary:Retrieve",
-            "api": "/api/system/dictionary/{id}/",
-            "method": 0
-          },
-          {
-            "name": "Êñ∞Â¢û",
-            "value": "dictionary:Create",
-            "api": "/api/system/dictionary/",
-            "method": 1
-          },
-          {
-            "name": "ÁºñËæë",
-            "value": "dictionary:Update",
-            "api": "/api/system/dictionary/{id}/",
-            "method": 2
-          },
-          {
-            "name": "Âà†Èô§",
-            "value": "dictionary:Delete",
-            "api": "/api/system/dictionary/{id}/",
-            "method": 3
-          }
-        ]
-      },
-      {
-        "name": "Âú∞Âå∫ÁÆ°ÁêÜ",
-        "icon": "iconfont icon-Area",
+        "parent": null,
+        "children": [
+            {
+                "name": "≤Àµ•π‹¿Ì",
+                "icon": "iconfont icon-caidan",
+                "sort": 1,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/menu",
+                "component": "system/menu/index",
+                "component_name": "menu",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "parent": 1,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "≤È—Ø",
+                        "value": "menu:Search",
+                        "api": "/api/system/menu/",
+                        "method": 0
+                    },
+                    {
+                        "name": "œÍ«È",
+                        "value": "menu:Retrieve",
+                        "api": "/api/system/menu/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "≤È—ØÀ˘”–",
+                        "value": "menu:SearchAll",
+                        "api": "/api/system/menu/get_all_menu/",
+                        "method": 0
+                    },
+                    {
+                        "name": "¬∑”…",
+                        "value": "menu:router",
+                        "api": "/api/system/menu/web_router/",
+                        "method": 0
+                    },
+                    {
+                        "name": "≤È—Ø∞¥≈•»®œﬁ",
+                        "value": "btn:Search",
+                        "api": "/api/system/menu_button/",
+                        "method": 0
+                    },
+                    {
+                        "name": "≤È—Ø¡–»®œﬁ",
+                        "value": "column:Search",
+                        "api": "/api/system/column/",
+                        "method": 0
+                    },
+                    {
+                        "name": "–¬‘ˆ",
+                        "value": "menu:Create",
+                        "api": "/api/system/menu/",
+                        "method": 1
+                    },
+                    {
+                        "name": "…œ“∆",
+                        "value": "menu:MoveUp",
+                        "api": "/api/system/menu/mode_up/",
+                        "method": 1
+                    },
+                    {
+                        "name": "œ¬“∆",
+                        "value": "menu:MoveDown",
+                        "api": "/api/system/menu/mode_down/",
+                        "method": 1
+                    },
+                    {
+                        "name": "–¬‘ˆ∞¥≈•»®œﬁ",
+                        "value": "btn:Create",
+                        "api": "/api/system/menu_button/",
+                        "method": 1
+                    },
+                    {
+                        "name": "–¬‘ˆ¡–»®œﬁ",
+                        "value": "column:Create",
+                        "api": "/api/system/column/",
+                        "method": 1
+                    },
+                    {
+                        "name": "◊‘∂Ø∆•≈‰¡–»®œﬁ",
+                        "value": "column:Match",
+                        "api": "/api/system/column/auto_match_fields/",
+                        "method": 1
+                    },
+                    {
+                        "name": "±‡º≠",
+                        "value": "menu:Update",
+                        "api": "/api/system/menu/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "–ﬁ∏ƒ∞¥≈•»®œﬁ",
+                        "value": "btn:Update",
+                        "api": "/api/system/menu_button/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "±‡º≠¡–»®œﬁ",
+                        "value": "column:Update",
+                        "api": "/api/system/column/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "…æ≥˝",
+                        "value": "menu:Delete",
+                        "api": "/api/system/menu/{id}/",
+                        "method": 3
+                    },
+                    {
+                        "name": "…æ≥˝∞¥≈•»®œﬁ",
+                        "value": "btn:Delete",
+                        "api": "/api/system/menu_button/{id}/",
+                        "method": 3
+                    },
+                    {
+                        "name": "…æ≥˝¡–»®œﬁ",
+                        "value": "column:Delete",
+                        "api": "/api/system/column/{id}/",
+                        "method": 3
+                    }
+                ],
+                "menu_field": []
+            },
+            {
+                "name": "≤ø√≈π‹¿Ì",
+                "icon": "ele-OfficeBuilding",
+                "sort": 3,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/dept",
+                "component": "system/dept/index",
+                "component_name": "dept",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "parent": 1,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "≤È—Ø",
+                        "value": "dept:Search",
+                        "api": "/api/system/dept/",
+                        "method": 0
+                    },
+                    {
+                        "name": "œÍ«È",
+                        "value": "dept:Retrieve",
+                        "api": "/api/system/dept/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "≤È—ØÀ˘”–",
+                        "value": "dept:SearchAll",
+                        "api": "/api/system/dept/all_dept/",
+                        "method": 0
+                    },
+                    {
+                        "name": "¿¡º”‘ÿ≤È—ØÀ˘”–",
+                        "value": "dept:LazySearchAll",
+                        "api": "/api/system/dept/dept_lazy_tree/",
+                        "method": 0
+                    },
+                    {
+                        "name": "Õ∑–≈œ¢",
+                        "value": "dept:HeaderInfo",
+                        "api": "/api/system/dept/dept_info/",
+                        "method": 0
+                    },
+                    {
+                        "name": "–¬‘ˆ",
+                        "value": "dept:Create",
+                        "api": "/api/system/dept/",
+                        "method": 1
+                    },
+                    {
+                        "name": "…œ“∆",
+                        "value": "dept:MoveUp",
+                        "api": "/api/system/dept/mode_up/",
+                        "method": 1
+                    },
+                    {
+                        "name": "œ¬“∆",
+                        "value": "dept:MoveDown",
+                        "api": "/api/system/dept/mode_down/",
+                        "method": 1
+                    },
+                    {
+                        "name": "±‡º≠",
+                        "value": "dept:Update",
+                        "api": "/api/system/dept/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "…æ≥˝",
+                        "value": "dept:Delete",
+                        "api": "/api/system/dept/{id}/",
+                        "method": 3
+                    }
+                ],
+                "menu_field": []
+            },
+            {
+                "name": "Ω«…´π‹¿Ì",
+                "icon": "ele-ColdDrink",
+                "sort": 4,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/role",
+                "component": "system/role/index",
+                "component_name": "role",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "parent": 1,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "≤È—Ø",
+                        "value": "role:Search",
+                        "api": "/api/system/role/",
+                        "method": 0
+                    },
+                    {
+                        "name": "œÍ«È",
+                        "value": "role:Retrieve",
+                        "api": "/api/system/role/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "»®œﬁ≈‰÷√",
+                        "value": "role:Permission",
+                        "api": "/api/system/role/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "–¬‘ˆ",
+                        "value": "role:Create",
+                        "api": "/api/system/role/",
+                        "method": 1
+                    },
+                    {
+                        "name": "±‡º≠",
+                        "value": "role:Update",
+                        "api": "/api/system/role/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "±£¥Ê",
+                        "value": "role:Save",
+                        "api": "/api/system/role/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "…æ≥˝",
+                        "value": "role:Delete",
+                        "api": "/api/system/role/{id}/",
+                        "method": 3
+                    }
+                ],
+                "menu_field": [
+                    {
+                        "field_name": "create_datetime",
+                        "title": "¥¥Ω® ±º‰",
+                        "model": "Role"
+                    },
+                    {
+                        "field_name": "creator",
+                        "title": "¥¥Ω®»À",
+                        "model": "Role"
+                    },
+                    {
+                        "field_name": "dept_belong_id",
+                        "title": " ˝æ›πÈ Ù≤ø√≈",
+                        "model": "Role"
+                    },
+                    {
+                        "field_name": "description",
+                        "title": "√Ë ˆ",
+                        "model": "Role"
+                    },
+                    {
+                        "field_name": "id",
+                        "title": "Id",
+                        "model": "Role"
+                    },
+                    {
+                        "field_name": "key",
+                        "title": "»®œﬁ◊÷∑˚",
+                        "model": "Role"
+                    },
+                    {
+                        "field_name": "modifier",
+                        "title": "–ﬁ∏ƒ»À",
+                        "model": "Role"
+                    },
+                    {
+                        "field_name": "name",
+                        "title": "Ω«…´√˚≥∆",
+                        "model": "Role"
+                    },
+                    {
+                        "field_name": "sort",
+                        "title": "Ω«…´À≥–Ú",
+                        "model": "Role"
+                    },
+                    {
+                        "field_name": "status",
+                        "title": "Ω«…´◊¥Ã¨",
+                        "model": "Role"
+                    },
+                    {
+                        "field_name": "update_datetime",
+                        "title": "–ﬁ∏ƒ ±º‰",
+                        "model": "Role"
+                    }
+                ]
+            },
+            {
+                "name": "”√ªßπ‹¿Ì",
+                "icon": "iconfont icon-icon-",
+                "sort": 6,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/user",
+                "component": "system/user/index",
+                "component_name": "user",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "parent": 1,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "≤È—Ø",
+                        "value": "user:Search",
+                        "api": "/api/system/user/",
+                        "method": 0
+                    },
+                    {
+                        "name": "œÍ«È",
+                        "value": "user:Retrieve",
+                        "api": "/api/system/user/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "–¬‘ˆ",
+                        "value": "user:Create",
+                        "api": "/api/system/user/",
+                        "method": 1
+                    },
+                    {
+                        "name": "µº≥ˆ",
+                        "value": "user:Export",
+                        "api": "/api/system/user/export/",
+                        "method": 1
+                    },
+                    {
+                        "name": "µº»Î",
+                        "value": "user:Import",
+                        "api": "/api/system/user/import/",
+                        "method": 1
+                    },
+                    {
+                        "name": "±‡º≠",
+                        "value": "user:Update",
+                        "api": "/api/system/user/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "÷ÿ…Ë√‹¬Î",
+                        "value": "user:ResetPassword",
+                        "api": "/api/system/user/{id}/reset_password/",
+                        "method": 2
+                    },
+                    {
+                        "name": "÷ÿ÷√√‹¬Î",
+                        "value": "user:DefaultPassword",
+                        "api": "/api/system/user/{id}/reset_to_default_password/",
+                        "method": 2
+                    },
+                    {
+                        "name": "…æ≥˝",
+                        "value": "user:Delete",
+                        "api": "/api/system/user/{id}/",
+                        "method": 3
+                    }
+                ],
+                "menu_field": [
+                    {
+                        "field_name": "avatar",
+                        "title": "Õ∑œÒ",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "create_datetime",
+                        "title": "¥¥Ω® ±º‰",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "creator",
+                        "title": "¥¥Ω®»À",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "dept",
+                        "title": "À˘ Ù≤ø√≈",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "dept_belong_id",
+                        "title": " ˝æ›πÈ Ù≤ø√≈",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "description",
+                        "title": "√Ë ˆ",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "email",
+                        "title": "” œ‰",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "gender",
+                        "title": "–‘±",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "id",
+                        "title": "Id",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "mobile",
+                        "title": "µÁª∞",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "modifier",
+                        "title": "–ﬁ∏ƒ»À",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "name",
+                        "title": "–’√˚",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "update_datetime",
+                        "title": "–ﬁ∏ƒ ±º‰",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "username",
+                        "title": "”√ªß’À∫≈",
+                        "model": "Users"
+                    },
+                    {
+                        "field_name": "user_type",
+                        "title": "”√ªß¿‡–Õ",
+                        "model": "Users"
+                    }
+                ]
+            },
+            {
+                "name": "œ˚œ¢÷––ƒ",
+                "icon": "iconfont icon-xiaoxizhongxin",
+                "sort": 7,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/messageCenter",
+                "component": "system/messageCenter/index",
+                "component_name": "messageCenter",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "parent": 1,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "≤È—Ø",
+                        "value": "messageCenter:Search",
+                        "api": "/api/system/message_center/",
+                        "method": 0
+                    },
+                    {
+                        "name": "œÍ«È",
+                        "value": "messageCenter:Retrieve",
+                        "api": "/api/system/message_center/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "–¬‘ˆ",
+                        "value": "messageCenter:Create",
+                        "api": "/api/system/message_center/",
+                        "method": 1
+                    },
+                    {
+                        "name": "±‡º≠",
+                        "value": "messageCenter:Update",
+                        "api": "/api/system/message_center/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "…æ≥˝",
+                        "value": "messageCenter:Delete",
+                        "api": "/api/system/menu/{id}/",
+                        "method": 3
+                    }
+                ],
+                "menu_field": [
+                    {
+                        "field_name": "content",
+                        "title": "ƒ⁄»›",
+                        "model": "MessageCenter"
+                    },
+                    {
+                        "field_name": "create_datetime",
+                        "title": "¥¥Ω® ±º‰",
+                        "model": "MessageCenter"
+                    },
+                    {
+                        "field_name": "creator",
+                        "title": "¥¥Ω®»À",
+                        "model": "MessageCenter"
+                    },
+                    {
+                        "field_name": "dept_belong_id",
+                        "title": " ˝æ›πÈ Ù≤ø√≈",
+                        "model": "MessageCenter"
+                    },
+                    {
+                        "field_name": "description",
+                        "title": "√Ë ˆ",
+                        "model": "MessageCenter"
+                    },
+                    {
+                        "field_name": "id",
+                        "title": "Id",
+                        "model": "MessageCenter"
+                    },
+                    {
+                        "field_name": "modifier",
+                        "title": "–ﬁ∏ƒ»À",
+                        "model": "MessageCenter"
+                    },
+                    {
+                        "field_name": "target_type",
+                        "title": "ƒø±Í¿‡–Õ",
+                        "model": "MessageCenter"
+                    },
+                    {
+                        "field_name": "title",
+                        "title": "±ÍÃ‚",
+                        "model": "MessageCenter"
+                    },
+                    {
+                        "field_name": "update_datetime",
+                        "title": "–ﬁ∏ƒ ±º‰",
+                        "model": "MessageCenter"
+                    }
+                ]
+            },
+            {
+                "name": "Ω”ø⁄∞◊√˚µ•",
+                "icon": "ele-SetUp",
+                "sort": 8,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/apiWhiteList",
+                "component": "system/whiteList/index",
+                "component_name": "whiteList",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "parent": 1,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "≤È—Ø",
+                        "value": "api_white_list:Search",
+                        "api": "/api/system/api_white_list/",
+                        "method": 0
+                    },
+                    {
+                        "name": "œÍ«È",
+                        "value": "api_white_list:Retrieve",
+                        "api": "/api/system/api_white_list/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "–¬‘ˆ",
+                        "value": "api_white_list:Create",
+                        "api": "/api/system/api_white_list/",
+                        "method": 1
+                    },
+                    {
+                        "name": "±‡º≠",
+                        "value": "api_white_list:Update",
+                        "api": "/api/system/api_white_list/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "…æ≥˝",
+                        "value": "api_white_list:Delete",
+                        "api": "/api/system/api_white_list/{id}/",
+                        "method": 3
+                    }
+                ],
+                "menu_field": [
+                    {
+                        "field_name": "create_datetime",
+                        "title": "¥¥Ω® ±º‰",
+                        "model": "ApiWhiteList"
+                    },
+                    {
+                        "field_name": "creator",
+                        "title": "¥¥Ω®»À",
+                        "model": "ApiWhiteList"
+                    },
+                    {
+                        "field_name": "dept_belong_id",
+                        "title": " ˝æ›πÈ Ù≤ø√≈",
+                        "model": "ApiWhiteList"
+                    },
+                    {
+                        "field_name": "description",
+                        "title": "√Ë ˆ",
+                        "model": "ApiWhiteList"
+                    },
+                    {
+                        "field_name": "enable_datasource",
+                        "title": "º§ªÓ ˝æ›»®œﬁ",
+                        "model": "ApiWhiteList"
+                    },
+                    {
+                        "field_name": "id",
+                        "title": "Id",
+                        "model": "ApiWhiteList"
+                    },
+                    {
+                        "field_name": "method",
+                        "title": "Ω”ø⁄«Î«Û∑Ω∑®",
+                        "model": "ApiWhiteList"
+                    },
+                    {
+                        "field_name": "modifier",
+                        "title": "–ﬁ∏ƒ»À",
+                        "model": "ApiWhiteList"
+                    },
+                    {
+                        "field_name": "update_datetime",
+                        "title": "–ﬁ∏ƒ ±º‰",
+                        "model": "ApiWhiteList"
+                    },
+                    {
+                        "field_name": "url",
+                        "title": "url",
+                        "model": "ApiWhiteList"
+                    }
+                ]
+            }
+        ],
+        "menu_button": [],
+        "menu_field": []
+    },
+    {
+        "name": "≥£πÊ≈‰÷√",
+        "icon": "iconfont icon-configure",
         "sort": 2,
         "is_link": false,
-        "is_catalog": false,
-        "web_path": "/areas",
-        "component": "system/areas/index",
-        "component_name": "areas",
+        "is_catalog": true,
+        "web_path": "/generalConfig",
+        "component": "",
+        "component_name": "",
         "status": true,
         "cache": false,
         "visible": true,
-        "children": [],
-        "menu_button": [
-          {
-            "name": "Êü•ËØ¢",
-            "value": "area:Search",
-            "api": "/api/system/area/",
-            "method": 0
-          },
-          {
-            "name": "ËØ¶ÊÉÖ",
-            "value": "area:Retrieve",
-            "api": "/api/system/area/{id}/",
-            "method": 0
-          },
-          {
-            "name": "Êñ∞Â¢û",
-            "value": "area:Create",
-            "api": "/api/system/area/",
-            "method": 1
-          },
-          {
-            "name": "ÁºñËæë",
-            "value": "area:Update",
-            "api": "/api/system/area/{id}/",
-            "method": 2
-          },
-          {
-            "name": "Âà†Èô§",
-            "value": "area:Delete",
-            "api": "/api/system/area/{id}/",
-            "method": 3
-          }
-        ]
-      },
-      {
-        "name": "ÈôÑ‰ª∂ÁÆ°ÁêÜ",
-        "icon": "iconfont icon-file",
+        "parent": null,
+        "children": [
+            {
+                "name": "œµÕ≥≈‰÷√",
+                "icon": "iconfont icon-system",
+                "sort": 0,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/config",
+                "component": "system/config/index",
+                "component_name": "config",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "parent": 10,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "≤È—Ø",
+                        "value": "system_config:Search",
+                        "api": "/api/system/system_config/",
+                        "method": 0
+                    },
+                    {
+                        "name": "œÍ«È",
+                        "value": "system_config:Retrieve",
+                        "api": "/api/system/system_config/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "–¬‘ˆ",
+                        "value": "system_config:Create",
+                        "api": "/api/system/system_config/",
+                        "method": 1
+                    },
+                    {
+                        "name": "±‡º≠",
+                        "value": "system_config:Update",
+                        "api": "/api/system/system_config/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "…æ≥˝",
+                        "value": "system_config:Delete",
+                        "api": "/api/system/system_config/{id}/",
+                        "method": 3
+                    }
+                ],
+                "menu_field": []
+            },
+            {
+                "name": "◊÷µ‰π‹¿Ì",
+                "icon": "iconfont icon-dict",
+                "sort": 1,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/dictionary",
+                "component": "system/dictionary/index",
+                "component_name": "dictionary",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "parent": 10,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "≤È—Ø",
+                        "value": "dictionary:Search",
+                        "api": "/api/system/dictionary/",
+                        "method": 0
+                    },
+                    {
+                        "name": "œÍ«È",
+                        "value": "dictionary:Retrieve",
+                        "api": "/api/system/dictionary/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "–¬‘ˆ",
+                        "value": "dictionary:Create",
+                        "api": "/api/system/dictionary/",
+                        "method": 1
+                    },
+                    {
+                        "name": "±‡º≠",
+                        "value": "dictionary:Update",
+                        "api": "/api/system/dictionary/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "…æ≥˝",
+                        "value": "dictionary:Delete",
+                        "api": "/api/system/dictionary/{id}/",
+                        "method": 3
+                    }
+                ],
+                "menu_field": [
+                    {
+                        "field_name": "color",
+                        "title": "—’…´",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "create_datetime",
+                        "title": "¥¥Ω® ±º‰",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "creator",
+                        "title": "¥¥Ω®»À",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "dept_belong_id",
+                        "title": " ˝æ›πÈ Ù≤ø√≈",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "description",
+                        "title": "√Ë ˆ",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "id",
+                        "title": "Id",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "is_value",
+                        "title": " «∑ÒŒ™value÷µ",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "label",
+                        "title": "◊÷µ‰√˚≥∆",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "modifier",
+                        "title": "–ﬁ∏ƒ»À",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "parent",
+                        "title": "∏∏º∂",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "remark",
+                        "title": "±∏◊¢",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "sort",
+                        "title": "œ‘ æ≈≈–Ú",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "status",
+                        "title": "◊¥Ã¨",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "type",
+                        "title": " ˝æ›÷µ¿‡–Õ",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "update_datetime",
+                        "title": "–ﬁ∏ƒ ±º‰",
+                        "model": "Dictionary"
+                    },
+                    {
+                        "field_name": "value",
+                        "title": "◊÷µ‰±‡∫≈",
+                        "model": "Dictionary"
+                    }
+                ]
+            },
+            {
+                "name": "µÿ«¯π‹¿Ì",
+                "icon": "iconfont icon-Area",
+                "sort": 2,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/areas",
+                "component": "system/areas/index",
+                "component_name": "areas",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "parent": 10,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "≤È—Ø",
+                        "value": "area:Search",
+                        "api": "/api/system/area/",
+                        "method": 0
+                    },
+                    {
+                        "name": "œÍ«È",
+                        "value": "area:Retrieve",
+                        "api": "/api/system/area/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "–¬‘ˆ",
+                        "value": "area:Create",
+                        "api": "/api/system/area/",
+                        "method": 1
+                    },
+                    {
+                        "name": "±‡º≠",
+                        "value": "area:Update",
+                        "api": "/api/system/area/{id}/",
+                        "method": 2
+                    },
+                    {
+                        "name": "…æ≥˝",
+                        "value": "area:Delete",
+                        "api": "/api/system/area/{id}/",
+                        "method": 3
+                    }
+                ],
+                "menu_field": [
+                    {
+                        "field_name": "code",
+                        "title": "µÿ«¯±‡¬Î",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "create_datetime",
+                        "title": "¥¥Ω® ±º‰",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "creator",
+                        "title": "¥¥Ω®»À",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "dept_belong_id",
+                        "title": " ˝æ›πÈ Ù≤ø√≈",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "description",
+                        "title": "√Ë ˆ",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "enable",
+                        "title": " «∑Ò∆Ù”√",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "id",
+                        "title": "Id",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "initials",
+                        "title": " ◊◊÷ƒ∏",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "level",
+                        "title": "µÿ«¯≤„º∂(1 °∑› 2≥« – 3«¯œÿ 4œÁº∂)",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "modifier",
+                        "title": "–ﬁ∏ƒ»À",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "name",
+                        "title": "√˚≥∆",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "pcode",
+                        "title": "∏∏µÿ«¯±‡¬Î",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "pinyin",
+                        "title": "∆¥“Ù",
+                        "model": "Area"
+                    },
+                    {
+                        "field_name": "update_datetime",
+                        "title": "–ﬁ∏ƒ ±º‰",
+                        "model": "Area"
+                    }
+                ]
+            },
+            {
+                "name": "∏Ωº˛π‹¿Ì",
+                "icon": "iconfont icon-file",
+                "sort": 3,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/file",
+                "component": "system/fileList/index",
+                "component_name": "file",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "parent": 10,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "œÍ«È",
+                        "value": "file:Retrieve",
+                        "api": "/api/system/file/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "≤È—Ø",
+                        "value": "file:Search",
+                        "api": "/api/system/file/",
+                        "method": 0
+                    },
+                    {
+                        "name": "±‡º≠",
+                        "value": "file:Update",
+                        "api": "/api/system/file/{id}/",
+                        "method": 1
+                    },
+                    {
+                        "name": "…æ≥˝",
+                        "value": "file:Delete",
+                        "api": "/api/system/file/{id}/",
+                        "method": 3
+                    }
+                ],
+                "menu_field": [
+                    {
+                        "field_name": "create_datetime",
+                        "title": "¥¥Ω® ±º‰",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "creator",
+                        "title": "¥¥Ω®»À",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "dept_belong_id",
+                        "title": " ˝æ›πÈ Ù≤ø√≈",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "description",
+                        "title": "√Ë ˆ",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "engine",
+                        "title": "“˝«Ê",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "file_url",
+                        "title": "Œƒº˛µÿ÷∑",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "id",
+                        "title": "Id",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "md5sum",
+                        "title": "Œƒº˛md5",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "mime_type",
+                        "title": "Mime¿‡–Õ",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "modifier",
+                        "title": "–ﬁ∏ƒ»À",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "name",
+                        "title": "√˚≥∆",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "size",
+                        "title": "Œƒº˛¥Û–°",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "update_datetime",
+                        "title": "–ﬁ∏ƒ ±º‰",
+                        "model": "FileList"
+                    },
+                    {
+                        "field_name": "url",
+                        "title": "url",
+                        "model": "FileList"
+                    }
+                ]
+            }
+        ],
+        "menu_button": [],
+        "menu_field": []
+    },
+    {
+        "name": "»’÷æπ‹¿Ì",
+        "icon": "iconfont icon-rizhi",
         "sort": 3,
         "is_link": false,
-        "is_catalog": false,
-        "web_path": "/file",
-        "component": "system/fileList/index",
-        "component_name": "file",
+        "is_catalog": true,
+        "web_path": "/log",
+        "component": "",
+        "component_name": "",
         "status": true,
         "cache": false,
         "visible": true,
-        "children": [],
-        "menu_button": [
-          {
-            "name": "ËØ¶ÊÉÖ",
-            "value": "file:Retrieve",
-            "api": "/api/system/file/{id}/",
-            "method": 0
-          },
-          {
-            "name": "Êü•ËØ¢",
-            "value": "file:Search",
-            "api": "/api/system/file/",
-            "method": 0
-          },
-          {
-            "name": "ÁºñËæë",
-            "value": "file:Update",
-            "api": "/api/system/file/{id}/",
-            "method": 1
-          },
-          {
-            "name": "Âà†Èô§",
-            "value": "file:Delete",
-            "api": "/api/system/file/{id}/",
-            "method": 3
-          }
-        ]
-      }
-    ],
-    "menu_button": []
-  },
-  {
-    "name": "Êó•ÂøóÁÆ°ÁêÜ",
-    "icon": "iconfont icon-rizhi",
-    "sort": 3,
-    "is_link": false,
-    "is_catalog": true,
-    "web_path": "/log",
-    "component": "",
-    "component_name": "",
-    "status": true,
-    "cache": false,
-    "visible": true,
-    "children": [
-      {
-        "name": "ÁôªÂΩïÊó•Âøó",
-        "icon": "iconfont icon-guanlidenglurizhi",
-        "sort": 1,
-        "is_link": false,
-        "is_catalog": false,
-        "web_path": "/loginLog",
-        "component": "system/log/loginLog/index",
-        "component_name": "loginLog",
-        "status": true,
-        "cache": false,
-        "visible": true,
-        "children": [],
-        "menu_button": [
-          {
-            "name": "Êü•ËØ¢",
-            "value": "login_log:Search",
-            "api": "/api/system/login_log/",
-            "method": 0
-          },
-          {
-            "name": "ËØ¶ÊÉÖ",
-            "value": "login_log:Retrieve",
-            "api": "/api/system/login_log/{id}/",
-            "method": 0
-          }
-        ]
-      },
-      {
-        "name": "Êìç‰ΩúÊó•Âøó",
-        "icon": "iconfont icon-caozuorizhi",
-        "sort": 2,
-        "is_link": false,
-        "is_catalog": false,
-        "web_path": "/operationLog",
-        "component": "system/log/operationLog/index",
-        "component_name": "operationLog",
-        "status": true,
-        "cache": false,
-        "visible": true,
-        "children": [],
-        "menu_button": [
-          {
-            "name": "ËØ¶ÊÉÖ",
-            "value": "operation_log:Retrieve",
-            "api": "/api/system/operation_log/{id}/",
-            "method": 0
-          },
-          {
-            "name": "Êü•ËØ¢",
-            "value": "operation_log:Search",
-            "api": "/api/system/operation_log/",
-            "method": 0
-          }
-        ]
-      }
-    ],
-    "menu_button": []
-  }
+        "parent": null,
+        "children": [
+            {
+                "name": "µ«¬º»’÷æ",
+                "icon": "iconfont icon-guanlidenglurizhi",
+                "sort": 1,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/loginLog",
+                "component": "system/log/loginLog/index",
+                "component_name": "loginLog",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "parent": 15,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "≤È—Ø",
+                        "value": "login_log:Search",
+                        "api": "/api/system/login_log/",
+                        "method": 0
+                    },
+                    {
+                        "name": "œÍ«È",
+                        "value": "login_log:Retrieve",
+                        "api": "/api/system/login_log/{id}/",
+                        "method": 0
+                    }
+                ],
+                "menu_field": [
+                    {
+                        "field_name": "agent",
+                        "title": "agent–≈œ¢",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "area_code",
+                        "title": "«¯”Ú¥˙¬Î",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "browser",
+                        "title": "‰Ø¿¿∆˜√˚",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "city",
+                        "title": "≥« –",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "continent",
+                        "title": "÷›",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "country",
+                        "title": "π˙º“",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "country_code",
+                        "title": "ºÚ≥∆",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "country_english",
+                        "title": "”¢Œƒ»´≥∆",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "create_datetime",
+                        "title": "¥¥Ω® ±º‰",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "creator",
+                        "title": "¥¥Ω®»À",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "dept_belong_id",
+                        "title": " ˝æ›πÈ Ù≤ø√≈",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "description",
+                        "title": "√Ë ˆ",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "district",
+                        "title": "œÿ«¯",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "id",
+                        "title": "Id",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "ip",
+                        "title": "µ«¬ºip",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "isp",
+                        "title": "‘À”™…Ã",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "latitude",
+                        "title": "Œ≥∂»",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "login_type",
+                        "title": "µ«¬º¿‡–Õ",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "longitude",
+                        "title": "æ≠∂»",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "modifier",
+                        "title": "–ﬁ∏ƒ»À",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "os",
+                        "title": "≤Ÿ◊˜œµÕ≥",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "province",
+                        "title": " °∑›",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "update_datetime",
+                        "title": "–ﬁ∏ƒ ±º‰",
+                        "model": "LoginLog"
+                    },
+                    {
+                        "field_name": "username",
+                        "title": "µ«¬º”√ªß√˚",
+                        "model": "LoginLog"
+                    }
+                ]
+            },
+            {
+                "name": "≤Ÿ◊˜»’÷æ",
+                "icon": "iconfont icon-caozuorizhi",
+                "sort": 2,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/operationLog",
+                "component": "system/log/operationLog/index",
+                "component_name": "operationLog",
+                "status": true,
+                "cache": false,
+                "visible": true,
+                "parent": 15,
+                "children": [],
+                "menu_button": [
+                    {
+                        "name": "œÍ«È",
+                        "value": "operation_log:Retrieve",
+                        "api": "/api/system/operation_log/{id}/",
+                        "method": 0
+                    },
+                    {
+                        "name": "≤È—Ø",
+                        "value": "operation_log:Search",
+                        "api": "/api/system/operation_log/",
+                        "method": 0
+                    }
+                ],
+                "menu_field": [
+                    {
+                        "field_name": "create_datetime",
+                        "title": "¥¥Ω® ±º‰",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "creator",
+                        "title": "¥¥Ω®»À",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "dept_belong_id",
+                        "title": " ˝æ›πÈ Ù≤ø√≈",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "description",
+                        "title": "√Ë ˆ",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "id",
+                        "title": "Id",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "json_result",
+                        "title": "∑µªÿ–≈œ¢",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "modifier",
+                        "title": "–ﬁ∏ƒ»À",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "request_body",
+                        "title": "«Î«Û≤Œ ˝",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "request_browser",
+                        "title": "«Î«Û‰Ø¿¿∆˜",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "request_ip",
+                        "title": "«Î«Ûipµÿ÷∑",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "request_method",
+                        "title": "«Î«Û∑Ω Ω",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "request_modular",
+                        "title": "«Î«Ûƒ£øÈ",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "request_msg",
+                        "title": "≤Ÿ◊˜Àµ√˜",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "request_os",
+                        "title": "≤Ÿ◊˜œµÕ≥",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "request_path",
+                        "title": "«Î«Ûµÿ÷∑",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "response_code",
+                        "title": "œÏ”¶◊¥Ã¨¬Î",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "status",
+                        "title": "œÏ”¶◊¥Ã¨",
+                        "model": "OperationLog"
+                    },
+                    {
+                        "field_name": "update_datetime",
+                        "title": "–ﬁ∏ƒ ±º‰",
+                        "model": "OperationLog"
+                    }
+                ]
+            }
+        ],
+        "menu_button": [],
+        "menu_field": []
+    }
 ]
