@@ -1,6 +1,6 @@
 [
     {
-        "name": "ÏµÍ³¹ÜÀí",
+        "name": "ç³»ç»Ÿç®¡ç†",
         "icon": "iconfont icon-xitongshezhi",
         "sort": 1,
         "is_link": false,
@@ -14,7 +14,7 @@
         "parent": null,
         "children": [
             {
-                "name": "²Ëµ¥¹ÜÀí",
+                "name": "èœå•ç®¡ç†",
                 "icon": "iconfont icon-caidan",
                 "sort": 1,
                 "is_link": false,
@@ -29,109 +29,109 @@
                 "children": [],
                 "menu_button": [
                     {
-                        "name": "²éÑ¯",
+                        "name": "æŸ¥è¯¢",
                         "value": "menu:Search",
                         "api": "/api/system/menu/",
                         "method": 0
                     },
                     {
-                        "name": "ÏêÇé",
+                        "name": "è¯¦æƒ…",
                         "value": "menu:Retrieve",
                         "api": "/api/system/menu/{id}/",
                         "method": 0
                     },
                     {
-                        "name": "²éÑ¯ËùÓĞ",
+                        "name": "æŸ¥è¯¢æ‰€æœ‰",
                         "value": "menu:SearchAll",
                         "api": "/api/system/menu/get_all_menu/",
                         "method": 0
                     },
                     {
-                        "name": "Â·ÓÉ",
+                        "name": "è·¯ç”±",
                         "value": "menu:router",
                         "api": "/api/system/menu/web_router/",
                         "method": 0
                     },
                     {
-                        "name": "²éÑ¯°´Å¥È¨ÏŞ",
+                        "name": "æŸ¥è¯¢æŒ‰é’®æƒé™",
                         "value": "btn:Search",
                         "api": "/api/system/menu_button/",
                         "method": 0
                     },
                     {
-                        "name": "²éÑ¯ÁĞÈ¨ÏŞ",
+                        "name": "æŸ¥è¯¢åˆ—æƒé™",
                         "value": "column:Search",
                         "api": "/api/system/column/",
                         "method": 0
                     },
                     {
-                        "name": "ĞÂÔö",
+                        "name": "æ–°å¢",
                         "value": "menu:Create",
                         "api": "/api/system/menu/",
                         "method": 1
                     },
                     {
-                        "name": "ÉÏÒÆ",
+                        "name": "ä¸Šç§»",
                         "value": "menu:MoveUp",
                         "api": "/api/system/menu/mode_up/",
                         "method": 1
                     },
                     {
-                        "name": "ÏÂÒÆ",
+                        "name": "ä¸‹ç§»",
                         "value": "menu:MoveDown",
                         "api": "/api/system/menu/mode_down/",
                         "method": 1
                     },
                     {
-                        "name": "ĞÂÔö°´Å¥È¨ÏŞ",
+                        "name": "æ–°å¢æŒ‰é’®æƒé™",
                         "value": "btn:Create",
                         "api": "/api/system/menu_button/",
                         "method": 1
                     },
                     {
-                        "name": "ĞÂÔöÁĞÈ¨ÏŞ",
+                        "name": "æ–°å¢åˆ—æƒé™",
                         "value": "column:Create",
                         "api": "/api/system/column/",
                         "method": 1
                     },
                     {
-                        "name": "×Ô¶¯Æ¥ÅäÁĞÈ¨ÏŞ",
+                        "name": "è‡ªåŠ¨åŒ¹é…åˆ—æƒé™",
                         "value": "column:Match",
                         "api": "/api/system/column/auto_match_fields/",
                         "method": 1
                     },
                     {
-                        "name": "±à¼­",
+                        "name": "ç¼–è¾‘",
                         "value": "menu:Update",
                         "api": "/api/system/menu/{id}/",
                         "method": 2
                     },
                     {
-                        "name": "ĞŞ¸Ä°´Å¥È¨ÏŞ",
+                        "name": "ä¿®æ”¹æŒ‰é’®æƒé™",
                         "value": "btn:Update",
                         "api": "/api/system/menu_button/{id}/",
                         "method": 2
                     },
                     {
-                        "name": "±à¼­ÁĞÈ¨ÏŞ",
+                        "name": "ç¼–è¾‘åˆ—æƒé™",
                         "value": "column:Update",
                         "api": "/api/system/column/{id}/",
                         "method": 2
                     },
                     {
-                        "name": "É¾³ı",
+                        "name": "åˆ é™¤",
                         "value": "menu:Delete",
                         "api": "/api/system/menu/{id}/",
                         "method": 3
                     },
                     {
-                        "name": "É¾³ı°´Å¥È¨ÏŞ",
+                        "name": "åˆ é™¤æŒ‰é’®æƒé™",
                         "value": "btn:Delete",
                         "api": "/api/system/menu_button/{id}/",
                         "method": 3
                     },
                     {
-                        "name": "É¾³ıÁĞÈ¨ÏŞ",
+                        "name": "åˆ é™¤åˆ—æƒé™",
                         "value": "column:Delete",
                         "api": "/api/system/column/{id}/",
                         "method": 3
@@ -140,7 +140,7 @@
                 "menu_field": []
             },
             {
-                "name": "²¿ÃÅ¹ÜÀí",
+                "name": "éƒ¨é—¨ç®¡ç†",
                 "icon": "ele-OfficeBuilding",
                 "sort": 3,
                 "is_link": false,
@@ -155,61 +155,61 @@
                 "children": [],
                 "menu_button": [
                     {
-                        "name": "²éÑ¯",
+                        "name": "æŸ¥è¯¢",
                         "value": "dept:Search",
                         "api": "/api/system/dept/",
                         "method": 0
                     },
                     {
-                        "name": "ÏêÇé",
+                        "name": "è¯¦æƒ…",
                         "value": "dept:Retrieve",
                         "api": "/api/system/dept/{id}/",
                         "method": 0
                     },
                     {
-                        "name": "²éÑ¯ËùÓĞ",
+                        "name": "æŸ¥è¯¢æ‰€æœ‰",
                         "value": "dept:SearchAll",
                         "api": "/api/system/dept/all_dept/",
                         "method": 0
                     },
                     {
-                        "name": "ÀÁ¼ÓÔØ²éÑ¯ËùÓĞ",
+                        "name": "æ‡’åŠ è½½æŸ¥è¯¢æ‰€æœ‰",
                         "value": "dept:LazySearchAll",
                         "api": "/api/system/dept/dept_lazy_tree/",
                         "method": 0
                     },
                     {
-                        "name": "Í·ĞÅÏ¢",
+                        "name": "å¤´ä¿¡æ¯",
                         "value": "dept:HeaderInfo",
                         "api": "/api/system/dept/dept_info/",
                         "method": 0
                     },
                     {
-                        "name": "ĞÂÔö",
+                        "name": "æ–°å¢",
                         "value": "dept:Create",
                         "api": "/api/system/dept/",
                         "method": 1
                     },
                     {
-                        "name": "ÉÏÒÆ",
+                        "name": "ä¸Šç§»",
                         "value": "dept:MoveUp",
                         "api": "/api/system/dept/mode_up/",
                         "method": 1
                     },
                     {
-                        "name": "ÏÂÒÆ",
+                        "name": "ä¸‹ç§»",
                         "value": "dept:MoveDown",
                         "api": "/api/system/dept/mode_down/",
                         "method": 1
                     },
                     {
-                        "name": "±à¼­",
+                        "name": "ç¼–è¾‘",
                         "value": "dept:Update",
                         "api": "/api/system/dept/{id}/",
                         "method": 2
                     },
                     {
-                        "name": "É¾³ı",
+                        "name": "åˆ é™¤",
                         "value": "dept:Delete",
                         "api": "/api/system/dept/{id}/",
                         "method": 3
@@ -218,7 +218,7 @@
                 "menu_field": []
             },
             {
-                "name": "½ÇÉ«¹ÜÀí",
+                "name": "è§’è‰²ç®¡ç†",
                 "icon": "ele-ColdDrink",
                 "sort": 4,
                 "is_link": false,
@@ -233,43 +233,43 @@
                 "children": [],
                 "menu_button": [
                     {
-                        "name": "²éÑ¯",
+                        "name": "æŸ¥è¯¢",
                         "value": "role:Search",
                         "api": "/api/system/role/",
                         "method": 0
                     },
                     {
-                        "name": "ÏêÇé",
+                        "name": "è¯¦æƒ…",
                         "value": "role:Retrieve",
                         "api": "/api/system/role/{id}/",
                         "method": 0
                     },
                     {
-                        "name": "È¨ÏŞÅäÖÃ",
+                        "name": "æƒé™é…ç½®",
                         "value": "role:Permission",
                         "api": "/api/system/role/{id}/",
                         "method": 0
                     },
                     {
-                        "name": "ĞÂÔö",
+                        "name": "æ–°å¢",
                         "value": "role:Create",
                         "api": "/api/system/role/",
                         "method": 1
                     },
                     {
-                        "name": "±à¼­",
+                        "name": "ç¼–è¾‘",
                         "value": "role:Update",
                         "api": "/api/system/role/{id}/",
                         "method": 2
                     },
                     {
-                        "name": "±£´æ",
+                        "name": "ä¿å­˜",
                         "value": "role:Save",
                         "api": "/api/system/role/{id}/",
                         "method": 2
                     },
                     {
-                        "name": "É¾³ı",
+                        "name": "åˆ é™¤",
                         "value": "role:Delete",
                         "api": "/api/system/role/{id}/",
                         "method": 3
@@ -278,22 +278,22 @@
                 "menu_field": [
                     {
                         "field_name": "create_datetime",
-                        "title": "´´½¨Ê±¼ä",
+                        "title": "åˆ›å»ºæ—¶é—´",
                         "model": "Role"
                     },
                     {
                         "field_name": "creator",
-                        "title": "´´½¨ÈË",
+                        "title": "åˆ›å»ºäºº",
                         "model": "Role"
                     },
                     {
                         "field_name": "dept_belong_id",
-                        "title": "Êı¾İ¹éÊô²¿ÃÅ",
+                        "title": "æ•°æ®å½’å±éƒ¨é—¨",
                         "model": "Role"
                     },
                     {
                         "field_name": "description",
-                        "title": "ÃèÊö",
+                        "title": "æè¿°",
                         "model": "Role"
                     },
                     {
@@ -303,38 +303,38 @@
                     },
                     {
                         "field_name": "key",
-                        "title": "È¨ÏŞ×Ö·û",
+                        "title": "æƒé™å­—ç¬¦",
                         "model": "Role"
                     },
                     {
                         "field_name": "modifier",
-                        "title": "ĞŞ¸ÄÈË",
+                        "title": "ä¿®æ”¹äºº",
                         "model": "Role"
                     },
                     {
                         "field_name": "name",
-                        "title": "½ÇÉ«Ãû³Æ",
+                        "title": "è§’è‰²åç§°",
                         "model": "Role"
                     },
                     {
                         "field_name": "sort",
-                        "title": "½ÇÉ«Ë³Ğò",
+                        "title": "è§’è‰²é¡ºåº",
                         "model": "Role"
                     },
                     {
                         "field_name": "status",
-                        "title": "½ÇÉ«×´Ì¬",
+                        "title": "è§’è‰²çŠ¶æ€",
                         "model": "Role"
                     },
                     {
                         "field_name": "update_datetime",
-                        "title": "ĞŞ¸ÄÊ±¼ä",
+                        "title": "ä¿®æ”¹æ—¶é—´",
                         "model": "Role"
                     }
                 ]
             },
             {
-                "name": "ÓÃ»§¹ÜÀí",
+                "name": "ç”¨æˆ·ç®¡ç†",
                 "icon": "iconfont icon-icon-",
                 "sort": 6,
                 "is_link": false,
@@ -349,55 +349,55 @@
                 "children": [],
                 "menu_button": [
                     {
-                        "name": "²éÑ¯",
+                        "name": "æŸ¥è¯¢",
                         "value": "user:Search",
                         "api": "/api/system/user/",
                         "method": 0
                     },
                     {
-                        "name": "ÏêÇé",
+                        "name": "è¯¦æƒ…",
                         "value": "user:Retrieve",
                         "api": "/api/system/user/{id}/",
                         "method": 0
                     },
                     {
-                        "name": "ĞÂÔö",
+                        "name": "æ–°å¢",
                         "value": "user:Create",
                         "api": "/api/system/user/",
                         "method": 1
                     },
                     {
-                        "name": "µ¼³ö",
+                        "name": "å¯¼å‡º",
                         "value": "user:Export",
                         "api": "/api/system/user/export/",
                         "method": 1
                     },
                     {
-                        "name": "µ¼Èë",
+                        "name": "å¯¼å…¥",
                         "value": "user:Import",
                         "api": "/api/system/user/import/",
                         "method": 1
                     },
                     {
-                        "name": "±à¼­",
+                        "name": "ç¼–è¾‘",
                         "value": "user:Update",
                         "api": "/api/system/user/{id}/",
                         "method": 2
                     },
                     {
-                        "name": "ÖØÉèÃÜÂë",
+                        "name": "é‡è®¾å¯†ç ",
                         "value": "user:ResetPassword",
                         "api": "/api/system/user/{id}/reset_password/",
                         "method": 2
                     },
                     {
-                        "name": "ÖØÖÃÃÜÂë",
+                        "name": "é‡ç½®å¯†ç ",
                         "value": "user:DefaultPassword",
                         "api": "/api/system/user/{id}/reset_to_default_password/",
                         "method": 2
                     },
                     {
-                        "name": "É¾³ı",
+                        "name": "åˆ é™¤",
                         "value": "user:Delete",
                         "api": "/api/system/user/{id}/",
                         "method": 3
@@ -406,42 +406,42 @@
                 "menu_field": [
                     {
                         "field_name": "avatar",
-                        "title": "Í·Ïñ",
+                        "title": "å¤´åƒ",
                         "model": "Users"
                     },
                     {
                         "field_name": "create_datetime",
-                        "title": "´´½¨Ê±¼ä",
+                        "title": "åˆ›å»ºæ—¶é—´",
                         "model": "Users"
                     },
                     {
                         "field_name": "creator",
-                        "title": "´´½¨ÈË",
+                        "title": "åˆ›å»ºäºº",
                         "model": "Users"
                     },
                     {
                         "field_name": "dept",
-                        "title": "ËùÊô²¿ÃÅ",
+                        "title": "æ‰€å±éƒ¨é—¨",
                         "model": "Users"
                     },
                     {
                         "field_name": "dept_belong_id",
-                        "title": "Êı¾İ¹éÊô²¿ÃÅ",
+                        "title": "æ•°æ®å½’å±éƒ¨é—¨",
                         "model": "Users"
                     },
                     {
                         "field_name": "description",
-                        "title": "ÃèÊö",
+                        "title": "æè¿°",
                         "model": "Users"
                     },
                     {
                         "field_name": "email",
-                        "title": "ÓÊÏä",
+                        "title": "é‚®ç®±",
                         "model": "Users"
                     },
                     {
                         "field_name": "gender",
-                        "title": "ĞÔ±ğ",
+                        "title": "æ€§åˆ«",
                         "model": "Users"
                     },
                     {
@@ -451,38 +451,38 @@
                     },
                     {
                         "field_name": "mobile",
-                        "title": "µç»°",
+                        "title": "ç”µè¯",
                         "model": "Users"
                     },
                     {
                         "field_name": "modifier",
-                        "title": "ĞŞ¸ÄÈË",
+                        "title": "ä¿®æ”¹äºº",
                         "model": "Users"
                     },
                     {
                         "field_name": "name",
-                        "title": "ĞÕÃû",
+                        "title": "å§“å",
                         "model": "Users"
                     },
                     {
                         "field_name": "update_datetime",
-                        "title": "ĞŞ¸ÄÊ±¼ä",
+                        "title": "ä¿®æ”¹æ—¶é—´",
                         "model": "Users"
                     },
                     {
                         "field_name": "username",
-                        "title": "ÓÃ»§ÕËºÅ",
+                        "title": "ç”¨æˆ·è´¦å·",
                         "model": "Users"
                     },
                     {
                         "field_name": "user_type",
-                        "title": "ÓÃ»§ÀàĞÍ",
+                        "title": "ç”¨æˆ·ç±»å‹",
                         "model": "Users"
                     }
                 ]
             },
             {
-                "name": "ÏûÏ¢ÖĞĞÄ",
+                "name": "æ¶ˆæ¯ä¸­å¿ƒ",
                 "icon": "iconfont icon-xiaoxizhongxin",
                 "sort": 7,
                 "is_link": false,
@@ -497,31 +497,31 @@
                 "children": [],
                 "menu_button": [
                     {
-                        "name": "²éÑ¯",
+                        "name": "æŸ¥è¯¢",
                         "value": "messageCenter:Search",
                         "api": "/api/system/message_center/",
                         "method": 0
                     },
                     {
-                        "name": "ÏêÇé",
+                        "name": "è¯¦æƒ…",
                         "value": "messageCenter:Retrieve",
                         "api": "/api/system/message_center/{id}/",
                         "method": 0
                     },
                     {
-                        "name": "ĞÂÔö",
+                        "name": "æ–°å¢",
                         "value": "messageCenter:Create",
                         "api": "/api/system/message_center/",
                         "method": 1
                     },
                     {
-                        "name": "±à¼­",
+                        "name": "ç¼–è¾‘",
                         "value": "messageCenter:Update",
                         "api": "/api/system/message_center/{id}/",
                         "method": 2
                     },
                     {
-                        "name": "É¾³ı",
+                        "name": "åˆ é™¤",
                         "value": "messageCenter:Delete",
                         "api": "/api/system/menu/{id}/",
                         "method": 3
@@ -530,27 +530,27 @@
                 "menu_field": [
                     {
                         "field_name": "content",
-                        "title": "ÄÚÈİ",
+                        "title": "å†…å®¹",
                         "model": "MessageCenter"
                     },
                     {
                         "field_name": "create_datetime",
-                        "title": "´´½¨Ê±¼ä",
+                        "title": "åˆ›å»ºæ—¶é—´",
                         "model": "MessageCenter"
                     },
                     {
                         "field_name": "creator",
-                        "title": "´´½¨ÈË",
+                        "title": "åˆ›å»ºäºº",
                         "model": "MessageCenter"
                     },
                     {
                         "field_name": "dept_belong_id",
-                        "title": "Êı¾İ¹éÊô²¿ÃÅ",
+                        "title": "æ•°æ®å½’å±éƒ¨é—¨",
                         "model": "MessageCenter"
                     },
                     {
                         "field_name": "description",
-                        "title": "ÃèÊö",
+                        "title": "æè¿°",
                         "model": "MessageCenter"
                     },
                     {
@@ -560,28 +560,28 @@
                     },
                     {
                         "field_name": "modifier",
-                        "title": "ĞŞ¸ÄÈË",
+                        "title": "ä¿®æ”¹äºº",
                         "model": "MessageCenter"
                     },
                     {
                         "field_name": "target_type",
-                        "title": "Ä¿±êÀàĞÍ",
+                        "title": "ç›®æ ‡ç±»å‹",
                         "model": "MessageCenter"
                     },
                     {
                         "field_name": "title",
-                        "title": "±êÌâ",
+                        "title": "æ ‡é¢˜",
                         "model": "MessageCenter"
                     },
                     {
                         "field_name": "update_datetime",
-                        "title": "ĞŞ¸ÄÊ±¼ä",
+                        "title": "ä¿®æ”¹æ—¶é—´",
                         "model": "MessageCenter"
                     }
                 ]
             },
             {
-                "name": "½Ó¿Ú°×Ãûµ¥",
+                "name": "æ¥å£ç™½åå•",
                 "icon": "ele-SetUp",
                 "sort": 8,
                 "is_link": false,
@@ -596,31 +596,31 @@
                 "children": [],
                 "menu_button": [
                     {
-                        "name": "²éÑ¯",
+                        "name": "æŸ¥è¯¢",
                         "value": "api_white_list:Search",
                         "api": "/api/system/api_white_list/",
                         "method": 0
                     },
                     {
-                        "name": "ÏêÇé",
+                        "name": "è¯¦æƒ…",
                         "value": "api_white_list:Retrieve",
                         "api": "/api/system/api_white_list/{id}/",
                         "method": 0
                     },
                     {
-                        "name": "ĞÂÔö",
+                        "name": "æ–°å¢",
                         "value": "api_white_list:Create",
                         "api": "/api/system/api_white_list/",
                         "method": 1
                     },
                     {
-                        "name": "±à¼­",
+                        "name": "ç¼–è¾‘",
                         "value": "api_white_list:Update",
                         "api": "/api/system/api_white_list/{id}/",
                         "method": 2
                     },
                     {
-                        "name": "É¾³ı",
+                        "name": "åˆ é™¤",
                         "value": "api_white_list:Delete",
                         "api": "/api/system/api_white_list/{id}/",
                         "method": 3
@@ -629,27 +629,27 @@
                 "menu_field": [
                     {
                         "field_name": "create_datetime",
-                        "title": "´´½¨Ê±¼ä",
+                        "title": "åˆ›å»ºæ—¶é—´",
                         "model": "ApiWhiteList"
                     },
                     {
                         "field_name": "creator",
-                        "title": "´´½¨ÈË",
+                        "title": "åˆ›å»ºäºº",
                         "model": "ApiWhiteList"
                     },
                     {
                         "field_name": "dept_belong_id",
-                        "title": "Êı¾İ¹éÊô²¿ÃÅ",
+                        "title": "æ•°æ®å½’å±éƒ¨é—¨",
                         "model": "ApiWhiteList"
                     },
                     {
                         "field_name": "description",
-                        "title": "ÃèÊö",
+                        "title": "æè¿°",
                         "model": "ApiWhiteList"
                     },
                     {
                         "field_name": "enable_datasource",
-                        "title": "¼¤»îÊı¾İÈ¨ÏŞ",
+                        "title": "æ¿€æ´»æ•°æ®æƒé™",
                         "model": "ApiWhiteList"
                     },
                     {
@@ -659,17 +659,17 @@
                     },
                     {
                         "field_name": "method",
-                        "title": "½Ó¿ÚÇëÇó·½·¨",
+                        "title": "æ¥å£è¯·æ±‚æ–¹æ³•",
                         "model": "ApiWhiteList"
                     },
                     {
                         "field_name": "modifier",
-                        "title": "ĞŞ¸ÄÈË",
+                        "title": "ä¿®æ”¹äºº",
                         "model": "ApiWhiteList"
                     },
                     {
                         "field_name": "update_datetime",
-                        "title": "ĞŞ¸ÄÊ±¼ä",
+                        "title": "ä¿®æ”¹æ—¶é—´",
                         "model": "ApiWhiteList"
                     },
                     {
@@ -684,7 +684,7 @@
         "menu_field": []
     },
     {
-        "name": "³£¹æÅäÖÃ",
+        "name": "å¸¸è§„é…ç½®",
         "icon": "iconfont icon-configure",
         "sort": 2,
         "is_link": false,
@@ -698,7 +698,7 @@
         "parent": null,
         "children": [
             {
-                "name": "ÏµÍ³ÅäÖÃ",
+                "name": "ç³»ç»Ÿé…ç½®",
                 "icon": "iconfont icon-system",
                 "sort": 0,
                 "is_link": false,
@@ -713,31 +713,31 @@
                 "children": [],
                 "menu_button": [
                     {
-                        "name": "²éÑ¯",
+                        "name": "æŸ¥è¯¢",
                         "value": "system_config:Search",
                         "api": "/api/system/system_config/",
                         "method": 0
                     },
                     {
-                        "name": "ÏêÇé",
+                        "name": "è¯¦æƒ…",
                         "value": "system_config:Retrieve",
                         "api": "/api/system/system_config/{id}/",
                         "method": 0
                     },
                     {
-                        "name": "ĞÂÔö",
+                        "name": "æ–°å¢",
                         "value": "system_config:Create",
                         "api": "/api/system/system_config/",
                         "method": 1
                     },
                     {
-                        "name": "±à¼­",
+                        "name": "ç¼–è¾‘",
                         "value": "system_config:Update",
                         "api": "/api/system/system_config/{id}/",
                         "method": 2
                     },
                     {
-                        "name": "É¾³ı",
+                        "name": "åˆ é™¤",
                         "value": "system_config:Delete",
                         "api": "/api/system/system_config/{id}/",
                         "method": 3
@@ -746,7 +746,7 @@
                 "menu_field": []
             },
             {
-                "name": "×Öµä¹ÜÀí",
+                "name": "å­—å…¸ç®¡ç†",
                 "icon": "iconfont icon-dict",
                 "sort": 1,
                 "is_link": false,
@@ -761,31 +761,31 @@
                 "children": [],
                 "menu_button": [
                     {
-                        "name": "²éÑ¯",
+                        "name": "æŸ¥è¯¢",
                         "value": "dictionary:Search",
                         "api": "/api/system/dictionary/",
                         "method": 0
                     },
                     {
-                        "name": "ÏêÇé",
+                        "name": "è¯¦æƒ…",
                         "value": "dictionary:Retrieve",
                         "api": "/api/system/dictionary/{id}/",
                         "method": 0
                     },
                     {
-                        "name": "ĞÂÔö",
+                        "name": "æ–°å¢",
                         "value": "dictionary:Create",
                         "api": "/api/system/dictionary/",
                         "method": 1
                     },
                     {
-                        "name": "±à¼­",
+                        "name": "ç¼–è¾‘",
                         "value": "dictionary:Update",
                         "api": "/api/system/dictionary/{id}/",
                         "method": 2
                     },
                     {
-                        "name": "É¾³ı",
+                        "name": "åˆ é™¤",
                         "value": "dictionary:Delete",
                         "api": "/api/system/dictionary/{id}/",
                         "method": 3
@@ -794,27 +794,27 @@
                 "menu_field": [
                     {
                         "field_name": "color",
-                        "title": "ÑÕÉ«",
+                        "title": "é¢œè‰²",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "create_datetime",
-                        "title": "´´½¨Ê±¼ä",
+                        "title": "åˆ›å»ºæ—¶é—´",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "creator",
-                        "title": "´´½¨ÈË",
+                        "title": "åˆ›å»ºäºº",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "dept_belong_id",
-                        "title": "Êı¾İ¹éÊô²¿ÃÅ",
+                        "title": "æ•°æ®å½’å±éƒ¨é—¨",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "description",
-                        "title": "ÃèÊö",
+                        "title": "æè¿°",
                         "model": "Dictionary"
                     },
                     {
@@ -824,58 +824,58 @@
                     },
                     {
                         "field_name": "is_value",
-                        "title": "ÊÇ·ñÎªvalueÖµ",
+                        "title": "æ˜¯å¦ä¸ºvalueå€¼",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "label",
-                        "title": "×ÖµäÃû³Æ",
+                        "title": "å­—å…¸åç§°",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "modifier",
-                        "title": "ĞŞ¸ÄÈË",
+                        "title": "ä¿®æ”¹äºº",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "parent",
-                        "title": "¸¸¼¶",
+                        "title": "çˆ¶çº§",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "remark",
-                        "title": "±¸×¢",
+                        "title": "å¤‡æ³¨",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "sort",
-                        "title": "ÏÔÊ¾ÅÅĞò",
+                        "title": "æ˜¾ç¤ºæ’åº",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "status",
-                        "title": "×´Ì¬",
+                        "title": "çŠ¶æ€",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "type",
-                        "title": "Êı¾İÖµÀàĞÍ",
+                        "title": "æ•°æ®å€¼ç±»å‹",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "update_datetime",
-                        "title": "ĞŞ¸ÄÊ±¼ä",
+                        "title": "ä¿®æ”¹æ—¶é—´",
                         "model": "Dictionary"
                     },
                     {
                         "field_name": "value",
-                        "title": "×Öµä±àºÅ",
+                        "title": "å­—å…¸ç¼–å·",
                         "model": "Dictionary"
                     }
                 ]
             },
             {
-                "name": "µØÇø¹ÜÀí",
+                "name": "åœ°åŒºç®¡ç†",
                 "icon": "iconfont icon-Area",
                 "sort": 2,
                 "is_link": false,
@@ -890,31 +890,31 @@
                 "children": [],
                 "menu_button": [
                     {
-                        "name": "²éÑ¯",
+                        "name": "æŸ¥è¯¢",
                         "value": "area:Search",
                         "api": "/api/system/area/",
                         "method": 0
                     },
                     {
-                        "name": "ÏêÇé",
+                        "name": "è¯¦æƒ…",
                         "value": "area:Retrieve",
                         "api": "/api/system/area/{id}/",
                         "method": 0
                     },
                     {
-                        "name": "ĞÂÔö",
+                        "name": "æ–°å¢",
                         "value": "area:Create",
                         "api": "/api/system/area/",
                         "method": 1
                     },
                     {
-                        "name": "±à¼­",
+                        "name": "ç¼–è¾‘",
                         "value": "area:Update",
                         "api": "/api/system/area/{id}/",
                         "method": 2
                     },
                     {
-                        "name": "É¾³ı",
+                        "name": "åˆ é™¤",
                         "value": "area:Delete",
                         "api": "/api/system/area/{id}/",
                         "method": 3
@@ -923,32 +923,32 @@
                 "menu_field": [
                     {
                         "field_name": "code",
-                        "title": "µØÇø±àÂë",
+                        "title": "åœ°åŒºç¼–ç ",
                         "model": "Area"
                     },
                     {
                         "field_name": "create_datetime",
-                        "title": "´´½¨Ê±¼ä",
+                        "title": "åˆ›å»ºæ—¶é—´",
                         "model": "Area"
                     },
                     {
                         "field_name": "creator",
-                        "title": "´´½¨ÈË",
+                        "title": "åˆ›å»ºäºº",
                         "model": "Area"
                     },
                     {
                         "field_name": "dept_belong_id",
-                        "title": "Êı¾İ¹éÊô²¿ÃÅ",
+                        "title": "æ•°æ®å½’å±éƒ¨é—¨",
                         "model": "Area"
                     },
                     {
                         "field_name": "description",
-                        "title": "ÃèÊö",
+                        "title": "æè¿°",
                         "model": "Area"
                     },
                     {
                         "field_name": "enable",
-                        "title": "ÊÇ·ñÆôÓÃ",
+                        "title": "æ˜¯å¦å¯ç”¨",
                         "model": "Area"
                     },
                     {
@@ -958,43 +958,43 @@
                     },
                     {
                         "field_name": "initials",
-                        "title": "Ê××ÖÄ¸",
+                        "title": "é¦–å­—æ¯",
                         "model": "Area"
                     },
                     {
                         "field_name": "level",
-                        "title": "µØÇø²ã¼¶(1Ê¡·İ 2³ÇÊĞ 3ÇøÏØ 4Ïç¼¶)",
+                        "title": "åœ°åŒºå±‚çº§(1çœä»½ 2åŸå¸‚ 3åŒºå¿ 4ä¹¡çº§)",
                         "model": "Area"
                     },
                     {
                         "field_name": "modifier",
-                        "title": "ĞŞ¸ÄÈË",
+                        "title": "ä¿®æ”¹äºº",
                         "model": "Area"
                     },
                     {
                         "field_name": "name",
-                        "title": "Ãû³Æ",
+                        "title": "åç§°",
                         "model": "Area"
                     },
                     {
                         "field_name": "pcode",
-                        "title": "¸¸µØÇø±àÂë",
+                        "title": "çˆ¶åœ°åŒºç¼–ç ",
                         "model": "Area"
                     },
                     {
                         "field_name": "pinyin",
-                        "title": "Æ´Òô",
+                        "title": "æ‹¼éŸ³",
                         "model": "Area"
                     },
                     {
                         "field_name": "update_datetime",
-                        "title": "ĞŞ¸ÄÊ±¼ä",
+                        "title": "ä¿®æ”¹æ—¶é—´",
                         "model": "Area"
                     }
                 ]
             },
             {
-                "name": "¸½¼ş¹ÜÀí",
+                "name": "é™„ä»¶ç®¡ç†",
                 "icon": "iconfont icon-file",
                 "sort": 3,
                 "is_link": false,
@@ -1009,25 +1009,25 @@
                 "children": [],
                 "menu_button": [
                     {
-                        "name": "ÏêÇé",
+                        "name": "è¯¦æƒ…",
                         "value": "file:Retrieve",
                         "api": "/api/system/file/{id}/",
                         "method": 0
                     },
                     {
-                        "name": "²éÑ¯",
+                        "name": "æŸ¥è¯¢",
                         "value": "file:Search",
                         "api": "/api/system/file/",
                         "method": 0
                     },
                     {
-                        "name": "±à¼­",
+                        "name": "ç¼–è¾‘",
                         "value": "file:Update",
                         "api": "/api/system/file/{id}/",
                         "method": 1
                     },
                     {
-                        "name": "É¾³ı",
+                        "name": "åˆ é™¤",
                         "value": "file:Delete",
                         "api": "/api/system/file/{id}/",
                         "method": 3
@@ -1036,32 +1036,32 @@
                 "menu_field": [
                     {
                         "field_name": "create_datetime",
-                        "title": "´´½¨Ê±¼ä",
+                        "title": "åˆ›å»ºæ—¶é—´",
                         "model": "FileList"
                     },
                     {
                         "field_name": "creator",
-                        "title": "´´½¨ÈË",
+                        "title": "åˆ›å»ºäºº",
                         "model": "FileList"
                     },
                     {
                         "field_name": "dept_belong_id",
-                        "title": "Êı¾İ¹éÊô²¿ÃÅ",
+                        "title": "æ•°æ®å½’å±éƒ¨é—¨",
                         "model": "FileList"
                     },
                     {
                         "field_name": "description",
-                        "title": "ÃèÊö",
+                        "title": "æè¿°",
                         "model": "FileList"
                     },
                     {
                         "field_name": "engine",
-                        "title": "ÒıÇæ",
+                        "title": "å¼•æ“",
                         "model": "FileList"
                     },
                     {
                         "field_name": "file_url",
-                        "title": "ÎÄ¼şµØÖ·",
+                        "title": "æ–‡ä»¶åœ°å€",
                         "model": "FileList"
                     },
                     {
@@ -1071,32 +1071,32 @@
                     },
                     {
                         "field_name": "md5sum",
-                        "title": "ÎÄ¼şmd5",
+                        "title": "æ–‡ä»¶md5",
                         "model": "FileList"
                     },
                     {
                         "field_name": "mime_type",
-                        "title": "MimeÀàĞÍ",
+                        "title": "Mimeç±»å‹",
                         "model": "FileList"
                     },
                     {
                         "field_name": "modifier",
-                        "title": "ĞŞ¸ÄÈË",
+                        "title": "ä¿®æ”¹äºº",
                         "model": "FileList"
                     },
                     {
                         "field_name": "name",
-                        "title": "Ãû³Æ",
+                        "title": "åç§°",
                         "model": "FileList"
                     },
                     {
                         "field_name": "size",
-                        "title": "ÎÄ¼ş´óĞ¡",
+                        "title": "æ–‡ä»¶å¤§å°",
                         "model": "FileList"
                     },
                     {
                         "field_name": "update_datetime",
-                        "title": "ĞŞ¸ÄÊ±¼ä",
+                        "title": "ä¿®æ”¹æ—¶é—´",
                         "model": "FileList"
                     },
                     {
@@ -1111,7 +1111,7 @@
         "menu_field": []
     },
     {
-        "name": "ÈÕÖ¾¹ÜÀí",
+        "name": "æ—¥å¿—ç®¡ç†",
         "icon": "iconfont icon-rizhi",
         "sort": 3,
         "is_link": false,
@@ -1125,7 +1125,7 @@
         "parent": null,
         "children": [
             {
-                "name": "µÇÂ¼ÈÕÖ¾",
+                "name": "ç™»å½•æ—¥å¿—",
                 "icon": "iconfont icon-guanlidenglurizhi",
                 "sort": 1,
                 "is_link": false,
@@ -1140,13 +1140,13 @@
                 "children": [],
                 "menu_button": [
                     {
-                        "name": "²éÑ¯",
+                        "name": "æŸ¥è¯¢",
                         "value": "login_log:Search",
                         "api": "/api/system/login_log/",
                         "method": 0
                     },
                     {
-                        "name": "ÏêÇé",
+                        "name": "è¯¦æƒ…",
                         "value": "login_log:Retrieve",
                         "api": "/api/system/login_log/{id}/",
                         "method": 0
@@ -1155,67 +1155,67 @@
                 "menu_field": [
                     {
                         "field_name": "agent",
-                        "title": "agentĞÅÏ¢",
+                        "title": "agentä¿¡æ¯",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "area_code",
-                        "title": "ÇøÓò´úÂë",
+                        "title": "åŒºåŸŸä»£ç ",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "browser",
-                        "title": "ä¯ÀÀÆ÷Ãû",
+                        "title": "æµè§ˆå™¨å",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "city",
-                        "title": "³ÇÊĞ",
+                        "title": "åŸå¸‚",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "continent",
-                        "title": "Öİ",
+                        "title": "å·",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "country",
-                        "title": "¹ú¼Ò",
+                        "title": "å›½å®¶",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "country_code",
-                        "title": "¼ò³Æ",
+                        "title": "ç®€ç§°",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "country_english",
-                        "title": "Ó¢ÎÄÈ«³Æ",
+                        "title": "è‹±æ–‡å…¨ç§°",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "create_datetime",
-                        "title": "´´½¨Ê±¼ä",
+                        "title": "åˆ›å»ºæ—¶é—´",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "creator",
-                        "title": "´´½¨ÈË",
+                        "title": "åˆ›å»ºäºº",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "dept_belong_id",
-                        "title": "Êı¾İ¹éÊô²¿ÃÅ",
+                        "title": "æ•°æ®å½’å±éƒ¨é—¨",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "description",
-                        "title": "ÃèÊö",
+                        "title": "æè¿°",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "district",
-                        "title": "ÏØÇø",
+                        "title": "å¿åŒº",
                         "model": "LoginLog"
                     },
                     {
@@ -1225,58 +1225,58 @@
                     },
                     {
                         "field_name": "ip",
-                        "title": "µÇÂ¼ip",
+                        "title": "ç™»å½•ip",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "isp",
-                        "title": "ÔËÓªÉÌ",
+                        "title": "è¿è¥å•†",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "latitude",
-                        "title": "Î³¶È",
+                        "title": "çº¬åº¦",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "login_type",
-                        "title": "µÇÂ¼ÀàĞÍ",
+                        "title": "ç™»å½•ç±»å‹",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "longitude",
-                        "title": "¾­¶È",
+                        "title": "ç»åº¦",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "modifier",
-                        "title": "ĞŞ¸ÄÈË",
+                        "title": "ä¿®æ”¹äºº",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "os",
-                        "title": "²Ù×÷ÏµÍ³",
+                        "title": "æ“ä½œç³»ç»Ÿ",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "province",
-                        "title": "Ê¡·İ",
+                        "title": "çœä»½",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "update_datetime",
-                        "title": "ĞŞ¸ÄÊ±¼ä",
+                        "title": "ä¿®æ”¹æ—¶é—´",
                         "model": "LoginLog"
                     },
                     {
                         "field_name": "username",
-                        "title": "µÇÂ¼ÓÃ»§Ãû",
+                        "title": "ç™»å½•ç”¨æˆ·å",
                         "model": "LoginLog"
                     }
                 ]
             },
             {
-                "name": "²Ù×÷ÈÕÖ¾",
+                "name": "æ“ä½œæ—¥å¿—",
                 "icon": "iconfont icon-caozuorizhi",
                 "sort": 2,
                 "is_link": false,
@@ -1291,13 +1291,13 @@
                 "children": [],
                 "menu_button": [
                     {
-                        "name": "ÏêÇé",
+                        "name": "è¯¦æƒ…",
                         "value": "operation_log:Retrieve",
                         "api": "/api/system/operation_log/{id}/",
                         "method": 0
                     },
                     {
-                        "name": "²éÑ¯",
+                        "name": "æŸ¥è¯¢",
                         "value": "operation_log:Search",
                         "api": "/api/system/operation_log/",
                         "method": 0
@@ -1306,22 +1306,22 @@
                 "menu_field": [
                     {
                         "field_name": "create_datetime",
-                        "title": "´´½¨Ê±¼ä",
+                        "title": "åˆ›å»ºæ—¶é—´",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "creator",
-                        "title": "´´½¨ÈË",
+                        "title": "åˆ›å»ºäºº",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "dept_belong_id",
-                        "title": "Êı¾İ¹éÊô²¿ÃÅ",
+                        "title": "æ•°æ®å½’å±éƒ¨é—¨",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "description",
-                        "title": "ÃèÊö",
+                        "title": "æè¿°",
                         "model": "OperationLog"
                     },
                     {
@@ -1331,67 +1331,67 @@
                     },
                     {
                         "field_name": "json_result",
-                        "title": "·µ»ØĞÅÏ¢",
+                        "title": "è¿”å›ä¿¡æ¯",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "modifier",
-                        "title": "ĞŞ¸ÄÈË",
+                        "title": "ä¿®æ”¹äºº",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "request_body",
-                        "title": "ÇëÇó²ÎÊı",
+                        "title": "è¯·æ±‚å‚æ•°",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "request_browser",
-                        "title": "ÇëÇóä¯ÀÀÆ÷",
+                        "title": "è¯·æ±‚æµè§ˆå™¨",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "request_ip",
-                        "title": "ÇëÇóipµØÖ·",
+                        "title": "è¯·æ±‚ipåœ°å€",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "request_method",
-                        "title": "ÇëÇó·½Ê½",
+                        "title": "è¯·æ±‚æ–¹å¼",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "request_modular",
-                        "title": "ÇëÇóÄ£¿é",
+                        "title": "è¯·æ±‚æ¨¡å—",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "request_msg",
-                        "title": "²Ù×÷ËµÃ÷",
+                        "title": "æ“ä½œè¯´æ˜",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "request_os",
-                        "title": "²Ù×÷ÏµÍ³",
+                        "title": "æ“ä½œç³»ç»Ÿ",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "request_path",
-                        "title": "ÇëÇóµØÖ·",
+                        "title": "è¯·æ±‚åœ°å€",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "response_code",
-                        "title": "ÏìÓ¦×´Ì¬Âë",
+                        "title": "å“åº”çŠ¶æ€ç ",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "status",
-                        "title": "ÏìÓ¦×´Ì¬",
+                        "title": "å“åº”çŠ¶æ€",
                         "model": "OperationLog"
                     },
                     {
                         "field_name": "update_datetime",
-                        "title": "ĞŞ¸ÄÊ±¼ä",
+                        "title": "ä¿®æ”¹æ—¶é—´",
                         "model": "OperationLog"
                     }
                 ]
