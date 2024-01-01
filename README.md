@@ -1,6 +1,6 @@
-# This project has been archived, please move to a new version dvadmin3: https://gitee.com/huge-dream/django-vue3-admin
-# This project has been archived, please move to a new version dvadmin3: https://gitee.com/huge-dream/django-vue3-admin
-# This project has been archived, please move to a new version dvadmin3: https://gitee.com/huge-dream/django-vue3-admin
+# This project has been archived, please move to a new version dvadmin3: https://github.com/huge-dream/django-vue3-admin
+# This project has been archived, please move to a new version dvadmin3: https://github.com/huge-dream/django-vue3-admin
+# This project has been archived, please move to a new version dvadmin3: https://github.com/huge-dream/django-vue3-admin
 
 # Django-Vue-Admin
 
